@@ -67,34 +67,72 @@
 
             <div class="container post-main">
                 <h3>First of all, what is Sanctorum?</h3>
-                <p>Sanctorum is a trusted software that enabling the Sanctum processor. It assure the isolation of
-                    enclaves by utilizing a small, privileged piece of monitor code in conjunction with partitioned
-                    caches and ﬂushing of shared state on context switches. In this way, Sanctorum provide isolation for
-                    enclaved processes across either space or time.</p>
-                <p>Sanctorum allows enclaves to share hardware resources for performance improvements. Meanwhile,
-                    enclave state cannot be impacted by external code in a data dependent manner either directly or
-                    indirectly. </p>
+                <p>Sanctorum implements a formally verified specification for generic enclaves on an in-order
+                    multiprocessor system. It uses partitioned caches and ﬂushing of shared state on context switches to
+                    provide isolation.
+                    Sanctorum allows enclaves to share hardware resources for performance improvements, with no impact
+                    by external code. Allows hardware to evolve separately from the software.
                 <p>This paradigm also allows hardware to evolve separately from the software – the same
                     hardware with more powerful security monitor, or the security monitor with a different hardware
                     design, as long as it supports a minimal set of isolation mechanisms.</p>
+                <p><span class="content-bold">Sanctorum requires hardware support.</span></p>
+
                 <h3>Then, what is Enclave?</h3>
-                <p>An enclave is an isolated process consisting of one or more threads and a exclusive allocation of the
-                    machine resources needed by the process: memory (physical pages) and hardware structures (cache
-                    lines, etc.). </p>
-                <p>Enclaves guarantee integrity and conﬁdentiality for private computations and data in
-                    the presence of untrusted privileged software such as an OS or hypervisor. Therefore, enclaves
-                    cannot rely on the OS to transparently provide services without potentially violating the integrity
-                    and conﬁdentiality of the enclave’s data. Based on that, neither the direct nor the
-                    indirect side effects of an enclave’s work are visible to untrusted software, including privileged
-                    system software. </p>
-                <p>However, truly isolation is not easy when faced with side channel adversaries exploiting leakage from
-                    data dependent utilization of shared resources such as caches, OS managed demand paging, or, more
-                    recently, speculative execution.</p>
+                <p>An enclave is an isolated process consisting of one or more threads and a exclusive allocation of
+                    the machine resources needed by the process. One approach of Trusted Execution Environments (TEEs)
+                    that strongly isolated sensitive user-mode processes in a largely untrusted software environment.
+                    Enclaves are designed to guarantee integrity and conﬁdentiality for private computations and data in
+                    the presence of untrusted privileged software such as an OS or hypervisor.</p>
+
                 <h3>Relationship between enclave and Sanctorum:</h3>
                 <p>Sanctorum authenticates enclaves via a cryptographic measurement of their initial state to
                     guaranteeing isolated execution and private state. In other words, Sanctorum is the assurance of
                     enclave.</p>
 
+                <h3>Enclave Execution Model</h3>
+                <p>
+                    Enclave cannot rely on the OS to transparently provide services. Operating system is not trusted as
+                    it can perform denial of service or wholesale destruction of the enclave. This is reasonable,
+                    because OS is designed to organize hardware resource. However, this is the same reason that
+                    operation system can not be trusted. Hence, direct/indirect side effects of an enclave’s work is not
+                    visible to untrusted software, including privileged system software (OS, hypervisor). Enclave is not
+                    prevented from deliberately leaking its own secrets, as it is able to access resources shared with
+                    it by the OS, leaking the timing of these accesses.
+                </p>
+                <p> Sanctorum <span class="content-bold">authenticates enclaves</span> via a cryptographic measurement
+                    of their initial state.
+                </p>
+
+                <h3>Threat Mode</h3>
+                <p>
+                    Sanctorum assumes an insidious privileged software adversary able to subvert any software in order
+                    to impersonate, tamper with, or inspect an enclave. The speciﬁc abilities of the modelled adversary
+                    to inspect enclaves via indirect means, such as cache tag state or availability of other shared
+                    resources, depends on the availability of isolated protection domains for these surfaces in the
+                    hardware platform.
+                </p>
+                <p>Denial of service is impossible to defend against in this setting, and is therefore not considered.
+                    Note that even denial of service happened, it still won't change the integrity and confidentiality
+                    of data that stored in the enclave.
+                </p>
+                <h3>Trust Assumed by Sanctorum</h3>
+                <ul class="ordered-list">
+                    <li>A <span class="content-bold">given enclave binary</span>, authenticated via a measurement of its
+                        initial state taken by
+                        Sanctorum.
+                    </li>
+                    <li><span class="content-bold">Sanctorum’s binary image</span>, authenticated via a secure boot
+                        protocol and endowed with unique
+                        keys. This is covered by attestation.
+                    </li>
+                    <li>The hardware platform is <span class="content-bold">unconditionally trusted</span>.</li>
+                    <li>A <span class="content-bold">trusted first party</span> is required to verify remote
+                        attestations on enclave state. This process
+                        requires a PKI to bootstrap trust in the hardware and Sanctorum.
+                    </li>
+                </ul>
+                <p>Hardware is assumed trusted and requires it has the capability to do the cryptographic
+                    measurement. Hence, it can be concluded that this Sanctorum is based on trusted hardware.</p>
             </div>
         </div>
     </div>
