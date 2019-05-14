@@ -53,6 +53,7 @@ function changeColorsSquare() {
                 // correct answer
 
                 msgDisplay.textContent = "Correct!";
+                h1.style.backgroundColor = targetColor;
                 changeColor(targetColor);
                 for (let j = 0; j < targetDisplay.length; j++) {
                     targetDisplay.style.backgroundColor = targetColor;
