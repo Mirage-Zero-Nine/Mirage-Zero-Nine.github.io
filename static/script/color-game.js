@@ -61,7 +61,7 @@ function changeColorsSquare() {
                 resetBtn.textContent = 'Play Again?';
             } else {
                 this.style.backgroundColor = "#f1f1f1";
-                msgDisplay.textContent = "Wrong guess, try again!";
+                msgDisplay.textContent = "Try again!";
             }
         })
     }
