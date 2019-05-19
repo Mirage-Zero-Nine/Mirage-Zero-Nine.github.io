@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Running MongoDB on Ubuntu 16.04</title>
+    <link rel="stylesheet" type="text/css"
+          href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Raleway:200i,400,800" rel="stylesheet">
+    <link rel="stylesheet" href="../static/css/post-content.css">
+    <link rel="stylesheet" href="../static/bootstrap-4.3.1-dist/css/bootstrap.css">
+
+    <!--    title icon        -->
+    <link rel="shortcut icon" type="image/x-icon" href="../static/img/Avatar-3.jpg"/>
+</head>
+<body>
+
+<!--        nav bar     -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="https://yyzhou95.github.io/">HOME</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="./index.html">Posts <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../tags/index.html">Tags <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../archived/index.html">Archived <span
+                            class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item dropdown active">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                       data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        Other Links
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="https://github.com/yyzhou95">Github</a>
+                        <a class="dropdown-item" href="https://github.com/yyzhou95/yyzhou95.github.io">This page</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="../about/">About Me</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<section class="post-content">
+    <div class="container">
+        <div class="jumbotron bg-transparent">
+            <div class="container">
+                <div class="post-heading">
+                    <h1>Running Mongodb on Ubuntu 16.04</h1>
+                </div>
+
+                <div class="container text-right post-date">May 19, 2019</div>
+
+                <div class="container post-main">
+                    <p>This is a side problem I confronted when I tried to deploy a <code>Node.js</code> app with <code>MongoDB</code>
+                        on my private server. Although I follow the path of <a
+                                href='https://docs.mongodb.com/manual/tutorial/install-mongodb-on-ubuntu/'>MongoDB
+                            Manual</a> to install <code>MongoDB</code>, it just can not work, simply display the message
+                        when I check the status of <code>MongoDB</code> using <code>systemctl status mongodb</code>:</p>
+                    <pre><code class='language-shell' lang='shell'>● mongodb.service
+   Loaded: not-found (Reason: No such file or directory)
+   Active: inactive (dead)
+</code></pre>
+                    <p>The problem seems to be that the <code>/lib/systemd/system/mongodb.service</code> is missing.
+                        Therefore, the solution is to write a start script in <code>systemd</code>, in this way to make
+                        <code>systemctl start mongodb</code> work. </p>
+                    <p>First, create file:</p>
+                    <p><code>nano /lib/systemd/system/mongodb.service</code></p>
+                    <p>I prefer <code>nano</code> but <code>vim</code> works in the same way.</p>
+                    <p>Then paste following content into the file:</p>
+                    <pre><code>[Unit]
+Description=MongoDB Database Service
+Wants=network.target
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/mongod --config /etc/mongod.conf
+ExecReload=/bin/kill -HUP $MAINPID
+Restart=always
+User=mongodb
+Group=mongodb
+StandardOutput=syslog
+StandardError=syslog
+
+[Install]
+WantedBy=multi-user.target
+</code></pre>
+                    <p>Save and quit. Then use <code>systemctl start mongodb</code> can simply start it.</p>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!--        inner script to control nav bar        -->
+
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<!--        This order must be followed!!       -->
+<script src="../static/jquery/jquery-3.3.1.js"></script>
+<script src="../static/popper/popper.js"></script>
+<script src="../static/bootstrap-4.3.1-dist/js/bootstrap.js"></script>
+</body>
+</html>
