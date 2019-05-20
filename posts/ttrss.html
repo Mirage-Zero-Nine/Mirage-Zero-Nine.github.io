@@ -6,7 +6,8 @@
     <title>Deploy Tiny Tiny RSS via Docker | Posts</title>
     <link rel="stylesheet" type="text/css"
           href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
-    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Martel+Sans:200,300,400,600,700,800,900&display=swap"
+          rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Raleway:200i,400,800" rel="stylesheet">
     <link rel="stylesheet" href="../static/css/post-content.css">
     <link rel="stylesheet" href="../static/bootstrap-4.3.1-dist/css/bootstrap.css">
@@ -34,7 +35,8 @@
                     <a class="nav-link" href="../tags/index.html">Tags <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item active">
-                    <a class="nav-link" href="../archived/index.html">Archived <span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href="../archived/index.html">Archived <span
+                            class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item dropdown active">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
@@ -56,21 +58,23 @@
 
 <section class="post-content">
     <div class="container">
-        <div class="jumbotron bg-transparent">
-            <div class="container">
-                <div class="post-heading">
-                    <h1>Deploy Tiny Tiny RSS via Docker</h1>
-                </div>
-                <div class="container text-right post-date">April 25, 2019</div>
-                <div class="container post-main">
-                    <h3>Install Docker</h3>
-                    <p>Install Docker first. <a href="https://docs.docker.com/install/">Docker CE Installation</a></p>
-                    <h3>Clone files</h3>
-                    <p>Clone this repository to server.</p>
-                    <code>git clone https://github.com/HenryQW/docker-ttrss-plugins.git</code>
-                    <h3>Set up environment</h3>
-                    <p>Modify <code>docker-compose.yml</code> as follows:</p>
-                    <pre class="dockerfile"><code>version: "3"
+        <div class="post-heading">
+            <h1>Deploy Tiny Tiny RSS via Docker</h1>
+        </div>
+
+        <div class="text-right post-date">
+            April 25,, 2019
+        </div>
+
+        <div class="post-main">
+            <h2>Install Docker</h2>
+            <p>Install Docker first. <a href="https://docs.docker.com/install/">Docker CE Installation</a></p>
+            <h2>Clone files</h2>
+            <p>Clone this repository to server.</p>
+            <code>git clone https://github.com/HenryQW/docker-ttrss-plugins.git</code>
+            <h2>Set up environment</h2>
+            <p>Modify <code>docker-compose.yml</code> as follows:</p>
+            <pre class="dockerfile"><code>version: "3"
 services:
   database.postgres:
     image: sameersbn/postgresql:latest
@@ -114,56 +118,52 @@ services:
     expose:
       - 3000    # do not change this
     restart: always</code></pre>
-                    <p>Modify these items:</p>
-                    <ul class="ordered-list">
-                        <li><code>PG_PASSWORD</code></li>
-                        <li><code>ports</code> and <code>SELF_URL_PATH</code>
-                        </li>
-                        <li><code>DB_PASS</code> , note that this should keep same as <code>PG_PASSWORD</code>
-                        </li>
-                    </ul>
-                    <p>Those modification can be directly made on <code>docker-compose.yml</code>, or can
-                        create a new file and replace the original one.</p>
-                    <h3>Build Container</h3>
-                    <p>Run this command:</p>
-                    <p><code>docker-compose up -d</code></p>
-                    <p>After everything is done, Tiny Tiny RSS should be build successfully. It can be accessed by <span
-                            class="code">SELF_URL_PATH</span> that is set previously. If everything correct, then access
-                        it would show the login page. If an error occurs, check the <code>docker-compose.yml</code>
-                        file. </p>
-                    <h3>Set Tiny Tiny RSS</h3>
+            <p>Modify these items:</p>
+            <ul class="ordered-list">
+                <li><code>PG_PASSWORD</code></li>
+                <li><code>ports</code> and <code>SELF_URL_PATH</code>
+                </li>
+                <li><code>DB_PASS</code> , note that this should keep same as <code>PG_PASSWORD</code>
+                </li>
+            </ul>
+            <p>Those modification can be directly made on <code>docker-compose.yml</code>, or can
+                create a new file and replace the original one.</p>
+            <h2>Build Container</h2>
+            <p>Run this command:</p>
+            <p><code>docker-compose up -d</code></p>
+            <p>After everything is done, Tiny Tiny RSS should be build successfully. It can be accessed by <span
+                    class="code">SELF_URL_PATH</span> that is set previously. If everything correct, then access
+                it would show the login page. If an error occurs, check the <code>docker-compose.yml</code>
+                file. </p>
+            <h2>Set Tiny Tiny RSS</h2>
 
-                    <p>After the password is set, modify some basic setting in preference page.</p>
+            <p>After the password is set, modify some basic setting in preference page.</p>
 
-                    <ul class="ordered-list">
-                        <li>Default feed update interval: 1 hour (suggested)</li>
-                        <li>Enable API access: click it to enable third-party app access, such as Reeder</li>
-                        <li>Purge articles after this number of days: 30 days (depend on server storage capability)</li>
-                    </ul>
+            <ul class="ordered-list">
+                <li>Default feed update interval: 1 hour (suggested)</li>
+                <li>Enable API access: click it to enable third-party app access, such as Reeder</li>
+                <li>Purge articles after this number of days: 30 days (depend on server storage capability)</li>
+            </ul>
 
-                    <p>Then save the configuration.</p>
+            <p>Then save the configuration.</p>
 
-                    <h3>Mercury plugin and Fever plugin</h3>
-                    <ol class="ordered-list">
-                        <li>Set Mercury Parser API endpoint to <code>service.mercury:3000</code></li>
-                        <li>Set OpenCC API endpoint to <code>service.opencc:3000</code>. This is a Chinese
-                            translation plugin. If it is not necessary, leave it.
-                        </li>
-                        <li>Fever plugin requires a password, create one and save it.</li>
-                        <li>In Reeder, the server address is <code>YOUR_URL/plugins/fever/</code> and
-                            password
-                            is mentioned above. Email is <code>admin</code>.
-                        </li>
-                        <li>Remember to keep a copy of previous subscription in OPML format.</li>
-                    </ol>
-                    <p><strong>Finally, all set! Enjoy!</strong></p>
-
-                </div>
-            </div>
+            <h2>Mercury plugin and Fever plugin</h2>
+            <ol class="ordered-list">
+                <li>Set Mercury Parser API endpoint to <code>service.mercury:3000</code></li>
+                <li>Set OpenCC API endpoint to <code>service.opencc:3000</code>. This is a Chinese
+                    translation plugin. If it is not necessary, leave it.
+                </li>
+                <li>Fever plugin requires a password, create one and save it.</li>
+                <li>In Reeder, the server address is <code>YOUR_URL/plugins/fever/</code> and
+                    password
+                    is mentioned above. Email is <code>admin</code>.
+                </li>
+                <li>Remember to keep a copy of previous subscription in OPML format.</li>
+            </ol>
+            <p><strong>Finally, all set! Enjoy!</strong></p>
         </div>
     </div>
 </section>
-
 
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 <!--        This order must be followed!!       -->
