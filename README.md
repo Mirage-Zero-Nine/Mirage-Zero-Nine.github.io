@@ -1,5 +1,4 @@
 # yyzhou95.github.io
-## Personal Blog
 
 Home page: [Blog](https://yyzhou95.github.io)
 
