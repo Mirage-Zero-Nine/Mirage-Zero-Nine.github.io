@@ -3,5 +3,5 @@
 
 [My Personal Page](https://yyzhou95.github.io)
 
-Stylesheet: Bootstrap 4
+Stylesheet based on Bootstrap 4.
 
