@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Palindrome Partitioning | Posts</title>
+    <link rel="stylesheet" type="text/css"
+          href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Martel+Sans:200,300,400,600,700,800,900&display=swap"
+          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Raleway:200i,400,800" rel="stylesheet">
+    <link rel="stylesheet" href="../../static/css/post-content.css">
+    <link rel="stylesheet" href="../../static/bootstrap-4.3.1-dist/css/bootstrap.css">
+    <link rel="stylesheet" href="../../static/css/post-content.css">
+
+    <!--    title icon        -->
+    <link rel="shortcut icon" type="image/x-icon" href="../../static/img/Avatar-3.jpg"/>
+</head>
+<body>
+
+<!--        nav bar     -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="https://yyzhou95.github.io/">HOME</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="../index.html">Posts <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../tags/index.html">Tags <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../archived/index.html">Archived <span
+                            class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item dropdown active">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                       data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        Other Links
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="https://github.com/yyzhou95">Github</a>
+                        <a class="dropdown-item" href="https://github.com/yyzhou95/yyzhou95.github.io">This page</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="../../about/">About Me</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<section class="post-content">
+    <div class="container">
+
+        <div class="post-heading">
+            <h1>Palindrome Partitioning</h1>
+        </div>
+
+        <div class="text-right post-date">
+            June 06, 2019
+        </div>
+
+        <div class="post-main">
+            <p>Link: <a href='https://leetcode.com/problems/palindrome-partitioning'>Palindrome Partitioning</a></p>
+            <h2>Problem description </h2>
+            <p>Given a string <em>s</em>, partition <em>s</em> such that every substring of the partition is a
+                palindrome.</p>
+            <p>Return all possible palindrome partitioning of <em>s</em>.</p>
+            <p><strong>Example:</strong></p>
+            <pre><code>Input: &quot;aab&quot;
+Output:
+[
+  [&quot;aa&quot;,&quot;b&quot;],
+  [&quot;a&quot;,&quot;a&quot;,&quot;b&quot;]
+]
+</code></pre>
+            <h2>Method</h2>
+            <p>There are two parts in this problem. First is to solve the palindrome substring, which simply traverse
+                whole string will suffice. The second part is to generate all substrings and add the correct palindrome
+                substring to result. Obviously, this is a backtracking problem. Note that the return value is a <code>List&lt;List&lt;String&gt;&gt;</code>,
+                therefore, the generation part should follow an order. </p>
+            <p>The order is to “insert” a breaker into each chars in the string. First check the substring before the
+                breaker, if it is palindrome, add the rest part of string to recursion. Continue until all substring has
+                been iterated.</p>
+            <h2>Code</h2>
+            <pre><code class='language-java' lang='java'>/**
+ * Backtracking.
+ * Use backtracking to &quot;insert&quot; all possible breaking point for substring.
+ * If creat a palindrome substring, then add it to list.
+ *
+ * @param s given string
+ * @return all possible palindrome partitioning of s
+ */
+public List&lt;List&lt;String&gt;&gt; partition(String s) {
+    List&lt;List&lt;String&gt;&gt; out = new ArrayList&lt;&gt;();
+
+    backtracking(s, out, new ArrayList&lt;&gt;());
+    return out;
+}
+
+/**
+ * Backtracking to generate all possible substring to find all possible palindrome partitioning of s.
+ *
+ * @param s    given string
+ * @param out  output list
+ * @param temp temp list
+ */
+private void backtracking(String s, List&lt;List&lt;String&gt;&gt; out, List&lt;String&gt; temp) {
+    if (s.length() == 0) {
+        out.add(new ArrayList&lt;&gt;(temp));     // also hold the corner case
+        return;
+    }
+    for (int i = 1; i &lt;= s.length(); i++) {     // i should starts at 1 to avoid empty substring
+        if (isPalindrome(s.substring(0, i))) {
+            temp.add(s.substring(0, i));
+            backtracking(s.substring(i), out, temp);        // repeat this process to rest of string
+            temp.remove(temp.size() - 1);
+        }
+    }
+}
+
+/**
+ * Check whether given string is palindrome.
+ *
+ * @param s given string
+ * @return whether given string is palindrome
+ */
+private boolean isPalindrome(String s) {
+    for (int i = 0; i &lt; s.length() / 2; i++) {
+        if (s.charAt(i) != s.charAt(s.length() - 1 - i)) {
+            return false;
+        }
+    }
+    return true;
+}
+</code></pre>
+        </div>
+    </div>
+</section>
+<!--        inner script to control nav bar        -->
+
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<!--        This order must be followed!!       -->
+<script src="../../static/jquery/jquery-3.3.1.js"></script>
+<script src="../../static/popper/popper.js"></script>
+<script src="../../static/bootstrap-4.3.1-dist/js/bootstrap.js"></script>
+</body>
+</html>
