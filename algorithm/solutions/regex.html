@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Regular Expression Matching | Posts</title>
+    <title>Regular Expression Matching / Wildcard Matching| Posts</title>
     <link rel="stylesheet" type="text/css"
           href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
     <link href="https://fonts.googleapis.com/css?family=Martel+Sans:200,300,400,600,700,800,900&display=swap"
@@ -61,7 +61,7 @@
     <div class="container">
 
         <div class="post-heading">
-            <h1>Regular Expression Matching</h1>
+            <h1>Regular Expression Matching / Wildcard Matching</h1>
         </div>
 
         <div class="text-right post-date">
@@ -69,9 +69,14 @@
         </div>
 
         <div class="post-main">
-            <p>Links: <a href='https://leetcode.com/problems/regular-expression-matching'>Regular Expression
-                Matching</a></p>
+            <p>Links:
+            <p><a href='https://leetcode.com/problems/regular-expression-matching'>Regular Expression Matching</a></p>
+            <p><a href='https://leetcode.com/problems/wildcard-matching/'>Wildcard Matching</a></p>
             <h2>Problem description </h2>
+            <p>
+                <strong>Regular Expression Matching</strong>
+
+            </p>
             <p>Given an input string (<code>s</code>) and a pattern (<code>p</code>), implement regular expression
                 matching with support for <code>&#39;.&#39;</code> and <code>&#39;*&#39;</code>.</p>
             <pre><code>&#39;.&#39; Matches any single character.
@@ -120,14 +125,64 @@ s = &quot;mississippi&quot;
 p = &quot;mis*is*p*.&quot;
 Output: false
 </code></pre>
+            <p><strong>Wildcard Matching</strong></p>
+            <p>Given an input string (<code>s</code>) and a pattern (<code>p</code>), implement wildcard pattern
+                matching with support for <code>&#39;?&#39;</code> and <code>&#39;*&#39;</code>.</p>
+            <pre><code>&#39;?&#39; Matches any single character.
+&#39;*&#39; Matches any sequence of characters (including the empty sequence).
+</code></pre>
+            <p>The matching should cover the <strong>entire</strong> input string (not partial).</p>
+            <p><strong>Note:</strong></p>
+            <ul>
+                <li><code>s</code> could be empty and contains only lowercase letters <code>a-z</code>.</li>
+                <li><code>p</code> could be empty and contains only lowercase letters <code>a-z</code>, and characters
+                    like <code>?</code> or <code>*</code>.
+                </li>
+
+            </ul>
+            <p><strong>Example 1:</strong></p>
+            <pre><code>Input:
+s = &quot;aa&quot;
+p = &quot;a&quot;
+Output: false
+Explanation: &quot;a&quot; does not match the entire string &quot;aa&quot;.
+</code></pre>
+            <p><strong>Example 2:</strong></p>
+            <pre><code>Input:
+s = &quot;aa&quot;
+p = &quot;*&quot;
+Output: true
+Explanation: &#39;*&#39; matches any sequence.
+</code></pre>
+            <p><strong>Example 3:</strong></p>
+            <pre><code>Input:
+s = &quot;cb&quot;
+p = &quot;?a&quot;
+Output: false
+Explanation: &#39;?&#39; matches &#39;c&#39;, but the second letter is &#39;a&#39;, which does not match &#39;b&#39;.
+</code></pre>
+            <p><strong>Example 4:</strong></p>
+            <pre><code>Input:
+s = &quot;adceb&quot;
+p = &quot;*a*b&quot;
+Output: true
+Explanation: The first &#39;*&#39; matches the empty sequence, while the second &#39;*&#39; matches the substring &quot;dce&quot;.
+</code></pre>
+            <p><strong>Example 5:</strong></p>
+            <pre><code>Input:
+s = &quot;acdcb&quot;
+p = &quot;a*c?b&quot;
+Output: false
+</code></pre>
             <h2>Method</h2>
+            <p><strong>Regular Expression Matching</strong></p>
             <p>This is a typical dynamic programming with 2D table problem. The key is to find the state transition
                 formulation.</p>
             <p>There are several conditions for state transition, assuming column of boolean table representing pattern
                 string. Note that boolean table has one more row and column than string, hence, if using string index in
                 iteration, corresponding table index should be index + 1.</p>
             <ul>
-                <li>First of all, iterate the first row of table, and if <code>*</code> is found, fill
+                <li>First of all, iterate the first row of table, and if <code>*</code>is met, fill
                     <code>dp[0][i+1]</code> with value in <code>dp[0][i+1]</code>. This is for the case of pattern
                     starts with <code>.*</code>.
                 </li>
@@ -149,8 +204,27 @@ Output: false
                 <li>Finally, return <code>dp[s.length()][p.length()]</code>.</li>
 
             </ul>
+            <p><strong>Wildcard Matching</strong></p>
+            <p>This problem’s only difference to previous one is the matching field of <code>*</code>. In this problem,
+                the <code>*</code> can match any sequence including empty sequence. Therefore, <code>*</code> is the
+                real wildcard in this problem. If current char in pattern is <code>*</code>, then <code>dp[i + 1][j + 1]
+                    = dp[i + 1][j] || dp[i][j + 1]</code>.</p>
             <h2>Code</h2>
-            <pre><code class='language-java' lang='java'>public boolean isMatch(String s, String p) {
+            <p><strong>Regular Expression Matching</strong></p>
+            <pre><code class='language-java' lang='java'>/**
+ * Dynamic programming with 2D table.
+ * Conditions:
+ * if (p.charAt(j) == s.charAt(i) || p.charAt(j) == &#39;.&#39;) -&gt;  dp[i + 1][j + 1] = dp[i][j]
+ * if (p.charAt(j) == &#39;*&#39;):
+ * 1. p.charAt(j - 1) != s.charAt(i): match previous char in 0 time
+ * 2. p.charAt(j - 1) == s.charAt(i): match either previous char in string or pattern, or match previous char 0 time
+ * If either condition is satisfied, return false.
+ *
+ * @param s string
+ * @param p pattern string
+ * @return if string is matched to pattern
+ */
+public boolean isMatch(String s, String p) {
 
     /* Corner case */
     if (s == null || p == null) {
@@ -182,7 +256,55 @@ Output: false
         }
     }
 
+    for (boolean[] booleans : dp) {
+        System.out.println(Arrays.toString(booleans));
+    }
     return dp[s.length()][p.length()];
+}
+</code></pre>
+            <p><strong>Wildcard Matching</strong></p>
+            <pre><code class='language-java' lang='java'>/**
+ * Dynamic programming with 2D table.
+ * Conditions:
+ * if (p.charAt(j) == s.charAt(i) || p.charAt(j) == &#39;.&#39;) -&gt;  dp[i + 1][j + 1] = dp[i][j]
+ * if (p.charAt(j) == &#39;*&#39;): since &#39;*&#39; can match empty string, then directly fill dp[i + 1][j] || dp[i][j + 1]
+ * If either condition is satisfied, return false.
+ *
+ * @param s string
+ * @param p pattern string
+ * @return if string is matched to pattern
+ */
+public boolean isMatch(String s, String p) {
+
+    /* Corner case */
+    if (s == null || p == null) {
+        return false;
+    }
+
+    boolean[][] dp = new boolean[s.length() + 1][p.length() + 1];
+    dp[0][0] = true;        // empty string matches empty string
+
+    for (int i = 0; i &lt; p.length(); i++) {
+        if (p.charAt(i) == &#39;*&#39;) {        // only p contains &#39;.&#39; or &#39;*&#39;
+            dp[0][i + 1] = true;        // &#39;*&#39; can match empty string
+        } else {
+            break;
+        }
+    }
+
+    for (int i = 0; i &lt; s.length(); i++) {
+        for (int j = 0; j &lt; p.length(); j++) {
+            if (s.charAt(i) == p.charAt(j) || p.charAt(j) == &#39;?&#39;) {
+                dp[i + 1][j + 1] = dp[i][j];
+            }
+            if (p.charAt(j) == &#39;*&#39;) {
+                dp[i + 1][j + 1] = dp[i + 1][j] || dp[i][j + 1];
+            }
+        }
+    }
+
+    return dp[s.length()][p.length()];
+}
 </code></pre>
         </div>
     </div>
