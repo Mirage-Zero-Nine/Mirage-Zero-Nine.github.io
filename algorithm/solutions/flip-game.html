@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Flip Game | Posts</title>
+    <link rel="stylesheet" type="text/css"
+          href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Martel+Sans:200,300,400,600,700,800,900&display=swap"
+          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Raleway:200i,400,800" rel="stylesheet">
+    <link rel="stylesheet" href="../../static/css/post-content.css">
+    <link rel="stylesheet" href="../../static/bootstrap-4.3.1-dist/css/bootstrap.css">
+    <link rel="stylesheet" href="../../static/css/post-content.css">
+
+    <!--    title icon        -->
+    <link rel="shortcut icon" type="image/x-icon" href="../../static/img/Avatar-3.jpg"/>
+</head>
+<body>
+
+<!--        nav bar     -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="https://yyzhou95.github.io/">HOME</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="../index.html">Posts <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../tags/index.html">Tags <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../archived/index.html">Archived <span
+                            class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item dropdown active">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                       data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        Other Links
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="https://github.com/yyzhou95">Github</a>
+                        <a class="dropdown-item" href="https://github.com/yyzhou95/yyzhou95.github.io">This page</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="../../about/">About Me</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<section class="post-content">
+    <div class="container">
+
+        <div class="post-heading">
+            <h1>Flip Game / Flip Game II</h1>
+        </div>
+
+        <div class="text-right post-date">
+            June 08, 2019
+        </div>
+
+        <div class="post-main">
+            <p>Link: <a href='https://leetcode.com/problems/flip-game'>Flip Game</a> / <a
+                    href='https://leetcode.com/problems/flip-game-ii'>Flip Game II</a></p>
+            <h2>Problem description </h2>
+            <h3>Flip Game</h3>
+            <p>You are playing the following Flip Game with your friend: Given a string that contains only these two
+                characters: <code>+</code>and <code>-</code>, you and your friend take turns to flip two <strong>consecutive</strong>
+                <code>&quot;++&quot;</code> into <code>&quot;--&quot;</code>. The game ends when a person can no longer
+                make a move and therefore the other person will be the winner.</p>
+            <p>Write a function to compute all possible states of the string after one valid move.</p>
+            <p><strong>Example:</strong></p>
+            <pre><code>Input: s = &quot;++++&quot;
+Output:
+[
+  &quot;--++&quot;,
+  &quot;+--+&quot;,
+  &quot;++--&quot;
+]
+</code></pre>
+            <p><strong>Note:</strong> If there is no valid move, return an empty list <code>[]</code>.</p>
+            <h3>Flip Game II</h3>
+            <p>You are playing the following Flip Game with your friend: Given a string that contains only these two
+                characters: <code>+</code>and <code>-</code>, you and your friend take turns to flip two <strong>consecutive</strong>
+                <code>&quot;++&quot;</code> into <code>&quot;--&quot;</code>. The game ends when a person can no longer
+                make a move and therefore the other person will be the winner.</p>
+            <p>Write a function to determine if the starting player can guarantee a win.</p>
+            <p><strong>Example:</strong></p>
+            <pre><code>Input: s = &quot;++++&quot;
+Output: true
+Explanation: The starting player can guarantee a win by flipping the middle &quot;++&quot; to become &quot;+--+&quot;.
+</code></pre>
+            <h2>Method</h2>
+            <h3>Flip Game</h3>
+            <p>It is a basic string constructing problem. Iterate the string and when a <code>++</code> is found, split
+                string to two parts, concatenating string with first part and <code>--</code> and second part.</p>
+            <h3>Flip Game II</h3>
+            <p>Use backtracking to find all possible solutions and determine if first player can win.</p>
+            <p>The backtracking process has to be done with a hash map to reduce time consumption. The key in hash map
+                is current string, and value of it is whether this string can guarantee first player wins.</p>
+            <h2>Code</h2>
+            <h3>Flip Game</h3>
+            <pre><code class='language-java' lang='java'>/**
+ * When find capable position, spilt string and add result to output list.
+ *
+ * @param s given string
+ * @return all possible states of the string after one flip
+ */
+public List&lt;String&gt; generatePossibleNextMoves(String s) {
+    List&lt;String&gt; out = new ArrayList&lt;&gt;();
+
+    /* Corner case */
+    if (s.length() &lt; 2) {
+        return out;
+    }
+
+    for (int i = 0; i &lt; s.length(); i++) {
+        if (i &gt; 0 &amp;&amp; s.charAt(i) == &#39;+&#39; &amp;&amp; s.charAt(i - 1) == &#39;+&#39;) {
+            out.add((i == 1 ? &quot;&quot; : s.substring(0, i - 1)) + &quot;--&quot; + s.substring(i + 1));
+
+        }
+    }
+    return out;
+}
+</code></pre>
+            <h3>Flip Game II</h3>
+            <pre><code class='language-java' lang='java'>/**
+ * Backtracking with hash map.
+ *
+ * @param s given string
+ * @return if first player can win
+ */
+public boolean canWin(String s) {
+    if (s.length() &lt; 2) {
+        return false;
+    }
+    HashMap&lt;String, Boolean&gt; m = new HashMap&lt;&gt;();
+
+    return backtracking(s.toCharArray(), m);
+}
+
+/**
+ * Backtracking with hash map.
+ * Iterate string and find a flip action. Keep backtracking.
+ * If given string contains a &quot;++&quot; (for flip) and later backtracking shows no other flips, then current player wins.
+ *
+ * @param arr given string converted to char array
+ * @param m   hash map
+ * @return if first player can win based on current string
+ */
+private boolean backtracking(char[] arr, HashMap&lt;String, Boolean&gt; m) {
+
+    for (int i = 1; i &lt; arr.length; i++) {
+        if (arr[i] == &#39;+&#39; &amp;&amp; arr[i - 1] == &#39;+&#39;) {
+
+            arr[i] = &#39;-&#39;;       // flip
+            arr[i - 1] = &#39;-&#39;;
+
+            boolean b;
+            String key = String.valueOf(arr);
+
+            if (!m.containsKey(key)) {
+                b = backtracking(arr, m);
+                m.put(key, b);
+            } else {
+                b = m.get(key);
+            }
+
+            arr[i] = &#39;+&#39;;
+            arr[i - 1] = &#39;+&#39;;
+
+            if (!b) {         // current string contains one &quot;++&quot; and rest of string can not win
+                return true;  // then current player wins
+            }
+        }
+    }
+    return false;
+}
+</code></pre>
+        </div>
+    </div>
+</section>
+<!--        inner script to control nav bar        -->
+
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<!--        This order must be followed!!       -->
+<script src="../../static/jquery/jquery-3.3.1.js"></script>
+<script src="../../static/popper/popper.js"></script>
+<script src="../../static/bootstrap-4.3.1-dist/js/bootstrap.js"></script>
+</body>
+</html>
