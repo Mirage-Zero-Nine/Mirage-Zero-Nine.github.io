@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Longest Valid Parentheses | Posts</title>
+    <link rel="stylesheet" type="text/css"
+          href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Martel+Sans:200,300,400,600,700,800,900&display=swap"
+          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Raleway:200i,400,800" rel="stylesheet">
+    <link rel="stylesheet" href="../../static/css/post-content.css">
+    <link rel="stylesheet" href="../../static/bootstrap-4.3.1-dist/css/bootstrap.css">
+    <link rel="stylesheet" href="../../static/css/post-content.css">
+
+    <!--    title icon        -->
+    <link rel="shortcut icon" type="image/x-icon" href="../../static/img/Avatar-3.jpg"/>
+</head>
+<body>
+
+<!--        nav bar     -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="https://yyzhou95.github.io/">HOME</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="../index.html">Posts <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../tags/index.html">Tags <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../archived/index.html">Archived <span
+                            class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item dropdown active">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                       data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        Other Links
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="https://github.com/yyzhou95">Github</a>
+                        <a class="dropdown-item" href="https://github.com/yyzhou95/yyzhou95.github.io">This page</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="../../about/">About Me</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<section class="post-content">
+    <div class="container">
+
+        <div class="post-heading">
+            <h1>Longest Valid Parentheses</h1>
+        </div>
+
+        <div class="text-right post-date">
+            June 08, 2019
+        </div>
+
+        <div class="post-main">
+            <p>Link: <a href='https://leetcode.com/problems/longest-valid-parentheses/'>Longest Valid Parentheses</a>
+            </p>
+            <h2>Problem description </h2>
+            <p>Given a string containing just the characters <code>&#39;(&#39;</code> and <code>&#39;)&#39;</code>, find
+                the length of the longest valid (well-formed) parentheses substring.</p>
+            <p><strong>Example 1:</strong></p>
+            <pre><code>Input: &quot;(()&quot;
+Output: 2
+Explanation: The longest valid parentheses substring is &quot;()&quot;
+</code></pre>
+            <p><strong>Example 2:</strong></p>
+            <pre><code>Input: &quot;)()())&quot;
+Output: 4
+Explanation: The longest valid parentheses substring is &quot;()()&quot;
+</code></pre>
+            <h2>Method</h2>
+            <p>This problem can be solved by 3 ways:</p>
+            <ol start=''>
+                <li>Traverse</li>
+                <li>Stack</li>
+                <li>Dynamic programming</li>
+
+            </ol>
+            <p><strong>Traverse</strong></p>
+            <p>This is the simplest way and takes least memory consumption. The idea is that traverse from left to
+                right. Find all valid parentheses and filter out max one. Then traverse from left to right and do the
+                same thing. This traverse is to avoid the situation that left parenthesis is more than right
+                parenthesis. Under this circumstances, if only one traverse is done, the function will only return 0, as
+                no valid condition is triggered.</p>
+            <p><strong>Stack</strong></p>
+            <p>Another solution of this problem that uses stack to store left parentheses&#39; position.</p>
+            <p> If encounter right parenthesis, pop stack&#39;s top index and compare i - index to max length. If stack
+                is empty and encounter right parenthesis, push current index into stack as next valid length&#39;s
+                start.</p>
+            <p>This approach is almost the same as checking whether a string is a valid parentheses pair. It only
+                requires one time of traversal, but consuming O(n) memory. The time complexity is O(n) as well, but only
+                half of the traverse solution, as it only traverse once.</p>
+            <p><strong>Dynamic programming</strong></p>
+            <p>Dynamic programming can solve this problem as well. The idea is to use a 1D table to save the previous
+                condition of valid parentheses. And the statement transition is as following:</p>
+            <pre><code>if s.charAt(i) == &#39;)&#39;:
+	1. s.charAt(i - 1) == &#39;(&#39;
+		arr[i] = arr[i - 2] + 2, i &gt; 1
+		arr[i] = 2 i == 1
+  2. i &gt; arr[i - 1] &amp;&amp; s.charAt(i - arr[i - 1] - 1) == &#39;(&#39;
+  	arr[i] = arr[i - 1] + arr[i - arr[i - 1] - 2] + 2, i - arr[i - 1] &gt; 1
+  	arr[i] = arr[i - 1] + 2, otherwise
+</code></pre>
+            <p>The first condition is simple, add a new pair to max length if previous char is <code>(</code>. The
+                second condition is a little complex. The purpose of this statement is to find first <code>(</code>
+                under current situation. If current pair is immediately to a previous one, such as <code>(())()</code>,
+                then the length should count it and add it to result.</p>
+            <p><code>i &gt; arr[i - 1]</code> is to assure this value has possibility to become max.</p>
+            <h2>Code</h2>
+            <pre><code class='language-java' lang='java'>/**
+ * Traverse s for two times, set two counter &quot;left&quot; and &quot;right&quot; to count &quot;(&quot;, &quot;)&quot; respectively.
+ * First from left to right, if left equals to right and none of them are 0, then one valid length is found.
+ * Compare current length to max length. If larger then switch it. Then reset both counters.
+ * When first traverse completed, traverse string from right to left with same process.
+ * Final max length is the result.
+ * Analysis:
+ * Time complexity: O(n). Single traversal of string to fill dp array is done.
+ * Space complexity: O(1). Three local variables are used.
+ *
+ * @param s input string
+ * @return length of the longest valid (well-formed) parentheses substring
+ */
+public int longestValidParentheses(String s) {
+
+    /* Corner case */
+    if (s.length() &lt; 2) {
+        return 0;
+    }
+
+    int left = 0, right = 0, max = 0;
+    for (int i = 0; i &lt; s.length(); i++) {      // traverse from left to right
+        if (s.charAt(i) == &#39;(&#39;) {
+            left++;
+        } else {
+            right++;
+        }
+        if (left == right) {
+            max = Math.max(max, left + right);
+        } else if (right &gt; left) {
+            left = 0;
+            right = 0;
+        }
+    }
+
+    left = 0;
+    right = 0;
+
+    for (int i = s.length() - 1; i &gt; -1; i--) {     // traverse from right to left
+        if (s.charAt(i) == &#39;(&#39;) {
+            left++;
+        } else {
+            right++;
+        }
+        if (left == right) {
+            max = Math.max(max, left + right);
+        } else if (right &lt; left) {
+            left = 0;
+            right = 0;
+        }
+    }
+    return max;
+}
+
+/**
+ * Another solution of this problem that uses stack to store left parentheses&#39; position.
+ * If encounter right parenthesis, pop stack&#39;s top index and compare i - index to max length.
+ * If stack is empty and encounter right parenthesis, push current index into stack as next valid length&#39;s start.
+ * Analysis:
+ * Time complexity: O(n). Single traversal of string to fill dp array is done.
+ * Space complexity: O(n). Stack at most store string&#39;s length
+ *
+ * @param s input parentheses string
+ * @return longest valid parentheses length
+ */
+public int longestValidParenthesesStack(String s) {
+
+    /* Corner case */
+    if (s.length() &lt; 2) {
+        return 0;
+    }
+
+    /* Stack that store left parentheses */
+    Stack&lt;Integer&gt; leftStack = new Stack&lt;&gt;();
+
+    /* -1 can be regarded as “extended” start position */
+    leftStack.push(-1);
+
+    int maxLength = 0;
+
+    for (int i = 0; i &lt; s.length(); i++) {
+        if (s.charAt(i) == &#39;(&#39;) {
+            leftStack.push(i);
+        } else {
+            leftStack.pop();
+            if (leftStack.size() == 0) {
+
+                /* Start position for next valid parentheses length counting */
+                leftStack.push(i);
+            } else {
+                maxLength = Math.max(maxLength, i - leftStack.peek());
+            }
+        }
+    }
+    return maxLength;
+}
+
+/**
+ * Using dynamic programming to solve this problem.
+ * This approach is faster than previous one.
+ * Analysis:
+ * Time complexity: O(n). Single traversal of string to fill dp array is done.
+ * Space complexity: O(n). dp array of size n is used.
+ *
+ * @param s input string
+ * @return longest valid parentheses length
+ */
+public int longestValidParenthesesDP(String s) {
+
+    /* Record temp max length result */
+    int[] arr = new int[s.length()];
+    int maxParentheses = 0;
+
+    for (int i = 1; i &lt; s.length(); i++) {
+
+        /* If current char is &#39;)&#39;, then find previous state */
+        if (s.charAt(i) == &#39;)&#39;) {
+            if (s.charAt(i - 1) == &#39;(&#39;) {       // add a new pair
+                if (i &gt; 1) {
+                    arr[i] = arr[i - 2] + 2;
+                } else {
+                    arr[i] = 2;
+                }
+            } else if (i &gt; arr[i - 1] &amp;&amp; s.charAt(i - arr[i - 1] - 1) == &#39;(&#39;) {
+
+                /* i - arr[i - 1] - 1: find first &#39;(&#39; */
+                if (i - arr[i - 1] &gt; 1) {
+                    arr[i] = arr[i - 1] + arr[i - arr[i - 1] - 2] + 2;		// a new valid pair immediatelly
+                } else {
+                    arr[i] = arr[i - 1] + 2;
+                }
+            }
+            maxParentheses = Math.max(maxParentheses, arr[i]);
+        }
+    }
+    return maxParentheses;
+}
+</code></pre>
+        </div>
+    </div>
+</section>
+<!--        inner script to control nav bar        -->
+
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<!--        This order must be followed!!       -->
+<script src="../../static/jquery/jquery-3.3.1.js"></script>
+<script src="../../static/popper/popper.js"></script>
+<script src="../../static/bootstrap-4.3.1-dist/js/bootstrap.js"></script>
+</body>
+</html>
