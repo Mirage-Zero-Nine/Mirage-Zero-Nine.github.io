@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Longest Increasing Path in a Matrix | Posts</title>
+    <link rel="stylesheet" type="text/css"
+          href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Martel+Sans:200,300,400,600,700,800,900&display=swap"
+          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Raleway:200i,400,800" rel="stylesheet">
+    <link rel="stylesheet" href="../../static/css/post-content.css">
+    <link rel="stylesheet" href="../../static/bootstrap-4.3.1-dist/css/bootstrap.css">
+    <link rel="stylesheet" href="../../static/css/post-content.css">
+
+    <!--    title icon        -->
+    <link rel="shortcut icon" type="image/x-icon" href="../../static/img/Avatar-3.jpg"/>
+</head>
+<body>
+
+<!--        nav bar     -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="https://yyzhou95.github.io/">HOME</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="../index.html">Posts <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../tags/index.html">Tags <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../archived/index.html">Archived <span
+                            class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item dropdown active">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                       data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        Other Links
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="https://github.com/yyzhou95">Github</a>
+                        <a class="dropdown-item" href="https://github.com/yyzhou95/yyzhou95.github.io">This page</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="../../about/">About Me</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<section class="post-content">
+    <div class="container">
+
+        <div class="post-heading">
+            <h1>Longest Increasing Path in a Matrix</h1>
+        </div>
+
+        <div class="text-right post-date">
+            June 08, 2019
+        </div>
+
+        <div class="post-main">
+            <p>Link: <a href='https://leetcode.com/problems/longest-increasing-path-in-a-matrix/'>Longest Increasing
+                Path in a Matrix</a></p>
+            <h2>Problem description </h2>
+            <p>Given an integer matrix, find the length of the longest increasing path.</p>
+            <p>From each cell, you can either move to four directions: left, right, up or down. You may NOT move
+                diagonally or move outside of the boundary (i.e. wrap-around is not allowed).</p>
+            <p><strong>Example 1:</strong></p>
+            <pre><code>Input: nums =
+[
+  [9,9,4],
+  [6,6,8],
+  [2,1,1]
+]
+Output: 4
+Explanation: The longest increasing path is [1, 2, 6, 9].
+</code></pre>
+            <p><strong>Example 2:</strong></p>
+            <pre><code>Input: nums =
+[
+  [3,4,5],
+  [3,2,6],
+  [2,2,1]
+]
+Output: 4
+Explanation: The longest increasing path is [3, 4, 5, 6]. Moving diagonally is not allowed.
+</code></pre>
+            <h2>Method</h2>
+            <p>The idea is based on DFS, and the difference between the normal DFS is that, instead of using a boolean
+                table to record the cells have been visited, a 2D integer array is used in this case to save each cell’s
+                max path. Since the matrix iteration is started at point (0,0), this approach will ensure no cell is
+                missed while reduce the runtime by this memoization.</p>
+            <h2>Code</h2>
+            <pre><code class='language-java' lang='java'>/**
+ * DFS with a 2D array for pruning.
+ * Use a 2D array to store the max length from current position.
+ * In this way to save time when later iteration comes to current location.
+ *
+ * @param matrix given matrix
+ * @return length of the longest increasing path
+ */
+public int longestIncreasingPath(int[][] matrix) {
+
+    /* Corner case */
+    if (matrix.length == 0) {
+        return 0;
+    }
+
+    int max = 1;
+    int[][] temp = new int[matrix.length][matrix[0].length];
+    for (int i = 0; i &lt; matrix.length; i++) {
+        for (int j = 0; j &lt; matrix[0].length; j++) {
+            max = Math.max(dfs(matrix, i, j, temp), max);
+        }
+    }
+    return max;
+}
+
+/**
+ * DFS with a 2D table for pruning.
+ *
+ * @param matrix given matrix
+ * @param i      i
+ * @param j      j
+ * @param temp   store max path length in previous itreation
+ * @return length of the longest increasing path on current cell
+ */
+private int dfs(int[][] matrix, int i, int j, int[][] temp) {
+
+    if (temp[i][j] != 0) {
+        return temp[i][j];		// if cell is visited more than one time, directly return the max value to save time
+    }
+    int max = 1;
+    int[] d = {1, -1, 0, 0, 0, 0, 1, -1};
+
+    for (int k = 0; k &lt; 4; k++) {
+        int xx = i + d[k];
+        int yy = j + d[k + 4];
+        if (xx &gt; -1 &amp;&amp; xx &lt; matrix.length &amp;&amp; yy &gt; -1 &amp;&amp; yy &lt; matrix[0].length &amp;&amp; matrix[xx][yy] &gt; matrix[i][j]) {
+            max = Math.max(max, 1 + dfs(matrix, xx, yy, temp));
+        }
+
+    }
+    temp[i][j] = max;
+
+    return max;
+}
+</code></pre>
+        </div>
+    </div>
+</section>
+<!--        inner script to control nav bar        -->
+
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<!--        This order must be followed!!       -->
+<script src="../../static/jquery/jquery-3.3.1.js"></script>
+<script src="../../static/popper/popper.js"></script>
+<script src="../../static/bootstrap-4.3.1-dist/js/bootstrap.js"></script>
+</body>
+</html>
