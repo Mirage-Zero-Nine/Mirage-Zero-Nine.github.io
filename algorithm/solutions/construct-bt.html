@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Construct Binary Tree from Preorder and Inorder Traversal | Posts</title>
+    <link rel="stylesheet" type="text/css"
+          href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Martel+Sans:200,300,400,600,700,800,900&display=swap"
+          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Raleway:200i,400,800" rel="stylesheet">
+    <link rel="stylesheet" href="../../static/css/post-content.css">
+    <link rel="stylesheet" href="../../static/bootstrap-4.3.1-dist/css/bootstrap.css">
+    <link rel="stylesheet" href="../../static/css/post-content.css">
+
+    <!--    title icon        -->
+    <link rel="shortcut icon" type="image/x-icon" href="../../static/img/Avatar-3.jpg"/>
+</head>
+<body>
+
+<!--        nav bar     -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="https://yyzhou95.github.io/">HOME</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="../index.html">Posts <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../tags/index.html">Tags <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../algorithm/index.html">Algorithm <span
+                            class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../archived/index.html">Archived <span
+                            class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item dropdown active">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                       data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        Other Links
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="https://github.com/yyzhou95">Github</a>
+                        <a class="dropdown-item" href="https://github.com/yyzhou95/yyzhou95.github.io">This page</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="../../about/">About Me</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<section class="post-content">
+    <div class="container">
+
+        <div class="post-heading">
+            <h1>Construct Binary Tree from Preorder and Inorder Traversal</h1>
+        </div>
+
+        <div class="text-right post-date">
+            June 10, 2019
+        </div>
+
+        <div class="post-main">
+            <p>Link: <a href='https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal'>Construct
+                Binary Tree from Preorder and Inorder Traversal</a></p>
+            <h2>Problem description </h2>
+            <p>Given preorder and inorder traversal of a tree, construct the binary tree.</p>
+            <p><strong>Note:</strong>
+                You may assume that duplicates do not exist in the tree.</p>
+            <p>For example, given</p>
+            <pre><code>preorder = [3,9,20,15,7]
+inorder = [9,3,15,20,7]
+</code></pre>
+            <p>Return the following binary tree:</p>
+            <pre><code>    3
+   / \
+  9  20
+    /  \
+   15   7
+</code></pre>
+            <h2>Method</h2>
+            <p>The idea is to find root of each tree during the traversal process. </p>
+            <p>Since array does not contain duplicated value, root node can be found in <code>inorder[]</code>. The left
+                part of array in <code>inorder[]</code> is the left child of root, right part is right child. Then
+                <code>preorder[1]</code> is the left child&#39;s root, <code>preorder[2]</code> is the right child&#39;s
+                root. Repeat this process and finally this tree can be rebuilt.</p>
+            <p><img src='../../static/img/construct-bt.png' alt='construct-bt'
+                    referrerPolicy='no-referrer'/></p>
+            <p>After current left child and right child is found, keep this process respectively to left child and right
+                child. The way to find root of it is to iterate the <code>preorder[]</code>.</p>
+            <p>To reduce time consumption, during the first iteration, put all <code>inorder[i] - I</code> pair into
+                hash map as an index. </p>
+            <h2>Code</h2>
+            <pre><code class='language-java' lang='java'>/**
+ * preorder[0] is the root node.
+ * Since array does not contain duplicated value, root node can be found in inorder[].
+ * The left part of array in inorder[] is the left child of root, right part is right child.
+ * Then preorder[1] is the left child&#39;s root, preorder[2] is the right child&#39;s root.
+ * Repeat this process and finally this tree can be rebuilt.
+ *
+ * @param preorder pre order traversal array
+ * @param inorder  in order traversal array
+ * @return constructed tree
+ */
+public TreeNode buildTree(int[] preorder, int[] inorder) {
+
+    /* Corner case */
+    if (preorder.length == 0) {
+        return null;
+    }
+    if (preorder.length == 1) {
+        return new TreeNode(preorder[0]);
+    }
+
+    /* Use a hash map to store node value and node index for quicker searching */
+    HashMap&lt;Integer, Integer&gt; m = new HashMap&lt;&gt;();
+    for (int i = 0; i &lt; inorder.length; i++) {
+        m.put(inorder[i], i);
+    }
+
+
+    return traverse(preorder, 0, preorder.length - 1, 0, inorder.length - 1, m);
+}
+
+/**
+ * Find root of children in inorder array and in this way to find their left and right children.
+ *
+ * @param preorder pre order traversal array
+ * @param preStart root in preorder traverse array
+ * @param preEnd   end of tree in preorder array
+ * @param inStart  start of left children
+ * @param inEnd    end of right children
+ * @param m        hash map for quickly find root index in inorder array
+ * @return root node of current tree
+ */
+private TreeNode traverse(int[] preorder, int preStart, int preEnd, int inStart, int inEnd, HashMap&lt;Integer, Integer&gt; m) {
+
+    if (preStart &gt; preEnd || inStart &gt; inEnd) {
+        return null;        // end point
+    }
+
+    TreeNode root = new TreeNode(preorder[preStart]);       // first element in preorder array is root of current tree
+    int inRoot = m.get(preorder[preStart]);     // find index of root in inorder array
+    int leftChild = inRoot - inStart;       // left part of root in inorder array is left child of current root node
+
+    root.left = traverse(preorder, preStart + 1, preStart + leftChild, inStart, inRoot - 1, m);
+    root.right = traverse(preorder, preStart + leftChild + 1, preEnd, inRoot + 1, inEnd, m);
+    return root;
+}
+</code></pre>
+        </div>
+    </div>
+</section>
+<!--        inner script to control nav bar        -->
+
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<!--        This order must be followed!!       -->
+<script src="../../static/jquery/jquery-3.3.1.js"></script>
+<script src="../../static/popper/popper.js"></script>
+<script src="../../static/bootstrap-4.3.1-dist/js/bootstrap.js"></script>
+</body>
+</html>
