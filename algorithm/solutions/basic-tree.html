@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Same Tree / Symmetric Tree / Maximum &amp; Minimum Depth of Binary Tree / Convert Sorted Array &amp; List to
-        Binary Search Tree / Balanced Binary Tree | Posts</title>
+    <title>Basic Tree DFS Traversal: In-order / Pre-order / Post-order | Posts</title>
     <link rel="stylesheet" type="text/css"
           href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
     <link href="https://fonts.googleapis.com/css?family=Martel+Sans:200,300,400,600,700,800,900&display=swap"
@@ -66,8 +65,7 @@
     <div class="container">
 
         <div class="post-heading">
-            <h1>Same Tree / Symmetric Tree / Maximum &amp; Minimum Depth of Binary Tree / Convert Sorted Array &amp;
-                List to Binary Search Tree / Balanced Binary Tree</h1>
+            <h1>Basic Tree DFS Traversal: In-order / Pre-order / Post-order</h1>
         </div>
 
         <div class="text-right post-date">
@@ -83,7 +81,8 @@
                     to Binary Search Tree</a> / <a
                         href='https://leetcode.com/problems/convert-sorted-list-to-binary-search-tree/'>Convert Sorted
                     List to Binary Search Tree</a> / <a href='https://leetcode.com/problems/balanced-binary-tree/'>Balanced
-                    Binary Tree</a></p>
+                    Binary Tree</a> / <a href='https://leetcode.com/problems/path-sum/'>Path Sum</a> / <a
+                        href='https://leetcode.com/problems/path-sum-ii/'>Path Sum II</a></p>
             <h2>Problem description </h2>
             <h3>Same Tree</h3>
             <p>Given two binary trees, write a function to check if they are the same or not.</p>
@@ -218,6 +217,41 @@ One possible answer is: [0,-3,9,-10,null,5], which represents the following heig
  4   4
 </code></pre>
             <p>Return false.</p>
+            <h3>Path Sum</h3>
+            <p>Given a binary tree and a sum, determine if the tree has a root-to-leaf path such that adding up all the
+                values along the path equals the given sum.</p>
+            <p><strong>Note:</strong> A leaf is a node with no children.</p>
+            <p><strong>Example:</strong></p>
+            <p>Given the below binary tree and <code>sum = 22</code>,</p>
+            <pre><code>      5
+     / \
+    4   8
+   /   / \
+  11  13  4
+ /  \      \
+7    2      1
+</code></pre>
+            <p>return true, as there exist a root-to-leaf path <code>5-&gt;4-&gt;11-&gt;2</code> which sum is 22.</p>
+            <h3>Path Sum II</h3>
+            <p>Given a binary tree and a sum, find all root-to-leaf paths where each path&#39;s sum equals the given
+                sum.</p>
+            <p><strong>Note:</strong> A leaf is a node with no children.</p>
+            <p><strong>Example:</strong></p>
+            <p>Given the below binary tree and <code>sum = 22</code>,</p>
+            <pre><code>      5
+     / \
+    4   8
+   /   / \
+  11  13  4
+ /  \    / \
+7    2  5   1
+</code></pre>
+            <p>Return:</p>
+            <pre><code>[
+   [5,4,11,2],
+   [5,8,4,5]
+]
+</code></pre>
             <h2>Method</h2>
             <h3>Same Tree / Symmetric Tree / Maximum Depth of Binary Tree / Minimum Depth of Binary Tree</h3>
             <p>Idea is almost same. Use pre-order traversal to traverse all nodes in tree and compare value inside tree
@@ -236,6 +270,11 @@ One possible answer is: [0,-3,9,-10,null,5], which represents the following heig
             <h3>Balanced Binary Tree</h3>
             <p>Use DFS to traversal tree and return the height of tree. If current is an imbalanced tree, or the sub
                 tree is height-imbalanced, return -1.</p>
+            <h3>Path Sum / Path Sum II</h3>
+            <p>Post-order traversal to find each path from root to leaf, and compare the node value to sum to see if
+                there a path that is equals to given value.</p>
+            <p>Path Sum II is actually a backtracking process. Therefore, add a linked list during the traversal process
+                will suffice the requirement of problem.</p>
             <h2>Code</h2>
             <h3>Same Tree</h3>
             <pre><code class='language-java' lang='java'>/**
@@ -469,6 +508,76 @@ private int dfs(TreeNode root) {
     }
 
     return Math.max(left, right) + 1;       // depth + 1
+}
+</code></pre>
+            <h3>Path Sum</h3>
+            <pre><code class='language-java' lang='java'>/**
+ * DFS Tree traversal.
+ *
+ * @param root root node
+ * @param sum  given sum
+ * @return if it has a root-to-leaf path such that sum of all values along the path equals the given sum
+ */
+public boolean hasPathSum(TreeNode root, int sum) {
+
+    if (root == null) {
+        return false;
+    }
+
+    if (root.left == null &amp;&amp; root.right == null &amp;&amp; sum == root.val) {
+        return true;
+    }
+
+    return hasPathSum(root.left, sum - root.val) || hasPathSum(root.right, sum - root.val);
+}
+</code></pre>
+            <h3>Path Sum II</h3>
+            <pre><code class='language-java' lang='java'>/**
+ * DFS.
+ *
+ * @param root root tree node
+ * @param sum  given sum
+ * @return all root-to-leaf paths where each path&#39;s sum equals the given sum
+ */
+public List&lt;List&lt;Integer&gt;&gt; pathSum(TreeNode root, int sum) {
+    List&lt;List&lt;Integer&gt;&gt; res = new ArrayList&lt;&gt;();
+    if (root == null) {
+        return res;
+    }
+    dfs(root, sum, res, new ArrayList&lt;&gt;());
+
+    return res;
+}
+
+
+/**
+ * Running DFS to find all possible path.
+ *
+ * @param r     current root node
+ * @param sum   required sum
+ * @param res   path list
+ * @param cache temporary path list
+ * @return all root-to-leaf paths sum equals the given sum
+ */
+private List&lt;List&lt;Integer&gt;&gt; dfs(TreeNode r, int sum, List&lt;List&lt;Integer&gt;&gt; res, List&lt;Integer&gt; cache) {
+
+    cache.add(r.val);
+
+    if (r.left == null &amp;&amp; r.right == null &amp;&amp; r.val == sum) {
+        res.add(new ArrayList&lt;&gt;(cache));
+
+    } else {
+        if (r.left != null) {
+            dfs(r.left, sum - r.val, res, cache);
+        }
+        if (r.right != null) {
+            dfs(r.right, sum - r.val, res, cache);
+        }
+    }
+
+    cache.remove(cache.size() - 1);
+
+    return res;
 }
 </code></pre>
         </div>
