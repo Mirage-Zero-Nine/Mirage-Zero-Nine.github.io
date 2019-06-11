@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Same Tree / Symmetric Tree / Maximum Depth of Binary Tree / Convert Sorted Array to Binary Search Tree |
-        Posts</title>
+    <title>Same Tree / Symmetric Tree / Maximum Depth of Binary Tree / Convert Sorted Array to Binary Search Tree /
+        Convert Sorted List to Binary Search Tree | Posts</title>
     <link rel="stylesheet" type="text/css"
           href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
     <link href="https://fonts.googleapis.com/css?family=Martel+Sans:200,300,400,600,700,800,900&display=swap"
@@ -66,8 +66,8 @@
     <div class="container">
 
         <div class="post-heading">
-            <h1>Same Tree / Symmetric Tree / Maximum Depth of Binary Tree / Convert Sorted Array to Binary Search
-                Tree</h1>
+            <h1>Same Tree / Symmetric Tree / Maximum Depth of Binary Tree / Convert Sorted Array to Binary Search Tree /
+                Convert Sorted List to Binary Search Tree</h1>
         </div>
 
         <div class="text-right post-date">
@@ -77,8 +77,11 @@
         <div class="post-main">
             <p>Link: <a href='https://leetcode.com/problems/same-tree/'>Same Tree</a> / <a
                     href='https://leetcode.com/problems/symmetric-tree'>Symmetric Tree</a> / <a
-                    href='https://leetcode.com/problems/maximum-depth-of-binary-tree'>Maximum Depth of Binary Tree</a>
-            </p>
+                    href='https://leetcode.com/problems/maximum-depth-of-binary-tree'>Maximum Depth of Binary Tree</a> /
+                <a href='https://leetcode.com/problems/convert-sorted-array-to-binary-search-tree/'>Convert Sorted Array
+                    to Binary Search Tree</a> / <a
+                        href='https://leetcode.com/problems/convert-sorted-list-to-binary-search-tree/'>Convert Sorted
+                    List to Binary Search Tree</a></p>
             <h2>Problem description </h2>
             <h3>Same Tree</h3>
             <p>Given two binary trees, write a function to check if they are the same or not.</p>
@@ -142,7 +145,7 @@ Output: false
    15   7
 </code></pre>
             <p>return its depth = 3.</p>
-            <h3>Convert Sorted Array to Binary Search Tree</h3>
+            <h3>Convert Sorted List to Binary Search Tree</h3>
             <p>Given an array where elements are sorted in ascending order, convert it to a height balanced BST.</p>
             <p>For this problem, a height-balanced binary tree is defined as a binary tree in which the depth of the two
                 subtrees of <em>every</em> node never differ by more than 1.</p>
@@ -157,10 +160,34 @@ One possible answer is: [0,-3,9,-10,null,5], which represents the following heig
    /   /
  -10  5
 </code></pre>
+            <h3>Convert Sorted List to Binary Search Tree</h3>
+            <p>Given a singly linked list where elements are sorted in ascending order, convert it to a height balanced
+                BST.</p>
+            <p>For this problem, a height-balanced binary tree is defined as a binary tree in which the depth of the two
+                subtrees of <em>every</em> node never differ by more than 1.</p>
+            <p><strong>Example:</strong></p>
+            <pre><code>Given the sorted linked list: [-10,-3,0,5,9],
+
+One possible answer is: [0,-3,9,-10,null,5], which represents the following height balanced BST:
+
+      0
+     / \
+   -3   9
+   /   /
+ -10  5
+</code></pre>
             <h2>Method</h2>
+            <h3>Same Tree / Symmetric Tree / Maximum Depth of Binary Tree</h3>
             <p>Idea is almost same. Use pre-order traversal to traverse all nodes in tree and compare value inside tree
                 node. The only difference is that during the traversal, first problem check if two nodes in different
                 tree is the same, second problem check if the child node has same value.</p>
+            <h3>Convert Sorted List to Binary Search Tree</h3>
+            <p>The only difference between this problem and previous problem is the the linked list can not directly
+                access the elements inside list by index. </p>
+            <p>Therefore, to locate the root in the list, two pointers are acquired: one <code>fast</code>, one <code>slow</code>.
+                <code>fast</code> will move two nodes forward each time, while <code>slow</code> will only move one
+                forward. In this way, when <code>fast</code> reaches the end of list, <code>slow</code> will be just at
+                the middle of list, which is the root node.</p>
             <h2>Code</h2>
             <h3>Same Tree</h3>
             <pre><code class='language-java' lang='java'>/**
@@ -252,7 +279,7 @@ public int maxDepth(TreeNode root) {
     return Integer.max(maxDepth(root.left), maxDepth(root.right)) + 1;
 }
 </code></pre>
-            <h3>Convert Sorted Array to Binary Search Tree</h3>
+            <h3>Convert Sorted List to Binary Search Tree</h3>
             <pre><code class='language-java' lang='java'>/**
  * Root of the tree is at the mid of array and sub array.
  *
@@ -290,6 +317,55 @@ private TreeNode builder(int[] num, int start, int end) {
 
     root.left = builder(num, start, mid - 1);
     root.right = builder(num, mid + 1, end);
+    return root;
+}
+</code></pre>
+            <h3>Convert Sorted List to Binary Search Tree</h3>
+            <pre><code class='language-java' lang='java'>/**
+ * Linked list can not directly get item by index.
+ * Therefore, use two pointers to traverse the linked list
+ * When faster one reaches the end of list, slow one will be at root (middle of linked list).
+ *
+ * @param head head node
+ * @return root of height balanced BST
+ */
+public TreeNode sortedListToBST(ListNode head) {
+
+    /* Corner case */
+    if (head == null) {
+        return null;
+    }
+
+    return builder(head, null);
+}
+
+/**
+ * Use two pointer to find root node.
+ * Fast node moves two time faster than slow node.
+ * In this way, if fast node reaches the end, slow node will accurately at the mid of list, which is root.
+ *
+ * @param head head node
+ * @param tail end node
+ * @return root of height balanced BST
+ */
+public TreeNode builder(ListNode head, ListNode tail) {
+
+    ListNode slow = head;       // find root (in the mid of linked list)
+    ListNode fast = head;       // two time faster move speed
+
+    if (head == tail) {
+        return null;
+    }
+
+    while (fast != tail &amp;&amp; fast.next != tail) {
+        fast = fast.next.next;      // when fast reaches the end, slow will be at mid of list
+        slow = slow.next;           // stop at root
+    }
+
+    TreeNode root = new TreeNode(slow.val);
+    root.left = builder(head, slow);
+    root.right = builder(slow.next, tail);
+
     return root;
 }
 </code></pre>
