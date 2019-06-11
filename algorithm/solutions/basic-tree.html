@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Same Tree / Symmetric Tree / Maximum Depth of Binary Tree / Convert Sorted Array to Binary Search Tree /
-        Convert Sorted List to Binary Search Tree | Posts</title>
+    <title>Same Tree / Symmetric Tree / Maximum Depth of Binary Tree / Convert Sorted Array (List) to Binary Search
+        Tree / Balanced Binary Tree | Posts</title>
     <link rel="stylesheet" type="text/css"
           href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
     <link href="https://fonts.googleapis.com/css?family=Martel+Sans:200,300,400,600,700,800,900&display=swap"
@@ -66,8 +66,8 @@
     <div class="container">
 
         <div class="post-heading">
-            <h1>Same Tree / Symmetric Tree / Maximum Depth of Binary Tree / Convert Sorted Array to Binary Search Tree /
-                Convert Sorted List to Binary Search Tree</h1>
+            <h1>Same Tree / Symmetric Tree / Maximum Depth of Binary Tree / Convert Sorted Array (List) to Binary Search
+                Tree / Balanced Binary Tree</h1>
         </div>
 
         <div class="text-right post-date">
@@ -75,13 +75,14 @@
         </div>
 
         <div class="post-main">
-            <p>Link: <a href='https://leetcode.com/problems/same-tree/'>Same Tree</a> / <a
+            <p>Links: <a href='https://leetcode.com/problems/same-tree/'>Same Tree</a> / <a
                     href='https://leetcode.com/problems/symmetric-tree'>Symmetric Tree</a> / <a
                     href='https://leetcode.com/problems/maximum-depth-of-binary-tree'>Maximum Depth of Binary Tree</a> /
                 <a href='https://leetcode.com/problems/convert-sorted-array-to-binary-search-tree/'>Convert Sorted Array
                     to Binary Search Tree</a> / <a
                         href='https://leetcode.com/problems/convert-sorted-list-to-binary-search-tree/'>Convert Sorted
-                    List to Binary Search Tree</a></p>
+                    List to Binary Search Tree</a> / <a href='https://leetcode.com/problems/balanced-binary-tree/'>Balanced
+                    Binary Tree</a></p>
             <h2>Problem description </h2>
             <h3>Same Tree</h3>
             <p>Given two binary trees, write a function to check if they are the same or not.</p>
@@ -176,6 +177,32 @@ One possible answer is: [0,-3,9,-10,null,5], which represents the following heig
    /   /
  -10  5
 </code></pre>
+            <h3>Balanced Binary Tree</h3>
+            <p>Given a binary tree, determine if it is height-balanced.</p>
+            <p>For this problem, a height-balanced binary tree is defined as:</p>
+            <blockquote><p>a binary tree in which the depth of the two subtrees of <em>every</em> node never differ by
+                more than 1.</p>
+            </blockquote>
+            <p><strong>Example 1:</strong></p>
+            <p>Given the following tree <code>[3,9,20,null,null,15,7]</code>:</p>
+            <pre><code>    3
+   / \
+  9  20
+    /  \
+   15   7
+</code></pre>
+            <p>Return true.</p>
+            <p><strong>Example 2:</strong></p>
+            <p>Given the following tree <code>[1,2,2,3,3,null,null,4,4]</code>:</p>
+            <pre><code>       1
+      / \
+     2   2
+    / \
+   3   3
+  / \
+ 4   4
+</code></pre>
+            <p>Return false.</p>
             <h2>Method</h2>
             <h3>Same Tree / Symmetric Tree / Maximum Depth of Binary Tree</h3>
             <p>Idea is almost same. Use pre-order traversal to traverse all nodes in tree and compare value inside tree
@@ -188,6 +215,9 @@ One possible answer is: [0,-3,9,-10,null,5], which represents the following heig
                 <code>fast</code> will move two nodes forward each time, while <code>slow</code> will only move one
                 forward. In this way, when <code>fast</code> reaches the end of list, <code>slow</code> will be just at
                 the middle of list, which is the root node.</p>
+            <h3>Balanced Binary Tree</h3>
+            <p>Use DFS to traversal tree and return the height of tree. If current is an imbalanced tree, or the sub
+                tree is height-imbalanced, return -1.</p>
             <h2>Code</h2>
             <h3>Same Tree</h3>
             <pre><code class='language-java' lang='java'>/**
@@ -367,6 +397,43 @@ public TreeNode builder(ListNode head, ListNode tail) {
     root.right = builder(slow.next, tail);
 
     return root;
+}
+</code></pre>
+            <h3>Balanced Binary Tree</h3>
+            <pre><code class='language-java' lang='java'>/**
+ * DFS traversal.
+ *
+ * @param root root node
+ * @return if given tree is height-balanced
+ */
+public boolean isBalanced(TreeNode root) {
+    if (root == null) {
+        return true;
+    }
+
+    return dfs(root) != -1;
+}
+
+/**
+ * DFS traversal. If current tree has a imbalanced tree, return -1.
+ * Otherwise return the height difference.
+ *
+ * @param root root node
+ * @return if given tree is height-balanced
+ */
+private int dfs(TreeNode root) {
+    if (root == null) {
+        return 0;
+    }
+
+    int left = dfs(root.left);
+    int right = dfs(root.right);
+
+    if (left == -1 || right == -1 || Math.abs(left - right) &gt; 1) {      // left/right/current tree is not height-balanced
+        return -1;      // sub tree is not height-balanced
+    }
+
+    return Math.max(left, right) + 1;       // depth + 1
 }
 </code></pre>
         </div>
