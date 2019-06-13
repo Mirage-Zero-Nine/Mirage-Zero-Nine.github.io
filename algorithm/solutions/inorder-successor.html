@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Inorder Successor in BST | Posts</title>
+    <title>Iorder Successor/Predecessor in BST | Posts</title>
     <link rel="stylesheet" type="text/css"
           href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
     <link href="https://fonts.googleapis.com/css?family=Martel+Sans:200,300,400,600,700,800,900&display=swap"
@@ -65,7 +65,7 @@
     <div class="container">
 
         <div class="post-heading">
-            <h1>Inorder Successor in BST</h1>
+            <h1>Iorder Successor/Predecessor in BST</h1>
         </div>
 
         <div class="text-right post-date">
@@ -73,11 +73,10 @@
         </div>
 
         <div class="post-main">
-            <p>Link: <a href='https://leetcode.com/problems/inorder-successor-in-bst'>Inorder Successor in BST</a></p>
+            <p>Link: <a href='https://leetcode.com/problems/inorder-successor-in-bst'>Iorder Successor/Predecessor in BST</a></p>
             <h2>Problem description </h2>
             <p>Given a binary search tree and a node in it, find the in-order successor of that node in the BST.</p>
-            <p>The successor of a node <code>p</code> is the node with the smallest key greater than <code>p.val</code>.
-            </p>
+            <p>The successor of a node <code>p</code> is the node with the smallest key greater than <code>p.val</code>.</p>
             <p><strong>Example 1:</strong></p>
             <pre><code>Input: root = [2,1,3], p = 1
 Output: 2
@@ -89,28 +88,20 @@ Output: null
 Explanation: There is no in-order successor of the current node, so the answer is null.
 </code></pre>
             <p><strong>Note:</strong></p>
-            <ol start=''>
+            <ol start='' >
                 <li>If the given node has no in-order successor in the tree, return <code>null</code>.</li>
                 <li>It&#39;s guaranteed that the values of the tree are unique.</li>
 
             </ol>
             <h2>Method</h2>
-            <p>In-order traversal in BST is to reveal the ascending order of tree. Therefore, to find the in-order
-                successor of given node is in fact to find the next element in ascending order of all elements in
-                BST.</p>
+            <p>In-order traversal in BST is to reveal the ascending order of tree. Therefore, to find the in-order successor of given node is in fact to find the next element in ascending order of all elements in BST.</p>
             <ul>
-                <li><code>p</code> is the largest element in current tree: then the in-order successor is the parent of
-                    current BST’s root.
-                </li>
-                <li><code>p</code> is in the right sub tree: recursively find a tree that is the right sub tree of
-                    <code>p</code>, the in-order successor is the smallest in the subtree, or returns previous condition
-                    if <code>p</code> is the largest element in BST.
-                </li>
-                <li><code>p</code> is in the left sub tree: recursively found <code>p</code>, and then turned into
-                    previous condition.
-                </li>
+                <li><code>p</code> is the largest element in current tree: then the in-order successor is the parent of current BST’s root.</li>
+                <li><code>p</code> is in the right sub tree: recursively find a tree that is the right sub tree of <code>p</code>, the in-order successor is the smallest in the subtree, or returns previous condition if <code>p</code> is the largest element in BST.</li>
+                <li><code>p</code> is in the left sub tree: recursively found <code>p</code>, and then turned into previous condition.</li>
 
             </ul>
+            <p>Predecessor has same idea, as it is finding the smaller one in BST, which is an invert of condition.</p>
             <h2>Code</h2>
             <pre><code class='language-java' lang='java'>/**
  * Successor will be at right sub tree, or previous root, or null.
@@ -150,6 +141,26 @@ private TreeNode successor(TreeNode r, TreeNode p) {
 
         TreeNode left = successor(r.left, p);
         return (left == null) ? r : left;
+    }
+}
+
+/**
+ * In-order predecessor of BST.
+ * Idea is almost the same, simply switch the condition, since predecessor is the previous element in BST.
+ *
+ * @param root current root
+ * @param p    target node
+ * @return in-order predecessor, or null
+ */
+private TreeNode predecessor(TreeNode root, TreeNode p) {
+    if (root == null)
+        return null;
+
+    if (root.val &gt;= p.val) {
+        return predecessor(root.left, p);       // find smaller number
+    } else {
+        TreeNode right = predecessor(root.right, p);
+        return (right != null) ? right : root;
     }
 }
 </code></pre>
