@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Segment Tree | Posts</title>
+    <link rel="stylesheet" type="text/css"
+          href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Martel+Sans:200,300,400,600,700,800,900&display=swap"
+          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Raleway:200i,400,800" rel="stylesheet">
+    <link rel="stylesheet" href="../../static/css/post-content.css">
+    <link rel="stylesheet" href="../../static/bootstrap-4.3.1-dist/css/bootstrap.css">
+    <link rel="stylesheet" href="../../static/css/post-content.css">
+
+    <!--    title icon        -->
+    <link rel="shortcut icon" type="image/x-icon" href="../../static/img/Avatar-3.jpg"/>
+</head>
+<body>
+
+<!--        nav bar     -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="https://yyzhou95.github.io/">HOME</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="../index.html">Posts <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../tags/index.html">Tags <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../algorithm/index.html">Algorithm <span
+                            class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../archived/index.html">Archived <span
+                            class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item dropdown active">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                       data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        Other Links
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="https://github.com/yyzhou95">Github</a>
+                        <a class="dropdown-item" href="https://github.com/yyzhou95/yyzhou95.github.io">This page</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="../../about/">About Me</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<section class="post-content">
+    <div class="container">
+
+        <div class="post-heading">
+            <h1>Segment Tree</h1>
+        </div>
+
+        <div class="text-right post-date">
+            June 14, 2019
+        </div>
+
+        <div class="post-main">
+            <p>This is a variant of binary tree. The node value in tree is the smallest/largest elements in certain
+                range of array. And the range is divided half each time. Root node has a range of whole given array,
+                while its left child has first half of array, and right child has the second half. Recursively repeating
+                this process until each range only contains one elements (<code>left == right</code>).</p>
+            <h2>Building Process</h2>
+            <p>Use an array as instance:</p>
+            <p><code>{5,2,6,1,4,4}</code></p>
+            <ul>
+                <li>The root of tree is the smallest (or largest, depends on requirement) element in whole array.
+                    Therefore, the value is <code>1</code> and the range is <code>[0,5]</code>.
+                </li>
+                <li>The left child is first half of array, which is <code>[0,2]</code>. And the smallest element in the
+                    sub array is <code>2</code>. Likewise, right part is <code>[3,5]</code> and smallest element is
+                    <code>1</code>.
+                </li>
+                <li>Repeat this process until range narrows to 1. Such as <code>[1,1]</code>. At this time, value in
+                    node will be itself. In <code>[1,1]</code>, the smallest value is obviously itself, which is
+                    <code>2</code>.
+                </li>
+
+            </ul>
+            <h2>Code</h2>
+            <pre><code class='language-java' lang='java'>public class SegmentTree {
+
+    private int[] nums;
+    private SegmentTreeNode root;
+
+    public SegmentTree(int[] nums) {
+        this.nums = nums;
+        this.root = treeBuilder(0, nums.length - 1, nums);
+    }
+
+    /**
+     * @param left  left bound of array
+     * @param right right bound of array
+     * @param nums  given array
+     * @return root node of segment tree
+     */
+    private SegmentTreeNode treeBuilder(int left, int right, int[] nums) {
+        if (left &gt; right) {
+            return null;
+        }
+
+        if (left == right) {
+            return new SegmentTreeNode(left, right, nums[left]);
+        }
+
+        SegmentTreeNode root = new SegmentTreeNode(left, right, findMin(nums, left, right));
+
+        int mid = (left + right) / 2;
+        root.left = treeBuilder(left, mid, nums);
+        root.right = treeBuilder(mid + 1, right, nums);
+        return root;
+
+    }
+
+    /**
+     * Find min value in array.
+     *
+     * @param nums  given array
+     * @param left  left bound, 0 &lt;= left &lt;= right &lt;= length - 1
+     * @param right right bound, 0 &lt;= left &lt;= right &lt;= length - 1
+     * @return min value in given array
+     */
+    private int findMin(int[] nums, int left, int right) {
+
+        int min = Integer.MAX_VALUE;
+
+        if (left == right) {
+            return nums[left];
+        }
+
+        for (int i = left; i &lt;= right; i++) {
+            min = (nums[i] &lt; min) ? nums[i] : min;
+        }
+        return min;
+    }
+
+    /**
+     * Print all nodes in tree by in-order traversal.
+     */
+    public void printAllNodes() {
+        Stack&lt;SegmentTreeNode&gt; s = new Stack&lt;&gt;();
+
+        if (root == null) {
+            System.out.println(&quot;Root node is NULL!&quot;);
+        }
+
+        while (this.root != null || !s.isEmpty()) {
+            while (this.root != null) {
+                s.add(this.root);
+                this.root = this.root.left;
+            }
+            this.root = s.pop();
+            System.out.println(&quot;Node Value: &quot; + this.root.value);
+            System.out.println(&quot;min: &quot; + this.root.min + &quot;, max: &quot; + this.root.max);
+            this.root = this.root.right;
+        }
+    }
+
+    /**
+     * Unit test
+     *
+     * @param args
+     */
+    public static void main(String[] args) {
+
+        SegmentTree test = new SegmentTree(new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10});
+//        SegmentTree test = new SegmentTree(new int[]{5});
+        test.printAllNodes();
+    }
+}
+
+/**
+ * Nodes in tree.
+ * Each node in segment tree has at least these attributes:
+ * 1. min: left bound of current node
+ * 2. right bound of current node
+ * 3. min/max value
+ * The value is the min/max value in array[left, right]. And the left/right is where &quot;segment&quot; comes from.
+ */
+class SegmentTreeNode {
+
+    int min, max;       // left bound and right bound of array (inclusive)
+    int value;      // value store in node
+
+    SegmentTreeNode left, right;        // left child and right child
+
+    /**
+     * @param min   left bound of node
+     * @param max   right bound of node
+     * @param value value store in node
+     */
+    public SegmentTreeNode(int min, int max, int value) {
+        this.min = min;
+        this.max = max;
+        this.value = value;
+    }
+}
+</code></pre>
+        </div>
+    </div>
+</section>
+<!--        inner script to control nav bar        -->
+
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<!--        This order must be followed!!       -->
+<script src="../../static/jquery/jquery-3.3.1.js"></script>
+<script src="../../static/popper/popper.js"></script>
+<script src="../../static/bootstrap-4.3.1-dist/js/bootstrap.js"></script>
+</body>
+</html>
