@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Count of Smaller Numbers After Self | Posts</title>
+    <link rel="stylesheet" type="text/css"
+          href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Martel+Sans:200,300,400,600,700,800,900&display=swap"
+          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Raleway:200i,400,800" rel="stylesheet">
+    <link rel="stylesheet" href="../../static/css/post-content.css">
+    <link rel="stylesheet" href="../../static/bootstrap-4.3.1-dist/css/bootstrap.css">
+    <link rel="stylesheet" href="../../static/css/post-content.css">
+
+    <!--    title icon        -->
+    <link rel="shortcut icon" type="image/x-icon" href="../../static/img/Avatar-3.jpg"/>
+</head>
+<body>
+
+<!--        nav bar     -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="https://yyzhou95.github.io/">HOME</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="../index.html">Posts <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../tags/index.html">Tags <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../algorithm/index.html">Algorithm <span
+                            class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../archived/index.html">Archived <span
+                            class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item dropdown active">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                       data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        Other Links
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="https://github.com/yyzhou95">Github</a>
+                        <a class="dropdown-item" href="https://github.com/yyzhou95/yyzhou95.github.io">This page</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="../../about/">About Me</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<section class="post-content">
+    <div class="container">
+
+        <div class="post-heading">
+            <h1>Count of Smaller Numbers After Self</h1>
+        </div>
+
+        <div class="text-right post-date">
+            June 14, 2019
+        </div>
+
+        <div class="post-main">
+            <p>Link: <a href='https://leetcode.com/problems/count-of-smaller-numbers-after-self'>Count of Smaller
+                Numbers After Self</a></p>
+            <h2>Problem description </h2>
+            <p>You are given an integer array <em>nums</em> and you have to return a new <em>counts</em> array. The <em>counts</em>
+                array has the property where <code>counts[i]</code> is the number of smaller elements to the right of
+                <code>nums[i]</code>.</p>
+            <p><strong>Example:</strong></p>
+            <pre><code>Input: [5,2,6,1]
+Output: [2,1,1,0]
+Explanation:
+To the right of 5 there are 2 smaller elements (2 and 1).
+To the right of 2 there is only 1 smaller element (1).
+To the right of 6 there is 1 smaller element (1).
+To the right of 1 there is 0 smaller element.
+</code></pre>
+            <h2>Method</h2>
+            <p>This problem requires operations of inserting elements in a binary search tree. And in this problem, a
+                modified binary search tree is used. The modification is to add a counter in the tree node. The function
+                of this counter is to save the number of elements that is larger than current binary tree node. In this
+                way, during the inserting process, the new node counter can collect all previous visited counter and
+                find how many nodes are smaller than current node.</p>
+            <p>The insert process is as following:</p>
+            <ul>
+                <li>If <code>val &gt; root.val</code>: the <code>val</code> should be inserted to right child of binary
+                    tree and move <code>root</code> to <code>root.right</code>. <code>count</code> should add <code>root.count</code>
+                    as it will be larger than any node that is smaller than current node.
+                </li>
+                <li>The insert condition is when current node meets the <code>null</code> situation.</li>
+                <li>If <code>val &lt;= root.val</code>: <code>val</code> should be inserted into left child of tree and
+                    move to <code>root.left</code>. Under this circumstance, <code>root.count</code> should +1 as it is
+                    a smaller node. And <code>count</code> remains the same.
+                </li>
+
+            </ul>
+            <p>After insert process is completed (node found a insert position), return the <code>count</code>. </p>
+            <p>This problem requires to return a linked list as result. Therefore, to avoid the reverse process, during
+                the traverse process, insert result to the head of linked list.</p>
+            <h2>Code</h2>
+            <pre><code class='language-java' lang='java'>/**
+ * Create a binary tree to store the elements with a counter that counting all elements smaller than current one.
+ *
+ * @param nums given int array
+ * @return array contains numbers of element in nums[i, length - 1] that is smaller than nums[i]
+ */
+public List&lt;Integer&gt; countSmaller(int[] nums) {
+
+    List&lt;Integer&gt; out = new LinkedList&lt;&gt;();
+
+    /* Corner case */
+    if (nums.length &lt; 1) {
+        return out;
+    }
+
+    BinaryTreeCount root = new BinaryTreeCount(nums[nums.length - 1]);
+    out.add(0);
+
+    for (int i = nums.length - 2; i &gt; -1; i--) {
+        out.add(0, insert(root, nums[i]));      // insert elements to tree
+    }
+
+    return out;
+}
+
+/**
+ * Insert array value into binary tree and count all left elements that is smaller than current value.
+ * This is a insert operation, therefore, it will only count elements at certain part of array.
+ * For instance, in this problem, only the elements that at right of nums[i] will be counted.
+ *
+ * @param root root node
+ * @param val  value
+ * @return # of elements that are smaller than given value
+ */
+private int insert(BinaryTreeCount root, int val) {
+
+    int count = 0;      // count # of elements smaller than current number
+
+    while (true) {
+
+        /* If larger than root value, insert to right child */
+        if (val &gt; root.val) {
+            count += root.count;        // add all elements that are smaller than current root
+            if (root.right == null) {
+
+                /* Reaches the end and insert node */
+                root.right = new BinaryTreeCount(val);
+                break;
+            } else {
+                root = root.right;
+            }
+        } else {        // insert to left child if small or equal to root
+            root.count++;
+
+            if (root.left == null) {
+
+                /* Reaches the end and insert node */
+                root.left = new BinaryTreeCount(val);
+                break;
+            } else {
+                root = root.left;
+            }
+        }
+    }
+    return count;
+}
+
+/**
+ * Brutal method. Direct traverse in num array.
+ * Analysis:
+ * Time complexity: O(n^2)
+ * Space complexity: O(n)
+ *
+ * @param nums given array
+ * @return smaller numbers after self
+ */
+private List&lt;Integer&gt; brutal(int[] nums) {
+    List&lt;Integer&gt; out = new LinkedList&lt;&gt;();
+
+    if (nums.length == 0) {
+        return out;
+    }
+
+    for (int i = 0; i &lt; nums.length; i++) {
+        int small = 0;
+        for (int j = i + 1; j &lt; nums.length; j++) {
+            small = (nums[i] &gt; nums[j]) ? small + 1 : small;
+        }
+        out.add(small);
+    }
+    return out;
+}
+
+/**
+ * This is a binary tree node.
+ * However, unlike normal binary tree, it has a counter that counts the elements smaller than current node.
+ */
+class BinaryTreeCount {
+    int val, count = 1;
+    BinaryTreeCount left, right;
+
+    BinaryTreeCount(int val) {
+        this.val = val;
+    }
+}
+</code></pre>
+        </div>
+    </div>
+</section>
+<!--        inner script to control nav bar        -->
+
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<!--        This order must be followed!!       -->
+<script src="../../static/jquery/jquery-3.3.1.js"></script>
+<script src="../../static/popper/popper.js"></script>
+<script src="../../static/bootstrap-4.3.1-dist/js/bootstrap.js"></script>
+</body>
+</html>
