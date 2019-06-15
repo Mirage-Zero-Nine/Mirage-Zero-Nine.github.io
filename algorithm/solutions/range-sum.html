@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Range Sum Query - Mutable | Posts</title>
+    <link rel="stylesheet" type="text/css"
+          href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Martel+Sans:200,300,400,600,700,800,900&display=swap"
+          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Raleway:200i,400,800" rel="stylesheet">
+    <link rel="stylesheet" href="../../static/css/post-content.css">
+    <link rel="stylesheet" href="../../static/bootstrap-4.3.1-dist/css/bootstrap.css">
+    <link rel="stylesheet" href="../../static/css/post-content.css">
+
+    <!--    title icon        -->
+    <link rel="shortcut icon" type="image/x-icon" href="../../static/img/Avatar-3.jpg"/>
+</head>
+<body>
+
+<!--        nav bar     -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="https://yyzhou95.github.io/">HOME</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../post/index.html">Posts <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../tags/index.html">Tags <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../index.html">Algorithm <span
+                            class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../archived/index.html">Archived <span
+                            class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item dropdown active">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                       data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        Other Links
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="https://github.com/yyzhou95">Github</a>
+                        <a class="dropdown-item" href="https://github.com/yyzhou95/yyzhou95.github.io">This page</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="../../about">About Me</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<section class="post-content">
+    <div class="container">
+
+        <div class="post-heading">
+            <h1>Range Sum Query - Mutable</h1>
+        </div>
+
+        <div class="text-right post-date">
+            June 14, 2019
+        </div>
+
+        <div class="post-main">
+            <p>Link: <a href='https://leetcode.com/problems/range-sum-query-mutable'>Range Sum Query - Mutable</a></p>
+            <h2>Problem description </h2>
+            <p>Given an integer array <em>nums</em>, find the sum of the elements between indices <em>i</em> and
+                <em>j</em> (<em>i</em> ≤ <em>j</em>), inclusive.</p>
+            <p>The <em>update(i, val)</em> function modifies <em>nums</em> by updating the element at index <em>i</em>
+                to <em>val</em>.</p>
+            <p><strong>Example:</strong></p>
+            <pre><code>Given nums = [1, 3, 5]
+
+sumRange(0, 2) -&gt; 9
+update(1, 2)
+sumRange(0, 2) -&gt; 8
+</code></pre>
+            <p><strong>Note:</strong></p>
+            <ol>
+                <li>The array is only modifiable by the <em>update</em> function.</li>
+                <li>You may assume the number of calls to <em>update</em> and <em>sumRange</em> function is distributed
+                    evenly.
+                </li>
+
+            </ol>
+            <h2>Method</h2>
+            <p>This array problem can be solved by creating a segment tree and storing the range sum within it.</p>
+            <p><strong>Tree construction</strong></p>
+            <p>The root node is the sum of whole array. The right child and left child is binary divided the array into
+                two parts and the value in children are the sum of corresponding sum in range. </p>
+            <p>If this process is recursively repeated, then a segment tree will be built. Each node contains a range,
+                and the min range is 0, which is the element itself. And the value in node is the sum of given range.
+                Hence, all leaves of this tree is elements in the array. </p>
+            <p>The leaves from left to right, has same order as array, since the way to construct it is the index of
+                array.</p>
+            <p>Since this process is recursively done, and the value in each sub tree’s root is the sum of its left
+                child and right child, there is no need to calculate sum each time, as long as add the left child and
+                right child will suffice.</p>
+            <p><strong>Update</strong></p>
+            <p>Update operation is simple and similar to construction process. First of all, since all elements in array
+                can be found in tree, simply do the binary search in tree. But not searching for the value, searching
+                for the index instead, since the binary search order in the tree is the index range, not the value.
+                After finding the target element, do the addition of left child and right child, will update the parent
+                nodes as well.</p>
+            <p><strong>Find range sum</strong></p>
+            <p>This is the most complex operation, yet still a recursive one. The range sum can be calculated in tree as
+                long as all segments in tree that is within the given range is found. Therefore, do the recursion in
+                tree:</p>
+            <ol>
+                <li>If the current range is accurately the root’s range, return the root sum.</li>
+                <li>If range is smaller than right part, or larger than left part, then search in the inverted part, as
+                    no possibility in the part to find range.
+                </li>
+                <li>If range is within the two children, binary dividing the range and repeat this process, as this is
+                    how this tree is constructed.
+                </li>
+
+            </ol>
+            <h2>Code</h2>
+            <pre><code class='language-java' lang='java'>public class NumArray {
+
+    private node root;
+
+    /**
+     * Create a segment tree to store, find and update elements in array.
+     *
+     * @param nums given array
+     */
+    public NumArray(int[] nums) {
+        root = segmentTreeBuilder(nums, 0, nums.length - 1);
+    }
+
+    /**
+     * Recursively construct the segment tree.
+     * The nodes in array contains left and right bound in array.
+     * The value is the sum of given range.
+     * If left and right are equal, then the sum is the element in array.
+     * To construct the segment tree, traverse to the bottom of tree. Sum is from left sub tree and right sub tree.
+     *
+     * @param nums given array
+     * @param min  left bound in array
+     * @param max  right bound in array
+     * @return constructed segment tree
+     */
+    private node segmentTreeBuilder(int[] nums, int min, int max) {
+
+        if (min &gt; max) {
+            return null;
+        } else {
+
+            node n = new node(min, max);        // create node at current location
+            if (min == max) {
+                n.value = nums[min];        // leaf of tree
+            } else {
+                int mid = min + (max - min) / 2;
+                n.left = segmentTreeBuilder(nums, min, mid);
+                n.right = segmentTreeBuilder(nums, mid + 1, max);
+
+                assert n.right != null;     // avoid null exception
+
+                /* Add sum bottom-up */
+                n.value = n.left.value + n.right.value;
+            }
+            return n;
+        }
+    }
+
+    /**
+     * Update ith element in tree.
+     *
+     * @param i   given index
+     * @param val value to update
+     */
+    public void update(int i, int val) {
+        updateNode(root, val, i);
+    }
+
+    /**
+     * Recursively traverse to the given index and update the value.
+     * Update parent nodes via same method in tree construction.
+     *
+     * @param n   current root node
+     * @param val value to be updated
+     * @param i   index of element in nums
+     */
+    private void updateNode(node n, int val, int i) {
+
+        if (n.min == n.max) {       // found node to update
+            n.value = val;
+        } else {
+
+            int mid = n.min + (n.max - n.min) / 2;      // binary search
+            if (i &lt;= mid) {
+                updateNode(n.left, val, i);
+            } else {
+                updateNode(n.right, val, i);
+            }
+
+            n.value = n.left.value + n.right.value;     // parent node value should be update as well
+        }
+    }
+
+    /**
+     * Return the sum of given range in array.
+     *
+     * @param i left index of range
+     * @param j right index of range
+     * @return sum of given range
+     */
+    public int sumRange(int i, int j) {
+        return findRangeSum(root, i, j);
+    }
+
+    /**
+     * The sum is made up by all segments in tree that is within the range of given index.
+     * If given range is
+     *
+     * @param n     current root node
+     * @param start start index
+     * @param end   end index
+     * @return sum of given range of array
+     */
+    private int findRangeSum(node n, int start, int end) {
+
+        if (n.min == start &amp;&amp; n.max == end) {       // identical range
+            return n.value;
+        } else {
+
+            int mid = n.min + (n.max - n.min) / 2;      // binary dividing segment
+            if (end &lt;= mid) {
+                return findRangeSum(n.left, start, end);        // target range is in the left subtree
+            } else if (start &gt;= mid + 1) {
+                return findRangeSum(n.right, start, end);       // target range is in the right subtree
+            } else {
+
+                /* Divide range into binary if indexes are within two different sub tree */
+                return findRangeSum(n.right, mid + 1, end) + findRangeSum(n.left, start, mid);
+            }
+        }
+    }
+
+    /**
+     * Node in segment tree.
+     */
+    private class node {
+
+        int min, max;       // left bound and right bound of array (inclusive)
+        int value = 0;      // value store in node
+
+        node left, right;        // left child and right child
+
+        /**
+         * @param min left bound of node
+         * @param max right bound of node
+         */
+        public node(int min, int max) {
+            this.min = min;
+            this.max = max;
+        }
+    }
+}
+</code></pre>
+        </div>
+    </div>
+</section>
+<!--        inner script to control nav bar        -->
+
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<!--        This order must be followed!!       -->
+<script src="../../static/jquery/jquery-3.3.1.js"></script>
+<script src="../../static/popper/popper.js"></script>
+<script src="../../static/bootstrap-4.3.1-dist/js/bootstrap.js"></script>
+</body>
+</html>
