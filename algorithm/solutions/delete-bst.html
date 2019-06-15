@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Delete Node in a BST | Posts</title>
+    <link rel="stylesheet" type="text/css"
+          href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Martel+Sans:200,300,400,600,700,800,900&display=swap"
+          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Raleway:200i,400,800" rel="stylesheet">
+    <link rel="stylesheet" href="../../static/css/post-content.css">
+    <link rel="stylesheet" href="../../static/bootstrap-4.3.1-dist/css/bootstrap.css">
+    <link rel="stylesheet" href="../../static/css/post-content.css">
+
+    <!--    title icon        -->
+    <link rel="shortcut icon" type="image/x-icon" href="../../static/img/Avatar-3.jpg"/>
+</head>
+<body>
+
+<!--        nav bar     -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="https://yyzhou95.github.io/">HOME</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="../index.html">Posts <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../tags/index.html">Tags <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../algorithm/index.html">Algorithm <span
+                            class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../archived/index.html">Archived <span
+                            class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item dropdown active">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                       data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        Other Links
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="https://github.com/yyzhou95">Github</a>
+                        <a class="dropdown-item" href="https://github.com/yyzhou95/yyzhou95.github.io">This page</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="../../about/">About Me</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<section class="post-content">
+    <div class="container">
+
+        <div class="post-heading">
+            <h1>Delete Node in a BST</h1>
+        </div>
+
+        <div class="text-right post-date">
+            June 15, 2019
+        </div>
+
+        <div class="post-main">
+            <p>Link: <a href='https://leetcode.com/problems/delete-node-in-a-bst/'>Delete Node in a BST</a></p>
+            <h2>Problem description </h2>
+            <p>Given a root node reference of a BST and a key, delete the node with the given key in the BST. Return the
+                root node reference (possibly updated) of the BST.</p>
+            <p>Basically, the deletion can be divided into two stages:</p>
+            <ol>
+                <li>Search for a node to remove.</li>
+                <li>If the node is found, delete the node.</li>
+
+            </ol>
+            <p><strong>Note:</strong> Time complexity should be O(height of tree).</p>
+            <p><strong>Example:</strong></p>
+            <pre><code>root = [5,3,6,2,4,null,7]
+key = 3
+
+    5
+   / \
+  3   6
+ / \   \
+2   4   7
+
+Given key to delete is 3. So we find the node with value 3 and delete it.
+
+One valid answer is [5,4,6,2,null,null,7], shown in the following BST.
+
+    5
+   / \
+  4   6
+ /     \
+2       7
+
+Another valid answer is [5,2,6,null,4,null,7].
+
+    5
+   / \
+  2   6
+   \   \
+    4   7
+</code></pre>
+            <h2>Method</h2>
+            <p>The key is to handle the situation after find the node in BST.</p>
+            <p>First, recursively find the node that has the same value as the key, while setting the left/right nodes
+                equal to the returned subtree. Once the node is found, the target node may have left or right or both
+                subtree, or having no subtree.</p>
+            <ul>
+                <li>Node doesn&#39;t have left or right -&gt; return null</li>
+                <li>Node only has left subtree -&gt; return the left subtree, as they follow BST rule.</li>
+                <li>Node only has right subtree -&gt; return the right subtree, same as left subtree only</li>
+
+            </ul>
+            <p>If node has two subtrees, the situation is complicated:</p>
+            <ul>
+                <li>Right subtree’s root has no left tree -&gt; all elements in right subtree is larger than left,
+                    replace current node with root of right subtree.
+                </li>
+                <li>Right subtree’s root has left tree -&gt; the left subtree of node that is to be removed will be the
+                    left subtree of smallest element in right subtree, which is the leftmost element in right subtree.
+                    The reason is that all elements in left subtree is smaller than right subtree in BST, and right
+                    subtree is larger than root. Therefore, to follow this rule, the parent of left subtree should be
+                    the smallest node in right subtree. And the right subtree of this new root, is the original right
+                    subtree, except with this smallest node.
+                </li>
+
+            </ul>
+            <h2>Code</h2>
+            <pre><code class='language-java' lang='java'>/**
+ * The key is to handle the situation after find the node in BST.
+ * First, recursively find the node that has the same value as the key.
+ * Once the node is found, 4 cases should be considered:
+ * node doesn&#39;t have left or right subtree -&gt; return null
+ * left subtree only -&gt; return the left subtree, as they follow BST rule.
+ * right subtree only -&gt; return the right subtree, same as left subtree only
+ * If node has two subtrees, the situation is complicated:
+ * 1. right has no left tree -&gt; left is smaller than right, replace node with root of right subtree.
+ * 2. right has left subtree -&gt; the left subtree will be the left subtree of smallest element in right subtree.
+ * The reason is that all elements in left is smaller than right in BST, and right subtree is larger than root.
+ * Therefore, to follow this rule, the parent of left subtree should be the smallest node in right subtree.
+ * And the right subtree of this new root, is the original right subtree, except with this smallest node.
+ *
+ * @param root root node in tree
+ * @param key  node to be delete
+ * @return BST after delete operation
+ */
+public TreeNode deleteNode(TreeNode root, int key) {
+
+    /* Corner case */
+    if (root == null) {
+        return null;
+    }
+
+    /* Searching in tree */
+    if (root.val &lt; key) {
+        root.right = deleteNode(root.right, key);
+        return root;
+    } else if (root.val &gt; key) {
+        root.left = deleteNode(root.left, key);
+        return root;
+    }
+
+    /* Find the target node and do the delete operation */
+    if (root.left == null &amp;&amp; root.right == null) {
+        return null;        // no subtree on current node
+    } else if (root.left == null) {
+        return root.right;      // no left subtree
+    } else if (root.right == null) {
+        return root.left;       // no right subtree
+    }
+
+    if (root.right.left == null) {      // all elements in right subtree is larger than current node
+        root.right.left = root.left;        // all elements in left subtree is smaller than right child
+        return root.right;      // right child replace current node as root
+    } else {
+
+        TreeNode smallest = finSubtreeRoot(root.right);     // find leftmost node
+
+        /* Smallest node in right tree will replace current root node */
+        smallest.left = root.left;
+        smallest.right = root.right;
+        return smallest;
+    }
+}
+
+/**
+ * Find left most node in tree. In BST, leftmost node is smallest node in tree.
+ *
+ * @param root root node
+ * @return leftmost node with its sub tree
+ */
+private TreeNode finSubtreeRoot(TreeNode root) {
+    TreeNode cur = root.left;
+    TreeNode pre = root;
+    while (cur.left != null) {
+        pre = cur;
+        cur = cur.left;
+    }
+
+    pre.left = cur.right;       // replace leftmost node with its right subtree (or null)
+
+    return cur;
+}
+</code></pre>
+        </div>
+    </div>
+</section>
+<!--        inner script to control nav bar        -->
+
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<!--        This order must be followed!!       -->
+<script src="../../static/jquery/jquery-3.3.1.js"></script>
+<script src="../../static/popper/popper.js"></script>
+<script src="../../static/bootstrap-4.3.1-dist/js/bootstrap.js"></script>
+</body>
+</html>
