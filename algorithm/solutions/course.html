@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Course Schedule | Posts</title>
+    <link rel="stylesheet" type="text/css"
+          href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Martel+Sans:200,300,400,600,700,800,900&display=swap"
+          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Raleway:200i,400,800" rel="stylesheet">
+    <link rel="stylesheet" href="../../static/css/post-content.css">
+    <link rel="stylesheet" href="../../static/bootstrap-4.3.1-dist/css/bootstrap.css">
+    <link rel="stylesheet" href="../../static/css/post-content.css">
+
+    <!--    title icon        -->
+    <link rel="shortcut icon" type="image/x-icon" href="../../static/img/Avatar-3.jpg"/>
+</head>
+<body>
+
+<!--        nav bar     -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="https://yyzhou95.github.io/">HOME</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="../index.html">Posts <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../tags/index.html">Tags <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../algorithm/index.html">Algorithm <span
+                            class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../archived/index.html">Archived <span
+                            class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item dropdown active">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                       data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        Other Links
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="https://github.com/yyzhou95">Github</a>
+                        <a class="dropdown-item" href="https://github.com/yyzhou95/yyzhou95.github.io">This page</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="../../about/">About Me</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<section class="post-content">
+    <div class="container">
+
+        <div class="post-heading">
+            <h1>Course Schedule</h1>
+        </div>
+
+        <div class="text-right post-date">
+            June 16, 2019
+        </div>
+
+        <div class="post-main">
+            <p>Link: <a href='https://leetcode.com/problems/course-schedule'>Course Schedule</a></p>
+            <h2>Problem description </h2>
+            <p>There are a total of <em>n</em> courses you have to take, labeled from <code>0</code> to <code>n-1</code>.
+            </p>
+            <p>Some courses may have prerequisites, for example to take course 0 you have to first take course 1, which
+                is expressed as a pair: <code>[0,1]</code></p>
+            <p>Given the total number of courses and a list of prerequisite <strong>pairs</strong>, is it possible for
+                you to finish all courses?</p>
+            <p><strong>Example 1:</strong></p>
+            <pre><code>Input: 2, [[1,0]]
+Output: true
+Explanation: There are a total of 2 courses to take.
+             To take course 1 you should have finished course 0. So it is possible.
+</code></pre>
+            <p><strong>Example 2:</strong></p>
+            <pre><code>Input: 2, [[1,0],[0,1]]
+Output: false
+Explanation: There are a total of 2 courses to take.
+             To take course 1 you should have finished course 0, and to take course 0 you should
+             also have finished course 1. So it is impossible.
+</code></pre>
+            <p><strong>Note:</strong></p>
+            <ol>
+                <li>The input prerequisites is a graph represented by <strong>a list of edges</strong>, not adjacency
+                    matrices. Read more about <a
+                            href='https://www.khanacademy.org/computing/computer-science/algorithms/graph-representation/a/representing-graphs'>how
+                        a graph is represented</a>.
+                </li>
+                <li>You may assume that there are no duplicate edges in the input prerequisites.</li>
+
+            </ol>
+            <h2>Method</h2>
+            <p>Regard this course relation as an DAG (Directed Acyclic Graph), which implement Topological Sorting to
+                solve the problem such as if a node is accessible from beginning or if all nodes are accessible.</p>
+            <p>The approach is that, regraded all course as a DAG and at least one node has no incoming edge (if not,
+                then this graph is not a DAG). Nodes with 0 incoming edge has 0 indegree. Therefore, remove nodes with 0
+                indegree with its connection. After removing the nodes and connections if there is any nodes that
+                becomes 0 indegree then add into a queue awaiting removing. Repeat this process, until the queue is
+                empty. If the number of removing nodes are same as total nodes in graph, then all nodes are
+                accessible.</p>
+            <h2>Code</h2>
+            <pre><code class='language-java' lang='java'>/**
+ * Topological sorting with a hash map to save connections.
+ * Each loop remove the connections with nodes that indegree is 0 (indegree - 1).
+ *
+ * @param numCourses    # of total courses
+ * @param prerequisites course - prerequisite pair
+ * @return if is it possible to finish all courses
+ */
+public boolean canFinish(int numCourses, int[][] prerequisites) {
+
+    /* Corner case */
+    if (numCourses &lt; 1 || prerequisites.length &lt; 1) {
+        return true;
+    }
+
+    HashMap&lt;Integer, List&lt;Integer&gt;&gt; m = new HashMap&lt;&gt;();        // prerequisite - course pair
+    int[] indegree = new int[numCourses];
+    Queue&lt;Integer&gt; q = new LinkedList&lt;&gt;();
+
+    for (int[] arr : prerequisites) {
+        indegree[arr[0]]++;
+        if (!m.containsKey(arr[1])) {
+            m.put(arr[1], new LinkedList&lt;&gt;());
+        }
+        m.get(arr[1]).add(arr[0]);
+
+    }
+
+    for (int i = 0; i &lt; indegree.length; i++) {
+        if (indegree[i] == 0) {
+            q.add(i);       // find nodes with 0 indegree
+        }
+    }
+
+    int count = 0;      // count total reachable nodes
+    while (!q.isEmpty()) {
+
+        int course = q.poll();
+        count++;
+
+        /* Remove the connections with nodes that indegree is 0 (indegree - 1) */
+        for (int i = 0; m.get(course) != null &amp;&amp; i &lt; m.get(course).size(); i++) {     // avoid Null pointer when reaches end of graph
+
+            if (--indegree[m.get(course).get(i)] == 0) {
+                q.add(m.get(course).get(i));        // add 0 indegree node after removing
+            }
+        }
+    }
+    return count == numCourses;
+}
+
+/**
+ * Use 2D array to store connections. This method is slower and consume more memory. But easy to understand.
+ *
+ * @param numCourses    # of total courses
+ * @param prerequisites course - prerequisite pair
+ * @return if is it possible to finish all courses
+ */
+private boolean intArray(int numCourses, int[][] prerequisites) {
+
+    /* Corner case */
+    if (numCourses &lt; 1 || prerequisites.length &lt; 1) {
+        return true;
+    }
+
+    int[][] topo = new int[numCourses][numCourses];     // row: course; column: prerequisite of current course
+    int[] indegree = new int[numCourses];       // indegree of each course
+
+    for (int[] arr : prerequisites) {
+        indegree[arr[0]]++;       // avoid duplicate prerequisite
+        topo[arr[0]][arr[1]] = 1;       // current course arr[0] has a prerequisite arr[1]
+    }
+
+    int count = 0;
+    Queue&lt;Integer&gt; q = new LinkedList&lt;&gt;();
+    for (int i = 0; i &lt; indegree.length; i++) {
+        if (indegree[i] == 0) {
+            q.add(i);       // find nodes with 0 indegree
+        }
+    }
+
+    while (!q.isEmpty()) {
+        int prerequisite = q.poll();
+        count++;        // one node can be reached
+        for (int i = 0; i &lt; numCourses; i++) {
+            if (topo[i][prerequisite] != 0 &amp;&amp; --indegree[i] == 0) {
+                q.add(i);
+            }
+        }
+    }
+
+    return count == numCourses;
+}
+</code></pre>
+        </div>
+    </div>
+</section>
+<!--        inner script to control nav bar        -->
+
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<!--        This order must be followed!!       -->
+<script src="../../static/jquery/jquery-3.3.1.js"></script>
+<script src="../../static/popper/popper.js"></script>
+<script src="../../static/bootstrap-4.3.1-dist/js/bootstrap.js"></script>
+</body>
+</html>
