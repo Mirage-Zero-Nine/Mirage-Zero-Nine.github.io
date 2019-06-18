@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Longest Substring Without Repeating Characters | Posts</title>
+    <link rel="stylesheet" type="text/css"
+          href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Martel+Sans:200,300,400,600,700,800,900&display=swap"
+          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Raleway:200i,400,800" rel="stylesheet">
+    <link rel="stylesheet" href="../../static/css/post-content.css">
+    <link rel="stylesheet" href="../../static/bootstrap-4.3.1-dist/css/bootstrap.css">
+    <link rel="stylesheet" href="../../static/css/post-content.css">
+
+    <!--    title icon        -->
+    <link rel="shortcut icon" type="image/x-icon" href="../../static/img/Avatar-3.jpg"/>
+</head>
+<body>
+
+<!--        nav bar     -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="https://yyzhou95.github.io/">HOME</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="../index.html">Posts <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../tags/index.html">Tags <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../algorithm/index.html">Algorithm <span
+                            class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../archived/index.html">Archived <span
+                            class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item dropdown active">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                       data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        Other Links
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="https://github.com/yyzhou95">Github</a>
+                        <a class="dropdown-item" href="https://github.com/yyzhou95/yyzhou95.github.io">This page</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="../../about/">About Me</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<section class="post-content">
+    <div class="container">
+
+        <div class="post-heading">
+            <h1>Longest Substring Without Repeating Characters</h1>
+        </div>
+
+        <div class="text-right post-date">
+            June 18, 2019
+        </div>
+
+        <div class="post-main">
+            <p>Link: <a href='https://leetcode.com/problems/longest-substring-without-repeating-characters'>Longest Substring Without Repeating Characters</a></p>
+            <h2>Problem description </h2>
+            <p>Given a string, find the length of the <strong>longest substring</strong> without repeating characters.</p>
+            <p><strong>Example 1:</strong></p>
+            <pre><code>Input: &quot;abcabcbb&quot;
+Output: 3
+Explanation: The answer is &quot;abc&quot;, with the length of 3.
+</code></pre>
+            <p><strong>Example 2:</strong></p>
+            <pre><code>Input: &quot;bbbbb&quot;
+Output: 1
+Explanation: The answer is &quot;b&quot;, with the length of 1.
+</code></pre>
+            <p><strong>Example 3:</strong></p>
+            <pre><code>Input: &quot;pwwkew&quot;
+Output: 3
+Explanation: The answer is &quot;wke&quot;, with the length of 3.
+             Note that the answer must be a substring, &quot;pwke&quot; is a subsequence and not a substring.
+</code></pre>
+            <h2>Method</h2>
+            <p>Use a hash map to store the char - index pair. And set two pointers to save start position. The reason that requires two pointers is to correctly found the longest substring in string like <code>dvdf</code>.</p>
+            <h2>Code</h2>
+            <pre><code class='language-java' lang='java'>/**
+ * Construct a new map to store previous chars.
+ * key - char
+ * value - next position
+ * If current char does not exist in map, then store this char and its next position.
+ * If current char exists in map, reset the position to current char&#39;s next. (No duplication)
+ * Compare current non-repeating substring length to max length and find longer one.
+ *
+ * @param s input string
+ * @return max sub-string length
+ */
+public int lengthOfLongestSubstring(String s) {
+
+    /* Corner case */
+    if (s.length() &lt; 2) {
+        return s.length();
+    }
+
+    int max = 0;
+    Map&lt;Character, Integer&gt; m = new HashMap&lt;&gt;();
+
+    for (int i = 0, j = 0; i &lt; s.length(); i++) {
+
+        if (m.containsKey(s.charAt(i))) {       // current char in map (duplicated)
+            j = Math.max(m.get(s.charAt(i)), j);        // compare current index to previous index
+        }
+        max = Math.max(max, i - j + 1);
+
+        m.put(s.charAt(i), i + 1);      // continue at next char, if char is duplicated, reset start index
+    }
+
+    return max;
+}
+</code></pre>
+        </div>
+    </div>
+</section>
+<!--        inner script to control nav bar        -->
+
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<!--        This order must be followed!!       -->
+<script src="../../static/jquery/jquery-3.3.1.js"></script>
+<script src="../../static/popper/popper.js"></script>
+<script src="../../static/bootstrap-4.3.1-dist/js/bootstrap.js"></script>
+</body>
+</html>
