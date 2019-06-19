@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Longest Repeating Character Replacement | Posts</title>
+    <link rel="stylesheet" type="text/css"
+          href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Martel+Sans:200,300,400,600,700,800,900&display=swap"
+          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Raleway:200i,400,800" rel="stylesheet">
+    <link rel="stylesheet" href="../../static/css/post-content.css">
+    <link rel="stylesheet" href="../../static/bootstrap-4.3.1-dist/css/bootstrap.css">
+    <link rel="stylesheet" href="../../static/css/post-content.css">
+
+    <!--    title icon        -->
+    <link rel="shortcut icon" type="image/x-icon" href="../../static/img/Avatar-3.jpg"/>
+</head>
+<body>
+
+<!--        nav bar     -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="https://yyzhou95.github.io/">HOME</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="../index.html">Posts <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../tags/index.html">Tags <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../algorithm/index.html">Algorithm <span
+                            class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../archived/index.html">Archived <span
+                            class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item dropdown active">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                       data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        Other Links
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="https://github.com/yyzhou95">Github</a>
+                        <a class="dropdown-item" href="https://github.com/yyzhou95/yyzhou95.github.io">This page</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="../../about/">About Me</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<section class="post-content">
+    <div class="container">
+
+        <div class="post-heading">
+            <h1>Longest Repeating Character Replacement</h1>
+        </div>
+
+        <div class="text-right post-date">
+            June 19, 2019
+        </div>
+
+        <div class="post-main">
+            <p>Link: <a href='https://leetcode.com/problems/longest-repeating-character-replacement'>Longest Repeating
+                Character Replacement</a></p>
+            <h2>Problem description </h2>
+            <p>Given a string that consists of only uppercase English letters, you can replace any letter in the string
+                with another letter at most <em>k</em> times. Find the length of a longest substring containing all
+                repeating letters you can get after performing the above operations.</p>
+            <p><strong>Note:</strong>
+                Both the string&#39;s length and <em>k</em> will not exceed 104.</p>
+            <p><strong>Example 1:</strong></p>
+            <pre><code>Input:
+s = &quot;ABAB&quot;, k = 2
+
+Output:
+4
+
+Explanation:
+Replace the two &#39;A&#39;s with two &#39;B&#39;s or vice versa.
+</code></pre>
+            <p><strong>Example 2:</strong></p>
+            <pre><code>Input:
+s = &quot;AABABBA&quot;, k = 1
+
+Output:
+4
+
+Explanation:
+Replace the one &#39;A&#39; in the middle with &#39;B&#39; and form &quot;AABBBBA&quot;.
+The substring &quot;BBBB&quot; has the longest repeating letters, which is 4.
+</code></pre>
+            <h2>Method</h2>
+            <p>This is a typical sliding window problem. The window is made up by k and the most duplicated char in
+                array. </p>
+            <p>Start at beginning, the window size is 1, which only contains first char. With the traverse continuing,
+                more chars added to array. When current substring has more different char that beyond the operation
+                limit, reduce the substring size until it fills the max window size. </p>
+            <p>During the reduce process, the count of same char should be considered, otherwise, the max count of most
+                duplicated char will be included in a substring that contains different chars exceed limit of replace
+                operation.</p>
+            <h2>Code</h2>
+            <pre><code class='language-java' lang='java'>/**
+ * Sliding window.
+ * The window will shift right, or extend its size only by appending one char on the right.
+ * The window can only extend its size when the count of the new char exceeds the historical max count.
+ * Therefore, count each char&#39;s appearance during the traverse.
+ * we only care if the max count exceeds the historical max count
+ *
+ * @param s given string
+ * @param k limit of replacing operations
+ * @return longest substring containing all repeating letters
+ */
+public int characterReplacement(String s, int k) {
+
+    /* Corner case */
+    if (s.length() &lt; 1) {
+        return 0;
+    }
+    if (k &gt; s.length()) {
+        return s.length();
+    }
+
+    int[] store = new int[26];      // store char appearance
+
+    int max = 0, window = 0, from = 0;
+
+    for (int i = 0; i &lt; s.length(); i++) {
+
+        max = Math.max(max, ++store[s.charAt(i) - &#39;A&#39;]);        // find window that contains the largest number of reoccurring char
+
+        while (i - from + 1 &gt; k + max) {        // set substring length (i - from + 1) to be equal to max length (k + max)
+            store[s.charAt(from++) - &#39;A&#39;]--;        // find chars require operation
+        }
+        window = Math.max(window, i - from + 1);        // find max window size
+    }
+
+    return window;
+}
+</code></pre>
+        </div>
+    </div>
+</section>
+<!--        inner script to control nav bar        -->
+
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<!--        This order must be followed!!       -->
+<script src="../../static/jquery/jquery-3.3.1.js"></script>
+<script src="../../static/popper/popper.js"></script>
+<script src="../../static/bootstrap-4.3.1-dist/js/bootstrap.js"></script>
+</body>
+</html>
