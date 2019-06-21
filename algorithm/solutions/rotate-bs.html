@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Search in Rotated Sorted Array | Posts</title>
+    <link rel="stylesheet" type="text/css"
+          href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Martel+Sans:200,300,400,600,700,800,900&display=swap"
+          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Raleway:200i,400,800" rel="stylesheet">
+    <link rel="stylesheet" href="../../static/css/post-content.css">
+    <link rel="stylesheet" href="../../static/bootstrap-4.3.1-dist/css/bootstrap.css">
+    <link rel="stylesheet" href="../../static/css/post-content.css">
+
+    <!--    title icon        -->
+    <link rel="shortcut icon" type="image/x-icon" href="../../static/img/Avatar-3.jpg"/>
+</head>
+<body>
+
+<!--        nav bar     -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="https://yyzhou95.github.io/">HOME</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="../index.html">Posts <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../tags/index.html">Tags <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../algorithm/index.html">Algorithm <span
+                            class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../archived/index.html">Archived <span
+                            class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item dropdown active">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                       data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        Other Links
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="https://github.com/yyzhou95">Github</a>
+                        <a class="dropdown-item" href="https://github.com/yyzhou95/yyzhou95.github.io">This page</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="../../about/">About Me</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<section class="post-content">
+    <div class="container">
+
+        <div class="post-heading">
+            <h1>Search in Rotated Sorted Array</h1>
+        </div>
+
+        <div class="text-right post-date">
+            June 21, 2019
+        </div>
+
+        <div class="post-main">
+            <p><span>Link: </span><a href='https://leetcode.com/problems/search-in-rotated-sorted-array'><span>Search in Rotated Sorted Array</span></a>
+            </p>
+            <h2><span>Problem description </span></h2>
+            <p>
+                <span>Suppose an array sorted in ascending order is rotated at some pivot unknown to you beforehand.</span>
+            </p>
+            <p>
+                <span>(i.e., </span><code>[0,1,2,4,5,6,7]</code><span> might become </span><code>[4,5,6,7,0,1,2]</code><span>).</span>
+            </p>
+            <p>
+                <span>You are given a target value to search. If found in the array return its index, otherwise return </span><code>-1</code><span>.</span>
+            </p>
+            <p><span>You may assume no duplicate exists in the array.</span></p>
+            <p>
+                <span>Your algorithm&#39;s runtime complexity must be in the order of </span><em><span>O</span></em><span>(log </span><em><span>n</span></em><span>).</span>
+            </p>
+            <p><strong><span>Example 1:</span></strong></p>
+            <pre><code>Input: nums = [4,5,6,7,0,1,2], target = 0
+Output: 4
+</code></pre>
+            <p><strong><span>Example 2:</span></strong></p>
+            <pre><code>Input: nums = [4,5,6,7,0,1,2], target = 3
+Output: -1
+</code></pre>
+            <h2><span>Method</span></h2>
+            <p><span>Only one sub-array in each search will possibly not be in ascending order. Hence, in each binary search iteration, identify sub-array that is not in ascending order. </span>
+            </p>
+            <ul>
+                <li><span>If target is not in normal ascending sub-array, compare target to the rest sub-array&#39;s mid and end.</span>
+                </li>
+                <li>
+                    <span>If sub-array [mid, end] is normal array, compare target to this array to see if in this range.</span>
+                </li>
+                <li><span>Repeat this process until no sub-array to search or found target.</span></li>
+
+            </ul>
+            <h2><span>Code</span></h2>
+            <pre><code class='language-java' lang='java'>/**
+ * Use modified binary search.
+ * Only one sub-array in each search will possibly not be in ascending order.
+ * Hence, in each binary search iteration, identify sub-array that is not in ascending order.
+ * If target is not in normal ascending sub-array, compare target to the rest sub-array&#39;s mid and end.
+ * If sub-array [mid, end] is normal array, compare target to this array to see if in this range.
+ * Repeat this process until no sub-array to search or found target.
+ *
+ * @param nums   input int array
+ * @param target value to search
+ * @return target index in array
+ */
+public int search(int[] nums, int target) {
+
+    /* Corner case */
+    if (nums.length &lt; 1) {
+        return -1;
+    }
+
+    int left = 0, right = nums.length - 1, mid;
+
+    while (left &lt; right) {
+
+        mid = (left + right) / 2;
+        if (nums[mid] == target) {
+            return mid;
+        }
+
+        if (nums[left] &lt;= nums[mid]) {      // left sub-array is normal ascending array
+
+            if (target &lt; nums[mid] &amp;&amp; target &gt;= nums[left]) {       // nums[left] &lt;= target &lt;  nums[mid]
+                right = mid - 1;        // target is in the left sub-array
+            } else {        // target &lt; left =&gt; right subarray is rotated, target &gt; mid =&gt; right subarray
+                left = mid + 1;
+            }
+        } else {        // nums[left] &gt; nums[mid] =&gt; rotated pivot in left subarray
+
+            if (target &lt;= nums[right] &amp;&amp; target &gt; nums[mid]) {      // nums[mid] &lt; target &lt;= nums[right]
+                left = mid + 1;     // normal situation, target at right subarray
+            } else {        // otherwise, target is in right subarray
+                right = mid - 1;
+            }
+        }
+    }
+
+    /*
+     * If last element in binary search is target, then return it.
+     * Otherwise, the element is not found in array.
+     * */
+    return (nums[left] == target) ? left : -1;
+}
+</code></pre>
+        </div>
+    </div>
+</section>
+<!--        inner script to control nav bar        -->
+
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<!--        This order must be followed!!       -->
+<script src="../../static/jquery/jquery-3.3.1.js"></script>
+<script src="../../static/popper/popper.js"></script>
+<script src="../../static/bootstrap-4.3.1-dist/js/bootstrap.js"></script>
+</body>
+</html>
