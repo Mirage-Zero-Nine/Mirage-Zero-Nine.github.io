@@ -81,6 +81,8 @@
                 <li><a href='https://leetcode.com/problems/search-insert-position/'><span>Search Insert Position</span></a>
                 </li>
                 <li><a href='https://leetcode.com/problems/sqrtx'><span>Sqrt(x)</span></a></li>
+                <li><a href='https://leetcode.com/problems/find-minimum-in-rotated-sorted-array'><span>Find Minimum in Rotated Sorted Array</span></a>
+                </li>
 
             </ul>
             <h2><span>Problem description </span></h2>
@@ -135,6 +137,22 @@ Output: 2
 Explanation: The square root of 8 is 2.82842..., and since
              the decimal part is truncated, 2 is returned.
 </code></pre>
+            <h3><span>Find Minimum in Rotated Sorted Array</span></h3>
+            <p>
+                <span>Suppose an array sorted in ascending order is rotated at some pivot unknown to you beforehand.</span>
+            </p>
+            <p><span>(i.e.,  </span><code>[0,1,2,4,5,6,7]</code><span> might become  </span><code>[4,5,6,7,0,1,2]</code><span>).</span>
+            </p>
+            <p><span>Find the minimum element.</span></p>
+            <p><span>You may assume no duplicate exists in the array.</span></p>
+            <p><strong><span>Example 1:</span></strong></p>
+            <pre><code>Input: [3,4,5,1,2]
+Output: 1
+</code></pre>
+            <p><strong><span>Example 2:</span></strong></p>
+            <pre><code>Input: [4,5,6,7,0,1,2]
+Output: 0
+</code></pre>
             <h2><span>Method</span></h2>
             <h3><span>Find First and Last Position of Element in Sorted Array</span></h3>
             <p><span>Normal binary search problem. After the target is found, search left and right of target position to find range.</span>
@@ -143,6 +161,10 @@ Explanation: The square root of 8 is 2.82842..., and since
             <p><span>Binary search. If binary search can not find the answer, return the insert position.</span></p>
             <h3><span>Sqrt(x)</span></h3>
             <p><span>Binary search to find square root of x from 1 to x / 2.</span></p>
+            <h3><span>Find Minimum in Rotated Sorted Array</span></h3>
+            <p><span>Binary search. The minimum element will be at left part, or right part if rotated.</span></p>
+            <p><span>There may be a &quot;pivot&quot; in the array lead a reverse, find minimum 2 int in array and finally return minor one.</span>
+            </p>
             <h2><span>Code</span></h2>
             <h3><span>Find First and Last Position of Element in Sorted Array</span></h3>
             <pre><code class='language-java' lang='java'>/**
@@ -253,6 +275,33 @@ public int binarySearch(int x) {
         }
     }
     return right;       // decimal part is truncated, therefore directly return closest one
+}
+</code></pre>
+            <h3><span>Find Minimum in Rotated Sorted Array</span></h3>
+            <pre><code class='language-java' lang='java'>/**
+ * Binary search. The minimum element will be at left part, or right part if rotated.
+ * There may be a &quot;pivot&quot; in the array lead a reverse, find minimum 2 int in array and finally return minor one.
+ *
+ * @param nums given int array
+ * @return min value in array
+ */
+public int findMin(int[] nums) {
+    if (nums.length == 1) {
+        return nums[0];
+    }
+
+    int left = 0, right = nums.length - 1;
+    while (left &lt; right - 1) {
+        int middle = (left + right) / 2;
+
+        if (nums[middle] &gt; nums[right]) {
+            left = middle;      // middle could be min value
+        } else {        // nums[right] &gt; nums[middle], left part contains minimum element
+            right = middle;     // middle could be min value
+        }
+    }
+
+    return Math.min(nums[left], nums[right]);
 }
 </code></pre>
         </div>
