@@ -72,7 +72,7 @@
             June 21, 2019
         </div>
 
-        <div class="post-main">
+        <div class="main-post">
             <p><span>Links:</span></p>
             <ul>
                 <li>
@@ -82,6 +82,7 @@
                 </li>
                 <li><a href='https://leetcode.com/problems/sqrtx'><span>Sqrt(x)</span></a></li>
                 <li><a href='https://leetcode.com/problems/find-peak-element'><span>Find Peak Element</span></a></li>
+                <li><a href='https://leetcode.com/problems/first-bad-version'><span>First Bad Version</span></a></li>
 
             </ul>
             <h2><span>Problem description </span></h2>
@@ -156,6 +157,7 @@ Explanation: Your function can return either index number 1 where the peak eleme
 </code></pre>
             <p><strong><span>Note:</span></strong></p>
             <p><span>Your solution should be in logarithmic complexity.</span></p>
+            <h3><span>First Bad Version</span></h3>
             <h2><span>Method</span></h2>
             <h3><span>Find First and Last Position of Element in Sorted Array</span></h3>
             <p><span>Normal binary search problem. After the target is found, search left and right of target position to find range.</span>
@@ -168,6 +170,13 @@ Explanation: Your function can return either index number 1 where the peak eleme
             <p>
                 <span>Each local maximum in array is one valid peak, therefore, find this local maximum will suffice.</span>
             </p>
+            <h3><span>First Bad Version</span></h3>
+            <p><span>Binary search.</span></p>
+            <ul>
+                <li><span>If middle one is good version, then first bad version is at left part.</span></li>
+                <li><span>Otherwise, it is at right part and may start at the middle one.</span></li>
+
+            </ul>
             <h2><span>Code</span></h2>
             <h3><span>Find First and Last Position of Element in Sorted Array</span></h3>
             <pre><code class='language-java' lang='java'>/**
@@ -300,6 +309,30 @@ public int findPeakElement(int[] nums) {
     while (left &lt; right) {
         int mid = left + (right - left) / 2;
         if (nums[mid] &lt; nums[mid + 1]) {        // right subarray may be ascending
+            left = mid + 1;
+        } else {
+            right = mid;
+        }
+    }
+    return left;
+}
+</code></pre>
+            <h3><span>First Bad Version</span></h3>
+            <pre><code class='language-java' lang='java'>/**
+ * Binary search.
+ * If middle one is good version, then first bad version is at left part.
+ * Otherwise, it is at right part and may start at the middle one.
+ *
+ * @param n n versions from 1 to n
+ * @return first bad version
+ */
+public int firstBadVersion(int n) {
+    int left = 1, right = n;
+
+    while (left &lt; right) {
+        int mid = left + (right - left) / 2;
+
+        if (!isBadVersion(mid)) {       // good version
             left = mid + 1;
         } else {
             right = mid;
