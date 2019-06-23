@@ -35,7 +35,8 @@
                     <a class="nav-link" href="../../tags/index.html">Tags <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item active">
-                    <a class="nav-link" href="../../algorithm/index.html">Algorithm <span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href="../../algorithm/index.html">Algorithm <span
+                            class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item active">
                     <a class="nav-link" href="../../archived/index.html">Archived <span
@@ -70,20 +71,17 @@
         </div>
 
         <div class="post-main">
-            <h2>Install Docker</h2>
-            <p>Install Docker first. <a href="https://docs.docker.com/install/">Docker CE Installation</a></p>
-            <h2>Clone files</h2>
-            <p>Clone this repository to server.</p>
-            <code>git clone https://github.com/HenryQW/docker-ttrss-plugins.git</code>
-            <h2>Set up environment</h2>
-            <p>Modify <code>docker-compose.yml</code> as follows:</p>
-            <pre class="dockerfile"><code>version: "3"
+            <h2><span>Docker setup:</span></h2>
+            <p><strong><span>Clone this repo:</span></strong></p>
+            <p><code>git clone https://github.com/HenryQW/docker-ttrss-plugins.git</code></p>
+            <p><strong><span>Modify </span><code>docker-compose.yml</code><span>:</span></strong></p>
+            <pre><code class='language-yml' lang='yml'>version: &quot;3&quot;
 services:
   database.postgres:
     image: sameersbn/postgresql:latest
-    container_name: postgres-1
+    container_name: postgres
     environment:
-      - PG_PASSWORD=YOUR_PASSWORD # please change the password
+      - PG_PASSWORD=kBZ4V3Vz # please change the password
       - DB_EXTENSION=pg_trgm
     volumes:
       - ~/postgres/data/:/var/lib/postgresql/ # persist postgres data to ~/postgres/data/ on the host
@@ -93,24 +91,25 @@ services:
     image: wangqiru/ttrss:latest
     container_name: ttrss
     ports:
-      - 181:80
+      - 26890:80		# change port here as well
     environment:
-      - SELF_URL_PATH=YOUR_URL # please change to your own domain
+      - SELF_URL_PATH=http://142.93.70.153:26890/ # please change to your own domain
       - DB_HOST=database.postgres
       - DB_PORT=5432
       - DB_NAME=ttrss
       - DB_USER=postgres
-      - DB_PASS=YOUR_PG_PASSWORD # please change the password
+      - DB_PASS=kBZ4V3Vz # please change the password
+      - ENABLE_PLUGINS=auth_internal,fever # auth_internal is required. Plugins enabled here will be enabled for all users as system plugins
     stdin_open: true
     tty: true
     restart: always
-    command: sh -c 'sh /wait-for database.postgres:5432 -- php /configure-db.php && exec s6-svscan /etc/s6/'
+    command: sh -c &#39;sh /wait-for database.postgres:5432 -- php /configure-db.php &amp;&amp; exec s6-svscan /etc/s6/&#39;
 
   service.mercury: # set Mercury Parser API endpoint to `service.mercury:3000` on TTRSS plugin setting page
     image: wangqiru/mercury-parser-api:latest
     container_name: mercury
     expose:
-      - 3000    # do not change this
+      - 3000		# do not change this
     restart: always
 
   service.opencc: # set OpenCC API endpoint to `service.opencc:3000` on TTRSS plugin setting page
@@ -119,51 +118,104 @@ services:
     environment:
       NODE_ENV: production
     expose:
-      - 3000    # do not change this
-    restart: always</code></pre>
-            <p>Modify these items:</p>
-            <ul class="ordered-list">
+      - 3000
+    restart: always
+</code></pre>
+            <p><strong><span>Modify these items:</span></strong></p>
+            <ul>
                 <li><code>PG_PASSWORD</code></li>
-                <li><code>ports</code> and <code>SELF_URL_PATH</code>
+                <li><code>ports</code><span> and </span><code>SELF_URL_PATH</code><span>, remember the port number should be same</span>
                 </li>
-                <li><code>DB_PASS</code> , note that this should keep same as <code>PG_PASSWORD</code>
-                </li>
+                <li><code>DB_PASS</code><span>, note that this should keep same as </span><code>PG_PASSWORD</code></li>
+
             </ul>
-            <p>Those modification can be directly made on <code>docker-compose.yml</code>, or can
-                create a new file and replace the original one.</p>
-            <h2>Build Container</h2>
-            <p>Run this command:</p>
+            <p><strong><span>Run this command:</span></strong><span> </span></p>
             <p><code>docker-compose up -d</code></p>
-            <p>After everything is done, Tiny Tiny RSS should be build successfully. It can be accessed by <span
-                    class="code">SELF_URL_PATH</span> that is set previously. If everything correct, then access
-                it would show the login page. If an error occurs, check the <code>docker-compose.yml</code>
-                file. </p>
-            <h2>Set Tiny Tiny RSS</h2>
+            <p>
+                <span>The docker set up should be ready after all containers have been pulled to local place and running.</span>
+            </p>
+            <h2><span>Set up Tiny Tiny RSS itself</span></h2>
+            <p><span>Try to access the Tiny Tiny RSS via </span><code>SELF_URL_PATH</code><span>. If everything correct, then the explorer should display the login page. The default user name and password is </span><code>admin</code><span> and </span><code>password</code><span>. After first login it will remind you to change password. </span>
+            </p>
+            <p><span>After the password is set, modify some basic setting in preference page. </span></p>
+            <ul>
+                <li><span>Default feed update interval - set to 1 hour</span></li>
+                <li><span>Enable API access - open it</span></li>
+                <li><span>Purge articles after this number of days -  set to 30 days</span></li>
 
-            <p>After the password is set, modify some basic setting in preference page.</p>
-
-            <ul class="ordered-list">
-                <li>Default feed update interval: 1 hour (suggested)</li>
-                <li>Enable API access: click it to enable third-party app access, such as Reeder</li>
-                <li>Purge articles after this number of days: 30 days (depend on server storage capability)</li>
             </ul>
+            <p><span>Then save the configuration.</span></p>
+            <p><span>Next is the Mercury plugin and Fever plugin. Set Mercury Parser API endpoint to </span><code>service.mercury:3000</code><span> and OpenCC API endpoint to </span><code>service.opencc:3000</code><span>. Fever plugin requires a password, create one and save it.</span>
+            </p>
+            <p>
+                <span>In Reeder, the server address is </span><code>http://142.93.70.153:26890/plugins/fever/</code><span> and password is mentioned above. Email is </span><code>admin</code><span>.</span>
+            </p>
+            <p><span>Remember to keep a copy of previous subscription in OPML format. </span></p>
+            <h2><span>Add Nginx And HTTPS Domain Support</span></h2>
+            <p>
+                Add Nginx and HTTPS domain to prevent direct access to your server port. <strong>This step is optional
+                and requires a domain of your own.</strong>
+            </p>
+            <h3><span>Install Nginx</span></h3>
+            <pre><code class='language-shell' lang='shell'>sudo apt-get update
+sudo apt-get install nginx
+</code></pre>
+            <h3><span>Add an configuration file</span></h3>
+            <pre><code class='language-shell' lang='shell'>nano /etc/nginx/conf.d/example.conf
+</code></pre>
+            <p><span>A sample config file:</span></p>
+            <pre><code class='language-nginx' lang='nginx'>upstream ttrsstest {
+  server 127.0.0.1:YOUR_TTRSS_PORT;
+}
 
-            <p>Then save the configuration.</p>
+server {
+    server_name  YOUR_DOMAIN;
+    rewrite ^(.*)$ https://$host$1 permanent;
+}
 
-            <h2>Mercury plugin and Fever plugin</h2>
-            <ol class="ordered-list">
-                <li>Set Mercury Parser API endpoint to <code>service.mercury:3000</code></li>
-                <li>Set OpenCC API endpoint to <code>service.opencc:3000</code>. This is a Chinese
-                    translation plugin. If it is not necessary, leave it.
-                </li>
-                <li>Fever plugin requires a password, create one and save it.</li>
-                <li>In Reeder, the server address is <code>YOUR_URL/plugins/fever/</code> and
-                    password
-                    is mentioned above. Email is <code>admin</code>.
-                </li>
-                <li>Remember to keep a copy of previous subscription in OPML format.</li>
-            </ol>
-            <p><strong>Finally, all set! Enjoy!</strong></p>
+server {
+    listen 443 ssl;
+    gzip on;
+    server_name  YOUR_DOMAIN;
+		## use Certbot to add certification
+
+    access_log /var/log/nginx/ttrssdev_access.log combined;
+    error_log  /var/log/nginx/ttrssdev_error.log;
+
+  ## add your domain below for regex
+    if ($host ~* &quot;^(.*?)\.example\.com$&quot;) {
+                set $domain $1;
+    }
+		location / {
+        proxy_redirect off;
+
+        proxy_set_header  Host                $http_host;
+        proxy_set_header  X-Real-IP           $remote_addr;
+        proxy_set_header  X-Forwarded-Ssl     on;
+        proxy_set_header  X-Forwarded-For     $proxy_add_x_forwarded_for;
+        proxy_set_header  X-Forwarded-Proto   $scheme;
+        proxy_set_header  X-Frame-Options     SAMEORIGIN;
+
+        client_max_body_size        100m;
+        client_body_buffer_size     128k;
+
+        proxy_buffer_size           4k;
+        proxy_buffers               4 32k;
+        proxy_busy_buffers_size     64k;
+        proxy_temp_file_write_size  64k;
+
+				## assign your second level domain here if you have other purpose
+        ## if ($domain ~* &quot;^test$&quot; ){
+        ##    proxy_pass http://ttrsstest;
+        ## }
+        proxy_pass http://ttrssdev;
+    }
+}</code></pre>
+            <h3><span>Add Certbot</span></h3>
+            <p><span>Follow this link: </span><a href='https://certbot.eff.org/lets-encrypt/ubuntuxenial-nginx'><span>Certbot instructions</span></a>
+            </p>
+            <p><span>RSSHub can be accessed by domain or second level domain by Nginx in same way, as long as the second level domain is added to Nginx configuration.</span>
+            </p>
         </div>
     </div>
 </section>
