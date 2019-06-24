@@ -184,37 +184,38 @@ public boolean searchMatrix(int[][] matrix, int target) {
  * @return if target value in matrix
  */
 public boolean searchMatrix(int[][] matrix, int target) {
-    if (matrix.length == 0)
+    if (matrix.length == 0) {
         return false;
-    return search(matrix, target, 0, 0, matrix.length - 1, matrix[0].length - 1);
+    }
+    return search(matrix, target, 0, matrix.length - 1, 0, matrix[0].length - 1);
 }
 
 /**
  * Binary search.
  *
- * @param x1 row coordinate of top left element of the matrix
- * @param y1 column coordinate of top left elemeent of the matrix
- * @param x2 row coordinate of bottom right element of the matrix
- * @param y2 column coordinate of bottom right element of the matrix
+ * @param m  given matrix
+ * @param t  target value
+ * @param r1 left index of row
+ * @param r2 right index of row
+ * @param c1 left index of column
+ * @param c2 right index of column
+ * @return if target exist in given range
  */
-private boolean search(int[][] matrix, int target, int x1, int y1, int x2, int y2) {
-    if (x2 &lt; x1 || y2 &lt; y1 || x1 &gt;= matrix.length || y1 &gt;= matrix[0].length || x2 &lt; 0 || y2 &lt; 0) {
+private boolean search(int[][] m, int t, int r1, int r2, int c1, int c2) {
+
+    if (r2 &lt; r1 || c2 &lt; c1 || r1 &gt;= m.length || c1 &gt; m[0].length || r2 &lt; 0 || c2 &lt; 0) {
         return false;
     }
-    int rowMid = (x2 - x1) / 2 + x1;
-    int colMid = (y2 - y1) / 2 + y1;
 
-    /*
-     * Recursively call the binary search function to narrow the search range.
-     * Each time reduce half of the row and column.
-     * Finally, if the target value is not found in the end, return false.
-     * */
-    if (matrix[rowMid][colMid] == target) {
+    int rowMid = r1 + (r2 - r1) / 2;
+    int colMid = c1 + (c2 - c1) / 2;
+
+    if (m[rowMid][colMid] == t) {
         return true;
-    } else if (matrix[rowMid][colMid] &lt; target) {       // search in bottom left and bottom right
-        return (search(matrix, target, x1, colMid + 1, x2, y2) || search(matrix, target, rowMid + 1, y1, x2, colMid));
-    } else if (matrix[rowMid][colMid] &gt; target) {       // search in upper left and upper right
-        return (search(matrix, target, x1, y1, x2, colMid - 1) || search(matrix, target, x1, colMid, rowMid - 1, y2));
+    } else if (t &gt; m[rowMid][colMid]) {
+        return (search(m, t, r1, r2, colMid + 1, c2)) || (search(m, t, rowMid + 1, r2, c1, colMid));
+    } else if (t &lt; m[rowMid][colMid]) {
+        return (search(m, t, r1, rowMid - 1, colMid, c2) || (search(m, t, r1, r2, c1, colMid - 1)));
     }
     return false;
 }
