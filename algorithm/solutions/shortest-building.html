@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Shortest Distance from All Buildings | Posts</title>
+    <link rel="stylesheet" type="text/css"
+          href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Martel+Sans:200,300,400,600,700,800,900&display=swap"
+          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Raleway:200i,400,800" rel="stylesheet">
+    <link rel="stylesheet" href="../../static/css/post-content.css">
+    <link rel="stylesheet" href="../../static/bootstrap-4.3.1-dist/css/bootstrap.css">
+    <link rel="stylesheet" href="../../static/css/post-content.css">
+
+    <!--    title icon        -->
+    <link rel="shortcut icon" type="image/x-icon" href="../../static/img/Avatar-3.jpg"/>
+</head>
+<body>
+
+<!--        nav bar     -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="https://yyzhou95.github.io/">HOME</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="../index.html">Posts <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../tags/index.html">Tags <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../algorithm/index.html">Algorithm <span
+                            class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../archived/index.html">Archived <span
+                            class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item dropdown active">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                       data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        Other Links
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="https://github.com/yyzhou95">Github</a>
+                        <a class="dropdown-item" href="https://github.com/yyzhou95/yyzhou95.github.io">This page</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="../../about/">About Me</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<section class="post-content">
+    <div class="container">
+
+        <div class="post-heading">
+            <h1>Shortest Distance from All Buildings</h1>
+        </div>
+
+        <div class="text-right post-date">
+            June 24, 2019
+        </div>
+
+        <div class="post-main">
+            <p><span>Link: </span><a href='https://leetcode.com/problems/shortest-distance-from-all-buildings'><span>Shortest Distance from All Buildings</span></a>
+            </p>
+            <h2><span>Problem description </span></h2>
+            <p><span>You want to build a house on an </span><em><span>empty</span></em><span> land which reaches all buildings in the shortest amount of distance. You can only move up, down, left and right. You are given a 2D grid of values </span><strong><span>0</span></strong><span>, </span><strong><span>1</span></strong><span> or </span><strong><span>2</span></strong><span>, where:</span>
+            </p>
+            <ul>
+                <li><span>Each </span><strong><span>0</span></strong><span> marks an empty land which you can pass by freely.</span>
+                </li>
+                <li><span>Each </span><strong><span>1</span></strong><span> marks a building which you cannot pass through.</span>
+                </li>
+                <li><span>Each </span><strong><span>2</span></strong><span> marks an obstacle which you cannot pass through.</span>
+                </li>
+
+            </ul>
+            <p><strong><span>Example:</span></strong></p>
+            <pre><code>Input: [[1,0,2,0,1],[0,0,0,0,0],[0,0,1,0,0]]
+
+1 - 0 - 2 - 0 - 1
+|   |   |   |   |
+0 - 0 - 0 - 0 - 0
+|   |   |   |   |
+0 - 0 - 1 - 0 - 0
+
+Output: 7
+
+Explanation: Given three buildings at (0,0), (0,4), (2,2), and an obstacle at (0,2),
+             the point (1,2) is an ideal empty land to build a house, as the total
+             travel distance of 3+3+1=7 is minimal. So return 7.
+</code></pre>
+            <p><strong><span>Note:</span></strong>
+                <span>There will be at least one building. If it is not possible to build such house according to the above rules, return -1.</span>
+            </p>
+            <h2><span>Method</span></h2>
+            <p><span>Traverse the matrix. For each building, use BFS to compute the shortest distance from each &#39;0&#39; to this building.</span>
+            </p>
+            <p><span>After searching every building, the sum of shortest distance can be found from every &#39;0&#39; to all reachable buildings.</span>
+            </p>
+            <h2><span>Code</span></h2>
+            <pre><code class='language-java' lang='java'>/**
+ * Traverse the matrix.
+ * For each building, use BFS to compute the shortest distance from each &#39;0&#39; to this building.
+ * After searching every building, the sum of shortest distance can be found from every &#39;0&#39; to all reachable buildings.
+ * This value is stored in &#39;distance[][]&#39;.
+ * Time complexity: O(number of 1) * O(number of 0) ~ O(m^2n^2)
+ *
+ * @param grid given grid
+ * @return minimal total travel distance
+ */
+public int shortestDistance(int[][] grid) {
+
+    /* Corner case */
+    if (grid.length == 0) {
+        return -1;
+    }
+
+    int row = grid.length;
+    int column = grid[0].length;
+    int total = 0;      // find total 1 on grid
+    int[][] distance = new int[row][column];       // distance sum
+    int[][] reach = new int[row][column];      // each 0 should be capable to reach every 1 on grid
+
+    for (int[] ints : grid) {
+        for (int j = 0; j &lt; column; j++) {
+            if (ints[j] == 1) {
+                total += 1;
+            }
+        }
+    }
+
+    for (int i = 0; i &lt; grid.length; i++) {
+        for (int j = 0; j &lt; grid[0].length; j++) {
+            if (grid[i][j] == 1 &amp;&amp; !bfs(grid, distance, total, reach, i, j)) {
+                return -1;      // if there is a 1 can not reach any other 1 in array, then no possibility
+            }
+        }
+    }
+
+    int min = Integer.MAX_VALUE;
+
+    for (int i = 0; i &lt; grid.length; i++) {
+        for (int j = 0; j &lt; grid[0].length; j++) {
+            if (grid[i][j] == 0 &amp;&amp; reach[i][j] == total) {
+                min = Math.min(min, distance[i][j]);
+            }
+        }
+    }
+
+    return min == Integer.MAX_VALUE ? -1 : min;
+}
+
+private boolean bfs(int[][] grid, int[][] d, int t, int[][] r, int x, int y) {
+
+    /* Directions */
+    int[] dx = {1, -1, 0, 0};
+    int[] dy = {0, 0, 1, -1};
+
+    int count = 0;      // count reachable 1, if count is not equal to total 1 on grid, then return false
+    int level = 0;      // distance is determined by level in bfs
+    boolean[][] isVisited = new boolean[grid.length][grid[0].length];       // mark visited point
+
+    Queue&lt;int[]&gt; q = new LinkedList&lt;&gt;();
+    q.offer(new int[]{x, y});
+
+    while (!q.isEmpty()) {
+        int s = q.size();
+        level++;
+
+        /* Level iteration */
+        for (int i = 0; i &lt; s; i++) {
+            int[] cur = q.remove();
+            for (int j = 0; j &lt; 4; j++) {
+
+                /* New coord */
+                int cx = cur[0] + dx[j];
+                int cy = cur[1] + dy[j];
+
+                /* Neighbour iteration */
+                if (cx &gt; -1 &amp;&amp; cy &gt; -1 &amp;&amp; cx &lt; grid.length &amp;&amp; cy &lt; grid[0].length &amp;&amp; !isVisited[cx][cy]) {
+                    if (grid[cx][cy] == 0) {
+                        d[cx][cy] += level;     // count sum of distance from each 1
+                        r[cx][cy]++;            // 0 can be reach by current iteration
+                        isVisited[cx][cy] = true;
+                        q.offer(new int[]{cx, cy});
+                    } else if (grid[cx][cy] == 1) {
+                        count++;
+                        isVisited[cx][cy] = true;
+                    }
+                }
+            }
+        }
+    }
+    return count == t;
+}
+</code></pre>
+        </div>
+    </div>
+</section>
+<!--        inner script to control nav bar        -->
+
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<!--        This order must be followed!!       -->
+<script src="../../static/jquery/jquery-3.3.1.js"></script>
+<script src="../../static/popper/popper.js"></script>
+<script src="../../static/bootstrap-4.3.1-dist/js/bootstrap.js"></script>
+</body>
+</html>
