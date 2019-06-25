@@ -146,41 +146,19 @@ public List&lt;Integer&gt; topKFrequent(int[] nums, int k) {
 public List&lt;Integer&gt; twoHashMap(int[] nums, int k) {
     List&lt;Integer&gt; out = new LinkedList&lt;&gt;();
 
-    HashMap&lt;Integer, Integer&gt; m1 = new HashMap&lt;&gt;();     // save the key - frequency pair
-    TreeMap&lt;Integer, HashSet&lt;Integer&gt;&gt; m2 = new TreeMap&lt;&gt;();        // save the frequency - key set pair
+    HashMap&lt;Integer, Integer&gt; m = new HashMap&lt;&gt;();     // save the key - frequency pair
 
     for (int i = 0; i &lt; nums.length; i++) {
-        m1.put(nums[i], m1.getOrDefault(nums[i], 0) - 1);       // update frequency in key - frequency pair
-
-        if (m1.get(nums[i]) == -1) {        // init the map
-            if (m2.containsKey(-1)) {
-                m2.get(-1).add(nums[i]);
-            } else {
-                HashSet&lt;Integer&gt; temp = new HashSet&lt;&gt;();
-                temp.add(nums[i]);
-                m2.put(-1, temp);
-            }
-        } else {
-            m2.get(m1.get(nums[i]) + 1).remove(nums[i]);
-            if (m2.containsKey(m1.get(nums[i]))) {
-                m2.get(m1.get(nums[i])).add(nums[i]);
-            } else {
-                HashSet&lt;Integer&gt; temp = new HashSet&lt;&gt;();
-                temp.add(nums[i]);
-                m2.put(m1.get(nums[i]), temp);
-            }
-        }
+        m.put(nums[i], m.getOrDefault(nums[i], 0) - 1);
     }
 
-    for (Integer i : m2.keySet()) {
-        if (out.size() &lt; k) {
-            HashSet&lt;Integer&gt; temp = m2.get(i);
-            out.addAll(temp);
-        }
+    List&lt;Map.Entry&lt;Integer, Integer&gt;&gt; list = new LinkedList&lt;&gt;(m.entrySet());
+    list.sort(Comparator.comparing(Map.Entry::getValue));       // sort map based on value instead of key
+
+    for (int i = 0; i &lt; k; i++) {
+        out.add(list.get(i).getKey());
     }
-    while (out.size() &gt; k) {
-        out.remove(out.size() - 1);
-    }
+
     return out;
 }
 </code></pre>
