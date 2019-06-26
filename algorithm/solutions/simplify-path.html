@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Simplify Path | Posts</title>
+    <title>Simplify Path/Longest Absolute File Path | Posts</title>
     <link rel="stylesheet" type="text/css"
           href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
     <link href="https://fonts.googleapis.com/css?family=Martel+Sans:200,300,400,600,700,800,900&display=swap"
@@ -65,7 +65,7 @@
     <div class="container">
 
         <div class="post-heading">
-            <h1>Simplify Path</h1>
+            <h1>Simplify Path/Longest Absolute File Path</h1>
         </div>
 
         <div class="text-right post-date">
@@ -73,8 +73,14 @@
         </div>
 
         <div class="post-main">
-            <p><span>Link: </span></p>
+            <p><span>Links:</span></p>
+            <ul>
+                <li></li>
+                <li></li>
+
+            </ul>
             <h2><span>Problem description </span></h2>
+            <h3><span>Simplify Path</span></h3>
             <p><span>Given an </span><strong><span>absolute path</span></strong><span> for a file (Unix-style), simplify it. Or in other words, convert it to the </span><strong><span>canonical path</span></strong><span>.</span>
             </p>
             <p><span>In a UNIX-style file system, a period </span><code>.</code><span> refers to the current directory. Furthermore, a double period </span><code>..</code><span> moves the directory up a level. For more information, see: </span>
@@ -108,10 +114,71 @@ Output: &quot;/c&quot;
             <pre><code>Input: &quot;/a//b////c/d//././/..&quot;
 Output: &quot;/a/b/c&quot;
 </code></pre>
+            <h3><span>Longest Absolute File Path</span></h3>
+            <p><span>Suppose we abstract our file system by a string in the following manner:</span></p>
+            <p><span>The string </span><code>&quot;dir\n\tsubdir1\n\tsubdir2\n\t\tfile.ext&quot;</code><span> represents:</span>
+            </p>
+            <pre><code>dir
+    subdir1
+    subdir2
+        file.ext
+</code></pre>
+            <p>
+                <span>The directory </span><code>dir</code><span> contains an empty sub-directory </span><code>subdir1</code><span> and a sub-directory </span><code>subdir2</code><span> containing a file </span><code>file.ext</code><span>.</span>
+            </p>
+            <p><span>The string </span><code>&quot;dir\n\tsubdir1\n\t\tfile1.ext\n\t\tsubsubdir1\n\tsubdir2\n\t\tsubsubdir2\n\t\t\tfile2.ext&quot;</code><span>represents:</span>
+            </p>
+            <pre><code>dir
+    subdir1
+        file1.ext
+        subsubdir1
+    subdir2
+        subsubdir2
+            file2.ext
+</code></pre>
+            <p>
+                <span>The directory </span><code>dir</code><span> contains two sub-directories </span><code>subdir1</code><span> and </span><code>subdir2</code><span>. </span><code>subdir1</code><span> contains a file </span><code>file1.ext</code><span> and an empty second-level sub-directory </span><code>subsubdir1</code><span>. </span><code>subdir2</code><span> contains a second-level sub-directory </span><code>subsubdir2</code><span>containing a file </span><code>file2.ext</code><span>.</span>
+            </p>
+            <p><span>We are interested in finding the longest (number of characters) absolute path to a file within our file system. For example, in the second example above, the longest absolute path is </span><code>&quot;dir/subdir2/subsubdir2/file2.ext&quot;</code><span>, and its length is </span><code>32</code><span> (not including the double quotes).</span>
+            </p>
+            <p><span>Given a string representing the file system in the above format, return the length of the longest absolute path to file in the abstracted file system. If there is no file in the system, return </span><code>0</code><span>.</span>
+            </p>
+            <p><strong><span>Note:</span></strong></p>
+            <ul>
+                <li><span>The name of a file contains at least a </span><code>.</code><span> and an extension.</span>
+                </li>
+                <li>
+                    <span>The name of a directory or sub-directory will not contain a </span><code>.</code><span>.</span>
+                </li>
+
+            </ul>
+            <p>&nbsp;</p>
+            <p><span>Time complexity required: </span><code>O(n)</code><span> where </span><code>n</code><span> is the size of the input string.</span>
+            </p>
+            <p><span>Notice that </span><code>a/aa/aaa/file1.txt</code><span> is not the longest file path, if there is another path </span><code>aaaaaaaaaaaaaaaaaaaaa/sth.png</code><span>.</span>
+            </p>
             <h2><span>Method</span></h2>
+            <h3><span>Simplify Path</span></h3>
             <p><span>Spilt string by &quot;/&quot; and push the valid path to stack. If meets &quot;..&quot;, pop the last element in stack. If meets &quot;.&quot; or &quot;&quot;(stands for &quot;//&quot;), ignore it and continue.</span>
             </p>
+            <h3><span>Longest Absolute File Path</span></h3>
+            <p><span>Use a stack to store length from root to current file. Each time in iteration, pop elements in stack  that is the length of other folder/file under different sub category.</span>
+            </p>
+            <p><span>Some corner case:</span></p>
+            <ul>
+                <li><span>Length of </span><code>\t</code><span> is 1.</span></li>
+                <li><span>Path is valid iff it contains a file inside it. i.e., path only contains folder will not be counted.</span>
+                </li>
+                <li>
+                    <span>Rememeber to add 1 when counting current position length, as all folders have a </span><code>/</code><span> before it.</span>
+                </li>
+                <li>
+                    <span>Remember to subtract 1 when finally counting the max length of path, since the first </span><code>/</code><span> is required to be removed when returning the max length of path.</span>
+                </li>
+
+            </ul>
             <h2><span>Code</span></h2>
+            <h3><span>Simplify Path</span></h3>
             <pre><code class='language-java' lang='java'>/**
  * Spilt string by &quot;/&quot; and push the valid path to stack.
  * If meets &quot;..&quot;, pop the last element in stack. If meets &quot;.&quot; or &quot;&quot;(stands for &quot;//&quot;), ignore it and continue.
@@ -140,6 +207,37 @@ public String simplifyPath(String path) {
     }
 
     return out.toString();
+}
+</code></pre>
+            <h3><span>Longest Absolute File Path</span></h3>
+            <pre><code class='language-java' lang='java'>/**
+ * Use a stack to store length from root to current file.
+ *
+ * @param input string representing the file system
+ * @return length of the longest absolute path to file
+ */
+public int lengthLongestPath(String input) {
+    Stack&lt;Integer&gt; stack = new Stack&lt;&gt;();      // store length
+    stack.push(0);
+    int max = 0;
+
+    for (String s : input.split(&quot;\n&quot;)) {
+
+        int level = s.lastIndexOf(&quot;\t&quot;) + 1;      // # of \t, representing the level of sub folder
+        while (level + 1 &lt; stack.size()) {
+            stack.pop();        // pop elements that are under same parent but not in same sub folder
+        }
+        int length = 0;
+
+        if (!stack.isEmpty()) {     // current sub folder or file path length
+            length = stack.peek() + s.length() - level + 1;     // each file path requires a additional &quot;/&quot;
+        }
+        stack.push(length);
+        if (s.contains(&quot;.&quot;) &amp;&amp; !stack.isEmpty()) {      // a valid path requires a file in it
+            max = Math.max(max, stack.peek() - 1);      // remove the &quot;/&quot; at the beginning of path
+        }
+    }
+    return max;
 }
 </code></pre>
         </div>
