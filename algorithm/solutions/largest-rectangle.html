@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Largest Rectangle in Histogram | Posts</title>
+    <link rel="stylesheet" type="text/css"
+          href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Martel+Sans:200,300,400,600,700,800,900&display=swap"
+          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Raleway:200i,400,800" rel="stylesheet">
+    <link rel="stylesheet" href="../../static/css/post-content.css">
+    <link rel="stylesheet" href="../../static/bootstrap-4.3.1-dist/css/bootstrap.css">
+    <link rel="stylesheet" href="../../static/css/post-content.css">
+
+    <!--    title icon        -->
+    <link rel="shortcut icon" type="image/x-icon" href="../../static/img/Avatar-3.jpg"/>
+</head>
+<body>
+
+<!--        nav bar     -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="https://yyzhou95.github.io/">HOME</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="../index.html">Posts <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../tags/index.html">Tags <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../algorithm/index.html">Algorithm <span
+                            class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../archived/index.html">Archived <span
+                            class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item dropdown active">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                       data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        Other Links
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="https://github.com/yyzhou95">Github</a>
+                        <a class="dropdown-item" href="https://github.com/yyzhou95/yyzhou95.github.io">This page</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="../../about/">About Me</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<section class="post-content">
+    <div class="container">
+
+        <div class="post-heading">
+            <h1>Largest Rectangle in Histogram</h1>
+        </div>
+
+        <div class="text-right post-date">
+            June 27, 2019
+        </div>
+
+        <div class="post-main">
+            <p><span>Link: </span><a href='https://leetcode.com/problems/largest-rectangle-in-histogram'><span>Largest Rectangle in Histogram</span></a>
+            </p>
+            <h2><span>Problem description </span></h2>
+            <p><span>Given </span><em><span>n</span></em><span> non-negative integers representing the histogram&#39;s bar height where the width of each bar is 1, find the area of largest rectangle in the histogram.</span>
+            </p>
+            <p><img src='../../static/img/histogram.png' alt='img' referrerPolicy='no-referrer'/>
+                <span>Above is a histogram where width of each bar is 1, given height = </span><code>[2,1,5,6,2,3]</code><span>.</span>
+            </p>
+            <p><img src='../../static/img/histogram_area.png' alt='img' referrerPolicy='no-referrer'/>
+                <span>The largest rectangle is shown in the shaded area, which has area = </span><code>10</code><span> unit.</span>
+            </p>
+            <p><strong><span>Example:</span></strong></p>
+            <pre><code>Input: [2,1,5,6,2,3]
+Output: 10
+</code></pre>
+            <h2><span>Method</span></h2>
+            <p><span>Faster solution with stack.</span></p>
+            <p><span>Traverse all elements in array and find each increasing subarray.</span></p>
+            <p><span>If increasing subarray is ended, then calculate rectangle size starts from largest element in subarray. The initially length of rectangle is 1 (itself). With the pop of stack, length increased by 1 each time until value at top of stack is smaller than current element.</span>
+            </p>
+            <p><span>For each deceasing area, simply count the area with itself and compared with max.</span></p>
+            <p><span>Note that if stack is empty, current element is the smallest element in current subarray. The area length of this rectangle is [0,i].</span>
+            </p>
+            <h2><span>Code</span></h2>
+            <pre><code class='language-java' lang='java'>/**
+ * Faster solution with stack.
+ * Traverse all elements in array and find each increasing subarray.
+ * If increasing subarray is ended, then calculate rectangle size starts from largest element in subarray.
+ * The initially length of rectangle is 1 (itself).
+ * With the pop of stack, length increased by 1 each time until value at top of stack is smaller than current element.
+ * For each deceasing area, simply count the area with itself and compared with max.
+ * Note that if stack is empty, current element is the smallest element in current subarray.
+ * The area length of this rectangle is [0,i].
+ *
+ * @param heights input histogram&#39;s bar height array
+ * @return area of largest rectangle
+ */
+public int largestRectangleArea(int[] heights) {
+
+    Stack&lt;Integer&gt; stack = new Stack&lt;&gt;();       // store index of array
+    int max = 0;
+
+    for (int i = 0; i &lt;= heights.length; i++) {
+
+        int h = (i == heights.length) ? 0 : heights[i];
+
+        while (!stack.isEmpty() &amp;&amp; h &lt; heights[stack.peek()]) {      // increasing subarray stopped
+
+            /*
+             * Stack only store index, therefore, heights[s.pop()] stands for the length of current height.
+             * The other part of area calculation is the length of rectangle.
+             * The length is between current bar and the max bar in increasing subarray.
+             * If stack is empty, then current element is the smallest element in [0,i], and length will be i.
+             * i - 1 is to move i to previous max value in previous increasing subarray.
+             * If stack is empty, current element is the smallest element in current subarray.
+             * The area length of this rectangle is [0,i]. */
+            int area = heights[stack.pop()] * (i - 1 - (stack.isEmpty() ? -1 : stack.peek()));
+            max = Math.max(max, area);
+        }
+        stack.push(i);
+    }
+    return max;
+}
+
+/**
+ * Slow yet plain brute force solution.
+ * Traverse all elements in array.
+ * In each round, find all elements that is larger than current bar. Calculate max area based on current bar.
+ *
+ * @param heights input histogram&#39;s bar height array
+ * @return area of largest rectangle
+ */
+public int largestRectangleAreaSlow(int[] heights) {
+
+    if (heights.length == 0) {
+        return 0;
+    }
+
+    int maxArea = heights[0];
+
+    for (int i = 0; i &lt; heights.length; i++) {
+        int l = i - 1;
+        int r = i + 1;
+
+        while (l &gt;= 0 &amp;&amp; heights[i] &lt;= heights[l]) {
+            l--;
+        }
+
+        while (r &lt; heights.length &amp;&amp; heights[i] &lt;= heights[r]) {
+            r++;
+        }
+
+        int temp = heights[i] * (r - l - 1);
+        maxArea = Integer.max(maxArea, temp);
+    }
+
+    return maxArea;
+}
+</code></pre>
+        </div>
+    </div>
+</section>
+<!--        inner script to control nav bar        -->
+
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<!--        This order must be followed!!       -->
+<script src="../../static/jquery/jquery-3.3.1.js"></script>
+<script src="../../static/popper/popper.js"></script>
+<script src="../../static/bootstrap-4.3.1-dist/js/bootstrap.js"></script>
+</body>
+</html>
