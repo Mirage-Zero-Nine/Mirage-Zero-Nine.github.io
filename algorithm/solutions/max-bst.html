@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Maximum Binary Tree | Posts</title>
+    <link rel="stylesheet" type="text/css"
+          href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Martel+Sans:200,300,400,600,700,800,900&display=swap"
+          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Raleway:200i,400,800" rel="stylesheet">
+    <link rel="stylesheet" href="../../static/css/post-content.css">
+    <link rel="stylesheet" href="../../static/bootstrap-4.3.1-dist/css/bootstrap.css">
+    <link rel="stylesheet" href="../../static/css/post-content.css">
+
+    <!--    title icon        -->
+    <link rel="shortcut icon" type="image/x-icon" href="../../static/img/Avatar-3.jpg"/>
+</head>
+<body>
+
+<!--        nav bar     -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="https://yyzhou95.github.io/">HOME</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="../index.html">Posts <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../tags/index.html">Tags <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../algorithm/index.html">Algorithm <span
+                            class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../archived/index.html">Archived <span
+                            class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item dropdown active">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                       data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        Other Links
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="https://github.com/yyzhou95">Github</a>
+                        <a class="dropdown-item" href="https://github.com/yyzhou95/yyzhou95.github.io">This page</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="../../about/">About Me</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<section class="post-content">
+    <div class="container">
+
+        <div class="post-heading">
+            <h1>Maximum Binary Tree</h1>
+        </div>
+
+        <div class="text-right post-date">
+            June 28, 2019
+        </div>
+
+        <div class="post-main">
+            <p><span>Link: </span><a
+                    href='https://leetcode.com/problems/maximum-binary-tree/'><span>Maximum Binary Tree</span></a></p>
+            <h2><span>Problem description </span></h2>
+            <p><span>Given an integer array with no duplicates. A maximum tree building on this array is defined as follow:</span>
+            </p>
+            <ol>
+                <li><span>The root is the maximum number in the array. </span></li>
+                <li><span>The left subtree is the maximum tree constructed from left part subarray divided by the maximum number.</span>
+                </li>
+                <li><span>The right subtree is the maximum tree constructed from right part subarray divided by the maximum number.</span>
+                </li>
+
+            </ol>
+            <p><span>Construct the maximum tree by the given array and output the root node of this tree.</span></p>
+            <p><strong><span>Example 1:</span></strong></p>
+            <pre><code>Input: [3,2,1,6,0,5]
+Output: return the tree root node representing the following tree:
+
+      6
+    /   \
+   3     5
+    \    /
+     2  0
+       \
+        1
+</code></pre>
+            <p><strong><span>Note:</span></strong></p>
+            <ol>
+                <li><span>The size of the given array will be in the range [1,1000].</span></li>
+
+            </ol>
+            <h2><span>Method</span></h2>
+            <p><span>Use stack to store previous larger element in array as root. If find a larger element, pop the stack to construct tree until find a larger one, which is root for current node.</span>
+            </p>
+            <ol>
+                <li><span>Traverse the array once and create the node one by one. Use stack to store a </span><code>decreasing
+                    sequence</code><span>.</span></li>
+                <li><span>Each step create a new curNode. compare to the peek of stack,</span>
+                    <span>2.a. keep popping the stack while (</span><code>stack.peek().val &lt; curNode.val</code><span>), and set the last popping node to be curNode.left.</span>
+                    <span>Because the last one fulfilling the criteria is the largest number among curNode&#39;s left children. =&gt; </span><code>curNode.left
+                        = last pop node</code>
+                    <span>2.b. after popping up all nodes that fulfill (</span><code>stack.peek().val &lt;
+                        curNode.val</code><span>),</span>
+                    <span>thus (</span><code>stack.peek().val &gt; curNode.val</code><span>), the </span><code>stack.peek()</code><span> is curNode&#39;s root =&gt; </span><code>peek.right
+                        = curNode</code></li>
+                <li><span>return the bottom node of stack.</span></li>
+
+            </ol>
+            <p><span>This problem can be solved by recursion, which is much more plain and simple. The time complexity, however, is </span><code>O(n^2)</code><span> in worse case.</span>
+            </p>
+            <h2><span>Code</span></h2>
+            <pre><code class='language-java' lang='java'>/**
+ * Basic recursion.
+ * Root is the largest one in array, left subtree is the left subarray max, right subtree is the right subarray max.
+ *
+ * @param nums given array
+ * @return maximum tree
+ */
+public TreeNode constructMaximumBinaryTree(int[] nums) {
+
+    /* Corner case */
+    if (nums.length == 0) {
+        return null;
+    }
+    int max = 0;
+    for (int i = 0; i &lt; nums.length; i++) {
+        if (nums[i] &gt; nums[max]) {
+            max = i;
+        }
+    }
+    TreeNode r = new TreeNode(nums[max]);
+    r.left = constructMaximumBinaryTree(Arrays.copyOfRange(nums, 0, max));
+    r.right = constructMaximumBinaryTree(Arrays.copyOfRange(nums, max + 1, nums.length));
+
+    return r;
+}
+
+/**
+ * Use stack to store previous larger element in array as root.
+ * If find a larger element, pop the stack to construct tree until find a larger one, which is root for current node.
+ *
+ * @param nums given array
+ * @return maximum tree
+ */
+public TreeNode useStack(int[] nums) {
+
+    /* Corner case */
+    if (nums == null || nums.length == 0) {
+        return null;
+    }
+
+    Stack&lt;TreeNode&gt; stack = new Stack&lt;&gt;();
+    for (int num : nums) {
+        TreeNode cur = new TreeNode(num);
+
+        while (!stack.isEmpty() &amp;&amp; num &gt; stack.peek().val) {
+            cur.left = stack.pop();     // if cur &gt; stack.peek, cur.left = stack.peek
+        }
+
+        if (!stack.isEmpty()) {
+            stack.peek().right = cur;       //if cur &lt; stack peek, peek.right = cur
+        }
+        stack.push(cur);
+
+    }
+    return stack.isEmpty() ? null : stack.get(0);
+}
+</code></pre>
+        </div>
+    </div>
+</section>
+<!--        inner script to control nav bar        -->
+
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<!--        This order must be followed!!       -->
+<script src="../../static/jquery/jquery-3.3.1.js"></script>
+<script src="../../static/popper/popper.js"></script>
+<script src="../../static/bootstrap-4.3.1-dist/js/bootstrap.js"></script>
+</body>
+</html>
