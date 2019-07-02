@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Number of Islands | Posts</title>
+    <link rel="stylesheet" type="text/css"
+          href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Martel+Sans:200,300,400,600,700,800,900&display=swap"
+          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Raleway:200i,400,800" rel="stylesheet">
+    <link rel="stylesheet" href="../../static/css/post-content.css">
+    <link rel="stylesheet" href="../../static/bootstrap-4.3.1-dist/css/bootstrap.css">
+
+    <!--    title icon        -->
+    <link rel="shortcut icon" type="image/x-icon" href="../../static/img/Avatar-3.jpg"/>
+    <link rel="stylesheet" href="../../static/css/coding.css">
+    <script src="../../static/script/coding_style.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <style> @media print {
+        .hljs {
+            overflow: visible;
+            word-wrap: break-word !important;
+        }
+    }</style>
+</head>
+<body>
+
+<!--        nav bar     -->
+<nav class="navbar navbar-expand-lg py-0 fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="https://yyzhou95.github.io/">HOME</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="../index.html">Posts <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../tags/index.html">Tags <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../algorithm/index.html">Algorithm <span
+                            class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../archived/index.html">Archived <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item dropdown active">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                       data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        Other Links
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="https://github.com/yyzhou95">Github</a>
+                        <a class="dropdown-item" href="https://github.com/yyzhou95/yyzhou95.github.io">This page</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="../../about/">About Me</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<section class="post-content">
+    <div class="container">
+
+        <div class="post-heading">
+            <h1>
+                Number of Islands
+            </h1>
+        </div>
+
+        <div class="text-right post-date">
+            July 02, 2019
+        </div>
+        <div class="post-main">
+            <p><span>Links:</span></p>
+            <ul>
+                <li><a href='https://leetcode.com/problems/number-of-islands'><span>Number of Islands</span></a></li>
+
+            </ul>
+            <h2><span>Problem description </span></h2>
+            <h3><span>Number of Islands</span></h3>
+            <p>&nbsp;</p>
+            <h2><span>Method</span></h2>
+            <h3><span>Number of Islands</span></h3>
+            <p><span>Two approaches: DFS and Union Find.</span></p>
+            <p><strong><span>DFS</span></strong></p>
+            <p><span>Start at each cell with ‘1’, then DFS find all nodes that are connected with current node. Flip  node’s ‘1’ to ‘0’ each time to reduce runtime.</span>
+            </p>
+            <p><strong><span>Union Find</span></strong></p>
+            <p><span>First find all nodes and mark them all as individual node. The traverse the whole grid, when two nodes are both ‘1’, union them and find root of them. If they have same root, then the number of islands should be reduced by 1.</span>
+            </p>
+            <h2><span>Code</span></h2>
+            <h3><span>Number of Islands</span></h3>
+            <pre><code class='language-java' lang='java'>/**
+ * DFS.
+ * When reaches a &#39;1&#39; then do DFS start at this point and mark all accessible point as visited.
+ * Iterate all cells in grid.
+ *
+ * @param grid given grid
+ * @return number of connected &#39;1&#39;
+ */
+public int numIslands(char[][] grid) {
+    int count = 0;
+
+    /* Corner case */
+    if (grid.length &lt; 1) {
+        return count;
+    }
+
+    for (int i = 0; i &lt; grid.length; i++) {
+        for (int j = 0; j &lt; grid[0].length; j++) {
+
+            if (grid[i][j] == &#39;1&#39;) {
+                count += 1;
+                grid[i][j] = &#39;0&#39;;
+                dfs(grid, i, j);
+            }
+        }
+    }
+    return count;
+}
+
+/**
+ * DFS to access all accessible points based on current point.
+ *
+ * @param grid given grid
+ * @param i    coord x
+ * @param j    coord y
+ */
+private void dfs(char[][] grid, int i, int j) {
+    int[] direction = {1, -1, 0, 0, 0, 0, 1, -1};
+    grid[i][j] = &#39;0&#39;;
+
+    for (int k = 0; k &lt; 4; k++) {
+
+        int nextX = i + direction[k];
+        int nextY = j + direction[k + 4];
+
+        if (nextX &gt; -1 &amp;&amp; nextX &lt; grid.length &amp;&amp; nextY &gt; -1 &amp;&amp; nextY &lt; grid[0].length &amp;&amp; grid[nextX][nextY] == &#39;1&#39;) {
+            dfs(grid, nextX, nextY);
+        }
+    }
+}
+
+/**
+ * Use union find to connect all nodes that are connected and count all islands.
+ *
+ * @param grid given grid
+ * @return number of islands
+ */
+public int unionFind(char[][] grid) {
+
+    /* Corner case */
+    if (grid == null || grid.length == 0 || grid[0].length == 0) {
+        return 0;
+    }
+
+    int[][] distance = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+
+    UnionFind uf = new UnionFind(grid);
+    int rows = grid.length;
+    int cols = grid[0].length;
+    for (int i = 0; i &lt; rows; i++) {
+        for (int j = 0; j &lt; cols; j++) {
+            if (grid[i][j] == &#39;1&#39;) {
+                for (int[] d : distance) {
+                    int x = i + d[0];
+                    int y = j + d[1];
+                    if (x &gt;= 0 &amp;&amp; x &lt; rows &amp;&amp; y &gt;= 0 &amp;&amp; y &lt; cols &amp;&amp; grid[x][y] == &#39;1&#39;) {
+                        int id1 = i * cols + j;
+                        int id2 = x * cols + y;
+                        uf.union(id1, id2);
+                    }
+                }
+            }
+        }
+    }
+    return uf.count;
+}
+
+/**
+ * Union find class specially implemented for this problem.
+ */
+class UnionFind {
+    int[] father;
+    int count = 0;
+
+    /**
+     * Count father of each node. Initially, father of each node is itself.
+     *
+     * @param grid given grid
+     */
+    UnionFind(char[][] grid) {
+        father = new int[grid.length * grid[0].length];     // contains all nodes in 2D array
+        for (int i = 0; i &lt; grid.length; i++) {
+            for (int j = 0; j &lt; grid[0].length; j++) {
+                if (grid[i][j] == &#39;1&#39;) {
+                    int id = i * grid[0].length + j;
+                    father[id] = id;
+                    count++;
+                }
+            }
+        }
+    }
+
+    /**
+     * Union two nodes that are both &#39;1&#39;.
+     * If two nodes are connected, then the # of islands reduced by 1.
+     *
+     * @param node1 first node
+     * @param node2 second node
+     */
+    void union(int node1, int node2) {
+        int find1 = find(node1), find2 = find(node2);
+        if (find1 != find2) {
+            father[find1] = find2;
+            count--;
+        }
+    }
+
+    /**
+     * Find root of given node.
+     *
+     * @param node given node
+     * @return root of given node
+     */
+    int find(int node) {
+        if (father[node] == node) {
+            return node;
+        }
+        father[node] = find(father[node]);      // recursively find father
+        return father[node];
+    }
+}
+</code></pre>
+        </div>
+    </div>
+</section>
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<!--        This order must be followed!!       -->
+<script src="../../static/jquery/jquery-3.3.1.js"></script>
+<script src="../../static/popper/popper.js"></script>
+<script src="../../static/bootstrap-4.3.1-dist/js/bootstrap.js"></script>
+
+<!--        inner script to control nav bar background color        -->
+<script>
+    $(function () {
+        $(document).scroll(function () {
+
+            let $nav = $("#mainNav");
+            $nav.toggleClass("scrolled", $(this).scrollTop() > $nav.height());
+        })
+    })
+</script>
+</body>
+</html>
