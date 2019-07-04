@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Flatten Nested List Iterator | Posts</title>
+    <link rel="stylesheet" type="text/css"
+          href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Martel+Sans:200,300,400,600,700,800,900&display=swap"
+          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Raleway:200i,400,800" rel="stylesheet">
+    <link rel="stylesheet" href="../../static/css/post-content.css">
+    <link rel="stylesheet" href="../../static/bootstrap-4.3.1-dist/css/bootstrap.css">
+
+    <!--    title icon        -->
+    <link rel="shortcut icon" type="image/x-icon" href="../../static/img/Avatar-3.jpg"/>
+    <link rel="stylesheet" href="../../static/css/coding.css">
+    <script src="../../static/script/coding_style.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <style> @media print {
+        .hljs {
+            overflow: visible;
+            word-wrap: break-word !important;
+        }
+    }</style>
+</head>
+<body>
+
+<!--        nav bar     -->
+<nav class="navbar navbar-expand-lg py-0 fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="https://yyzhou95.github.io/">HOME</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="../index.html">Posts <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../tags/index.html">Tags <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../algorithm/index.html">Algorithm <span
+                            class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../archived/index.html">Archived <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item dropdown active">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                       data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        Other Links
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="https://github.com/yyzhou95">Github</a>
+                        <a class="dropdown-item" href="https://github.com/yyzhou95/yyzhou95.github.io">This page</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="../../about/">About Me</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<section class="post-content">
+    <div class="container">
+
+        <div class="post-heading">
+            <h1>
+                Flatten Nested List Iterator
+            </h1>
+        </div>
+
+        <div class="text-right post-date">
+            July 03, 2019
+        </div>
+        <div class="post-main">
+            <p><span>Link: </span><a href='https://leetcode.com/problems/flatten-nested-list-iterator'><span>Flatten Nested List Iterator</span></a>
+            </p>
+            <h2><span>Problem description </span></h2>
+            <p><span>Given a nested list of integers, implement an iterator to flatten it.</span></p>
+            <p>
+                <span>Each element is either an integer, or a list -- whose elements may also be integers or other lists.</span>
+            </p>
+            <p><strong><span>Example 1:</span></strong></p>
+            <pre><code>Input: [[1,1],2,[1,1]]
+Output: [1,1,2,1,1]
+Explanation: By calling next repeatedly until hasNext returns false,
+             the order of elements returned by next should be: [1,1,2,1,1].
+</code></pre>
+            <p><strong><span>Example 2:</span></strong></p>
+            <pre><code>Input: [1,[4,[6]]]
+Output: [1,4,6]
+Explanation: By calling next repeatedly until hasNext returns false,
+             the order of elements returned by next should be: [1,4,6].
+</code></pre>
+            <h2><span>Method</span></h2>
+            <p><span>Use a stack to temporary store nested integers.</span></p>
+            <h2><span>Code</span></h2>
+            <pre><code class='language-java' lang='java'>public class NestedIterator_341 implements Iterator&lt;Integer&gt; {
+
+    private Stack&lt;NestedInteger&gt; stack = new Stack&lt;&gt;();     // nested integers are given in reversed order
+
+    /**
+     * Initialize class.
+     *
+     * @param nestedList given nest integer list
+     */
+    public NestedIterator_341(List&lt;NestedInteger&gt; nestedList) {
+        for (int i = nestedList.size() - 1; i &gt;= 0; i--) {
+            stack.push(nestedList.get(i));
+        }
+    }
+
+    /**
+     * Return next value in nested integer.
+     *
+     * @return next value in nested integer.
+     */
+    @Override
+    public Integer next() {
+        return stack.pop().getInteger();
+    }
+
+    /**
+     * Check if iterator has next element.
+     *
+     * @return if iterator has next element
+     */
+    @Override
+    public boolean hasNext() {
+        while (!stack.isEmpty()) {
+            NestedInteger curr = stack.peek();
+            if (curr.isInteger()) {
+                return true;
+            }
+            stack.pop();
+            for (int i = curr.getList().size() - 1; i &gt;= 0; i--) {
+                stack.push(curr.getList().get(i));
+            }
+        }
+        return false;
+    }
+}
+</code></pre>
+        </div>
+    </div>
+</section>
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<!--        This order must be followed!!       -->
+<script src="../../static/jquery/jquery-3.3.1.js"></script>
+<script src="../../static/popper/popper.js"></script>
+<script src="../../static/bootstrap-4.3.1-dist/js/bootstrap.js"></script>
+
+<!--        inner script to control nav bar background color        -->
+
+</body>
+</html>
