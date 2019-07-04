@@ -87,6 +87,7 @@
                 </li>
                 <li><a href='https://leetcode.com/problems/add-and-search-word-data-structure-design'><span>Add and Search Word - Data structure design</span></a>
                 </li>
+                <li><a href='https://leetcode.com/problems/word-search-ii'><span>Word Search II</span></a></li>
 
             </ul>
             <h2><span>Problem description </span></h2>
@@ -132,6 +133,28 @@ search(&quot;b..&quot;) -&gt; true
             <p><strong><span>Note:</span></strong>
                 <span>You may assume that all words are consist of lowercase letters </span><code>a-z</code><span>.</span>
             </p>
+            <h3><span>Word Search II</span></h3>
+            <p><span>Given a 2D board and a list of words from the dictionary, find all words in the board.</span></p>
+            <p><span>Each word must be constructed from letters of sequentially adjacent cell, where &quot;adjacent&quot; cells are those horizontally or vertically neighboring. The same letter cell may not be used more than once in a word.</span>
+            </p>
+            <p><strong><span>Example:</span></strong></p>
+            <pre><code>Input:
+board = [
+  [&#39;o&#39;,&#39;a&#39;,&#39;a&#39;,&#39;n&#39;],
+  [&#39;e&#39;,&#39;t&#39;,&#39;a&#39;,&#39;e&#39;],
+  [&#39;i&#39;,&#39;h&#39;,&#39;k&#39;,&#39;r&#39;],
+  [&#39;i&#39;,&#39;f&#39;,&#39;l&#39;,&#39;v&#39;]
+]
+words = [&quot;oath&quot;,&quot;pea&quot;,&quot;eat&quot;,&quot;rain&quot;]
+
+Output: [&quot;eat&quot;,&quot;oath&quot;]
+</code></pre>
+            <p><strong><span>Note:</span></strong></p>
+            <ol>
+                <li><span>All inputs are consist of lowercase letters </span><code>a-z</code><span>.</span></li>
+                <li><span>The values of </span><code>words</code><span> are distinct.</span></li>
+
+            </ol>
             <h2><span>Method</span></h2>
             <h3><span>Implement Trie (Prefix Tree)</span></h3>
             <p>
@@ -152,6 +175,9 @@ search(&quot;b..&quot;) -&gt; true
             <p><span>If current char is </span><code>.</code><span>, then find all children under current node and do the DFS on it until find all possible combinations.</span>
             </p>
             <p><span>If current char is </span><code>.</code><span> and it is the end of given searching word, find if passing node is end of word. If it is not the end of it, return false. For instance, if a dictionary has a word </span><code>a</code><span>, then search </span><code>a.</code><span> should return false.</span>
+            </p>
+            <h3><span>Word Search II</span></h3>
+            <p><span>Use a simplified trie that store nodes by array instead of hash map to store given words. Search in board to see if board contains words from list.</span>
             </p>
             <h2><span>Code</span></h2>
             <h3><span>Implement Trie (Prefix Tree)</span></h3>
@@ -480,6 +506,93 @@ search(&quot;b..&quot;) -&gt; true
         System.out.println(test.search(&quot;dap&quot;));
 
     }
+}
+</code></pre>
+            <h3><span>Word Search II</span></h3>
+            <pre><code class='language-java' lang='java'>/**
+ * Use a simplified trie that store nodes by array instead of hash map to store given words.
+ * Search in board to see if board contains words from list.
+ *
+ * @param board given board
+ * @param words words list
+ * @return all words in list
+ */
+public List&lt;String&gt; findWords(char[][] board, String[] words) {
+
+    List&lt;String&gt; out = new ArrayList&lt;&gt;();
+    TrieNode root = trie(words);
+
+    for (int i = 0; i &lt; board.length; i++) {
+        for (int j = 0; j &lt; board[0].length; j++) {
+            dfs(board, i, j, root, out);
+        }
+    }
+
+    return out;
+}
+
+/**
+ * DFS search in board.
+ *
+ * @param board given board
+ * @param i     row
+ * @param j     column
+ * @param p     trie node
+ * @param out   output list
+ */
+private void dfs(char[][] board, int i, int j, TrieNode p, List&lt;String&gt; out) {
+    char c = board[i][j];
+    if (c == &#39;#&#39; || p.next[c - &#39;a&#39;] == null) {
+        return;
+    }
+    p = p.next[c - &#39;a&#39;];
+    if (p.word != null) {   // found one
+        out.add(p.word);
+        p.word = null;     // de-duplicate
+    }
+
+    board[i][j] = &#39;#&#39;;
+    if (i &gt; 0) {
+        dfs(board, i - 1, j, p, out);
+    }
+    if (j &gt; 0) {
+        dfs(board, i, j - 1, p, out);
+    }
+    if (i &lt; board.length - 1) {
+        dfs(board, i + 1, j, p, out);
+    }
+    if (j &lt; board[0].length - 1) {
+        dfs(board, i, j + 1, p, out);
+    }
+    board[i][j] = c;
+}
+
+/**
+ * Simplified trie constructed by array.
+ *
+ * @param words given words list
+ * @return new trie
+ */
+private TrieNode trie(String[] words) {
+    TrieNode root = new TrieNode();
+    for (String w : words) {
+        TrieNode p = root;
+        for (char c : w.toCharArray()) {
+            int i = c - &#39;a&#39;;
+            if (p.next[i] == null) p.next[i] = new TrieNode();
+            p = p.next[i];
+        }
+        p.word = w;
+    }
+    return root;
+}
+
+/**
+ * Node in trie.
+ */
+class TrieNode {
+    TrieNode[] next = new TrieNode[26];
+    String word;
 }
 </code></pre>
         </div>
