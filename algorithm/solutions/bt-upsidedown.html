@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Binary Tree Upside Down | Posts</title>
+    <link rel="stylesheet" type="text/css"
+          href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Martel+Sans:200,300,400,600,700,800,900&display=swap"
+          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Raleway:200i,400,800" rel="stylesheet">
+    <link rel="stylesheet" href="../../static/css/post-content.css">
+    <link rel="stylesheet" href="../../static/bootstrap-4.3.1-dist/css/bootstrap.css">
+
+    <!--    title icon        -->
+    <link rel="shortcut icon" type="image/x-icon" href="../../static/img/Avatar-3.jpg"/>
+    <link rel="stylesheet" href="../../static/css/coding.css">
+    <script src="../../static/script/coding_style.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <style> @media print {
+        .hljs {
+            overflow: visible;
+            word-wrap: break-word !important;
+        }
+    }</style>
+</head>
+<body>
+
+<!--        nav bar     -->
+<nav class="navbar navbar-expand-lg py-0 fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="https://yyzhou95.github.io/">HOME</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="../index.html">Posts <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../tags/index.html">Tags <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../algorithm/index.html">Algorithm <span
+                            class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../archived/index.html">Archived <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item dropdown active">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                       data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        Other Links
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="https://github.com/yyzhou95">Github</a>
+                        <a class="dropdown-item" href="https://github.com/yyzhou95/yyzhou95.github.io">This page</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="../../about/">About Me</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<section class="post-content">
+    <div class="container">
+
+        <div class="post-heading">
+            <h1>
+                Binary Tree Upside Down
+            </h1>
+        </div>
+
+        <div class="text-right post-date">
+            July 06, 2019
+        </div>
+        <div class="post-main">
+            <p><span>Link: </span><a href='https://leetcode.com/problems/binary-tree-upside-down/'><span>Binary Tree Upside Down</span></a>
+            </p>
+            <h2><span>Problem description </span></h2>
+            <p><span>Given a binary tree where all the right nodes are either leaf nodes with a sibling (a left node that shares the same parent node) or empty, flip it upside down and turn it into a tree where the original right nodes turned into left leaf nodes. Return the new root.</span>
+            </p>
+            <p><strong><span>Example:</span></strong></p>
+            <pre><code>Input: [1,2,3,4,5]
+
+    1
+   / \
+  2   3
+ / \
+4   5
+
+Output: return the root of the binary tree [4,5,2,#,#,3,1]
+
+   4
+  / \
+ 5   2
+    / \
+   3   1
+</code></pre>
+            <h2><span>Method</span></h2>
+            <p><span>&quot;Upside down” is to mark left child to root, root to right child, right child to new root’s left child.</span>
+            </p>
+            <p><span>Therefore, use recursion to complete this process. First is to move to the leftmost child of tree. This will be the new root. Then move previous root to its left child&#39;s right node, and move root&#39;s left child to new root&#39;s left. Remember to mark the previous root’s child as null to avoid duplicated node in tree. Finally, return this new root for later recursion.</span>
+            </p>
+            <h2><span>Code</span></h2>
+            <pre><code class='language-java' lang='java'>/**
+ * &quot;Upside down&quot; first is to turn previous left most child to new root node.
+ * Then move previous root to its left child&#39;s right node, and move root&#39;s left child to new root&#39;s left.
+ *
+ * @param root root node
+ * @return flipped tree
+ */
+public TreeNode upsideDownBinaryTree(TreeNode root) {
+
+    /* Corner case and end point */
+    if (root == null || root.left == null &amp;&amp; root.right == null) {
+        return root;
+    }
+
+    TreeNode newRoot = upsideDownBinaryTree(root.left);     // return left most child node
+
+    /* &quot;Upside down&quot; first is to turn previous left most child to new root node.
+     * Then move previous root to its left child&#39;s right node, and move root&#39;s left child to new root&#39;s left. */
+    root.left.left = root.right;
+    root.left.right = root;
+
+    root.left = null;       // in case this is the last level
+    root.right = null;
+
+    return newRoot;     // return current level root for next recursion
+}
+</code></pre>
+        </div>
+    </div>
+</section>
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<!--        This order must be followed!!       -->
+<script src="../../static/jquery/jquery-3.3.1.js"></script>
+<script src="../../static/popper/popper.js"></script>
+<script src="../../static/bootstrap-4.3.1-dist/js/bootstrap.js"></script>
+
+<!--        inner script to control nav bar background color        -->
+
+</body>
+</html>
