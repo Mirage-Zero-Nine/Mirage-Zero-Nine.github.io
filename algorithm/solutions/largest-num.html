@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Insertion Sort List | Posts</title>
+    <title>Largest Number | Posts</title>
     <link rel="stylesheet" type="text/css"
           href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
     <link href="https://fonts.googleapis.com/css?family=Martel+Sans:200,300,400,600,700,800,900&display=swap"
@@ -73,7 +73,7 @@
 
         <div class="post-heading">
             <h1>
-                Insertion Sort List
+                Largest Number
             </h1>
         </div>
 
@@ -82,77 +82,66 @@
         </div>
         <div class="post-main">
             <p><span>Link: </span><a
-                    href='https://leetcode.com/problems/insertion-sort-list/'><span>Insertion Sort List</span></a></p>
-            <h2><span>Problem description </span></h2>
-            <p><span>Sort a linked list using insertion sort.</span></p>
-            <p><img src='../../static/img/Insertion-sort-example-300px.gif' style="width: auto; height: auto;" alt='img'
-                    referrerPolicy='no-referrer'/>
+                    href='https://leetcode.com/problems/largest-number/'><span>Largest Number</span></a></p>
+            <h2><span>Problem description</span></h2>
+            <p><span>Given a list of non negative integers, arrange them such that they form the largest number.</span>
             </p>
-            <p>
-                A graphical example of insertion sort. The partial sorted list (black) initially contains only the first
-                element in the list.
-                With each iteration one element (red) is removed from the input data and inserted in-place into the
-                sorted list.
-            </p>
-            <p><strong>Algorithm of Insertion Sort:</strong></p>
-            <ol>
-                <li>Insertion sort iterates, consuming one input element each repetition, and growing a sorted output
-                    list.
-                </li>
-                <li>At each iteration, insertion sort removes one element from the input data, finds the location it
-                    belongs within the sorted list, and inserts it there.
-                </li>
-                <li>It repeats until no input elements remain.</li>
-
-            </ol>
             <p><strong><span>Example 1:</span></strong></p>
-            <pre><code>Input: 4-&gt;2-&gt;1-&gt;3
-Output: 1-&gt;2-&gt;3-&gt;4
+            <pre><code>Input: [10,2]
+Output: &quot;210&quot;
 </code></pre>
             <p><strong><span>Example 2:</span></strong></p>
-            <pre><code>Input: -1-&gt;5-&gt;3-&gt;4-&gt;0
-Output: -1-&gt;0-&gt;3-&gt;4-&gt;5
+            <pre><code>Input: [3,30,34,5,9]
+Output: &quot;9534330&quot;
 </code></pre>
+            <p><strong><span>Note:</span></strong><span> The result may be very large, so you need to return a string instead of an integer. </span>
+            </p>
             <h2><span>Method</span></h2>
-            <p><span>Simply implement the insertion sort.</span></p>
+            <p><span>The principle of comparison is similar to dictionary lexical order.</span></p>
+            <p><span>Only compare first number between two numbers, place larger one at head of result for a largest number. If two numbers have same first digit, then compare second digit with same rule.</span>
+            </p>
             <h2><span>Code</span></h2>
             <pre><code class='language-java' lang='java'>/**
- * Implement the insertion sort.
+ * The principle of comparison is similar to dictionary lexical order.
+ * Only compare first number between two numbers, place larger one at head of result for a largest number.
+ * If two numbers have same first digit, then compare second digit with same rule.
  *
- * @param head head of list
- * @return sorted list
+ * @param nums given array
+ * @return largest # that this array could make up
  */
-public ListNode insertionSortList(ListNode head) {
+public String largestNumber(int[] nums) {
 
-    if (head == null || head.next == null) {
-        return head;
+    /* Corner case */
+    if (nums == null || nums.length == 0) {
+        return &quot;&quot;;
     }
 
-    ListNode sortedHead = head, sortedTail = head;
-    head = head.next;
-    sortedHead.next = null;
-
-    while (head != null) {
-        ListNode temp = head;
-        head = head.next;       // move head to its next
-        temp.next = null;       // new head
-
-        if (temp.val &lt;= sortedHead.val) {       // next val is less than the head, insert it in the front
-            temp.next = sortedHead;
-            sortedHead = temp;
-        } else if (temp.val &gt;= sortedTail.val) {      // next val is greater than the tail, insert it at the end
-            sortedTail.next = temp;
-            sortedTail = sortedTail.next;
-        } else {        // new val is somewhere in the middle
-            ListNode current = sortedHead;
-            while (current.next != null &amp;&amp; current.next.val &lt; temp.val) {
-                current = current.next;
-            }
-            temp.next = current.next;
-            current.next = temp;
-        }
+    String[] num = new String[nums.length];
+    for (int i = 0; i &lt; nums.length; i++) {
+        num[i] = String.valueOf(nums[i]);       // convert int to string for comparator
     }
-    return sortedHead;
+
+    /* The principle of comparison is similar to dictionary lexical order.
+     * Only compare first number between two numbers, place larger one at head of result for a largest number.
+     * If two numbers have same first digit, then compare second digit with same rule. */
+    Comparator&lt;String&gt; comparator = (str1, str2) -&gt; {
+        String s1 = str1 + str2;
+        String s2 = str2 + str1;
+        return s2.compareTo(s1);
+    };
+
+    Arrays.sort(num, comparator);
+
+    if (num[0].charAt(0) == &#39;0&#39;) {      // if whole array is 0
+        return &quot;0&quot;;
+    }
+
+    StringBuilder sb = new StringBuilder();
+    for (String s : num) {
+        sb.append(s);
+    }
+
+    return sb.toString();
 }
 </code></pre>
         </div>
