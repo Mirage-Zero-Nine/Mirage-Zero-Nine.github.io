@@ -77,7 +77,7 @@
         </div>
 
         <div class="text-right post-date">
-            June 29, 2019
+            July 15, 2019
         </div>
 
         <div class="post-main">
@@ -343,15 +343,14 @@ public ListNode reverseKGroup(ListNode head, int k) {
         return head;
     }
 
-    ListNode begin;
     ListNode dummy = new ListNode(-1);
     dummy.next = head;
-    begin = dummy;
+    ListNode begin = dummy;
     int i = 0;
     while (head != null) {
         if (++i % k == 0) {
-            begin = reverse(begin, head.next);
-            head = begin.next;
+            begin = reverse(begin, head.next);      // obtain end of reversed list
+            head = begin.next;                      // move to next reverse sub linked list
         } else {
             head = head.next;       // head works as local reverse end node
         }
@@ -360,29 +359,76 @@ public ListNode reverseKGroup(ListNode head, int k) {
 }
 
 /**
- * Reverse node in list.
+ * Reverse node in from dummy.next to end (end is not included).
  * Note that return value is the next reverse start dummy head node, instead of next start node.
  *
- * @param begin dummy head node
- * @param end   end node
+ * @param dummy dummy head node (not included in reverse)
+ * @param end   end node (not included in reverse)
  * @return next reverse start node
  */
-public ListNode reverse(ListNode begin, ListNode end) {
-    ListNode current = begin.next;
-    ListNode next, first;
-    ListNode previous = begin;
-    first = current;
+public ListNode reverse(ListNode dummy, ListNode end) {
+    ListNode current = dummy.next;
+    ListNode first = current;     // first: first node to be reversed
+    ListNode previous = dummy;
+    ListNode next;
 
     while (current != end) {
-        next = current.next;
-        current.next = previous;
-        previous = current;
-        current = next;
+        next = current.next;        // save next current position when current node reverse is completed
+        current.next = previous;    // reverse: link current node to previous node
+        previous = current;         // current reverse is done, move previous node to current node
+        current = next;             // move current node to next node
     }
 
-    begin.next = previous;      // link beginning node to last reversed node&#39;s next node
-    first.next = current;       // link
+    /*
+     * After iteration, current node is at end now.
+     * Link beginning of list to last node reversed and link first reversed node to end of list.
+     * Return last reversed node, as it will be the next reverse&#39;s beginning. (dummy head) */
+    dummy.next = previous;      // link beginning node to last reversed node&#39;s next node
+    first.next = end;           // link start to next start as next reverse&#39;s dummy
     return first;
+}
+
+/**
+ * Reverse list in recursion.
+ *
+ * @param head head ListNode
+ * @param k    reverse the nodes of a linked list k at a time
+ * @return reversed head ListNode
+ */
+public ListNode reverseKGroupRecursion(ListNode head, int k) {
+
+    /* Corner case */
+    if (k &lt;= 1 || head == null) {
+        return head;
+    }
+
+    ListNode current = head;
+    int count = 0;
+
+    while (current != null &amp;&amp; count != k) {     // find current reverse part
+        current = current.next;
+        count++;
+    }
+
+    if (count == k) {       // if current part is not remaining part of linked list
+
+        current = reverseKGroupRecursion(current, k);        // each recursion returns next recursion&#39;s start node
+
+        /* Reverse example:
+         * 1 -&gt; 2 -&gt; 3 -&gt; 4 -&gt; 5 -&gt;
+         * &lt;- 1 &lt;- 2 &lt;- 3 &lt;- 4 &lt;- 5
+         * 5 -&gt; 4 -&gt; 3 -&gt; 2 -&gt; 1 -&gt; */
+        while (count &gt; 0) {
+            ListNode cache = head.next;     // store next node that will be relinked
+            head.next = current;        // link origin next pointer to previous node for reverse
+            current = head;
+            head = cache;       // set next reverse node
+            count--;
+        }
+        head = current;
+    }
+
+    return head;
 }
 </code></pre>
             <h3><span>Reorder List</span></h3>
