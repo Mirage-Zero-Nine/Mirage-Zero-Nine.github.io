@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Candy | Algorithm</title>
+    <link rel="stylesheet" type="text/css"
+          href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Martel+Sans:200,300,400,600,700,800,900&display=swap"
+          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Raleway:200i,400,800" rel="stylesheet">
+    <link rel="stylesheet" href="../../static/css/post-content.css">
+    <link rel="stylesheet" href="../../static/bootstrap-4.3.1-dist/css/bootstrap.css">
+
+    <!--    title icon        -->
+    <link rel="shortcut icon" type="image/x-icon" href="../../static/img/Avatar-3.jpg"/>
+    <link rel="stylesheet" href="../../static/css/coding.css">
+    <script src="../../static/script/coding_style.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <style> @media print {
+        .hljs {
+            overflow: visible;
+            word-wrap: break-word !important;
+        }
+    }</style>
+</head>
+<body>
+
+<!--        nav bar     -->
+<nav id="mainNav" class="navbar navbar-expand-lg py-0 fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="https://yyzhou95.github.io/">HOME</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="../index.html">Posts <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../tags/index.html">Tags <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../algorithm/index.html">Algorithm <span
+                            class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../archived/index.html">Archived <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item dropdown active">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                       data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        Other Links
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="https://github.com/yyzhou95">Github</a>
+                        <a class="dropdown-item" href="https://github.com/yyzhou95/yyzhou95.github.io">This page</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="../../about/">About Me</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<section class="post-content">
+    <div class="container">
+
+        <div class="post-heading">
+            <h1>
+                Candy
+            </h1>
+        </div>
+
+        <div class="text-right post-date">
+            July 15, 2019
+        </div>
+        <div class="post-main">
+            <p><span>Link: </span><a href='https://leetcode.com/problems/candy/'><span>Candy</span></a></p>
+            <h2><span>Problem description </span></h2>
+            <p><span>There are </span><em><span>N</span></em><span> children standing in a line. Each child is assigned a rating value.</span>
+            </p>
+            <p><span>You are giving candies to these children subjected to the following requirements:</span></p>
+            <ul>
+                <li><span>Each child must have at least one candy.</span></li>
+                <li><span>Children with a higher rating get more candies than their neighbors.</span></li>
+
+            </ul>
+            <p><span>What is the minimum candies you must give?</span></p>
+            <p><strong><span>Example 1:</span></strong></p>
+            <pre><code>Input: [1,0,2]
+Output: 5
+Explanation: You can allocate to the first, second and third child with 2, 1, 2 candies respectively.
+</code></pre>
+            <p><strong><span>Example 2:</span></strong></p>
+            <pre><code>Input: [1,2,2]
+Output: 4
+Explanation: You can allocate to the first, second and third child with 1, 2, 1 candies respectively.
+             The third child gets 1 candy because it satisfies the above two conditions.
+</code></pre>
+            <h2><span>Method</span></h2>
+            <p><span>If sub array is increasing, then give candy based by previous rating.</span></p>
+            <p><span>If sub array is decreasing, then count the length of decreasing sub array.</span></p>
+            <p><span>If decreasing sub array is longer than largest candies give to previous child, update candies with length. Otherwise, simply add the sum from 1 to length of decreasing sub array to total candies count.</span>
+            </p>
+            <p><span>Finally, if decreasing sub array reaches the end of array, count the decreasing sum again.</span>
+            </p>
+            <h2><span>Code</span></h2>
+            <pre><code class='language-java' lang='java'>/**
+ * If sub array is increasing, then give candy based by previous rating.
+ * If sub array is decreasing, then count the length of decreasing sub array.
+ * If decreasing sub array is longer than largest candies give to previous child, update candies with length.
+ * Otherwise, simply add the sum from 1 to length of decreasing sub array to total candies count.
+ * Finally, if decreasing sub array reaches the end of array, count the decreasing sum again.
+ *
+ * @param ratings given rating array
+ * @return minimum total candies to give
+ */
+public int candy(int[] ratings) {
+
+    /* Corner case */
+    if (ratings.length &lt; 2) {
+        return ratings.length;
+    }
+
+    int decreasing = 0;     // length of decreasing sub array
+    int previousCandy = 1;      // largest candies give to a child in previous array
+    int totalCandy = 1;     // sum of candies
+
+    for (int i = 1; i &lt; ratings.length; i++) {
+
+        if (ratings[i] &lt; ratings[i - 1]) {      // calculate total length of decreasing array
+            decreasing++;
+        } else {
+
+            /*
+             * If there is no decreasing array, then check current rating and previous rating.
+             * If rating is the same, previous largest candies can be set to 1.
+             * If later part is decreasing array, sum will be recalculated.
+             * Otherwise, 1 candy will suffice, since only higher rating get more candies than their neighbors. */
+            if (decreasing == 0) {
+                if (ratings[i] == ratings[i - 1]) {
+                    previousCandy = 1;
+                    totalCandy += previousCandy;
+                } else {        // normal increasing array
+                    previousCandy++;
+                    totalCandy += previousCandy;
+                }
+            } else {
+                /*
+                 * If reaches the end of decreasing array, then there are two conditions:
+                 * If decreasing part is shorter than most previous candies , simply add sum of length to total candies.
+                 * Otherwise, the whole decreasing sub array will be updated.
+                 * The candies give to child should starts at lowest rating, which is 1.
+                 * Then add one during the traverse of decreasing sub array.
+                 * Finally, add the difference at the start of decreasing sub array.
+                 * The value is length of decreasing sub array minus previous candies give to this point. */
+                totalCandy += (1 + decreasing) * decreasing / 2;
+
+                if (decreasing &gt;= previousCandy) {
+                    totalCandy = totalCandy + (decreasing - previousCandy) + 1;
+                }
+
+                previousCandy = (ratings[i] == ratings[i - 1]) ? 1 : 2;     // current should be higher than lower rating
+                totalCandy += previousCandy;
+                decreasing = 0;
+            }
+        }
+    }
+
+    /* If decreasing sub array reaches the end of array, then the sum of this sub array will not be added to total.
+     * Therefore, complete the decreasing array calculation process again to finish it. */
+    if (decreasing &gt; 0) {
+        totalCandy += (1 + decreasing) * decreasing / 2;
+        if (decreasing &gt;= previousCandy) {
+            totalCandy += decreasing - previousCandy + 1;
+        }
+    }
+
+    return totalCandy;
+}
+</code></pre>
+        </div>
+    </div>
+</section>
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<!--        This order must be followed!!       -->
+<script src="../../static/jquery/jquery-3.3.1.js"></script>
+<script src="../../static/popper/popper.js"></script>
+<script src="../../static/bootstrap-4.3.1-dist/js/bootstrap.js"></script>
+
+<!--        inner script to control nav bar background color        -->
+
+</body>
+</html>
