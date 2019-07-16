@@ -217,7 +217,7 @@ Output: 0
  * Use modified binary search.
  * Only one sub-array in each search will possibly not be in ascending order.
  * Hence, in each binary search iteration, identify sub-array that is not in ascending order.
- * If target is not in normal ascending sub-array, compare target to the rest sub-array&#39;s mid and end.
+ * If target is not in normal ascending sub-array, compare target to the rest sub-array's mid and end.
  * If sub-array [mid, end] is normal array, compare target to this array to see if in this range.
  * Repeat this process until no sub-array to search or found target.
  *
@@ -228,29 +228,29 @@ Output: 0
 public int search(int[] nums, int target) {
 
     /* Corner case */
-    if (nums.length &lt; 1) {
+    if (nums.length < 1) {
         return -1;
     }
 
     int left = 0, right = nums.length - 1, mid;
 
-    while (left &lt; right) {
+    while (left <= right) {     // avoid corner case that target is at left most of array
 
         mid = (left + right) / 2;
         if (nums[mid] == target) {
             return mid;
         }
 
-        if (nums[left] &lt;= nums[mid]) {      // left sub-array is normal ascending array
+        if (nums[left] <= nums[mid]) {      // left sub-array is normal ascending array, and including array with 2 elements
 
-            if (target &lt; nums[mid] &amp;&amp; target &gt;= nums[left]) {       // nums[left] &lt;= target &lt;  nums[mid]
+            if (target < nums[mid] && target >= nums[left]) {       // nums[left] <= target <  nums[mid]
                 right = mid - 1;        // target is in the left sub-array
-            } else {        // target &lt; left =&gt; right subarray is rotated, target &gt; mid =&gt; right subarray
+            } else {        // target < left => right subarray is rotated, target > mid => right subarray
                 left = mid + 1;
             }
-        } else {        // nums[left] &gt; nums[mid] =&gt; rotated pivot in left subarray
+        } else {        // nums[left] > nums[mid] => rotated pivot in left subarray
 
-            if (target &lt;= nums[right] &amp;&amp; target &gt; nums[mid]) {      // nums[mid] &lt; target &lt;= nums[right]
+            if (target <= nums[right] && target > nums[mid]) {      // nums[mid] < target <= nums[right]
                 left = mid + 1;     // normal situation, target at right subarray
             } else {        // otherwise, target is in right subarray
                 right = mid - 1;
@@ -258,11 +258,7 @@ public int search(int[] nums, int target) {
         }
     }
 
-    /*
-     * If last element in binary search is target, then return it.
-     * Otherwise, the element is not found in array.
-     * */
-    return (nums[left] == target) ? left : -1;
+    return -1;
 }
 </code></pre>
             <h3><span>Search in Rotated Sorted Array II</span></h3>
