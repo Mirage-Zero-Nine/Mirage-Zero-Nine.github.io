@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Delete Nodes And Return Forest | Algorithm</title>
+    <link rel="stylesheet" type="text/css"
+          href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Martel+Sans:200,300,400,600,700,800,900&display=swap"
+          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Raleway:200i,400,800" rel="stylesheet">
+    <link rel="stylesheet" href="../../static/css/post-content.css">
+    <link rel="stylesheet" href="../../static/bootstrap-4.3.1-dist/css/bootstrap.css">
+
+    <!--    title icon        -->
+    <link rel="shortcut icon" type="image/x-icon" href="../../static/img/Avatar-3.jpg"/>
+    <link rel="stylesheet" href="../../static/css/coding.css">
+    <script src="../../static/script/coding_style.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <style> @media print {
+        .hljs {
+            overflow: visible;
+            word-wrap: break-word !important;
+        }
+    }</style>
+</head>
+<body>
+
+<!--        nav bar     -->
+<nav id="mainNav" class="navbar navbar-expand-lg py-0 fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="https://yyzhou95.github.io/">HOME</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="../index.html">Posts <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../tags/index.html">Tags <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../algorithm/index.html">Algorithm <span
+                            class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../archived/index.html">Archived <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item dropdown active">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                       data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        Other Links
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="https://github.com/yyzhou95">Github</a>
+                        <a class="dropdown-item" href="https://github.com/yyzhou95/yyzhou95.github.io">This page</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="../../about/">About Me</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<section class="post-content">
+    <div class="container">
+
+        <div class="post-heading">
+            <h1>
+                Delete Nodes And Return Forest
+            </h1>
+        </div>
+
+        <div class="text-right post-date">
+            July 16, 2019
+        </div>
+        <div class="post-main">
+            <p><span>Link: </span><a href='https://leetcode.com/problems/delete-nodes-and-return-forest/'><span>Delete Nodes And Return Forest</span></a>
+            </p>
+            <h2><span>Problem description </span></h2>
+            <p><span>Given the </span><code>root</code><span> of a binary tree, each node in the tree has a distinct value.</span>
+            </p>
+            <p><span>After deleting all nodes with a value in </span><code>to_delete</code><span>, we are left with a forest (a disjoint union of trees).</span>
+            </p>
+            <p>
+                <span>Return the roots of the trees in the remaining forest.  You may return the result in any order. </span>
+            </p>
+            <p><strong><span>Example 1:</span></strong></p>
+            <p><strong><img
+                    src='../../static/img/screen-shot-2019-07-01-at-53836-pm.png'
+                    alt='img' referrerPolicy='no-referrer'/></strong></p>
+            <pre><code>Input: root = [1,2,3,4,5,6,7], to_delete = [3,5]
+Output: [[1,2,null,4],[6],[7]]
+</code></pre>
+            <p><strong><span>Constraints:</span></strong></p>
+            <ul>
+                <li><span>The number of nodes in the given tree is at most </span><code>1000</code><span>.</span></li>
+                <li>
+                    <span>Each node has a distinct value between </span><code>1</code><span> and </span><code>1000</code><span>.</span>
+                </li>
+                <li><code>to_delete.length &lt;= 1000</code></li>
+                <li>
+                    <code>to_delete</code><span> contains distinct values between </span><code>1</code><span> and </span><code>1000</code><span>.</span>
+                </li>
+
+            </ul>
+            <h2><span>Method</span></h2>
+            <p><span>DFS recursion with a boolean marks whether current node is a new root of sub tree.</span></p>
+            <p><span>If current node requires to be deleted, then mark its sub tree as new root and continue. </span>
+            </p>
+            <p><span>Note that if this node requires to be removed, then return null. Otherwise, return node it self will suffice.</span>
+            </p>
+            <h2><span>Code</span></h2>
+            <pre><code class='language-java' lang='java'>private List&lt;TreeNode&gt; out = new LinkedList&lt;&gt;();
+private HashSet&lt;Integer&gt; s = new HashSet&lt;&gt;();
+
+/**
+ * DFS recursion.
+ *
+ * @param root      root node
+ * @param to_delete nodes to be deleted
+ * @return the roots of the trees in the remaining forest
+ */
+public List&lt;TreeNode&gt; delNodes(TreeNode root, int[] to_delete) {
+    if (root == null) {
+        return null;
+    }
+
+    for (int value : to_delete) {
+        s.add(value);
+    }
+
+    dfs(root, true);
+    return this.out;
+}
+
+/**
+ * DFS traverse tree to find nodes that are in delete set.
+ * If current node requires to be deleted, then mark its sub tree as new root and continue.
+ * Note that if this node requires to be removed, then return null.
+ * Otherwise, return node it self will suffice.
+ *
+ * @param r      root node
+ * @param isRoot is current node a new root
+ * @return if current node requires to be removed, return null; otherwise return current node
+ */
+private TreeNode dfs(TreeNode r, boolean isRoot) {
+    if (r == null) {
+        return null;
+    }
+
+    boolean deleted = s.contains(r.val);
+
+    if (isRoot &amp;&amp; !deleted) {
+        out.add(r);
+    }
+
+    r.left = dfs(r.left, deleted);
+    r.right = dfs(r.right, deleted);
+
+    return deleted ? null : r;
+}
+</code></pre>
+        </div>
+    </div>
+</section>
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<!--        This order must be followed!!       -->
+<script src="../../static/jquery/jquery-3.3.1.js"></script>
+<script src="../../static/popper/popper.js"></script>
+<script src="../../static/bootstrap-4.3.1-dist/js/bootstrap.js"></script>
+
+<!--        inner script to control nav bar background color        -->
+
+</body>
+</html>
