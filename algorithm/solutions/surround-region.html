@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Surrounded Regions | Algorithm</title>
+    <link rel="stylesheet" type="text/css"
+          href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Martel+Sans:200,300,400,600,700,800,900&display=swap"
+          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Raleway:200i,400,800" rel="stylesheet">
+    <link rel="stylesheet" href="../../static/css/post-content.css">
+    <link rel="stylesheet" href="../../static/bootstrap-4.3.1-dist/css/bootstrap.css">
+
+    <!--    title icon        -->
+    <link rel="shortcut icon" type="image/x-icon" href="../../static/img/Avatar-3.jpg"/>
+    <link rel="stylesheet" href="../../static/css/coding.css">
+    <script src="../../static/script/coding_style.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <style> @media print {
+        .hljs {
+            overflow: visible;
+            word-wrap: break-word !important;
+        }
+    }</style>
+</head>
+<body>
+
+<!--        nav bar     -->
+<nav id="mainNav" class="navbar navbar-expand-lg py-0 fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="https://yyzhou95.github.io/">HOME</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="../index.html">Posts <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../tags/index.html">Tags <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../algorithm/index.html">Algorithm <span
+                            class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../archived/index.html">Archived <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item dropdown active">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                       data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        Other Links
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="https://github.com/yyzhou95">Github</a>
+                        <a class="dropdown-item" href="https://github.com/yyzhou95/yyzhou95.github.io">This page</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="../../about/">About Me</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<section class="post-content">
+    <div class="container">
+
+        <div class="post-heading">
+            <h1>
+                Surrounded Regions
+            </h1>
+        </div>
+
+        <div class="text-right post-date">
+            July 16, 2019
+        </div>
+        <div class="post-main">
+            <p><span>Link: </span><a
+                    href='https://leetcode.com/problems/surrounded-regions/'><span>Surrounded Regions</span></a></p>
+            <h2><span>Problem description </span></h2>
+            <p>
+                <span>Given a 2D board containing </span><code>&#39;X&#39;</code><span> and </span><code>&#39;O&#39;</code><span> (</span><strong><span>the letter O</span></strong><span>), capture all regions surrounded by </span><code>&#39;X&#39;</code><span>.</span>
+            </p>
+            <p><span>A region is captured by flipping all </span><code>&#39;O&#39;</code><span>s into </span><code>&#39;X&#39;</code><span>s in that surrounded region.</span>
+            </p>
+            <p><strong><span>Example:</span></strong></p>
+            <pre><code>X X X X
+X O O X
+X X O X
+X O X X
+</code></pre>
+            <p><span>After running your function, the board should be:</span></p>
+            <pre><code>X X X X
+X X X X
+X X X X
+X O X X
+</code></pre>
+            <p><strong><span>Explanation:</span></strong></p>
+            <p><span>Surrounded regions shouldn’t be on the border, which means that any </span><code>&#39;O&#39;</code><span> on the border of the board are not flipped to </span><code>&#39;X&#39;</code><span>. Any </span><code>&#39;O&#39;</code><span> that is not on the border and it is not connected to an </span><code>&#39;O&#39;</code><span> on the border will be flipped to </span><code>&#39;X&#39;</code><span>. Two cells are connected if they are adjacent cells connected horizontally or vertically.</span>
+            </p>
+            <h2><span>Method</span></h2>
+            <p><span>Find all &#39;O&#39; on boundary of given board and relating &#39;O&#39;, set them to a third value. Use BFS to searching relating &#39;O&#39;.</span>
+            </p>
+            <h2><span>Code</span></h2>
+            <pre><code class='language-java' lang='java'>/**
+ * Find all &#39;O&#39; on boundary of given board and relating &#39;O&#39;, set them to a third value.
+ * Use BFS to searching relating &#39;O&#39;.
+ * These &#39;O&#39;s will not be flipped.
+ * After such &#39;O&#39;s are all found, flip the rest &#39;O&#39;s.
+ *
+ * @param board given board
+ */
+public void solve(char[][] board) {
+    if (board.length &lt; 2 || board[0].length &lt; 2) {
+        return;
+    }
+
+    /* Find all &#39;O&#39; on wall of board and all relating &#39;O&#39;. These &#39;O&#39; will not be flipped. */
+    for (int i = 0; i &lt; board.length; i++) {
+        for (int j = 0; j &lt; board[0].length; j++) {
+            if ((i == 0 || j == 0 || i == board.length - 1 || j == board[0].length - 1) &amp;&amp; board[i][j] == &#39;O&#39;) {
+                board[i][j] = &#39;T&#39;;
+                LinkedList&lt;Point&gt; q = new LinkedList&lt;&gt;();
+                q.offer(new Point(i, j));
+
+                while (!q.isEmpty()) {
+                    Point temp = q.remove();
+                    int r = temp.x;
+                    int c = temp.y;
+
+                    /* left */
+                    if (r - 1 &gt; -1 &amp;&amp; board[r - 1][c] == &#39;O&#39;) {
+                        board[r - 1][c] = &#39;T&#39;;
+                        q.offer(new Point(r - 1, c));
+                    }
+
+                    /* right */
+                    if (r + 1 &lt; board.length &amp;&amp; board[r + 1][c] == &#39;O&#39;) {
+                        board[r + 1][c] = &#39;T&#39;;
+                        q.offer(new Point(r + 1, c));
+                    }
+
+                    /* top */
+                    if (c - 1 &gt; -1 &amp;&amp; board[r][c - 1] == &#39;O&#39;) {
+                        board[r][c - 1] = &#39;T&#39;;
+                        q.offer(new Point(r, c - 1));
+                    }
+
+                    /* bottom */
+                    if (c + 1 &lt; board[0].length &amp;&amp; board[r][c + 1] == &#39;O&#39;) {
+                        board[r][c + 1] = &#39;T&#39;;
+                        q.add(new Point(r, c + 1));
+                    }
+                }
+            }
+        }
+    }
+
+    /* Flip other &#39;O&#39; to &#39;X&#39; */
+    for (int i = 0; i &lt; board.length; i++) {
+        for (int j = 0; j &lt; board[0].length; j++) {
+            if (board[i][j] == &#39;T&#39;) {
+                board[i][j] = &#39;O&#39;;
+            } else if (board[i][j] == &#39;O&#39;) {
+                board[i][j] = &#39;X&#39;;
+            }
+        }
+    }
+}
+</code></pre>
+        </div>
+    </div>
+</section>
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<!--        This order must be followed!!       -->
+<script src="../../static/jquery/jquery-3.3.1.js"></script>
+<script src="../../static/popper/popper.js"></script>
+<script src="../../static/bootstrap-4.3.1-dist/js/bootstrap.js"></script>
+
+<!--        inner script to control nav bar background color        -->
+
+</body>
+</html>
