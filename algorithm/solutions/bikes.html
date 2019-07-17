@@ -81,9 +81,14 @@
             July 16, 2019
         </div>
         <div class="post-main">
-            <p><span>Link: </span><a href='https://leetcode.com/problems/campus-bikes/'><span>Campus Bikes</span></a>
-            </p>
+            <p><span>Links: </span></p>
+            <ul>
+                <li><a href='https://leetcode.com/problems/campus-bikes/'><span>Campus Bikes</span></a></li>
+                <li><a href='https://leetcode.com/problems/campus-bikes-ii/'><span>Campus Bikes II</span></a></li>
+
+            </ul>
             <h2><span>Problem description </span></h2>
+            <h3><span>Campus Bikes</span></h3>
             <p>
                 <span>On a campus represented as a 2D grid, there are </span><code>N</code><span> workers and </span><code>M</code><span> bikes, with </span><code>N
                 &lt;= M</code><span>. Each worker and bike is a 2D coordinate on this grid.</span></p>
@@ -96,7 +101,7 @@
                 <span>Return a vector </span><code>ans</code><span> of length </span><code>N</code><span>, where </span><code>ans[i]</code><span> is the index (0-indexed) of the bike that the </span><code>i</code><span>-th worker is assigned to.</span>
             </p>
             <p><strong><span>Example 1:</span></strong></p>
-            <p><img src='../../static/img/1261_example_1_v2.png' alt='img'
+            <p><img src='../../static/img/1261_example_1_v2.png' alt='img' style="width: auto; height: auto"
                     referrerPolicy='no-referrer'/></p>
             <pre><code>Input: workers = [[0,0],[2,1]], bikes = [[1,2],[3,3]]
 Output: [1,0]
@@ -104,7 +109,7 @@ Explanation:
 Worker 1 grabs Bike 0 as they are closest (without ties), and Worker 0 is assigned Bike 1. So the output is [1, 0].
 </code></pre>
             <p><strong><span>Example 2:</span></strong></p>
-            <p><img src='../../static/img/1261_example_2_v2.png' alt='img'
+            <p><img src='../../static/img/1261_example_2_v2.png' alt='img' style="width: auto; height: auto"
                     referrerPolicy='no-referrer'/></p>
             <pre><code>Input: workers = [[0,0],[1,1],[2,0]], bikes = [[1,0],[2,2],[2,1]]
 Output: [0,2,1]
@@ -112,15 +117,51 @@ Explanation:
 Worker 0 grabs Bike 0 at first. Worker 1 and Worker 2 share the same distance to Bike 2, thus Worker 1 is assigned to Bike 2, and Worker 2 will take Bike 1. So the output is [0,2,1].
 </code></pre>
             <p><strong><span>Note:</span></strong></p>
-            <ol>
+            <ol start=''>
                 <li><code>0 &lt;= workers[i][j], bikes[i][j] &lt; 1000</code></li>
                 <li><span>All worker and bike locations are distinct.</span></li>
                 <li><code>1 &lt;= workers.length &lt;= bikes.length &lt;= 1000</code></li>
 
             </ol>
+            <h3><span>Campus Bikes II</span></h3>
+            <p>
+                <span>On a campus represented as a 2D grid, there are </span><code>N</code><span> workers and </span><code>M</code><span> bikes, with </span><code>N
+                &lt;= M</code><span>. Each worker and bike is a 2D coordinate on this grid.</span></p>
+            <p><span>We assign one unique bike to each worker so that the sum of the Manhattan distances between each worker and their assigned bike is minimized.</span>
+            </p>
+            <p>
+                <span>The Manhattan distance between two points </span><code>p1</code><span> and </span><code>p2</code><span> is </span><code>Manhattan(p1,
+                p2) = |p1.x - p2.x| + |p1.y - p2.y|</code><span>.</span></p>
+            <p>
+                <span>Return the minimum possible sum of Manhattan distances between each worker and their assigned bike.</span>
+            </p>
+            <p><span> </span></p>
+            <p><strong><span>Example 1:</span></strong></p>
+
+            <p><img src='../../static/img/1261_example_1_v2.png' alt='img' style="width: auto; height: auto"
+                    referrerPolicy='no-referrer'/></p>
+            <pre><code>Input: workers = [[0,0],[2,1]], bikes = [[1,2],[3,3]]
+Output: 6
+Explanation:
+We assign bike 0 to worker 0, bike 1 to worker 1. The Manhattan distance of both assignments is 3, so the output is 6.
+</code></pre>
+            <p><strong><span>Example 2:</span></strong></p>
+
+            <p><img src='../../static/img/1261_example_2_v2.png' alt='img' style="width: auto; height: auto"
+                    referrerPolicy='no-referrer'/></p>
+            <pre><code>Input: workers = [[0,0],[1,1],[2,0]], bikes = [[1,0],[2,2],[2,1]]
+Output: 4
+Explanation:
+We first assign bike 0 to worker 0, then assign bike 1 to worker 1 or worker 2, bike 2 to worker 2 or worker 1. Both assignments lead to sum of the Manhattan distances as 4.
+</code></pre>
             <h2><span>Method</span></h2>
+            <h3><span>Campus Bikes</span></h3>
             <p><span>Use a heap with modified comparator to store the distance-worker-bike pair.</span></p>
+            <h3><span>Campus Bikes II</span></h3>
+            <p><span>Dijkstra&#39;s algorithm with a heap to sort the total distance between bikes and workers.</span>
+            </p>
             <h2><span>Code</span></h2>
+            <h3><span>Campus Bikes</span></h3>
             <pre><code class='language-java' lang='java'>/**
  * Use a heap with modified comparator to store the distance-worker-bike pair.
  *
@@ -166,6 +207,73 @@ public int[] assignBikes(int[][] workers, int[][] bikes) {
     }
 
     return out;
+}
+</code></pre>
+            <h3><span>Campus Bikes II</span></h3>
+            <pre><code class='language-java' lang='java'>/**
+ * Dijkstra&#39;s algorithm.
+ *
+ * @param workers given works array
+ * @param bikes   given bikes array
+ * @return minimum possible sum of Manhattan distances between each worker and their assigned bike
+ */
+public int assignBikes(int[][] workers, int[][] bikes) {
+    PriorityQueue&lt;Pair&gt; pq = new PriorityQueue&lt;&gt;(1, (a, b) -&gt; (a.totalDistance - b.totalDistance));
+    Set&lt;String&gt; seen = new HashSet&lt;&gt;();
+    pq.offer(new Pair(0, 0, 0));
+    while (!pq.isEmpty()) {
+        Pair curr = pq.poll();
+
+        String key = curr.worker + &quot; &quot; + curr.mask;     // mark selected bikes
+
+        if (seen.contains(key)) {
+            continue;
+        }
+        seen.add(key);
+
+        if (curr.worker == workers.length) {
+            return curr.totalDistance;       // all workers have a bike
+        }
+
+
+        for (int j = 0; j &lt; bikes.length; j++) {        // scan all bikes and create new nodes into the PQ for next worker
+            if ((curr.mask &amp; (1 &lt;&lt; j)) == 0) {      // if current bike is not selected
+                pq.offer(new Pair(curr.worker + 1, curr.mask | (1 &lt;&lt; j), curr.totalDistance + distance(bikes[j], workers[curr.worker])));
+            }
+        }
+    }
+    return -1;
+}
+
+/**
+ * Calculate Manhattan distance for two points.
+ *
+ * @param b bike coord
+ * @param w worker coord
+ * @return Manhattan distance between bike and worker
+ */
+private int distance(int[] b, int[] w) {
+    return Math.abs(b[0] - w[0]) + Math.abs(b[1] - w[1]);
+}
+
+/**
+ * Worker - selected bikes pair
+ */
+class Pair {
+    int worker;              // # of worker, from 0 to workers.length
+    int mask;                // bikes have been selected
+    int totalDistance;       // total totalDistance under current worker
+
+    /**
+     * @param w             # of worker
+     * @param m             bikes have been selected
+     * @param totalDistance // total totalDistance under current worker
+     */
+    private Pair(int w, int m, int totalDistance) {
+        this.worker = w;
+        this.mask = m;
+        this.totalDistance = totalDistance;
+    }
 }
 </code></pre>
         </div>
