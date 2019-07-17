@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>01 Matrix | Algorithm</title>
+    <link rel="stylesheet" type="text/css"
+          href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Martel+Sans:200,300,400,600,700,800,900&display=swap"
+          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Raleway:200i,400,800" rel="stylesheet">
+    <link rel="stylesheet" href="../../static/css/post-content.css">
+    <link rel="stylesheet" href="../../static/bootstrap-4.3.1-dist/css/bootstrap.css">
+
+    <!--    title icon        -->
+    <link rel="shortcut icon" type="image/x-icon" href="../../static/img/Avatar-3.jpg"/>
+    <link rel="stylesheet" href="../../static/css/coding.css">
+    <script src="../../static/script/coding_style.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <style> @media print {
+        .hljs {
+            overflow: visible;
+            word-wrap: break-word !important;
+        }
+    }</style>
+</head>
+<body>
+
+<!--        nav bar     -->
+<nav id="mainNav" class="navbar navbar-expand-lg py-0 fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="https://yyzhou95.github.io/">HOME</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="../index.html">Posts <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../tags/index.html">Tags <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../algorithm/index.html">Algorithm <span
+                            class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../archived/index.html">Archived <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item dropdown active">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                       data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        Other Links
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="https://github.com/yyzhou95">Github</a>
+                        <a class="dropdown-item" href="https://github.com/yyzhou95/yyzhou95.github.io">This page</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="../../about/">About Me</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<section class="post-content">
+    <div class="container">
+
+        <div class="post-heading">
+            <h1>
+                01 Matrix
+            </h1>
+        </div>
+
+        <div class="text-right post-date">
+            July 16, 2019
+        </div>
+        <div class="post-main">
+            <p><span>Link: </span><a href='https://leetcode.com/problems/01-matrix/'><span>01 Matrix</span></a></p>
+            <h2><span>Problem description </span></h2>
+            <p><span>Given a matrix consists of 0 and 1, find the distance of the nearest 0 for each cell. The distance between two adjacent cells is 1.</span>
+            </p>
+            <p><strong><span>Example 1:</span></strong><span> </span></p>
+            <pre><code>Input:
+[[0,0,0],
+ [0,1,0],
+ [0,0,0]]
+
+Output:
+[[0,0,0],
+ [0,1,0],
+ [0,0,0]]
+</code></pre>
+            <p><strong><span>Example 2:</span></strong><span> </span></p>
+            <pre><code>Input:
+[[0,0,0],
+ [0,1,0],
+ [1,1,1]]
+
+Output:
+[[0,0,0],
+ [0,1,0],
+ [1,2,1]]
+</code></pre>
+            <p><strong><span>Note:</span></strong></p>
+            <ol>
+                <li><span>The number of elements of the given matrix will not exceed 10,000.</span></li>
+                <li><span>There are at least one 0 in the given matrix.</span></li>
+                <li><span>The cells are adjacent in only four directions: up, down, left and right.</span></li>
+
+            </ol>
+            <h2><span>Method</span></h2>
+            <p><span>Mark each 1 to Integer.MAX_VALUE.</span></p>
+            <h2><span>Code</span></h2>
+            <pre><code class='language-java' lang='java'>/**
+ * Mark each 1 to Integer.MAX_VALUE.
+ *
+ * @param matrix given 2D int array
+ * @return matrix with distance
+ */
+public int[][] updateMatrix(int[][] matrix) {
+
+    /* Corner case */
+    if (matrix.length == 0) {
+        return matrix;
+    }
+
+    Queue&lt;int[]&gt; l = new LinkedList&lt;&gt;();
+    int r = matrix.length;
+    int c = matrix[0].length;
+
+    for (int i = 0; i &lt; r; i++) {
+        for (int j = 0; j &lt; c; j++) {
+            if (matrix[i][j] == 0) {
+                l.offer(new int[]{i, j});
+            } else {
+                matrix[i][j] = Integer.MAX_VALUE;
+            }
+        }
+    }
+    while (!l.isEmpty()) {
+        int[] t = l.remove();
+        int x = t[0];
+        int y = t[1];
+
+        if (x + 1 &lt; r &amp;&amp; matrix[x + 1][y] &gt; 0 &amp;&amp; (matrix[x + 1][y] &gt; matrix[x][y] + 1)) {
+            l.add(new int[]{x + 1, y});
+            matrix[x + 1][y] = matrix[x][y] + 1;
+        }
+
+        if (x - 1 &gt; -1 &amp;&amp; matrix[x - 1][y] &gt; 0 &amp;&amp; (matrix[x - 1][y] &gt; matrix[x][y] + 1)) {
+            l.add(new int[]{x - 1, y});
+            matrix[x - 1][y] = matrix[x][y] + 1;
+        }
+        if (y + 1 &lt; c &amp;&amp; matrix[x][y + 1] &gt; 0 &amp;&amp; (matrix[x][y + 1] &gt; matrix[x][y] + 1)) {
+            l.add(new int[]{x, y + 1});
+            matrix[x][y + 1] = matrix[x][y] + 1;
+        }
+        if (y - 1 &gt; -1 &amp;&amp; matrix[x][y - 1] &gt; 0 &amp;&amp; (matrix[x][y - 1] &gt; matrix[x][y] + 1)) {
+            l.add(new int[]{x, y - 1});
+            matrix[x][y - 1] = matrix[x][y] + 1;
+        }
+    }
+
+    return matrix;
+}
+</code></pre>
+        </div>
+    </div>
+</section>
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<!--        This order must be followed!!       -->
+<script src="../../static/jquery/jquery-3.3.1.js"></script>
+<script src="../../static/popper/popper.js"></script>
+<script src="../../static/bootstrap-4.3.1-dist/js/bootstrap.js"></script>
+
+<!--        inner script to control nav bar background color        -->
+
+</body>
+</html>
