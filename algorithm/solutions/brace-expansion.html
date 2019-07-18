@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Brace Expansion | Algorithm</title>
+    <link rel="stylesheet" type="text/css"
+          href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Martel+Sans:200,300,400,600,700,800,900&display=swap"
+          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Raleway:200i,400,800" rel="stylesheet">
+    <link rel="stylesheet" href="../../static/css/post-content.css">
+    <link rel="stylesheet" href="../../static/bootstrap-4.3.1-dist/css/bootstrap.css">
+
+    <!--    title icon        -->
+    <link rel="shortcut icon" type="image/x-icon" href="../../static/img/Avatar-3.jpg"/>
+    <link rel="stylesheet" href="../../static/css/coding.css">
+    <script src="../../static/script/coding_style.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <style> @media print {
+        .hljs {
+            overflow: visible;
+            word-wrap: break-word !important;
+        }
+    }</style>
+</head>
+<body>
+
+<!--        nav bar     -->
+<nav id="mainNav" class="navbar navbar-expand-lg py-0 fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="https://yyzhou95.github.io/">HOME</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="../index.html">Posts <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../tags/index.html">Tags <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../algorithm/index.html">Algorithm <span
+                            class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../archived/index.html">Archived <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item dropdown active">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                       data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        Other Links
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="https://github.com/yyzhou95">Github</a>
+                        <a class="dropdown-item" href="https://github.com/yyzhou95/yyzhou95.github.io">This page</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="../../about/">About Me</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<section class="post-content">
+    <div class="container">
+
+        <div class="post-heading">
+            <h1>
+                Brace Expansion
+            </h1>
+        </div>
+
+        <div class="text-right post-date">
+            July 17, 2019
+        </div>
+        <div class="post-main">
+            <p><span>Link: </span><a href='https://leetcode.com/problems/brace-expansion/'><span>Brace Expansion</span></a>
+            </p>
+            <h2><span>Problem description </span></h2>
+            <p><span>A string </span><code>S</code><span> represents a list of words.</span></p>
+            <p><span>Each letter in the word has 1 or more options.  If there is one option, the letter is represented as is.  If there is more than one option, then curly braces delimit the options.  For example, </span><code>&quot;{a,b,c}&quot;</code><span> represents options </span><code>[&quot;a&quot;,
+                &quot;b&quot;, &quot;c&quot;]</code><span>.</span></p>
+            <p><span>For example, </span><code>&quot;{a,b,c}d{e,f}&quot;</code><span> represents the list </span><code>[&quot;ade&quot;,
+                &quot;adf&quot;, &quot;bde&quot;, &quot;bdf&quot;, &quot;cde&quot;,
+                &quot;cdf&quot;]</code><span>.</span></p>
+            <p><span>Return all words that can be formed in this manner, in lexicographical order.</span></p>
+            <p><strong><span>Example 1:</span></strong></p>
+            <pre><code>Input: &quot;{a,b}c{d,e}f&quot;
+Output: [&quot;acdf&quot;,&quot;acef&quot;,&quot;bcdf&quot;,&quot;bcef&quot;]
+</code></pre>
+            <p><strong><span>Example 2:</span></strong></p>
+            <pre><code>Input: &quot;abcd&quot;
+Output: [&quot;abcd&quot;]
+</code></pre>
+            <p><strong><span>Note:</span></strong></p>
+            <ol>
+                <li><code>1 &lt;= S.length &lt;= 50</code></li>
+                <li><span>There are no nested curly brackets.</span></li>
+                <li>
+                    <span>All characters inside a pair of consecutive opening and ending curly brackets are different.</span>
+                </li>
+
+            </ol>
+            <h2><span>Method</span></h2>
+            <p><span>Backtracking.</span></p>
+            <p><span>Note that the string requires reformatting to divide chars can be backtracking.</span></p>
+            <h2><span>Code</span></h2>
+            <pre><code class='language-java' lang='java'>/**
+ * Backtracking.
+ * Note that the string requires reformatting to divide chars can be backtracking.
+ *
+ * @param s given string
+ * @return all words that can be formed in lexicographical order
+ */
+public String[] expand(String s) {
+
+    List&lt;String&gt; res = new ArrayList&lt;&gt;();
+
+    backtracking(s, 0, new StringBuilder(), res);
+
+    String[] out = new String[res.size()];
+    for (int i = 0; i &lt; res.size(); i++) {
+        out[i] = res.get(i);
+    }
+    return out;
+}
+
+/**
+ * Backtracking to find all possible combinations.
+ *
+ * @param s     given string
+ * @param index start index
+ * @param sb    string builder
+ * @param temp  output list
+ */
+private void backtracking(String s, int index, StringBuilder sb, List&lt;String&gt; temp) {
+    if (index == s.length()) {
+        if (sb.length() &gt; 0) {
+            temp.add(sb.toString());
+        }
+        return;
+    }
+
+    char c = s.charAt(index);
+    int position = sb.length();
+
+    if (c == &#39;{&#39;) {
+        List&lt;Character&gt; charList = new ArrayList&lt;&gt;();
+        int endIndex = index + 1;
+        while (endIndex &lt; s.length() &amp;&amp; s.charAt(endIndex) != &#39;}&#39;) {
+            if (Character.isLetter(s.charAt(endIndex))) {
+                charList.add(s.charAt(endIndex));
+            }
+            endIndex++;
+        }
+
+        Collections.sort(charList);
+        for (char d : charList) {
+            sb.append(d);
+            backtracking(s, endIndex + 1, sb, temp);
+            sb.setLength(position);     // remove last char
+        }
+
+    } else if (Character.isLetter(c)) {     // if current char is not in {}
+        sb.append(s.charAt(index));
+        backtracking(s, index + 1, sb, temp);
+    }
+}
+</code></pre>
+        </div>
+    </div>
+</section>
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<!--        This order must be followed!!       -->
+<script src="../../static/jquery/jquery-3.3.1.js"></script>
+<script src="../../static/popper/popper.js"></script>
+<script src="../../static/bootstrap-4.3.1-dist/js/bootstrap.js"></script>
+
+<!--        inner script to control nav bar background color        -->
+
+</body>
+</html>
