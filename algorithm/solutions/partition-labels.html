@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Partition Labels | Algorithm</title>
+    <link rel="stylesheet" type="text/css"
+          href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Martel+Sans:200,300,400,600,700,800,900&display=swap"
+          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Raleway:200i,400,800" rel="stylesheet">
+    <link rel="stylesheet" href="../../static/css/post-content.css">
+    <link rel="stylesheet" href="../../static/bootstrap-4.3.1-dist/css/bootstrap.css">
+
+    <!--    title icon        -->
+    <link rel="shortcut icon" type="image/x-icon" href="../../static/img/Avatar-3.jpg"/>
+    <link rel="stylesheet" href="../../static/css/coding.css">
+    <script src="../../static/script/coding_style.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <style> @media print {
+        .hljs {
+            overflow: visible;
+            word-wrap: break-word !important;
+        }
+    }</style>
+</head>
+<body>
+
+<!--        nav bar     -->
+<nav id="mainNav" class="navbar navbar-expand-lg py-0 fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="https://yyzhou95.github.io/">HOME</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="../index.html">Posts <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../tags/index.html">Tags <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../algorithm/index.html">Algorithm <span
+                            class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../archived/index.html">Archived <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item dropdown active">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                       data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        Other Links
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="https://github.com/yyzhou95">Github</a>
+                        <a class="dropdown-item" href="https://github.com/yyzhou95/yyzhou95.github.io">This page</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="../../about/">About Me</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<section class="post-content">
+    <div class="container">
+
+        <div class="post-heading">
+            <h1>
+                Partition Labels
+            </h1>
+        </div>
+
+        <div class="text-right post-date">
+            July 18, 2019
+        </div>
+        <div class="post-main">
+            <p><span>Link: </span><a
+                    href='https://leetcode.com/problems/partition-labels/'><span>Partition Labels</span></a></p>
+            <h2><span>Problem description </span></h2>
+            <p><span>A string </span><code>S</code><span> of lowercase letters is given. We want to partition this string into as many parts as possible so that each letter appears in at most one part, and return a list of integers representing the size of these parts.</span>
+            </p>
+            <p><strong><span>Example 1:</span></strong></p>
+            <pre><code>Input: S = &quot;ababcbacadefegdehijhklij&quot;
+Output: [9,7,8]
+Explanation:
+The partition is &quot;ababcbaca&quot;, &quot;defegde&quot;, &quot;hijhklij&quot;.
+This is a partition so that each letter appears in at most one part.
+A partition like &quot;ababcbacadefegde&quot;, &quot;hijhklij&quot; is incorrect, because it splits S into less parts.
+</code></pre>
+            <p><strong><span>Note:</span></strong></p>
+            <ol>
+                <li><code>S</code><span> will have length in range </span><code>[1, 500]</code><span>.</span></li>
+                <li>
+                    <code>S</code><span> will consist of lowercase letters (</span><code>&#39;a&#39;</code><span> to </span><code>&#39;z&#39;</code><span>) only.</span>
+                </li>
+
+            </ol>
+            <h2><span>Method</span></h2>
+            <p><span>First traverse the whole array, save the char&#39;s last appearance index. Then use two pointers and traverse string.</span>
+            </p>
+            <p><span>First pointers points at the beginning of substring, second pointer points at the end of last char index. Compare last index each time, find larger end index until traverse i == last. This is the length of substring.</span>
+            </p>
+            <h2><span>Code</span></h2>
+            <pre><code class='language-java' lang='java'>/**
+ * First traverse the whole array, save the char&#39;s last appearance index.
+ * Then use two pointers and traverse string.
+ * First pointers points at the beginning of substring, second pointer points at the end of last char index.
+ * Compare last index each time, find larger end index until traverse i == last. This is the length of substring.
+ *
+ * @param s given string
+ * @return list of integers representing the size of these parts that each letter appears in at most one part
+ */
+public List&lt;Integer&gt; partitionLabels(String s) {
+    List&lt;Integer&gt; out = new LinkedList&lt;&gt;();
+
+    /* Corner case */
+    if (s.length() == 0) {
+        return out;
+    }
+
+    int[] arr = new int[26];
+
+    for (int i = 0; i &lt; s.length(); i++) {
+        arr[s.charAt(i) - &#39;a&#39;] = i;
+    }
+
+    int last = 0;       // last index of char&#39;s appearance
+    int start = 0;      // start position of sub string
+    for (int i = 0; i &lt; s.length(); i++) {
+
+        last = Math.max(last, arr[s.charAt(i) - &#39;a&#39;]);
+
+        if (last == i) {
+            out.add(last - start + 1);
+            start = last + 1;
+        }
+    }
+    return out;
+}
+</code></pre>
+        </div>
+    </div>
+</section>
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<!--        This order must be followed!!       -->
+<script src="../../static/jquery/jquery-3.3.1.js"></script>
+<script src="../../static/popper/popper.js"></script>
+<script src="../../static/bootstrap-4.3.1-dist/js/bootstrap.js"></script>
+
+<!--        inner script to control nav bar background color        -->
+
+</body>
+</html>
