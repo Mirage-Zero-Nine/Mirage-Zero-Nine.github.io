@@ -77,7 +77,7 @@
         </div>
 
         <div class="text-right post-date">
-            June 28, 2019
+            July 25, 2019
         </div>
 
         <div class="post-main">
@@ -87,6 +87,8 @@
                 <li><a href='https://leetcode.com/problems/insert-interval/'><span>Insert Interval</span></a></li>
                 <li><a href='https://leetcode.com/problems/meeting-rooms/'><span>Meeting Rooms</span></a></li>
                 <li><a href='https://leetcode.com/problems/meeting-rooms-ii/'><span>Meeting Rooms II</span></a></li>
+                <li><a href='https://leetcode.com/problems/interval-list-intersections/'><span>Interval List Intersections</span></a>
+                </li>
 
             </ul>
             <h2><span>Problem description </span></h2>
@@ -127,6 +129,37 @@ Output: false
 Output: true
 </code></pre>
             <h3><span>Meeting Rooms II</span></h3>
+            <p><span>Given an array of meeting time intervals consisting of start and end times </span><code>[[s1,e1],[s2,e2],...]</code><span> (si &lt; ei), find the minimum number of conference rooms required.</span>
+            </p>
+            <p><strong><span>Example 1:</span></strong></p>
+            <pre><code>Input: [[0, 30],[5, 10],[15, 20]]
+Output: 2
+</code></pre>
+            <p><strong><span>Example 2:</span></strong></p>
+            <pre><code>Input: [[7,10],[2,4]]
+Output: 1
+</code></pre>
+            <h3><span>Interval List Intersections</span></h3>
+            <p><span>Given two lists of </span><strong><span>closed</span></strong><span> intervals, each list of intervals is pairwise disjoint and in sorted order.</span>
+            </p>
+            <p><span>Return the intersection of these two interval lists.</span></p>
+            <p><em><span>(Formally, a closed interval [a, b] (with a &lt;= b) denotes the set of real numbers x with a &lt;= x &lt;= b.  The intersection of two closed intervals is a set of real numbers that is either empty, or can be represented as a closed interval.  For example, the intersection of [1, 3] and [2, 4] is [2, 3].)</span></em>
+            </p>
+            <p><strong><span>Example 1:</span></strong></p>
+            <p><strong><img
+                    src='../../static/img/interval1-20190725174607450.png'
+                    alt='img' referrerPolicy='no-referrer'/></strong></p>
+            <pre><code>Input: A = [[0,2],[5,10],[13,23],[24,25]], B = [[1,5],[8,12],[15,24],[25,26]]
+Output: [[1,2],[5,5],[8,10],[15,23],[24,24],[25,25]]
+Reminder: The inputs and the desired output are lists of Interval objects, and not arrays or lists.
+</code></pre>
+            <p><strong><span>Note:</span></strong></p>
+            <ol>
+                <li><code>0 &lt;= A.length &lt; 1000</code></li>
+                <li><code>0 &lt;= B.length &lt; 1000</code></li>
+                <li><code>0 &lt;= A[i].start, A[i].end, B[i].start, B[i].end &lt; 10^9</code></li>
+
+            </ol>
             <h2><span>Method</span></h2>
             <h3><span>Merge Intervals</span></h3>
             <p><span>Sort the array first by each interval&#39;s first element. Then add each interval.</span></p>
@@ -170,6 +203,9 @@ Output: true
             <p><span>For situation 1,2,3, add current interval end to heap and one more room is required.</span></p>
             <p><span>For situation 4, their is no conflict, hence add the end time to heap.</span></p>
             <p><span>For situation 5, assume it is not required to add a room, do nothing but continue.</span></p>
+            <h3><span>Interval List Intersections</span></h3>
+            <p><span>Two pointers, one point at A and one point at B. If there is interval, add result to list, otherwise move pointers.</span>
+            </p>
             <h2><span>Code</span></h2>
             <h3><span>Merge Intervals</span></h3>
             <pre><code class='language-java' lang='java'>/**
@@ -302,6 +338,37 @@ public int minMeetingRooms(int[][] intervals) {
         }
     }
     return count;
+}
+</code></pre>
+            <h3><span>Interval List Intersections</span></h3>
+            <pre><code class='language-java' lang='java'>/**
+ * Two pointers, one point at A and one point at B. If there is interval, add result to list, otherwise move pointers.
+ *
+ * @param A first array
+ * @param B second array
+ * @return intersection of these two interval lists
+ */
+public int[][] intervalIntersection(int[][] A, int[][] B) {
+    ArrayList&lt;int[]&gt; res = new ArrayList&lt;&gt;();
+    int p1 = 0, p2 = 0;
+    int start, end;
+    while (p1 &lt; A.length &amp;&amp; p2 &lt; B.length) {
+
+        start = Math.max(A[p1][0], B[p2][0]);
+        end = Math.min(A[p1][1], B[p2][1]);
+        if (end &gt;= start) {
+            int[] tmp = new int[2];
+            tmp[0] = start;
+            tmp[1] = end;
+            res.add(tmp);
+        }
+        if (end == A[p1][1]) {
+            p1++;
+        } else {
+            p2++;
+        }
+    }
+    return res.toArray(new int[res.size()][]);
 }
 </code></pre>
         </div>
