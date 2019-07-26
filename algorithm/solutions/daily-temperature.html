@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Daily Temperatures | Algorithm</title>
+    <title>Daily Temperatures/Next Greater Node In Linked List | Algorithm</title>
     <link rel="stylesheet" type="text/css"
           href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
     <link href="https://fonts.googleapis.com/css?family=Martel+Sans:200,300,400,600,700,800,900&display=swap"
@@ -73,17 +73,22 @@
 
         <div class="post-heading">
             <h1>
-                Daily Temperatures
+                Daily Temperatures/Next Greater Node In Linked List
             </h1>
         </div>
 
         <div class="text-right post-date">
-            July 19, 2019
+            July 25, 2019
         </div>
         <div class="post-main">
-            <p><span>Link: </span><a
-                    href='https://leetcode.com/problems/daily-temperatures/'><span>Daily Temperatures</span></a></p>
-            <h2><span>Problem description </span></h2>
+            <p><span>Links: </span></p>
+            <ul>
+                <li><a href='https://leetcode.com/problems/daily-temperatures/'>Daily Temperatures</a></li>
+                <li><a href='https://leetcode.com/problems/next-greater-node-in-linked-list'>Next Greater Node In Linked
+                    List</a></li>
+            </ul>
+            <h2><span>Problem description</span></h2>
+            <h3><span>Daily Temperatures</span></h3>
             <p><span>Given a list of daily temperatures </span><code>T</code><span>, return a list such that, for each day in the input, tells you how many days you would have to wait until a warmer temperature. If there is no future day for which this is possible, put </span><code>0</code><span> instead.</span>
             </p>
             <p><span>For example, given the list of temperatures </span><code>T = [73, 74, 75, 71, 69, 72, 76,
@@ -91,10 +96,44 @@
             <p><strong><span>Note:</span></strong><span> The length of </span><code>temperatures</code><span> will be in the range </span><code>[1,
                 30000]</code><span>. Each temperature will be an integer in the range </span><code>[30,
                 100]</code><span>.</span></p>
+            <h3><span>Next Greater Node In Linked List</span></h3>
+            <p><span>We are given a linked list with </span><code>head</code><span> as the first node.  Let&#39;s number the nodes in the list: </span><code>node_1,
+                node_2, node_3, ...</code><span> etc.</span></p>
+            <p>
+                <span>Each node may have a </span><em><span>next larger</span></em><span> </span><strong><span>value</span></strong><span>: for </span><code>node_i</code><span>, </span><code>next_larger(node_i)</code><span> is the </span><code>node_j.val</code><span> such that </span><code>j
+                &gt; i</code><span>, </span><code>node_j.val &gt;
+                node_i.val</code><span>, and </span><code>j</code><span> is the smallest possible choice.  If such a </span><code>j</code><span> does not exist, the next larger value is </span><code>0</code><span>.</span>
+            </p>
+            <p><span>Return an array of integers </span><code>answer</code><span>, where </span><code>answer[i] =
+                next_larger(node_{i+1})</code><span>.</span></p>
+            <p><span>Note that in the example </span><strong><span>inputs</span></strong><span> (not outputs) below, arrays such as </span><code>[2,1,5]</code><span> represent the serialization of a linked list with a head node value of 2, second node value of 1, and third node value of 5.</span>
+            </p>
+            <p><strong><span>Example 1:</span></strong></p>
+            <pre><code>Input: [2,1,5]
+Output: [5,5,0]
+</code></pre>
+            <p><strong><span>Example 2:</span></strong></p>
+            <pre><code>Input: [2,7,4,3,5]
+Output: [7,0,5,5,0]
+</code></pre>
+            <p><strong><span>Example 3:</span></strong></p>
+            <pre><code>Input: [1,7,5,1,9,2,5,1]
+Output: [7,9,9,9,0,5,0,0]
+</code></pre>
+            <p><strong><span>Note:</span></strong></p>
+            <ol start=''>
+                <li><code>1 &lt;= node.val &lt;= 10^9</code><span> for each node in the linked list.</span></li>
+                <li><span>The given list has length in the range </span><code>[0, 10000]</code><span>.</span></li>
+
+            </ol>
             <h2><span>Method</span></h2>
+            <h3><span>Daily Temperatures</span></h3>
             <p><span>Use a stack to save the days that has not found a warmer day. Compare current value to top of stack, pop days until reaches a day with higher value or stack is empty.</span>
             </p>
             <p><span>Use an array to simulate the stack to reduce time.</span></p>
+            <h3><span>Next Greater Node In Linked List</span></h3>
+            <p><span>Almost same as previous problem. The only difference is the list has to be traversed first.</span>
+            </p>
             <h2><span>Code</span></h2>
             <pre><code class='language-java' lang='java'>/**
  * Use a stack to save the days that has not found a warmer day.
@@ -124,6 +163,45 @@ public int[] dailyTemperatures(int[] T) {
         }
         s[++top] = i;
     }
+    return out;
+}
+</code></pre>
+            <h3><span>Next Greater Node In Linked List</span></h3>
+            <pre><code class='language-java' lang='java'>/**
+ * Use a stack to store previous small value and its index.
+ *
+ * @param head head node
+ * @return array of integers answer, where answer[i] = next_larger(node_{i+1}).
+ */
+public int[] nextLargerNodes(ListNode head) {
+    if (head == null) {
+        return new int[0];
+    }
+
+    int size = 0;
+
+    ListNode dummy = head;
+
+    while (dummy != null) {
+        size++;
+        dummy = dummy.next;
+    }
+
+    int[] out = new int[size];
+    ArrayList&lt;int[]&gt; arr = new ArrayList&lt;&gt;();       // use array list to replace stack
+    int index = 0;
+
+    while (head != null) {
+
+        while (!arr.isEmpty() &amp;&amp; head.val &gt; arr.get(arr.size() - 1)[1]) {
+            out[arr.get(arr.size() - 1)[0]] = head.val;
+            arr.remove(arr.size() - 1);
+        }
+
+        arr.add(new int[]{index++, head.val});
+        head = head.next;
+    }
+
     return out;
 }
 </code></pre>
