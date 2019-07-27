@@ -83,9 +83,11 @@
         <div class="post-main">
             <p><span>Links: </span></p>
             <ul>
-                <li><a href='https://leetcode.com/problems/daily-temperatures/'>Daily Temperatures</a></li>
-                <li><a href='https://leetcode.com/problems/next-greater-node-in-linked-list'>Next Greater Node In Linked
-                    List</a></li>
+                <li><a href='https://leetcode.com/problems/daily-temperatures/'><span>Daily Temperatures</span></a></li>
+                <li><a href='https://leetcode.com/problems/next-greater-node-in-linked-list'><span>Next Greater Node In Linked List</span></a>
+                </li>
+                <li><a href='https://leetcode.com/problems/minimum-cost-tree-from-leaf-values/'><span>Minimum Cost Tree From Leaf Values</span></a>
+                </li>
             </ul>
             <h2><span>Problem description</span></h2>
             <h3><span>Daily Temperatures</span></h3>
@@ -126,6 +128,42 @@ Output: [7,9,9,9,0,5,0,0]
                 <li><span>The given list has length in the range </span><code>[0, 10000]</code><span>.</span></li>
 
             </ol>
+            <h3><span>Minimum Cost Tree From Leaf Values</span></h3>
+            <p><span>Given an array </span><code>arr</code><span> of positive integers, consider all binary trees such that:</span>
+            </p>
+            <ul>
+                <li><span>Each node has either 0 or 2 children;</span></li>
+                <li>
+                    <span>The values of </span><code>arr</code><span> correspond to the values of each </span><strong><span>leaf</span></strong><span> in an in-order traversal of the tree.  </span><em><span>(Recall that a node is a leaf if and only if it has 0 children.)</span></em>
+                </li>
+                <li><span>The value of each non-leaf node is equal to the product of the largest leaf value in its left and right subtree respectively.</span>
+                </li>
+
+            </ul>
+            <p><span>Among all possible binary trees considered, return the smallest possible sum of the values of each non-leaf node.  It is guaranteed this sum fits into a 32-bit integer.</span>
+            </p>
+            <p><strong><span>Example 1:</span></strong></p>
+            <pre><code>Input: arr = [6,2,4]
+Output: 32
+Explanation:
+There are two possible trees.  The first has non-leaf node sum 36, and the second has non-leaf node sum 32.
+
+    24            24
+   /  \          /  \
+  12   4        6    8
+ /  \               / \
+6    2             2   4
+</code></pre>
+            <p><span> </span></p>
+            <p><strong><span>Constraints:</span></strong></p>
+            <ul>
+                <li><code>2 &lt;= arr.length &lt;= 40</code></li>
+                <li><code>1 &lt;= arr[i] &lt;= 15</code></li>
+                <li>
+                    <span>It is guaranteed that the answer fits into a 32-bit signed integer (ie. it is less than </span><code>2^31</code><span>).</span>
+                </li>
+
+            </ul>
             <h2><span>Method</span></h2>
             <h3><span>Daily Temperatures</span></h3>
             <p><span>Use a stack to save the days that has not found a warmer day. Compare current value to top of stack, pop days until reaches a day with higher value or stack is empty.</span>
@@ -134,7 +172,11 @@ Output: [7,9,9,9,0,5,0,0]
             <h3><span>Next Greater Node In Linked List</span></h3>
             <p><span>Almost same as previous problem. The only difference is the list has to be traversed first.</span>
             </p>
+            <h3><span>Minimum Cost Tree From Leaf Values</span></h3>
+            <p><span>Larger value should be calculated last. Hence, combine small value first for each node.</span></p>
+            <p><span>The combine process is same as find next greater value in array.</span></p>
             <h2><span>Code</span></h2>
+            <h3><span>Daily Temperatures</span></h3>
             <pre><code class='language-java' lang='java'>/**
  * Use a stack to save the days that has not found a warmer day.
  * Compare current value to top of stack, pop days until reaches a day with higher value or stack is empty.
@@ -203,6 +245,33 @@ public int[] nextLargerNodes(ListNode head) {
     }
 
     return out;
+}
+</code></pre>
+            <h3><span>Minimum Cost Tree From Leaf Values</span></h3>
+            <pre><code class='language-java' lang='java'>/**
+ * Larger value should be calculated last. Hence, combine small value first for each node.
+ * The combine process is same as find next greater value in array.
+ *
+ * @param arr given array with leaves in in-order traversal of the tree
+ * @return smallest possible sum of the values of each non-leaf node
+ */
+public int mctFromLeafValues(int[] arr) {
+    Stack&lt;Integer&gt; s = new Stack&lt;&gt;();
+    s.push(Integer.MAX_VALUE);
+    int total = 0;
+    for (int value : arr) {
+        while (s.peek() &lt; value) {
+            int mid = s.pop();
+            total += mid * Math.min(s.peek(), value);       // combine smaller value for min tree sum
+        }
+        s.push(value);
+    }
+
+    while (s.size() &gt; 2) {
+        total += s.pop() * s.peek();        // cleaning rest of nodes
+    }
+
+    return total;
 }
 </code></pre>
         </div>
