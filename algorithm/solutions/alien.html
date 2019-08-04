@@ -81,13 +81,12 @@
         </div>
 
         <div class="post-main">
-            <p>Link: <a href='https://leetcode.com/problems/alien-dictionary'>Alien Dictionary</a></p>
-            <h2>Problem description </h2>
-            <p>There is a new alien language which uses the latin alphabet. However, the order among letters are unknown
-                to you. You receive a list of <strong>non-empty</strong> words from the dictionary, where <strong>words
-                    are sorted lexicographically by the rules of this new language</strong>. Derive the order of letters
-                in this language.</p>
-            <p><strong>Example 1:</strong></p>
+            <p><span>Link: </span><a href='https://leetcode.com/problems/alien-dictionary'><span>Alien Dictionary</span></a>
+            </p>
+            <h2><span>Problem description </span></h2>
+            <p><span>There is a new alien language which uses the latin alphabet. However, the order among letters are unknown to you. You receive a list of </span><strong><span>non-empty</span></strong><span> words from the dictionary, where </span><strong><span>words are sorted lexicographically by the rules of this new language</span></strong><span>. Derive the order of letters in this language.</span>
+            </p>
+            <p><strong><span>Example 1:</span></strong></p>
             <pre><code>Input:
 [
   &quot;wrt&quot;,
@@ -99,7 +98,7 @@
 
 Output: &quot;wertf&quot;
 </code></pre>
-            <p><strong>Example 2:</strong></p>
+            <p><strong><span>Example 2:</span></strong></p>
             <pre><code>Input:
 [
   &quot;z&quot;,
@@ -108,7 +107,7 @@ Output: &quot;wertf&quot;
 
 Output: &quot;zx&quot;
 </code></pre>
-            <p><strong>Example 3:</strong></p>
+            <p><strong><span>Example 3:</span></strong></p>
             <pre><code>Input:
 [
   &quot;z&quot;,
@@ -120,97 +119,107 @@ Output: &quot;&quot;
 
 Explanation: The order is invalid, so return &quot;&quot;.
 </code></pre>
-            <p><strong>Note:</strong></p>
-            <ol>
-                <li>You may assume all letters are in lowercase.</li>
-                <li>You may assume that if A is a prefix of B, then a must appear before b in the given dictionary.</li>
-                <li>If the order is invalid, return an empty string.</li>
-                <li>There may be multiple valid order of letters, return any one of them is fine.</li>
+            <p><strong><span>Note:</span></strong></p>
+            <ol start=''>
+                <li><span>You may assume all letters are in lowercase.</span></li>
+                <li><span>You may assume that if A is a prefix of B, then a must appear before b in the given dictionary.</span>
+                </li>
+                <li><span>If the order is invalid, return an empty string.</span></li>
+                <li><span>There may be multiple valid order of letters, return any one of them is fine.</span></li>
 
             </ol>
-            <h2>Method</h2>
-            <p>Topological sorting. The first different char in word is the order of letters in given language. And also
-                remember the prefix (I don’t think this prefix is a correct description, yet it exists in test
-                case).</p>
-            <h2>Code</h2>
-            <pre><code class='language-java' lang='java'>        /* Corner case */
-        if (words.length &lt; 1) {
+            <h2><span>Method</span></h2>
+            <p><span>Topological sorting. The first different char in word is the order of letters in given language. And also remember the prefix (I don’t think this prefix is a correct description, yet it exists in test case).</span>
+            </p>
+            <h2><span>Code</span></h2>
+            <pre><code class='language-java' lang='java'>/**
+ * Topological sorting.
+ * The first different char in word is the order of letters in given language.
+ *
+ * @param words given word list
+ * @return order of letters
+ */
+public String alienOrder(String[] words) {
+
+    /* Corner case */
+    if (words.length &lt; 1) {
+        return &quot;&quot;;
+    }
+    if (words.length == 1) {
+        return words[0];
+    }
+
+    boolean[][] graph = new boolean[26][26];        // save each char in string
+    int[] indegree = new int[26];
+    Arrays.fill(indegree, -1);
+
+    char[] previous = words[0].toCharArray(), current;
+    for (char x : previous) {
+        indegree[x - &#39;a&#39;] = 0;      // init all existing chars in given list
+    }
+
+    for (int i = 1; i &lt; words.length; i++) {        // iter words in list
+
+        current = words[i].toCharArray();
+        for (char x : current) {
+            indegree[x - &#39;a&#39;] = 0;
+        }
+
+        int index = 0;
+
+        while (index &lt; previous.length &amp;&amp; index &lt; current.length &amp;&amp; previous[index] == current[index]) {
+            index++;
+        }
+
+        if (index == current.length &amp;&amp; previous.length != current.length) {
             return &quot;&quot;;
         }
-        if (words.length == 1) {
-            return words[0];
+
+        if (index == previous.length) {
+            continue;
         }
 
-        boolean[][] graph = new boolean[26][26];        // save each char in string
-        int[] indegree = new int[26];
-        Arrays.fill(indegree, -1);
+        graph[previous[index] - &#39;a&#39;][current[index] - &#39;a&#39;] = true;
+        previous = current;
+    }
 
-        char[] previous = words[0].toCharArray(), current;
-        for (char x : previous) {
-            indegree[x - &#39;a&#39;] = 0;      // init all existing chars in given list
+    int count = 0;
+    for (int a : indegree) {
+        count = (a == 0) ? count + 1 : count;
+    }
+
+    for (int i = 0; i &lt; 26; i++) {
+        for (int j = 0; j &lt; 26; j++) {
+            indegree[j] = (graph[i][j]) ? indegree[j] + 1 : indegree[j];
         }
+    }
 
-        for (int i = 1; i &lt; words.length; i++) {        // iter words in list
+    LinkedList&lt;Integer&gt; q = new LinkedList&lt;&gt;();
 
-            current = words[i].toCharArray();
-            for (char x : current) {
-                indegree[x - &#39;a&#39;] = 0;
-            }
-
-            int index = 0;
-
-            while (index &lt; previous.length &amp;&amp; index &lt; current.length &amp;&amp; previous[index] == current[index]) {
-                index++;
-            }
-
-            if (index == current.length &amp;&amp; previous.length != current.length) {
-                return &quot;&quot;;
-            }
-
-            if (index == previous.length) {
-                continue;
-            }
-
-            graph[previous[index] - &#39;a&#39;][current[index] - &#39;a&#39;] = true;
-            previous = current;
+    for (int i = 0; i &lt; 26; i++) {
+        if (indegree[i] == 0) {
+            q.offer(i);     // indegree 0
         }
+    }
 
-        int count = 0;
-        for (int a : indegree) {
-            count = (a == 0) ? count + 1 : count;
-        }
+    StringBuilder order = new StringBuilder();
 
-        for (int i = 0; i &lt; 26; i++) {
-            for (int j = 0; j &lt; 26; j++) {
-                indegree[j] = (graph[i][j]) ? indegree[j] + 1 : indegree[j];
-            }
-        }
+    while (!q.isEmpty()) {
+        int temp = q.poll();
+        order.append((char) (&#39;a&#39; + temp));      // convert int to char
 
-        LinkedList&lt;Integer&gt; q = new LinkedList&lt;&gt;();
-
-        for (int i = 0; i &lt; 26; i++) {
-            if (indegree[i] == 0) {
-                q.offer(i);     // indegree 0
-            }
-        }
-
-        StringBuilder order = new StringBuilder();
-
-        while (!q.isEmpty()) {
-            int temp = q.poll();
-            order.append((char) (&#39;a&#39; + temp));      // convert int to char
-
-            for (int next = 0; next &lt; 26; next++) {
-                if (graph[temp][next]) {
-                    if (--indegree[next] == 0) {
-                        q.offer(next);
-                    }
-                    graph[temp][next] = false;
+        for (int next = 0; next &lt; 26; next++) {
+            if (graph[temp][next]) {
+                if (--indegree[next] == 0) {
+                    q.offer(next);
                 }
+                graph[temp][next] = false;
             }
         }
+    }
 
-        return order.length() == count ? order.toString() : &quot;&quot;;
+    return order.length() == count ? order.toString() : &quot;&quot;;
+}
 </code></pre>
         </div>
     </div>
