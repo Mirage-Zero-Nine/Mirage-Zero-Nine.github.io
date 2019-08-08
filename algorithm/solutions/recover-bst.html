@@ -77,7 +77,7 @@
         </div>
 
         <div class="text-right post-date">
-            June 10, 2019
+            August 07, 2019
         </div>
 
         <div class="post-main">
@@ -127,49 +127,68 @@ Output: [2,1,4,null,null,3]
 
             </ul>
             <h2>Method</h2>
-            <p>This is a bottom-up traverse problem, and therefore, in-order traverse will suffice.</p>
+            <p>Morris Traversal.</p>
+            <p>To complete the traversal without O(n) space, use the null in leaf node to store root of current sub
+                tree. Each time, set the right child of right leaf of current tree to point to root of current tree.</p>
+            <p>When in-order traversal is completed, the right child of last node is the root of current tree.</p>
+            <p>In this way, the right child of leaf (null) can be used as stack and to save space.</p>
             <h2>Code</h2>
-            <pre><code class='language-java' lang='java'>private TreeNode wrong1 = null;
-private TreeNode wrong2 = null;
-private TreeNode temp = new TreeNode(Integer.MIN_VALUE);        // avoid null when &quot;root&quot; is the deepest left node
-
-/**
- * The factor is to find two &quot;root&quot; nodes to swap.
- * Therefore, use in order traversal would found the incorrect left node and then incorrect right node.
- * This equals to add a &quot;check&quot; operation between two sub nodes.
+            <pre><code class='language-java' lang='java'>/**
+ * Morris traversal. Store the root node of current subtree to right most leaf&#39;s right child.
+ * Space: O(1).
  *
  * @param root root node of tree
  */
 public void recoverTree(TreeNode root) {
-    traverse(root);
+    TreeNode temp;
+    TreeNode t1 = null, t2 = null;
+    TreeNode previous = null;
 
-    /* Swap incorrect value */
-    wrong1.val = wrong1.val + wrong2.val;
-    wrong2.val = wrong1.val - wrong2.val;
-    wrong1.val = wrong1.val - wrong2.val;
+    /*
+     * Morris Traversal.
+     * To complete the traversal without O(n) space, use the null in leaf node to store root of current sub tree.
+     * Each time, set the right child of right leaf of current tree to point to root of current tree.
+     * When in-order traversal is completed, the right child of last node is the root of current tree.
+     * In this way, the right child of leaf (null) can be used as stack and to save space. */
+    while (root != null) {
+        if (root.left != null) {       // in order traversal, not reaches the end of left most
+            temp = root.left;
+            while (temp.right != null &amp;&amp; temp.right != root) {      // move temp to left subtree&#39;s right most
+                temp = temp.right;
+            }
+
+            if (temp.right == null) {      // node not traversed yet
+                temp.right = root;
+                root = root.left;       // move to left subtree to repeat process
+            } else {        // node has been traversed
+                if (previous != null &amp;&amp; previous.val &gt; root.val) {
+                    if (t1 == null) {
+                        t1 = previous;
+                    }
+                    t2 = root;
+                }
+                previous = root;
+                temp.right = null;
+                root = root.right;
+            }
+        } else {
+            if (previous != null &amp;&amp; previous.val &gt; root.val) {
+                if (t1 == null) {
+                    t1 = previous;
+                }
+                t2 = root;
+            }
+            previous = root;
+            root = root.right;
+        }
+    }
+
+    if (t1 != null) {       // swap two nodes value
+        int t = t1.val;
+        t1.val = t2.val;
+        t2.val = t;
+    }
 }
-
-/**
- * In order traversal.
- *
- * @param r temp root node
- */
-private void traverse(TreeNode r) {
-    if (r == null) {
-        return;
-    }
-
-    traverse(r.left);
-
-    if (wrong1 == null &amp;&amp; temp.val &gt;= r.val) {
-        wrong1 = temp;      // left incorrect node, based on in order traversal (left -&gt; root -&gt; right)
-    }
-    if (wrong1 != null &amp;&amp; temp.val &gt;= r.val) {
-        wrong2 = r;      // right incorrect node, based on in order traversal (left -&gt; root -&gt; right)
-    }
-
-    temp = r;
-    traverse(r.right);
 </code></pre>
         </div>
     </div>
