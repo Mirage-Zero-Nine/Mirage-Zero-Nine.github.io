@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Longest Repeating Character Replacement | Algorithm</title>
+    <title>Problem Set: Sliding Window by Counting Char | Algorithm</title>
     <link rel="stylesheet" type="text/css"
           href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
     <link href="https://fonts.googleapis.com/css?family=Martel+Sans:200,300,400,600,700,800,900&display=swap"
@@ -73,17 +73,26 @@
     <div class="container">
 
         <div class="post-heading">
-            <h1>Longest Repeating Character Replacement</h1>
+            <h1>
+                Problem Set: Sliding Window by Counting Char
+            </h1>
         </div>
 
         <div class="text-right post-date">
-            June 19, 2019
+            August 11, 2019
         </div>
 
         <div class="post-main">
-            <p>Link: <a href='https://leetcode.com/problems/longest-repeating-character-replacement'>Longest Repeating
-                Character Replacement</a></p>
+            <p>Links: </p>
+            <ul>
+                <li><a href='https://leetcode.com/problems/longest-repeating-character-replacement'>Longest Repeating
+                    Character Replacement</a></li>
+                <li><a href='https://leetcode.com/problems/swap-for-longest-repeated-character-substring/'>Swap For
+                    Longest Repeated Character Substring</a></li>
+
+            </ul>
             <h2>Problem description </h2>
+            <h3>Longest Repeating Character Replacement</h3>
             <p>Given a string that consists of only uppercase English letters, you can replace any letter in the string
                 with another letter at most <em>k</em> times. Find the length of a longest substring containing all
                 repeating letters you can get after performing the above operations.</p>
@@ -110,7 +119,40 @@ Explanation:
 Replace the one &#39;A&#39; in the middle with &#39;B&#39; and form &quot;AABBBBA&quot;.
 The substring &quot;BBBB&quot; has the longest repeating letters, which is 4.
 </code></pre>
+            <h3>Swap For Longest Repeated Character Substring</h3>
+            <p>Given a string <code>text</code>, we are allowed to swap two of the characters in the string. Find the
+                length of the longest substring with repeated characters.</p>
+            <p><strong>Example 1:</strong></p>
+            <pre><code>Input: text = &quot;ababa&quot;
+Output: 3
+Explanation: We can swap the first &#39;b&#39; with the last &#39;a&#39;, or the last &#39;b&#39; with the first &#39;a&#39;. Then, the longest repeated character substring is &quot;aaa&quot;, which its length is 3.
+</code></pre>
+            <p><strong>Example 2:</strong></p>
+            <pre><code>Input: text = &quot;aaabaaa&quot;
+Output: 6
+Explanation: Swap &#39;b&#39; with the last &#39;a&#39; (or the first &#39;a&#39;), and we get longest repeated character substring &quot;aaaaaa&quot;, which its length is 6.
+</code></pre>
+            <p><strong>Example 3:</strong></p>
+            <pre><code>Input: text = &quot;aaabbaaa&quot;
+Output: 4
+</code></pre>
+            <p><strong>Example 4:</strong></p>
+            <pre><code>Input: text = &quot;aaaaa&quot;
+Output: 5
+Explanation: No need to swap, longest repeated character substring is &quot;aaaaa&quot;, length is 5.
+</code></pre>
+            <p><strong>Example 5:</strong></p>
+            <pre><code>Input: text = &quot;abcdef&quot;
+Output: 1
+</code></pre>
+            <p><strong>Constraints:</strong></p>
+            <ul>
+                <li><code>1 &lt;= text.length &lt;= 20000</code></li>
+                <li><code>text</code> consist of lowercase English characters only.</li>
+
+            </ul>
             <h2>Method</h2>
+            <h3>Longest Repeating Character Replacement</h3>
             <p>This is a typical sliding window problem. The window is made up by k and the most duplicated char in
                 array. </p>
             <p>Start at beginning, the window size is 1, which only contains first char. With the traverse continuing,
@@ -119,13 +161,18 @@ The substring &quot;BBBB&quot; has the longest repeating letters, which is 4.
             <p>During the reduce process, the count of same char should be considered, otherwise, the max count of most
                 duplicated char will be included in a substring that contains different chars exceed limit of replace
                 operation.</p>
+            <h3>Swap For Longest Repeated Character Substring</h3>
+            <p>Sliding window. First traverse the whole string to count each char appearance. Then traverse the string
+                again, each time find the max window starting at current char.</p>
+            <p>The max possible window is the char occurred time in string.</p>
+            <p>Since there is only one swap is allowed, the window should stop extending when find a different char.</p>
             <h2>Code</h2>
+            <h3>Longest Repeating Character Replacement</h3>
             <pre><code class='language-java' lang='java'>/**
  * Sliding window.
- * The window will shift right, or extend its size only by appending one char on the right.
  * The window can only extend its size when the count of the new char exceeds the historical max count.
  * Therefore, count each char&#39;s appearance during the traverse.
- * we only care if the max count exceeds the historical max count
+ * Only consider if the max count exceeds the historical max count.
  *
  * @param s given string
  * @param k limit of replacing operations
@@ -137,25 +184,76 @@ public int characterReplacement(String s, int k) {
     if (s.length() &lt; 1) {
         return 0;
     }
-    if (k &gt; s.length()) {
+    if (k &gt; s.length()) {       // directly replace all char in string
         return s.length();
     }
 
-    int[] store = new int[26];      // store char appearance
-
-    int max = 0, window = 0, from = 0;
+    int[] count = new int[26];      // store char appearance
+    int max = 0, window = 0, start = 0;
 
     for (int i = 0; i &lt; s.length(); i++) {
 
-        max = Math.max(max, ++store[s.charAt(i) - &#39;A&#39;]);        // find window that contains the largest number of reoccurring char
-
-        while (i - from + 1 &gt; k + max) {        // set substring length (i - from + 1) to be equal to max length (k + max)
-            store[s.charAt(from++) - &#39;A&#39;]--;        // find chars require operation
+        /*
+         * During traverse, the max possible window is the most occurred char + k.
+         * k is the largest possible replacement. And the char count is under current window size.
+         * The initially window size is 1. To extend the window size, there are two conditions:
+         * 1. There are replacement left for different char.
+         * 2. Find a new char that is either the current most occurred char, or new max count.
+         * If window size is larger than max possible size (max char + k), then the window size should be narrowed.
+         * When narrowing the window size, reduce char count that will be excluded from window . */
+        max = Math.max(max, ++count[s.charAt(i) - &#39;A&#39;]);    // resize window if new max count found
+        while (i - start + 1 &gt; k + max) {                   // narrow window
+            count[s.charAt(start++) - &#39;A&#39;]--;               // remove char that is excluded from window
         }
-        window = Math.max(window, i - from + 1);        // find max window size
+        window = Math.max(window, i - start + 1);           // find max window size
     }
 
     return window;
+}
+</code></pre>
+            <h3>Swap For Longest Repeated Character Substring</h3>
+            <pre><code class='language-java' lang='java'>/**
+ * Sliding window. First traverse the whole string to count each char appearance.
+ * The traverse the string again, each time find the max window starting at current char.
+ * The max possible window is the char occurred time in string.
+ * Since there is only one swap is allowed, the window should stop extending when find a different char.
+ *
+ * @param s given string
+ * @return length of the longest substring with repeated characters
+ */
+public int maxRepOpt1_1156(String s) {
+
+    /* Corner case */
+    if (s.length() &lt; 1) {
+        return 0;
+    }
+
+    int n = s.length();
+    int[] arr = new int[26];
+    for (int i = 0; i &lt; n; i++) {
+        arr[s.charAt(i) - &#39;a&#39;]++;       // count char appearance
+    }
+
+    int max = 0;
+    for (int i = 0; i &lt; n; i++) {
+        int j = i, window = 0;      // each time, reset the window
+        boolean canContinue = true;
+
+        /*
+         * Each time, reset the window and find the longest substring starting at current char.
+         * Window can extend only when these conditions are fulfilled:
+         * 1. At most one different char (compare to s.charAt(i)) is found.
+         * 2. Window size is larger than s.charAt(i) occurrence. */
+        while (j &lt; s.length() &amp;&amp; (s.charAt(i) == s.charAt(j) || canContinue) &amp;&amp; window &lt; arr[s.charAt(i) - &#39;a&#39;]) {
+            if (s.charAt(j++) != s.charAt(i)) {       // found a different char, swap and end window extension
+                canContinue = false;
+            }
+            window++;
+        }
+        max = Math.max(max, window);
+    }
+
+    return max;
 }
 </code></pre>
         </div>
