@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Vertical Order Traversal of a Binary Tree | Algorithm</title>
+    <link rel="stylesheet" type="text/css"
+          href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Martel+Sans:200,300,400,600,700,800,900&display=swap"
+          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Raleway:200i,400,800" rel="stylesheet">
+    <link rel="stylesheet" href="../../static/css/post-content.css">
+    <link rel="stylesheet" href="../../static/bootstrap-4.3.1-dist/css/bootstrap.css">
+
+    <!--    title icon        -->
+    <link rel="shortcut icon" type="image/x-icon" href="../../static/img/Avatar-3.jpg"/>
+    <link rel="stylesheet" href="../../static/css/coding.css">
+    <script src="../../static/script/coding_style.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <style> @media print {
+        .hljs {
+            overflow: visible;
+            word-wrap: break-word !important;
+        }
+    }</style>
+</head>
+<body>
+
+<!--        nav bar     -->
+<nav id="mainNav" class="navbar navbar-expand-lg py-0 fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="https://yyzhou95.github.io/">HOME</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="../index.html">Posts <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../tags/index.html">Tags <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../algorithm/index.html">Algorithm <span
+                            class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../archived/index.html">Archived <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item dropdown active">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                       data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        Other Links
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="https://github.com/yyzhou95">Github</a>
+                        <a class="dropdown-item" href="https://github.com/yyzhou95/yyzhou95.github.io">This page</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="../../about/">About Me</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<section class="post-content">
+    <div class="container">
+
+        <div class="post-heading">
+            <h1>
+                Vertical Order Traversal of a Binary Tree
+            </h1>
+        </div>
+
+        <div class="text-right post-date">
+            August 12, 2019
+        </div>
+        <div class="post-main">
+            <p>Link: <a href='https://leetcode.com/problems/vertical-order-traversal-of-a-binary-tree/'>Vertical Order
+                Traversal of a Binary Tree</a></p>
+            <h2>Problem description </h2>
+            <p>Given a binary tree, return the <em>vertical order</em> traversal of its nodes values.</p>
+            <p>For each node at position <code>(X, Y)</code>, its left and right children respectively will be at
+                positions <code>(X-1, Y-1)</code> and <code>(X+1, Y-1)</code>.</p>
+            <p>Running a vertical line from <code>X = -infinity</code> to <code>X = +infinity</code>, whenever the
+                vertical line touches some nodes, we report the values of the nodes in order from top to bottom
+                (decreasing <code>Y</code> coordinates).</p>
+            <p>If two nodes have the same position, then the value of the node that is reported first is the value that
+                is smaller.</p>
+            <p>Return an list of non-empty reports in order of <code>X</code> coordinate. Every report will have a list
+                of values of nodes.</p>
+            <p><strong>Example 1:</strong></p>
+            <p><img src='../../static/img/1236_example_1.PNG' alt='img' style="width: auto; height: auto"
+                    referrerPolicy='no-referrer'/></p>
+            <pre><code>Input: [3,9,20,null,null,15,7]
+Output: [[9],[3,15],[20],[7]]
+Explanation:
+Without loss of generality, we can assume the root node is at position (0, 0):
+Then, the node with value 9 occurs at position (-1, -1);
+The nodes with values 3 and 15 occur at positions (0, 0) and (0, -2);
+The node with value 20 occurs at position (1, -1);
+The node with value 7 occurs at position (2, -2).
+</code></pre>
+            <p><strong>Example 2:</strong></p>
+            <p><strong><img src='../../static/img/tree2-5640173.png' alt='img' style="width: auto; height: auto"
+                            referrerPolicy='no-referrer'/></strong></p>
+            <pre><code>Input: [1,2,3,4,5,6,7]
+Output: [[4],[2],[1,5,6],[3],[7]]
+Explanation:
+The node with value 5 and the node with value 6 have the same position according to the given scheme.
+However, in the report &quot;[1,5,6]&quot;, the node value of 5 comes first since 5 is smaller than 6.
+</code></pre>
+            <p><strong>Note:</strong></p>
+            <ol>
+                <li>The tree will have between 1 and <code>1000</code> nodes.</li>
+                <li>Each node&#39;s value will be between <code>0</code> and <code>1000</code>.</li>
+
+            </ol>
+            <h2>Method</h2>
+            <p>DFS. During the DFS traversal, pass the horizon distance and node height to next node.</p>
+            <p>For left child, horizon distance - 1, for right child, horizon distance + 1. Both child will add 1 to
+                height.</p>
+            <p>Use a heap to sort nodes based on horizon distance and height. If nodes have same horizon distance,
+                smaller height first. If they have same height, smaller value first.</p>
+            <h2>Code</h2>
+            <pre><code class='language-java' lang='java'>private PriorityQueue&lt;int[]&gt; q;     // save node value based on horizon distance and node height
+
+/**
+ * DFS.
+ * During the DFS traversal, pass the horizon distance and node height to next node.
+ * For left child, horizon distance - 1, for right child, horizon distance + 1. Both child will add 1 to height.
+ * Use a heap to sort nodes based on horizon distance and height.
+ * If nodes have same horizon distance, smaller height first. If they have same height, smaller value first.
+ *
+ * @param root root node
+ * @return list of non-empty reports in order of X coordinate
+ */
+public List&lt;List&lt;Integer&gt;&gt; verticalTraversal(TreeNode root) {
+    q = new PriorityQueue&lt;&gt;(new Comparator&lt;int[]&gt;() {
+        @Override
+        public int compare(int[] o1, int[] o2) {
+            if (o1[0] == o2[0]) {
+                if (o1[1] == o2[1]) {
+                    return o1[2] - o2[2];
+                }
+                return o1[1] - o2[1];
+            }
+            return o1[0] - o2[0];
+        }
+    });
+
+    dfs(root, 0, 0);
+
+    List&lt;List&lt;Integer&gt;&gt; out = new LinkedList&lt;&gt;();
+    List&lt;Integer&gt; l = new ArrayList&lt;&gt;();
+
+    if (q.size() != 0) {
+        int distance = q.peek()[0];
+        while (!q.isEmpty()) {
+            int[] arr = q.poll();
+            if (distance == arr[0]) {
+                l.add(arr[2]);
+            } else {
+                distance = arr[0];
+                out.add(new ArrayList&lt;&gt;(l));
+                l = new ArrayList&lt;&gt;();
+                l.add(arr[2]);
+            }
+        }
+        if (l.size() != 0) {
+            out.add(l);
+        }
+    }
+    return out;
+}
+
+/**
+ * DFS. During the DFS, add current node to heap.
+ *
+ * @param root     root node
+ * @param distance horizon distance
+ * @param height   height of current node
+ */
+private void dfs(TreeNode root, int distance, int height) {
+    if (root == null) {
+        return;
+    }
+
+    q.add(new int[]{distance, height, root.val});
+
+    dfs(root.left, distance - 1, height + 1);
+    dfs(root.right, distance + 1, height + 1);
+}
+</code></pre>
+        </div>
+    </div>
+</section>
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<!--        This order must be followed!!       -->
+<script src="../../static/jquery/jquery-3.3.1.js"></script>
+<script src="../../static/popper/popper.js"></script>
+<script src="../../static/bootstrap-4.3.1-dist/js/bootstrap.js"></script>
+
+<!-- Nav bar control -->
+<script src="../../static/script/nav-bar.js"></script>
+</body>
+</html>
