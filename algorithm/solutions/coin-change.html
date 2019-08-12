@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Coin Change | Algorithm</title>
+    <link rel="stylesheet" type="text/css"
+          href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Martel+Sans:200,300,400,600,700,800,900&display=swap"
+          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Raleway:200i,400,800" rel="stylesheet">
+    <link rel="stylesheet" href="../../static/css/post-content.css">
+    <link rel="stylesheet" href="../../static/bootstrap-4.3.1-dist/css/bootstrap.css">
+
+    <!--    title icon        -->
+    <link rel="shortcut icon" type="image/x-icon" href="../../static/img/Avatar-3.jpg"/>
+    <link rel="stylesheet" href="../../static/css/coding.css">
+    <script src="../../static/script/coding_style.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <style> @media print {
+        .hljs {
+            overflow: visible;
+            word-wrap: break-word !important;
+        }
+    }</style>
+</head>
+<body>
+
+<!--        nav bar     -->
+<nav id="mainNav" class="navbar navbar-expand-lg py-0 fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="https://yyzhou95.github.io/">HOME</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="../index.html">Posts <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../tags/index.html">Tags <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../algorithm/index.html">Algorithm <span
+                            class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../archived/index.html">Archived <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item dropdown active">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                       data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        Other Links
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="https://github.com/yyzhou95">Github</a>
+                        <a class="dropdown-item" href="https://github.com/yyzhou95/yyzhou95.github.io">This page</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="../../about/">About Me</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<section class="post-content">
+    <div class="container">
+
+        <div class="post-heading">
+            <h1>
+                Coin Change
+            </h1>
+        </div>
+
+        <div class="text-right post-date">
+            August 12, 2019
+        </div>
+        <div class="post-main">
+            <p>Link: <a href='https://leetcode.com/problems/coin-change/'>Coin Change</a></p>
+            <h2>Problem description </h2>
+            <p>You are given coins of different denominations and a total amount of money <em>amount</em>. Write a
+                function to compute the fewest number of coins that you need to make up that amount. If that amount of
+                money cannot be made up by any combination of the coins, return <code>-1</code>.</p>
+            <p><strong>Example 1:</strong></p>
+            <pre><code>Input: coins = [1, 2, 5], amount = 11
+Output: 3
+Explanation: 11 = 5 + 5 + 1
+</code></pre>
+            <p><strong>Example 2:</strong></p>
+            <pre><code>Input: coins = [2], amount = 3
+Output: -1
+</code></pre>
+            <p><strong>Note</strong>:
+                You may assume that you have an infinite number of each kind of coin.</p>
+            <h2>Method</h2>
+            <p>Dynamic programming.</p>
+            <p>State transformation: <code>dp[i] = Math.min(dp[i - j] + 1)</code>, if <code>i - coins[k] &gt;= 0 &amp;&amp;
+                dp[i - coin] != Integer.MAX_VALUE</code></p>
+            <h2>Code</h2>
+            <pre><code class='language-java' lang='java'>/**
+ * Dynamic programming.
+ * State transformation:
+ * dp[i] = Math.min(dp[i - j] + 1), if i - coins[k] &gt;= 0 &amp;&amp; dp[i - coin] != Integer.MAX_VALUE
+ *
+ * @param coins  given coins list
+ * @param amount amount to reach
+ * @return fewest number of coins that needed to make up that amount
+ */
+public int coinChange(int[] coins, int amount) {
+    if (coins.length == 0) {
+        return -1;
+    }
+    if (amount == 0) {
+        return 0;
+    }
+
+    int[] dp = new int[amount + 1];
+    Arrays.fill(dp, Integer.MAX_VALUE);     // set init value
+    dp[0] = 0;
+    for (int i = 1; i &lt; dp.length; i++) {
+        for (int coin : coins) {
+            if (i - coin &gt;= 0 &amp;&amp; dp[i - coin] != Integer.MAX_VALUE) {
+                dp[i] = Math.min(dp[i - coin] + 1, dp[i]);
+            }
+        }
+    }
+
+    return (dp[dp.length - 1] == Integer.MAX_VALUE) ? -1 : dp[dp.length - 1];
+</code></pre>
+        </div>
+    </div>
+</section>
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<!--        This order must be followed!!       -->
+<script src="../../static/jquery/jquery-3.3.1.js"></script>
+<script src="../../static/popper/popper.js"></script>
+<script src="../../static/bootstrap-4.3.1-dist/js/bootstrap.js"></script>
+
+<!-- Nav bar control -->
+<script src="../../static/script/nav-bar.js"></script>
+</body>
+</html>
