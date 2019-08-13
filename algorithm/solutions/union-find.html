@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Number of Islands | Algorithm</title>
+    <title>Problem Set - Union Find | Algorithm</title>
     <link rel="stylesheet" type="text/css"
           href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
     <link href="https://fonts.googleapis.com/css?family=Martel+Sans:200,300,400,600,700,800,900&display=swap"
@@ -73,33 +73,84 @@
 
         <div class="post-heading">
             <h1>
-                Number of Islands
+                Problem Set - Union Find
             </h1>
         </div>
 
         <div class="text-right post-date">
-            July 02, 2019
+            August 12, 2019
         </div>
         <div class="post-main">
-            <p><span>Links:</span></p>
+            <p>Links:</p>
             <ul>
-                <li><a href='https://leetcode.com/problems/number-of-islands'><span>Number of Islands</span></a></li>
+                <li><a href='https://leetcode.com/problems/number-of-islands'>Number of Islands</a></li>
+                <li><a href='https://leetcode.com/problems/most-stones-removed-with-same-row-or-column/'>Most Stones
+                    Removed with Same Row or Column</a></li>
 
             </ul>
-            <h2><span>Problem description </span></h2>
-            <h3><span>Number of Islands</span></h3>
-            <p>&nbsp;</p>
-            <h2><span>Method</span></h2>
-            <h3><span>Number of Islands</span></h3>
-            <p><span>Two approaches: DFS and Union Find.</span></p>
-            <p><strong><span>DFS</span></strong></p>
-            <p><span>Start at each cell with ‘1’, then DFS find all nodes that are connected with current node. Flip  node’s ‘1’ to ‘0’ each time to reduce runtime.</span>
-            </p>
-            <p><strong><span>Union Find</span></strong></p>
-            <p><span>First find all nodes and mark them all as individual node. The traverse the whole grid, when two nodes are both ‘1’, union them and find root of them. If they have same root, then the number of islands should be reduced by 1.</span>
-            </p>
-            <h2><span>Code</span></h2>
-            <h3><span>Number of Islands</span></h3>
+            <h2>Problem description </h2>
+            <h3>Number of Islands</h3>
+            <p>Given a 2d grid map of <code>&#39;1&#39;</code>s (land) and <code>&#39;0&#39;</code>s (water), count the
+                number of islands. An island is surrounded by water and is formed by connecting adjacent lands
+                horizontally or vertically. You may assume all four edges of the grid are all surrounded by water.</p>
+            <p><strong>Example 1:</strong></p>
+            <pre><code>Input:
+11110
+11010
+11000
+00000
+
+Output: 1
+</code></pre>
+            <p><strong>Example 2:</strong></p>
+            <pre><code>Input:
+11000
+11000
+00100
+00011
+
+Output: 3
+</code></pre>
+            <h3>Most Stones Removed with Same Row or Column</h3>
+            <p>On a 2D plane, we place stones at some integer coordinate points. Each coordinate point may have at most
+                one stone.</p>
+            <p>Now, a <em>move</em> consists of removing a stone that shares a column or row with another stone on the
+                grid.</p>
+            <p>What is the largest possible number of moves we can make?</p>
+            <p><strong>Example 1:</strong></p>
+            <pre><code>Input: stones = [[0,0],[0,1],[1,0],[1,2],[2,1],[2,2]]
+Output: 5
+</code></pre>
+            <p><strong>Example 2:</strong></p>
+            <pre><code>Input: stones = [[0,0],[0,2],[1,1],[2,0],[2,2]]
+Output: 3
+</code></pre>
+            <p><strong>Example 3:</strong></p>
+            <pre><code>Input: stones = [[0,0]]
+Output: 0
+</code></pre>
+            <p><strong>Note:</strong></p>
+            <ol>
+                <li><code>1 &lt;= stones.length &lt;= 1000</code></li>
+                <li><code>0 &lt;= stones[i][j] &lt; 10000</code></li>
+
+            </ol>
+            <h2>Method</h2>
+            <h3>Number of Islands</h3>
+            <p>Two approaches: DFS and Union Find.</p>
+            <p><strong>DFS</strong></p>
+            <p>Start at each cell with ‘1’, then DFS find all nodes that are connected with current node. Flip node’s
+                ‘1’ to ‘0’ each time to reduce runtime.</p>
+            <p><strong>Union Find</strong></p>
+            <p>First find all nodes and mark them all as individual node. The traverse the whole grid, when two nodes
+                are both ‘1’, union them and find root of them. If they have same root, then the number of islands
+                should be reduced by 1.</p>
+            <h3>Most Stones Removed with Same Row or Column</h3>
+            <p>Union find. Note that in this problem, it is not union find on stone, it is based on coord, i.e., x and
+                y.</p>
+            <p>Count total connected island in whole map, the max move is the total # of 1 reduce # of islands.</p>
+            <h2>Code</h2>
+            <h3>Number of Islands</h3>
             <pre><code class='language-java' lang='java'>/**
  * DFS.
  * When reaches a &#39;1&#39; then do DFS start at this point and mark all accessible point as visited.
@@ -239,6 +290,61 @@ class UnionFind {
         }
         father[node] = find(father[node]);      // recursively find father
         return father[node];
+    }
+}
+</code></pre>
+            <h3>Most Stones Removed with Same Row or Column</h3>
+            <pre><code class='language-java' lang='java'>private HashMap&lt;Integer, Integer&gt; m = new HashMap&lt;&gt;();
+private int count = 0;
+
+/**
+ * Union find.
+ * Count total connected island in whole map, the max move is the total # of 1 reduce # of islands.
+ *
+ * @param stones given array stores stone coord
+ * @return largest possible number of moves
+ */
+public int removeStones(int[][] stones) {
+
+    for (int[] stone : stones) {
+        union(stone[0], stone[1] + 10000);     // reverse to avoid duplicated coord x and y
+    }
+
+    return stones.length - count;
+}
+
+/**
+ * Find father based on given x.
+ *
+ * @param x find father of this node
+ * @return father of x
+ */
+private int find(int x) {
+
+    if (m.putIfAbsent(x, x) == null) {      // if current node is not root
+        count++;                            // one less island can be found
+    }
+
+    if (x != m.get(x)) {
+        m.put(x, find(m.get(x)));           // recursively find father, reset father to avoid counting duplication
+    }
+
+    return m.get(x);
+}
+
+/**
+ * Union two nodes.
+ *
+ * @param id1 first node
+ * @param id2 second node
+ */
+private void union(int id1, int id2) {
+    int f1 = find(id1);
+    int f2 = find(id2);
+
+    if (f1 != f2) {
+        count--;
+        m.put(f1, f2);
     }
 }
 </code></pre>
