@@ -86,9 +86,37 @@
                 <li><a href='https://leetcode.com/problems/number-of-islands'>Number of Islands</a></li>
                 <li><a href='https://leetcode.com/problems/most-stones-removed-with-same-row-or-column/'>Most Stones
                     Removed with Same Row or Column</a></li>
+                <li><a href='https://leetcode.com/problems/number-of-connected-components-in-an-undirected-graph'>Number
+                    of Connected Components in an Undirected Graph</a></li>
 
             </ul>
             <h2>Problem description </h2>
+            <h3>Number of Connected Components in an Undirected Graph</h3>
+            <p>Given <code>n</code> nodes labeled from <code>0</code> to <code>n - 1</code> and a list of undirected
+                edges (each edge is a pair of nodes), write a function to find the number of connected components in an
+                undirected graph.</p>
+            <p><strong>Example 1:</strong></p>
+            <pre><code>Input: n = 5 and edges = [[0, 1], [1, 2], [3, 4]]
+
+     0          3
+     |          |
+     1 --- 2    4
+
+Output: 2
+</code></pre>
+            <p><strong>Example 2:</strong></p>
+            <pre><code>Input: n = 5 and edges = [[0, 1], [1, 2], [2, 3], [3, 4]]
+
+     0           4
+     |           |
+     1 --- 2 --- 3
+
+Output:  1
+</code></pre>
+            <p><strong>Note:</strong>
+                You can assume that no duplicate edges will appear in <code>edges</code>. Since all edges are
+                undirected, <code>[0, 1]</code> is the same as <code>[1, 0]</code> and thus will not appear together in
+                <code>edges</code>.</p>
             <h3>Number of Islands</h3>
             <p>Given a 2d grid map of <code>&#39;1&#39;</code>s (land) and <code>&#39;0&#39;</code>s (water), count the
                 number of islands. An island is surrounded by water and is formed by connecting adjacent lands
@@ -130,12 +158,17 @@ Output: 3
 Output: 0
 </code></pre>
             <p><strong>Note:</strong></p>
-            <ol>
+            <ol start=''>
                 <li><code>1 &lt;= stones.length &lt;= 1000</code></li>
                 <li><code>0 &lt;= stones[i][j] &lt; 10000</code></li>
 
             </ol>
             <h2>Method</h2>
+            <h3>Number of Connected Components in an Undirected Graph</h3>
+            <p>Classic 1D union find problem. The way to solve it is to find the root of each node. </p>
+            <p>Assume all nodes are unconnected and the # of unconnected nodes equal to n. If root of node is different,
+                then reduce one on # of unconnected nodes. Finally, the # of unconnected nodes is the # of connected
+                components.</p>
             <h3>Number of Islands</h3>
             <p>Two approaches: DFS and Union Find.</p>
             <p><strong>DFS</strong></p>
@@ -150,6 +183,48 @@ Output: 0
                 y.</p>
             <p>Count total connected island in whole map, the max move is the total # of 1 reduce # of islands.</p>
             <h2>Code</h2>
+            <h3>Number of Connected Components in an Undirected Graph</h3>
+            <pre><code class='language-java' lang='java'>/**
+ * Union find.
+ * Initially, consider all nodes as individual nodes.
+ * Then traverse all given edges. Union two vertices that connected by edge.
+ *
+ * @param n     # of nodes
+ * @param edges edges connect nodes
+ * @return # of connected components in an undirected graph
+ */
+public int countComponents(int n, int[][] edges) {
+    int[] union = new int[n];
+
+    for (int i = 0; i &lt; union.length; i++) {
+        union[i] = i;       // count each node as individual node
+    }
+    for (int[] e : edges) {
+        int r1 = find(e[0], union);
+        int r2 = find(e[1], union);
+        if (r1 != r2) {
+            union[r1] = union[r2];      // union two nodes as connected
+            n--;
+        }
+    }
+    return n;
+}
+
+/**
+ * Find operation.
+ *
+ * @param i   given node
+ * @param arr array of union situation
+ * @return root of current node
+ */
+private int find(int i, int[] arr) {
+    while (i != arr[i]) {
+        arr[i] = arr[arr[i]];       // update root if current node is not root
+        i = arr[i];
+    }
+    return i;
+}
+</code></pre>
             <h3>Number of Islands</h3>
             <pre><code class='language-java' lang='java'>/**
  * DFS.
