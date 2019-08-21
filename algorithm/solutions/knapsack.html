@@ -78,15 +78,38 @@
         </div>
 
         <div class="text-right post-date">
-            August 18, 2019
+            August 20, 2019
         </div>
+
         <div class="post-main">
             <p>Links: </p>
             <ul>
+                <li><a href='https://leetcode.com/problems/partition-equal-subset-sum/'>Partition Equal Subset Sum</a>
+                </li>
                 <li><a href='https://leetcode.com/problems/coin-change-2/'>Coin Change 2</a></li>
                 <li><a href='https://leetcode.com/problems/last-stone-weight-ii'>Last Stone Weight II</a></li>
+
             </ul>
             <h2>Problem description </h2>
+            <h3>Partition Equal Subset Sum</h3>
+            <p>Given a <strong>non-empty</strong> array containing <strong>only positive integers</strong>, find if the
+                array can be partitioned into two subsets such that the sum of elements in both subsets is equal.</p>
+            <p><strong>Note:</strong></p>
+            <ol start=''>
+                <li>Each of the array element will not exceed 100.</li>
+                <li>The array size will not exceed 200.</li>
+
+            </ol>
+            <p><strong>Example 1:</strong></p>
+            <pre><code>Input: [1, 5, 11, 5]
+Output: true
+Explanation: The array can be partitioned as [1, 5, 5] and [11].
+</code></pre>
+            <p><strong>Example 2:</strong></p>
+            <pre><code>Input: [1, 2, 3, 5]
+Output: false
+Explanation: The array cannot be partitioned into equal sum subsets.
+</code></pre>
             <h3>Coin Change 2</h3>
             <p>You are given coins of different denominations and a total amount of money. Write a function to compute
                 the number of combinations that make up that amount. You may assume that you have infinite number of
@@ -141,12 +164,25 @@ we can combine 2 and 1 to get 1 so the array converts to [1,1,1] then,
 we can combine 1 and 1 to get 0 so the array converts to [1] then that&#39;s the optimal value.
 </code></pre>
             <p><strong>Note:</strong></p>
-            <ol>
+            <ol start=''>
                 <li><code>1 &lt;= stones.length &lt;= 30</code></li>
                 <li><code>1 &lt;= stones[i] &lt;= 100</code></li>
 
             </ol>
             <h2>Method</h2>
+            <h3>Partition Equal Subset Sum</h3>
+            <p>0/1 Knapsack problem.</p>
+            <p>State transition:</p>
+            <p><code>dp[i][j] = dp[i - 1][j - nums[i - 1]] || dp[i - 1][j]</code></p>
+            <ul>
+                <li><code>dp[i - 1][j - nums[i - 1]]</code>: choose <code>nums[i]</code>, and if <code>j -
+                    nums[i]</code> can make up sum, <code>dp[i][j]</code> can.
+                </li>
+                <li><code>dp[i - 1][j]</code>: leave <code>nums[i]</code> and if from <code>nums[0]</code> to <code>nums[i-1]</code>
+                    can make up, then <code>dp[i][j]</code> can.
+                </li>
+
+            </ul>
             <h3>Coin Change 2</h3>
             <p>Knapsack problem.
                 <code>dp[i][j] = dp[i - 1][j] + dp[i][j - coins[i - 1]]</code>, if <code>j - coins[i - 1] &gt;= 0</code>.
@@ -161,6 +197,51 @@ we can combine 1 and 1 to get 0 so the array converts to [1] then that&#39;s the
             <h3>Last Stone Weight II</h3>
             <p>Knapsack problem. State transformation is same as previous problem.</p>
             <h2>Code</h2>
+            <h3>Partition Equal Subset Sum</h3>
+            <pre><code class='language-java' lang='java'>/**
+ * 0/1 Knapsack problem.
+ * State transition:
+ * dp[i][j] = dp[i - 1][j - nums[i - 1]] || dp[i - 1][j]
+ * dp[i - 1][j - nums[i - 1]]: choose nums[i], and if j - nums[i] can make up sum, dp[i][j] can.
+ * dp[i - 1][j]: leave nums[i] and if from nums[0] to nums[i-1] can make up, then dp[i][j] can.
+ *
+ * @param nums given array
+ * @return if the array can be partitioned into two subsets such that the sum of elements in both subsets is equal
+ */
+public boolean canPartition(int[] nums) {
+
+    /* */
+    if (nums.length &lt; 2) {
+        return false;
+    }
+
+    int sum = 0;
+    for (int i : nums) {
+        sum += i;
+    }
+    if (sum % 2 == 1) {
+        return false;       // odd number can not be spilt to equal parts
+    }
+
+    sum /= 2;
+    boolean[][] dp = new boolean[nums.length + 1][sum + 1];     // dp[i][j]: if 0 to i in nums can reach sum of j
+
+    for (int i = 0; i &lt; dp.length; i++) {
+        dp[i][0] = true;
+    }
+
+    for (int i = 1; i &lt; dp.length; i++) {
+        for (int j = 1; j &lt; dp[0].length; j++) {
+
+            if (j - nums[i - 1] &gt;= 0) {     // choose current nums[i]
+                dp[i][j] = dp[i - 1][j - nums[i - 1]] || dp[i - 1][j];
+            }
+        }
+    }
+
+    return dp[nums.length][sum];
+}
+</code></pre>
             <h3>Coin Change 2</h3>
             <pre><code class='language-java' lang='java'>/**
  * Knapsack problem.
