@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Distinct Subsequences | Algorithm</title>
+    <link rel="stylesheet" type="text/css"
+          href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Martel+Sans:200,300,400,600,700,800,900&display=swap"
+          rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Raleway:200i,400,800" rel="stylesheet">
+    <link rel="stylesheet" href="../../static/css/post-content.css">
+    <link rel="stylesheet" href="../../static/bootstrap-4.3.1-dist/css/bootstrap.css">
+
+    <!--    title icon        -->
+    <link rel="shortcut icon" type="image/x-icon" href="../../static/img/Avatar-3.jpg"/>
+    <link rel="stylesheet" href="../../static/css/coding.css">
+    <script src="../../static/script/coding_style.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <style> @media print {
+        .hljs {
+            overflow: visible;
+            word-wrap: break-word !important;
+        }
+    }</style>
+</head>
+<body>
+
+<!--        nav bar     -->
+<nav id="mainNav" class="navbar navbar-expand-lg py-0 fixed-top">
+    <div class="container">
+        <a class="navbar-brand" href="https://yyzhou95.github.io/">HOME</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="../index.html">Posts <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../tags/index.html">Tags <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../algorithm/index.html">Algorithm <span
+                            class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item active">
+                    <a class="nav-link" href="../../archived/index.html">Archived <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item dropdown active">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                       data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        Other Links
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="https://github.com/yyzhou95">Github</a>
+                        <a class="dropdown-item" href="https://github.com/yyzhou95/yyzhou95.github.io">This page</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="../../about/">About Me</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<section class="post-content">
+    <div class="container">
+
+        <div class="post-heading">
+            <h1>
+                Distinct Subsequences
+            </h1>
+        </div>
+
+        <div class="text-right post-date">
+            August 21, 2019
+        </div>
+        <div class="post-main">
+            <p>Link: <a href='https://leetcode.com/problems/distinct-subsequences/'>Distinct Subsequences</a></p>
+            <h2>Problem description </h2>
+            <h3>Distinct Subsequences</h3>
+            <p>Given a string <strong>S</strong> and a string <strong>T</strong>, count the number of distinct
+                subsequences of <strong>S</strong> which equals <strong>T</strong>.</p>
+            <p>A subsequence of a string is a new string which is formed from the original string by deleting some (can
+                be none) of the characters without disturbing the relative positions of the remaining characters. (ie,
+                <code>&quot;ACE&quot;</code> is a subsequence of <code>&quot;ABCDE&quot;</code> while <code>&quot;AEC&quot;</code>
+                is not).</p>
+            <p><strong>Example 1:</strong></p>
+            <pre><code>Input: S = &quot;rabbbit&quot;, T = &quot;rabbit&quot;
+Output: 3
+Explanation:
+
+As shown below, there are 3 ways you can generate &quot;rabbit&quot; from S.
+(The caret symbol ^ means the chosen letters)
+
+rabbbit
+^^^^ ^^
+rabbbit
+^^ ^^^^
+rabbbit
+^^^ ^^^
+</code></pre>
+            <p><strong>Example 2:</strong></p>
+            <pre><code>Input: S = &quot;babgbag&quot;, T = &quot;bag&quot;
+Output: 5
+Explanation:
+
+As shown below, there are 5 ways you can generate &quot;bag&quot; from S.
+(The caret symbol ^ means the chosen letters)
+
+babgbag
+^^ ^
+babgbag
+^^    ^
+babgbag
+^    ^^
+babgbag
+  ^  ^^
+babgbag
+    ^^^
+</code></pre>
+            <h2>Method</h2>
+            <h3>Distinct Subsequences</h3>
+            <p>Dynamic programming.</p>
+            <p>State transition:</p>
+            <ul>
+                <li><code>dp[i][j] = dp[i][j - 1]</code>.</li>
+                <li>If <code>s.charAt(j - 1) == t.charAt(i - 1)</code>, then <code>dp[i][j] += dp[i - 1][j - 1]</code>.
+                </li>
+
+            </ul>
+            <p><code>dp[i][j]</code>: <code>S(0, j)</code> contains distinct subsequences of <code>T(0, i)</code>.</p>
+            <p>If <code>T[i] != S[j]</code>, then <code>dp[i,j] = dp[i,j-1]</code>, since current char will not be
+                taken.</p>
+            <p>If <code>T[i] == S[j]</code>, then current char can be taken to make the last char of T.</p>
+            <p>Under this condition, <code>dp[i][j] = dp[i-1][j-1]</code>, which is # of previous condition. Current
+                char is last char that made up of subsequence, therefore, no extra value needed under this condition.
+            </p>
+            <p>But it is also possible that current char is not taken, which is same as first situation. Therefore, no
+                matter which condition is triggered, <code>dp[i][j]</code> should be at least <code>dp[i][j-1]</code>.
+            </p>
+            <h2>Code</h2>
+            <h3>Distinct Subsequences</h3>
+            <pre><code class='language-java' lang='java'>/**
+ * Dynamic programming.
+ * State transition:
+ * dp[i][j] = dp[i][j - 1], if s.charAt(j - 1) == t.charAt(i - 1), then dp[i][j] += dp[i - 1][j - 1]
+ * dp[i][j]: S(0, j) contains distinct subsequences of T(0, i).
+ * If T[i] != S[j], then dp[i,j] = dp[i,j-1], since current char will not be taken.
+ * If T[i] == S[j], then current char can be taken to make the last char of T.
+ * Under this condition, dp[i][j] = dp[i-1][j-1], which is # of previous condition.
+ * Current char is last char that made up of subsequence, therefore, no extra value needed under this condition.
+ * But it is also possible that current char is not taken, which is same as first situation.
+ *
+ * @param s string not longer than t
+ * @param t second string
+ * @return number of distinct subsequences of S which equals T
+ */
+public int numDistinct(String s, String t) {
+    int n = s.length(), m = t.length();
+
+    int[][] dp = new int[m + 1][n + 1];
+
+    Arrays.fill(dp[0], 1);      // empty string is a subsequence
+
+    for (int i = 1; i &lt; dp.length; i++) {     // row: char in t
+        for (int j = 1; j &lt; dp[0].length; j++) {      // column: char in s
+
+            /*
+             * Two conditions:
+             * 1. If chars in S and T is not matched, then dp[i][j] = dp[i][j-1]. Char in S will not influence [j-1]
+             * 2. If two chars is matched, then based on condition 1, dp[i][j] += dp[i - 1][j - 1].
+             * dp[i - 1][j - 1]: S(0, j - 1) contains distinct subsequences of T(0, i - 1) */
+            dp[i][j] = dp[i][j - 1];
+
+            if (s.charAt(j - 1) == t.charAt(i - 1)) {
+                dp[i][j] += dp[i - 1][j - 1];
+            }
+        }
+    }
+
+    return dp[m][n];
+}
+</code></pre>
+        </div>
+    </div>
+</section>
+<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+<!--        This order must be followed!!       -->
+<script src="../../static/jquery/jquery-3.3.1.js"></script>
+<script src="../../static/popper/popper.js"></script>
+<script src="../../static/bootstrap-4.3.1-dist/js/bootstrap.js"></script>
+
+<!-- Nav bar control -->
+<script src="../../static/script/nav-bar.js"></script>
+</body>
+</html>
