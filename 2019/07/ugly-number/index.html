@@ -13,10 +13,10 @@
 
 <meta property="og:description" content="">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Evaluate Division">
-<meta name="twitter:title" content="Evaluate Division">
-<meta property="og:url" content="https://yyzhou95.github.io/2019/07/evaluate-division/">
-<meta property="twitter:url" content="https://yyzhou95.github.io/2019/07/evaluate-division/">
+<meta property="og:title" content="Ugly Number">
+<meta name="twitter:title" content="Ugly Number">
+<meta property="og:url" content="https://yyzhou95.github.io/2019/07/ugly-number/">
+<meta property="twitter:url" content="https://yyzhou95.github.io/2019/07/ugly-number/">
 <meta property="og:site_name" content="Bingo!">
 <meta property="og:description" content="">
 <meta name="twitter:description" content="">
@@ -36,7 +36,9 @@
   
   
     
-      <meta property="article:tag" content="Union Find">
+      <meta property="article:tag" content="Dynamic Programming">
+    
+      <meta property="article:tag" content="Math">
     
   
 
@@ -57,14 +59,14 @@
   <meta property="twitter:image" content="https://yyzhou95.github.io/img/avatar.jpg">
 
 
-    <title>Evaluate Division</title>
+    <title>Ugly Number</title>
 
     <link rel="icon" href="https://yyzhou95.github.io/favicon.png">
     
 
     
 
-    <link rel="canonical" href="https://yyzhou95.github.io/2019/07/evaluate-division/">
+    <link rel="canonical" href="https://yyzhou95.github.io/2019/07/ugly-number/">
 
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
@@ -214,7 +216,7 @@
             <div class="post-header main-content-wrap text-center">
   
     <h1 class="post-title" itemprop="headline">
-      Evaluate Division
+      Ugly Number
     </h1>
   
   
@@ -241,116 +243,222 @@
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <p>Link: <a href="https://leetcode.com/problems/evaluate-division">Evaluate Division</a></p>
+              <p>Links:</p>
 
-<h2 id="problem-description">Problem description</h2>
+<ul>
+<li><a href="https://leetcode.com/problems/ugly-number">Ugly Number</a></li>
+<li><a href="https://leetcode.com/problems/ugly-number-ii">Ugly Number II</a></li>
+<li><a href="https://leetcode.com/problems/super-ugly-number">Super Ugly Number</a></li>
+</ul>
 
-<p>Equations are given in the format <code>A / B = k</code>, where <code>A</code> and <code>B</code> are variables represented as strings, and <code>k</code> is a real number (floating point number). Given some queries, return the answers. If the answer does not exist, return <code>-1.0</code>.</p>
+<h2 id="ugly-number">Ugly Number</h2>
 
-<p><strong>Example:</strong>
-Given <code>a / b = 2.0, b / c = 3.0.</code>
-queries are: <code>a / c = ?, b / a = ?, a / e = ?, a / a = ?, x / x = ? .</code>
-return <code>[6.0, 0.5, -1.0, 1.0, -1.0 ].</code></p>
+<h3 id="problem-description">Problem description</h3>
 
-<p>The input is: <code>vector&lt;pair&lt;string, string&gt;&gt; equations, vector&lt;double&gt;&amp; values, vector&lt;pair&lt;string, string&gt;&gt; queries</code>, where <code>equations.size() == values.size()</code>, and the values are positive. This represents the equations. Return <code>vector&lt;double&gt;</code>.</p>
+<p>Write a program to check whether a given number is an ugly number.</p>
 
-<p>According to the example above:</p>
+<p>Ugly numbers are <strong>positive numbers</strong> whose prime factors only include <code>2, 3, 5</code>.</p>
 
-<pre><code>equations = [ [&quot;a&quot;, &quot;b&quot;], [&quot;b&quot;, &quot;c&quot;] ],
-values = [2.0, 3.0],
-queries = [ [&quot;a&quot;, &quot;c&quot;], [&quot;b&quot;, &quot;a&quot;], [&quot;a&quot;, &quot;e&quot;], [&quot;a&quot;, &quot;a&quot;], [&quot;x&quot;, &quot;x&quot;] ]. 
+<p><strong>Example 1:</strong></p>
+
+<pre><code>Input: 6
+Output: true
+Explanation: 6 = 2 × 3
 </code></pre>
 
-<p>The input is always valid. You may assume that evaluating the queries will result in no division by zero and there is no contradiction.</p>
+<p><strong>Example 2:</strong></p>
 
-<h2 id="method">Method</h2>
+<pre><code>Input: 8
+Output: true
+Explanation: 8 = 2 × 2 × 2
+</code></pre>
 
-<p>Union find.</p>
+<p><strong>Example 3:</strong></p>
 
-<p>Given a query <code>[a, b]</code>, if they share the same root, find out the value of <code>common_root/a and common_root/b</code>. Then the result is <code>(common_root/b) / (common_root/a)</code>.</p>
+<pre><code>Input: 14
+Output: false 
+Explanation: 14 is not ugly since it includes another prime factor 7.
+</code></pre>
 
-<h2 id="code">Code</h2>
+<p><strong>Note:</strong></p>
 
-<pre><code class="language-java">private HashMap&lt;String, String&gt; parent = new HashMap&lt;&gt;();       // parent of current node
-private HashMap&lt;String, Double&gt; ratio = new HashMap&lt;&gt;();        // ratio of edge
+<ol>
+<li><code>1</code> is typically treated as an ugly number.</li>
+<li>Input is within the 32-bit signed integer range: [−231,  231 − 1].</li>
+</ol>
 
-/**
- * Union find.
- * Given a query [a, b], if they share the same root, find out the value of common_root/a and common_root/b.
- * Then the result is (common_root/b) / (common_root/a).
+<h3 id="method">Method</h3>
+
+<p>If there are any other prime factor than 2, 3, 5, then return false.</p>
+
+<p>Any integer &lt; 1 (including negative integer) is not ugly number.</p>
+
+<h3 id="code">Code</h3>
+
+<pre><code class="language-java">/**
+ * If there are any other prime factor than 2, 3, 5, then return false.
+ * Any num &lt; 1 is not ugly number.
  *
- * @param equations given equations list
- * @param values    given value list representing each equation's result
- * @param queries   given queries
- * @return answers of queries
+ * @param num given number
+ * @return if given number is an ugly number
  */
-public double[] calcEquation(List&lt;List&lt;String&gt;&gt; equations, double[] values, List&lt;List&lt;String&gt;&gt; queries) {
+public boolean isUgly(int num) {
 
-    if (equations == null || equations.size() == 0) {
-        return new double[]{};
+    /* Corner case */
+    if (num &lt; 1) {
+        return false;
     }
 
-    for (int i = 0; i &lt; equations.size(); i++) {
-        union(equations.get(i).get(0), equations.get(i).get(1), values[i]);
+    while (num % 2 == 0) {
+        num = num / 2;
+    }
+    while (num % 3 == 0) {
+        num = num / 3;
     }
 
-    double[] out = new double[queries.size()];
-    for (int i = 0; i &lt; queries.size(); i++) {
-        String s1 = queries.get(i).get(0);
-        String s2 = queries.get(i).get(1);
-        if (!parent.containsKey(s1) || !parent.containsKey(s2) || !find(s1).equals(find(s2))) {
-            out[i] = -1.0;
-        } else {
-            out[i] = ratio.get(s1) / ratio.get(s2);
+    while (num % 5 == 0) {
+        num = num / 5;
+    }
+
+    return num == 1;
+}
+</code></pre>
+
+<h2 id="ugly-number-ii">Ugly Number II</h2>
+
+<h3 id="problem-description-1">Problem description</h3>
+
+<p>Write a program to find the <code>n</code>-th ugly number.</p>
+
+<p>Ugly numbers are <strong>positive numbers</strong> whose prime factors only include <code>2, 3, 5</code>.</p>
+
+<p><strong>Example:</strong></p>
+
+<pre><code>Input: n = 10
+Output: 12
+Explanation: 1, 2, 3, 4, 5, 6, 8, 9, 10, 12 is the sequence of the first 10 ugly numbers.
+</code></pre>
+
+<p><strong>Note:</strong></p>
+
+<ol>
+<li><code>1</code> is typically treated as an ugly number.</li>
+<li><code>n</code> <strong>does not exceed 1690</strong>.</li>
+</ol>
+
+<h3 id="method-1">Method</h3>
+
+<p>Dynamic programming.</p>
+
+<p>Every subsequence is the ugly-sequence itself (1, 2, 3, 4, 5, &hellip;) multiply 2, 3, 5. Each time, choose the smallest one among 3 of the factors.</p>
+
+<p>Multiply each with <code>2/3/5</code> as next number.</p>
+
+<h3 id="code-1">Code</h3>
+
+<pre><code class="language-java">/**
+ * Dynamic programming.
+ * Every subsequence is the ugly-sequence itself (1, 2, 3, 4, 5, ...) multiply 2, 3, 5.
+ * Each time, choose the smallest one among 3 of the factors.
+ * Multiply each with 2/3/5 as next number.
+ *
+ * @param n request nth ugly number
+ * @return nth ugly number
+ */
+public int nthUglyNumber(int n) {
+    int[] dp = new int[n];
+
+    dp[0] = 1;
+    int i2 = 0, i3 = 0, i5 = 0;
+    int f2 = 2, f3 = 3, f5 = 5;
+
+    for (int i = 1; i &lt; n; i++) {
+        int min = Math.min(Math.min(f2, f3), f5);
+        dp[i] = min;
+        if (f2 == min) {
+            f2 = 2 * dp[++i2];
+        }
+        if (f3 == min) {
+            f3 = 3 * dp[++i3];
+        }
+        if (f5 == min) {
+            f5 = 5 * dp[++i5];
         }
     }
-    System.out.println(parent);
-    return out;
+
+    return dp[n - 1];
 }
+</code></pre>
 
-/**
- * Union.
- * If map does not contains the given node, then put it in map and consider it as root of itself.
- * This is the initially state of each given operand of equation.
+<h2 id="super-ugly-number">Super Ugly Number</h2>
+
+<h3 id="problem-description-2">Problem description</h3>
+
+<p>Write a program to find the <code>nth</code> super ugly number.</p>
+
+<p>Super ugly numbers are positive numbers whose all prime factors are in the given prime list <code>primes</code> of size <code>k</code>.</p>
+
+<p><strong>Example:</strong></p>
+
+<pre><code>Input: n = 12, primes = [2,7,13,19]
+Output: 32 
+Explanation: [1,2,4,7,8,13,14,16,19,26,28,32] is the sequence of the first 12 
+             super ugly numbers given primes = [2,7,13,19] of size 4.
+</code></pre>
+
+<p><strong>Note:</strong></p>
+
+<ul>
+<li><code>1</code> is a super ugly number for any given <code>primes</code>.</li>
+<li>The given numbers in <code>primes</code> are in ascending order.</li>
+<li>0 &lt; <code>k</code> ≤ 100, 0 &lt; <code>n</code> ≤ 106, 0 &lt; <code>primes[i]</code> &lt; 1000.</li>
+<li>The nth super ugly number is guaranteed to fit in a 32-bit signed integer.</li>
+</ul>
+
+<h3 id="method-2">Method</h3>
+
+<p>Dynamic programming. Almost same as Nth ugly number.</p>
+
+<p>Every subsequence is the ugly-sequence itself (1, 2, 3, 4, 5, &hellip;) multiply primes in given array. Each time, choose the smallest one among 3 of the factors.</p>
+
+<p>Multiply each with given prime factor as next number.</p>
+
+<p>Note that if use heap in this problem may cause TLE.</p>
+
+<h3 id="code-2">Code</h3>
+
+<pre><code class="language-java">/**
+ * Dynamic programming. Almost same as Nth ugly number.
+ * Every subsequence is the ugly-sequence itself (1, 2, 3, 4, 5, ...) multiply primes in given array.
+ * Each time, choose the smallest one among 3 of the factors.
+ * Multiply each with given prime factor as next number.
+ * Note that if use heap in this problem may cause TLE.
  *
- * @param e1  first equation
- * @param e2  second equation
- * @param val value of equation
+ * @param n      given n
+ * @param primes array of prime numbers
+ * @return nth super ugly number
  */
-private void union(String e1, String e2, double val) {
+public int nthSuperUglyNumber(int n, int[] primes) {
 
-    if (!parent.containsKey(e1)) {
-        parent.put(e1, e1);
-        ratio.put(e1, 1.0);     // a / a = 1
-    }
-    if (!parent.containsKey(e2)) {
-        parent.put(e2, e2);
-        ratio.put(e2, 1.0);
-    }
+    int length = primes.length;
+    int[] index = new int[length], res = new int[n];
+    res[0] = 1;
 
-    String p1 = find(e1);
-    String p2 = find(e2);
-    parent.put(p1, p2);
-    ratio.put(p1, val * ratio.get(e2) / ratio.get(e1));
-}
+    for (int i = 1; i &lt; n; i++) {
+        int min = Integer.MAX_VALUE;
 
-/**
- * Find root of given equation string.
- *
- * @param s given equation string
- * @return root of s
- */
-private String find(String s) {
+        for (int j = 0; j &lt; length; j++) {
+            min = Math.min(res[index[j]] * primes[j], min);
+        }
 
-    if (s.equals(parent.get(s))) {
-        return s;       // s is root
+        res[i] = min;
+
+        for (int j = 0; j &lt; length; j++) {
+            if (res[i] % primes[j] == 0) index[j]++;
+        }
     }
 
-    String previous = parent.get(s);
-    String root = find(previous);       // find root
-    parent.put(s, root);        // update given operand's root
-    ratio.put(s, ratio.get(s) * ratio.get(previous));
-    return root;
+    return res[n - 1];
 }
 </code></pre>
               
@@ -364,7 +472,9 @@ private String find(String s) {
                   <div class="post-footer-tags">
                     <span class="text-color-light text-small">TAGGED IN</span><br/>
                     
-  <a class="tag tag--primary tag--small" href="https://yyzhou95.github.io/tags/union-find/">Union Find</a>
+  <a class="tag tag--primary tag--small" href="https://yyzhou95.github.io/tags/dynamic-programming/">Dynamic Programming</a>
+
+  <a class="tag tag--primary tag--small" href="https://yyzhou95.github.io/tags/math/">Math</a>
 
                   </div>
                 
@@ -377,7 +487,7 @@ private String find(String s) {
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/07/accounts-merge/" data-tooltip="Accounts Merge">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/07/evaluate-division/" data-tooltip="Evaluate Division">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -385,7 +495,7 @@ private String find(String s) {
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/07/ugly-number/" data-tooltip="Ugly Number">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/07/union-find/" data-tooltip="Union Find">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
@@ -435,7 +545,7 @@ private String find(String s) {
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/07/accounts-merge/" data-tooltip="Accounts Merge">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/07/evaluate-division/" data-tooltip="Evaluate Division">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -443,7 +553,7 @@ private String find(String s) {
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/07/ugly-number/" data-tooltip="Ugly Number">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/07/union-find/" data-tooltip="Union Find">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
