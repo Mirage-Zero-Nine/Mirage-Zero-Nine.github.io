@@ -13,30 +13,32 @@
 
 <meta property="og:description" content="">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Distinct Subsequences">
-<meta name="twitter:title" content="Distinct Subsequences">
-<meta property="og:url" content="https://yyzhou95.github.io/2019/08/distinct-subsequences/">
-<meta property="twitter:url" content="https://yyzhou95.github.io/2019/08/distinct-subsequences/">
+<meta property="og:title" content="Remove Zero Sum Consecutive Nodes from Linked List">
+<meta name="twitter:title" content="Remove Zero Sum Consecutive Nodes from Linked List">
+<meta property="og:url" content="https://yyzhou95.github.io/2019/08/remove-zero-sum-consecutive-nodes-from-linked-list/">
+<meta property="twitter:url" content="https://yyzhou95.github.io/2019/08/remove-zero-sum-consecutive-nodes-from-linked-list/">
 <meta property="og:site_name" content="Bingo!">
 <meta property="og:description" content="">
 <meta name="twitter:description" content="">
 <meta property="og:locale" content="en-us">
 
   
-    <meta property="article:published_time" content="2019-08-21T00:00:00">
+    <meta property="article:published_time" content="2019-08-25T00:00:00">
   
   
-    <meta property="article:modified_time" content="2019-08-21T00:00:00">
+    <meta property="article:modified_time" content="2019-08-25T00:00:00">
   
   
   
     
       <meta property="article:section" content="LeetCode Solution">
     
+      <meta property="article:section" content="Remove Elements">
+    
   
   
     
-      <meta property="article:tag" content="Dynamic Programming">
+      <meta property="article:tag" content="Stack">
     
   
 
@@ -57,14 +59,14 @@
   <meta property="twitter:image" content="https://yyzhou95.github.io/img/avatar.jpg">
 
 
-    <title>Distinct Subsequences</title>
+    <title>Remove Zero Sum Consecutive Nodes from Linked List</title>
 
     <link rel="icon" href="https://yyzhou95.github.io/favicon.png">
     
 
     
 
-    <link rel="canonical" href="https://yyzhou95.github.io/2019/08/distinct-subsequences/">
+    <link rel="canonical" href="https://yyzhou95.github.io/2019/08/remove-zero-sum-consecutive-nodes-from-linked-list/">
 
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
@@ -214,15 +216,15 @@
             <div class="post-header main-content-wrap text-center">
   
     <h1 class="post-title" itemprop="headline">
-      Distinct Subsequences
+      Remove Zero Sum Consecutive Nodes from Linked List
     </h1>
   
   
   <div class="postShorten-meta post-meta">
     
-      <time itemprop="datePublished" datetime="2019-08-21T00:00:00Z">
+      <time itemprop="datePublished" datetime="2019-08-25T00:00:00Z">
         
-  August 21, 2019
+  August 25, 2019
 
       </time>
     
@@ -231,7 +233,9 @@
   
     <span>in</span>
     
-      <a class="category-link" href="https://yyzhou95.github.io/categories/leetcode-solution">LeetCode Solution</a>
+      <a class="category-link" href="https://yyzhou95.github.io/categories/leetcode-solution">LeetCode Solution</a>, 
+    
+      <a class="category-link" href="https://yyzhou95.github.io/categories/remove-elements">Remove Elements</a>
     
   
 
@@ -241,120 +245,94 @@
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <p>Link: <a href="https://leetcode.com/problems/distinct-subsequences/">Distinct Subsequences</a></p>
+              <p>Link: <a href="https://leetcode.com/problems/remove-zero-sum-consecutive-nodes-from-linked-list">Remove Zero Sum Consecutive Nodes from Linked List</a></p>
 
-<h2 id="problem-description">Problem description</h2>
+<h3 id="problem-description">Problem description</h3>
 
-<h3 id="distinct-subsequences">Distinct Subsequences</h3>
+<p>Given the <code>head</code> of a linked list, we repeatedly delete consecutive sequences of nodes that sum to <code>0</code> until there are no such sequences.</p>
 
-<p>Given a string <strong>S</strong> and a string <strong>T</strong>, count the number of distinct subsequences of <strong>S</strong> which equals <strong>T</strong>.</p>
+<p>After doing so, return the head of the final linked list.  You may return any such answer.</p>
 
-<p>A subsequence of a string is a new string which is formed from the original string by deleting some (can be none) of the characters without disturbing the relative positions of the remaining characters. (ie, <code>&quot;ACE&quot;</code> is a subsequence of <code>&quot;ABCDE&quot;</code> while <code>&quot;AEC&quot;</code> is not).</p>
+<p>(Note that in the examples below, all sequences are serializations of <code>ListNode</code> objects.)</p>
 
 <p><strong>Example 1:</strong></p>
 
-<pre><code>Input: S = &quot;rabbbit&quot;, T = &quot;rabbit&quot;
-Output: 3
-Explanation:
-
-As shown below, there are 3 ways you can generate &quot;rabbit&quot; from S.
-(The caret symbol ^ means the chosen letters)
-
-rabbbit
-^^^^ ^^
-rabbbit
-^^ ^^^^
-rabbbit
-^^^ ^^^
+<pre><code>Input: head = [1,2,-3,3,1]
+Output: [3,1]
+Note: The answer [1,2,1] would also be accepted.
 </code></pre>
 
 <p><strong>Example 2:</strong></p>
 
-<pre><code>Input: S = &quot;babgbag&quot;, T = &quot;bag&quot;
-Output: 5
-Explanation:
-
-As shown below, there are 5 ways you can generate &quot;bag&quot; from S.
-(The caret symbol ^ means the chosen letters)
-
-babgbag
-^^ ^
-babgbag
-^^    ^
-babgbag
-^    ^^
-babgbag
-  ^  ^^
-babgbag
-    ^^^
+<pre><code>Input: head = [1,2,3,-3,4]
+Output: [1,2,4]
 </code></pre>
 
-<h2 id="method">Method</h2>
+<p><strong>Example 3:</strong></p>
 
-<h3 id="distinct-subsequences-1">Distinct Subsequences</h3>
+<pre><code>Input: head = [1,2,3,-3,-2]
+Output: [1]
+</code></pre>
 
-<p>Dynamic programming.</p>
-
-<p>State transition:</p>
+<p><strong>Constraints:</strong></p>
 
 <ul>
-<li><code>dp[i][j] = dp[i][j - 1]</code>.</li>
-<li>If <code>s.charAt(j - 1) == t.charAt(i - 1)</code>, then <code>dp[i][j] += dp[i - 1][j - 1]</code>.</li>
+<li>The given linked list will contain between <code>1</code> and <code>1000</code> nodes.</li>
+<li>Each node in the linked list has <code>-1000 &lt;= node.val &lt;= 1000</code>.</li>
 </ul>
 
-<p><code>dp[i][j]</code>: <code>S(0, j)</code> contains distinct subsequences of <code>T(0, i)</code>.</p>
+<h3 id="method">Method</h3>
 
-<p>If <code>T[i] != S[j]</code>, then <code>dp[i,j] = dp[i,j-1]</code>, since current char will not be taken.</p>
+<p>Prefix sum.</p>
 
-<p>If <code>T[i] == S[j]</code>, then current char can be taken to make the last char of T.</p>
+<p>Use a hash map to store prefix sum. Prefix sum can only be increasing or decreasing if given array is monotonous. Hence, when meet the same prefix, remove all elements of the subarray between them.</p>
 
-<p>Under this condition, <code>dp[i][j] = dp[i-1][j-1]</code>, which is # of previous condition. Current char is last char that made up of subsequence, therefore, no extra value needed under this condition.</p>
+<ul>
+<li>If it&rsquo;s a prefix that we&rsquo;ve never seen, set <code>m[prefix] = current</code>.</li>
+<li>If this prefix is in map, <code>m[prefix]</code> is the node achieved this prefix sum.</li>
+</ul>
 
-<p>But it is also possible that current char is not taken, which is same as first situation. Therefore, no matter which condition is triggered, <code>dp[i][j]</code> should be at least <code>dp[i][j-1]</code>.</p>
+<p>To skip all nodes between <code>m[prefix]</code> and <code>cur.next</code> (exclusive), simply link <code>m[prefix].next = cur.next</code>.</p>
 
-<h2 id="code">Code</h2>
-
-<h3 id="distinct-subsequences-2">Distinct Subsequences</h3>
+<h3 id="code">Code</h3>
 
 <pre><code class="language-java">/**
- * Dynamic programming.
- * State transition:
- * dp[i][j] = dp[i][j - 1], if s.charAt(j - 1) == t.charAt(i - 1), then dp[i][j] += dp[i - 1][j - 1]
- * dp[i][j]: S(0, j) contains distinct subsequences of T(0, i).
- * If T[i] != S[j], then dp[i,j] = dp[i,j-1], since current char will not be taken.
- * If T[i] == S[j], then current char can be taken to make the last char of T.
- * Under this condition, dp[i][j] = dp[i-1][j-1], which is # of previous condition.
- * Current char is last char that made up of subsequence, therefore, no extra value needed under this condition.
- * But it is also possible that current char is not taken, which is same as first situation.
+ * Prefix sum.
+ * Use a hash map to store prefix sum.
+ * Prefix sum can only be increasing or decreasing if given array is monotonous.
+ * When meet the same prefix, remove all elements of the subarray between them.
+ * If it's a prefix that we've never seen, set m[prefix] = current.
+ * If this prefix is in map, m[prefix] is the node achieved this prefix sum.
+ * To skip all nodes between m[prefix] and cur.next (exclusive), simply link m[prefix].next = cur.next.
  *
- * @param s string not longer than t
- * @param t second string
- * @return number of distinct subsequences of S which equals T
+ * @param head head node of list
+ * @return list without such sequences that sum is 0
  */
-public int numDistinct(String s, String t) {
-    int n = s.length(), m = t.length();
+public ListNode removeZeroSumSublists(ListNode head) {
+    ListNode dummy = new ListNode(0), cur = dummy;
+    dummy.next = head;
+    int prefix = 0;         // calculate prefix sum
+    Map&lt;Integer, ListNode&gt; m = new HashMap&lt;&gt;();     // key: prefix sum; value: node with current prefix sum
 
-    int[][] dp = new int[m + 1][n + 1];
+    while (cur != null) {
+        prefix += cur.val;
+        if (m.containsKey(prefix)) {
+            cur = m.get(prefix).next;
+            int p = prefix + cur.val;
 
-    Arrays.fill(dp[0], 1);      // empty string is a subsequence
-
-    for (int i = 1; i &lt; dp.length; i++) {     // row: char in t
-        for (int j = 1; j &lt; dp[0].length; j++) {      // column: char in s
-
-            /*
-             * Two conditions:
-             * 1. If chars in S and T is not matched, then dp[i][j] = dp[i][j-1]. Char in S will not influence [j-1]
-             * 2. If two chars is matched, then based on condition 1, dp[i][j] += dp[i - 1][j - 1].
-             * dp[i - 1][j - 1]: S(0, j - 1) contains distinct subsequences of T(0, i - 1) */
-            dp[i][j] = dp[i][j - 1];
-
-            if (s.charAt(j - 1) == t.charAt(i - 1)) {
-                dp[i][j] += dp[i - 1][j - 1];
+            while (p != prefix) {       // remove invalid prefix sum
+                m.remove(p);
+                cur = cur.next;
+                p += cur.val;
             }
-        }
-    }
 
-    return dp[m][n];
+            m.get(prefix).next = cur.next;
+        } else {
+            m.put(prefix, cur);
+        }
+        cur = cur.next;
+    }
+    return dummy.next;
 }
 </code></pre>
               
@@ -368,7 +346,7 @@ public int numDistinct(String s, String t) {
                   <div class="post-footer-tags">
                     <span class="text-color-light text-small">TAGGED IN</span><br/>
                     
-  <a class="tag tag--primary tag--small" href="https://yyzhou95.github.io/tags/dynamic-programming/">Dynamic Programming</a>
+  <a class="tag tag--primary tag--small" href="https://yyzhou95.github.io/tags/stack/">Stack</a>
 
                   </div>
                 
@@ -381,7 +359,7 @@ public int numDistinct(String s, String t) {
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/08/remove-zero-sum-consecutive-nodes-from-linked-list/" data-tooltip="Remove Zero Sum Consecutive Nodes from Linked List">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/08/problem-set-binary-search/" data-tooltip="Problem Set: Binary Search">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -389,7 +367,7 @@ public int numDistinct(String s, String t) {
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/08/overriding-comparator/" data-tooltip="Overriding Comparator">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/08/distinct-subsequences/" data-tooltip="Distinct Subsequences">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
@@ -439,7 +417,7 @@ public int numDistinct(String s, String t) {
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/08/remove-zero-sum-consecutive-nodes-from-linked-list/" data-tooltip="Remove Zero Sum Consecutive Nodes from Linked List">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/08/problem-set-binary-search/" data-tooltip="Problem Set: Binary Search">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -447,7 +425,7 @@ public int numDistinct(String s, String t) {
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/08/overriding-comparator/" data-tooltip="Overriding Comparator">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/08/distinct-subsequences/" data-tooltip="Distinct Subsequences">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
