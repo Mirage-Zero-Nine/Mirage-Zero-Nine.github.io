@@ -189,6 +189,16 @@
     </ul>
     <ul class="sidebar-buttons">
       
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://github.com/yyzhou95/yyzhou95.github.io" target="_blank" rel="noopener">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-link"></i>
+      
+      <span class="sidebar-button-desc">Source Code</span>
+    </a>
+  </li>
+
 
     </ul>
   </div>
@@ -358,35 +368,6 @@ public int rob(int[] nums) {
             dp1[i + 1] = Math.max(dp1[i], nums[i + 1] + dp1[i - 1]);        // iter array without first element
 
     return Math.max(dp[nums.length - 2], dp1[nums.length - 1]);
-}
-</code></pre>
-
-<h2 id="others">Others</h2>
-
-<p>Since this question is a follow-up to House Robber, we can assume we already have a way to solve the simpler question, i.e. given a 1 row of house, we know how to rob them. So we already have such a helper function. We modify it a bit to rob a given range of houses.</p>
-
-<pre><code class="language-java">private int rob(int[] num, int lo, int hi) {
-    int include = 0, exclude = 0;
-    for (int j = lo; j &lt;= hi; j++) {
-        int i = include, e = exclude;
-        include = e + num[j];
-        exclude = Math.max(e, i);
-    }
-    return Math.max(include, exclude);
-}
-</code></pre>
-
-<p>Now the question is how to rob a circular row of houses. It is a bit complicated to solve like the simpler question. It is because in the simpler question whether to rob <em>num[lo]</em> is entirely our choice. But, it is now constrained by whether <em>num[hi]</em> is robbed.</p>
-
-<p>However, since we already have a nice solution to the simpler problem. We do not want to throw it away. Then, it becomes how can we reduce this problem to the simpler one. Actually, extending from the logic that if house i is not robbed, then you are free to choose whether to rob house i + 1, you can break the circle by assuming a house is not robbed.</p>
-
-<p>For example, 1 -&gt; 2 -&gt; 3 -&gt; 1 becomes 2 -&gt; 3 if 1 is not robbed.</p>
-
-<p>Since every house is either robbed or not robbed and at least half of the houses are not robbed, the solution is simply the larger of two cases with consecutive houses, i.e. house i not robbed, break the circle, solve it, or house i + 1 not robbed. Hence, the following solution. I chose i = n and i + 1 = 0 for simpler coding. But, you can choose whichever two consecutive ones.</p>
-
-<pre><code>public int rob(int[] nums) {
-    if (nums.length == 1) return nums[0];
-    return Math.max(rob(nums, 0, nums.length - 2), rob(nums, 1, nums.length - 1));
 }
 </code></pre>
               
