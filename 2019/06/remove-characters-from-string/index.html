@@ -8,18 +8,18 @@
 <meta name="generator" content="Hugo 0.57.2 with theme Tranquilpeak 0.4.7-BETA">
 <meta name="author" content="Steve Zhou">
 <meta name="keywords" content="">
-<meta name="description" content="">
+<meta name="description" content="This problem is tagged with stack, but use deque is preferred. The reason is that deque can poll out elements from start, which save time for reversion when forming up output.">
 
 
-<meta property="og:description" content="">
+<meta property="og:description" content="This problem is tagged with stack, but use deque is preferred. The reason is that deque can poll out elements from start, which save time for reversion when forming up output.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Remove Characters from String">
 <meta name="twitter:title" content="Remove Characters from String">
 <meta property="og:url" content="https://yyzhou95.github.io/2019/06/remove-characters-from-string/">
 <meta property="twitter:url" content="https://yyzhou95.github.io/2019/06/remove-characters-from-string/">
 <meta property="og:site_name" content="Bingo!">
-<meta property="og:description" content="">
-<meta name="twitter:description" content="">
+<meta property="og:description" content="This problem is tagged with stack, but use deque is preferred. The reason is that deque can poll out elements from start, which save time for reversion when forming up output.">
+<meta name="twitter:description" content="This problem is tagged with stack, but use deque is preferred. The reason is that deque can poll out elements from start, which save time for reversion when forming up output.">
 <meta property="og:locale" content="en-us">
 
   
@@ -245,13 +245,15 @@
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <p>Links:
+              <p>This problem is tagged with stack, but use deque is preferred. The reason is that deque can poll out elements from start, which save time for reversion when forming up output.</p>
+
+<p>Links:
 - <a href="https://leetcode.com/problems/remove-k-digits/">Remove K Digits</a>
 - <a href="https://leetcode.com/problems/remove-duplicate-letters/">Remove Duplicate Letters</a></p>
 
-<h2 id="problem-description">Problem description</h2>
+<h2 id="remove-k-digits">Remove K Digits</h2>
 
-<h3 id="remove-k-digits">Remove K Digits</h3>
+<h3 id="problem-description">Problem description</h3>
 
 <p>Given a non-negative integer <em>num</em> represented as a string, remove <em>k</em> digits from the number so that the new number is the smallest possible.
 <strong>Note:</strong>
@@ -278,7 +280,19 @@ Output: &quot;0&quot;
 Explanation: Remove all the digits from the number and it is left with nothing which is 0.
 </code></pre>
 
-<h3 id="remove-duplicate-letters">Remove Duplicate Letters</h3>
+<h3 id="method">Method</h3>
+
+<p>Use a dequeue to store the numbers in given string.</p>
+
+<p>When found a new number that is smaller than last element in dequeue, remove element in dequeue until meets larger.</p>
+
+<p>Note that this remove operation can be done at most k.</p>
+
+<h3 id="code">Code</h3>
+
+<h2 id="remove-duplicate-letters">Remove Duplicate Letters</h2>
+
+<h3 id="problem-description-1">Problem description</h3>
 
 <p>Given a string which contains only lowercase letters, remove duplicate letters so that every letter appear once and only once. You must make sure your result is the smallest in lexicographical order among all possible results.</p>
 
@@ -294,17 +308,7 @@ Output: &quot;abc&quot;
 Output: &quot;acdb&quot;
 </code></pre>
 
-<h2 id="method">Method</h2>
-
-<h3 id="remove-k-digits-1">Remove K Digits</h3>
-
-<p>Use a dequeue to store the numbers in given string.</p>
-
-<p>When found a new number that is smaller than last element in dequeue, remove element in dequeue until meets larger.</p>
-
-<p>Note that this remove operation can be done at most k.</p>
-
-<h3 id="remove-duplicate-letters-1">Remove Duplicate Letters</h3>
+<h3 id="method-1">Method</h3>
 
 <p>First, iterate the array to count each char&rsquo;s appearance. Then iterate this array again.</p>
 
@@ -314,53 +318,7 @@ Output: &quot;acdb&quot;
 
 <p>The stack is not to store temporary char during first iteration, it is to store final output result.</p>
 
-<h2 id="code">Code</h2>
-
-<h3 id="remove-k-digits-2">Remove K Digits</h3>
-
-<pre><code class="language-java">/**
- * Use a dequeue to store the numbers in given string.
- * When found a new number that is smaller than last element in dequeue, remove element in dequeue until meets larger.
- * Note that this remove operation can be done at most k.
- *
- * @param num given string represent numbers
- * @param k   k digits to be removed
- * @return new number is the smallest possible
- */
-public String removeKdigits(String num, int k) {
-
-    /* Corner case */
-    if (num.length() == k) {
-        return &quot;0&quot;;
-    }
-    Deque&lt;Character&gt; q = new LinkedList&lt;&gt;();        // use deque to replace stack to avoid reverse operation
-    for (int i = 0; i &lt; num.length(); i++) {
-        while (!q.isEmpty() &amp;&amp; q.peekLast() &gt; num.charAt(i) &amp;&amp; k &gt; 0) {
-            q.removeLast();
-            k--;
-        }
-        q.addLast(num.charAt(i));
-    }
-
-    while (k &gt; 0) {     // handle corner case such as &quot;1111111&quot; that will not be removed in q.peekLast() &gt; num.charAt(i)
-        q.removeLast();
-        k--;
-    }
-
-    StringBuilder out = new StringBuilder();
-
-    while (q.size() &gt; 1 &amp;&amp; q.peek() == '0') {
-        q.poll();       // remove 0 at beginning of output
-    }
-    while (!q.isEmpty()) {
-        out.append(q.poll());
-    }
-
-    return out.toString();
-}
-</code></pre>
-
-<h3 id="remove-duplicate-letters-2">Remove Duplicate Letters</h3>
+<h3 id="code-1">Code</h3>
 
 <pre><code class="language-java">/**
  * First, iterate the array to count each char's appearance.
@@ -368,7 +326,7 @@ public String removeKdigits(String num, int k) {
  * If found a char has been in stack, pass this char. Delete this char to keep in smallest lexicographical order.
  * If found a char that is smaller than top of stack, pop it if this top char has more than one appearance in array.
  * The purpose of this process is to assure output result is in smallest lexicographical order.
- * The stack is not to store temporary char during first iteration, it is to store final output result.
+ * Stack is not to store temporary char during first iteration, it is to store final output result.
  *
  * @param s given string
  * @return string without duplicated letter and be smallest in lexicographical order
@@ -380,9 +338,9 @@ public String removeDuplicateLetters(String s) {
         return &quot;&quot;;
     }
 
-    Stack&lt;Character&gt; stack = new Stack&lt;&gt;();     // stack store the final available chars
-    int[] count = new int[26];      // count char appearance
-    boolean[] visited = new boolean[26];
+    Deque&lt;Character&gt; dq = new LinkedList&lt;&gt;();       // use deque instead of stack for better string forming
+    boolean[] isVisited = new boolean[26];
+    int[] count = new int[26];                      // count char appearance
     char[] arr = s.toCharArray();
 
     for (char c : arr) {
@@ -392,28 +350,26 @@ public String removeDuplicateLetters(String s) {
     for (char c : arr) {
         count[c - 'a']--;
 
-        if (visited[c - 'a']) {
-            continue;       // pass chars already in stack to delete duplicated char
-        }
+        if (!isVisited[c - 'a']) {      // pass chars already in stack and in this way to delete duplicated char
 
-        /*
-         * Pop out elements that:
-         * 1. larger than current char (to assure result smallest lexicographical order)
-         * 2. this popped char should be found in later of string */
-        while (!stack.isEmpty() &amp;&amp; stack.peek() &gt; c &amp;&amp; count[stack.peek() - 'a'] &gt; 0) {
-            visited[stack.peek() - 'a'] = false;        // popped char may be seen in later of array
-            stack.pop();
+            /*
+             * Pop out elements that:
+             * 1. Larger than current char (to assure result smallest lexicographical order)
+             * 2. This popped char will be found in later of string (count[c] &gt; 0)
+             * Both conditions should be met. */
+            while (!dq.isEmpty() &amp;&amp; dq.peekLast() &gt; c &amp;&amp; count[dq.peekLast() - 'a'] &gt; 0) {
+                isVisited[dq.pollLast() - 'a'] = false;     // popped char may be seen in later of array
+            }
+            dq.addLast(c);
+            isVisited[c - 'a'] = true;
         }
-
-        stack.push(c);
-        visited[c - 'a'] = true;
     }
 
     StringBuilder sb = new StringBuilder();
-    for (char c : stack) {
-        sb.append(c);
-    }
 
+    while (!dq.isEmpty()) {
+        sb.append(dq.pollFirst());
+    }
     return sb.toString();
 }
 </code></pre>
