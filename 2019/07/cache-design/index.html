@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="generator" content="Hugo 0.57.2 with theme Tranquilpeak 0.4.7-BETA">
+<meta name="author" content="Steve Zhou">
+<meta name="keywords" content="">
+<meta name="description" content="">
+
+
+<meta property="og:description" content="">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Cache Design">
+<meta name="twitter:title" content="Cache Design">
+<meta property="og:url" content="https://yyzhou95.github.io/2019/07/cache-design/">
+<meta property="twitter:url" content="https://yyzhou95.github.io/2019/07/cache-design/">
+<meta property="og:site_name" content="Bingo!">
+<meta property="og:description" content="">
+<meta name="twitter:description" content="">
+<meta property="og:locale" content="en-us">
+
+  
+    <meta property="article:published_time" content="2019-07-05T00:00:00">
+  
+  
+    <meta property="article:modified_time" content="2019-07-05T00:00:00">
+  
+  
+  
+    
+      <meta property="article:section" content="LeetCode Solution">
+    
+      <meta property="article:section" content="Object-oriented design">
+    
+  
+  
+    
+      <meta property="article:tag" content="Linked List">
+    
+      <meta property="article:tag" content="HashMap/HashSet">
+    
+  
+
+
+<meta name="twitter:card" content="summary">
+
+
+
+
+
+
+
+
+
+
+
+  <meta property="og:image" content="https://yyzhou95.github.io/img/avatar.jpg">
+  <meta property="twitter:image" content="https://yyzhou95.github.io/img/avatar.jpg">
+
+
+    <title>Cache Design</title>
+
+    <link rel="icon" href="https://yyzhou95.github.io/favicon.png">
+    
+
+    
+
+    <link rel="canonical" href="https://yyzhou95.github.io/2019/07/cache-design/">
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/jquery.fancybox.min.css" integrity="sha256-vuXZ9LGmmwtjqFX1F+EKin1ThZMub58gKULUyf0qECk=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/helpers/jquery.fancybox-thumbs.min.css" integrity="sha256-SEa4XYAHihTcEP1f5gARTB2K26Uk8PsndQYHQC1f4jU=" crossorigin="anonymous" />
+    
+    
+    <link rel="stylesheet" href="https://yyzhou95.github.io/css/style-twzjdbqhmnnacqs0pwwdzcdbt8yhv8giawvjqjmyfoqnvazl0dalmnhdkvp7.min.css" />
+    
+    
+
+    
+      
+    
+    
+  </head>
+
+  <body>
+    <div id="blog">
+      <header id="header" data-behavior="5">
+  <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+  <div class="header-title">
+    <a class="header-title-link" href="https://yyzhou95.github.io/">Bingo!</a>
+  </div>
+  
+    
+      <a class="header-right-picture "
+         href="https://yyzhou95.github.io/#about">
+    
+    
+    
+      
+        <img class="header-picture" src="https://yyzhou95.github.io/img/avatar.jpg" alt="Author&#39;s picture" />
+      
+    
+    </a>
+  
+</header>
+
+      <nav id="sidebar" data-behavior="5">
+  <div class="sidebar-container">
+    
+      <div class="sidebar-profile">
+        <a href="https://yyzhou95.github.io/#about">
+          <img class="sidebar-profile-picture" src="https://yyzhou95.github.io/img/avatar.jpg" alt="Author&#39;s picture" />
+        </a>
+        <h4 class="sidebar-profile-name">Steve Zhou</h4>
+        
+          <h5 class="sidebar-profile-bio">Bingo!</h5>
+        
+      </div>
+    
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://yyzhou95.github.io/">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-home"></i>
+      
+      <span class="sidebar-button-desc">Home</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://yyzhou95.github.io/categories">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-bookmark"></i>
+      
+      <span class="sidebar-button-desc">Categories</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://yyzhou95.github.io/tags">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-tags"></i>
+      
+      <span class="sidebar-button-desc">Tags</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://yyzhou95.github.io/archives">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-archive"></i>
+      
+      <span class="sidebar-button-desc">Archives</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://yyzhou95.github.io/#about">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-question"></i>
+      
+      <span class="sidebar-button-desc">About</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://github.com/yyzhou95" target="_blank" rel="noopener">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+      
+      <span class="sidebar-button-desc">GitHub</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://github.com/yyzhou95/yyzhou95.github.io" target="_blank" rel="noopener">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-link"></i>
+      
+      <span class="sidebar-button-desc">Source Code</span>
+    </a>
+  </li>
+
+
+    </ul>
+  </div>
+</nav>
+
+      
+
+      <div id="main" data-behavior="5"
+        class="
+               hasCoverMetaOut
+               ">
+        <article class="post" itemscope itemType="http://schema.org/BlogPosting">
+          
+          
+            <div class="post-header main-content-wrap text-center">
+  
+    <h1 class="post-title" itemprop="headline">
+      Cache Design
+    </h1>
+  
+  
+  <div class="postShorten-meta post-meta">
+    
+      <time itemprop="datePublished" datetime="2019-07-05T00:00:00Z">
+        
+  July 5, 2019
+
+      </time>
+    
+    
+  
+  
+    <span>in</span>
+    
+      <a class="category-link" href="https://yyzhou95.github.io/categories/leetcode-solution">LeetCode Solution</a>, 
+    
+      <a class="category-link" href="https://yyzhou95.github.io/categories/object-oriented-design">Object-oriented design</a>
+    
+  
+
+  </div>
+
+</div>
+          
+          <div class="post-content markdown" itemprop="articleBody">
+            <div class="main-content-wrap">
+              <p>Links:</p>
+
+<ul>
+<li><a href="https://leetcode.com/problems/lru-cache">LRU Cache</a></li>
+<li><a href="https://leetcode.com/problems/lfu-cache/">LFU Cache</a></li>
+</ul>
+
+<h2 id="problem-description">Problem description</h2>
+
+<h3 id="lru-cache">LRU Cache</h3>
+
+<p>Design and implement a data structure for <a href="https://en.wikipedia.org/wiki/Cache_replacement_policies#LRU">Least Recently Used (LRU) cache</a>. It should support the following operations: <code>get</code> and <code>put</code>.</p>
+
+<p><code>get(key)</code> - Get the value (will always be positive) of the key if the key exists in the cache, otherwise return -1.
+<code>put(key, value)</code> - Set or insert the value if the key is not already present. When the cache reached its capacity, it should invalidate the least recently used item before inserting a new item.</p>
+
+<p>The cache is initialized with a <strong>positive</strong> capacity.</p>
+
+<p><strong>Follow up:</strong>
+Could you do both operations in <strong>O(1)</strong> time complexity?</p>
+
+<p><strong>Example:</strong></p>
+
+<pre><code>LRUCache cache = new LRUCache( 2 /* capacity */ );
+
+cache.put(1, 1);
+cache.put(2, 2);
+cache.get(1);       // returns 1
+cache.put(3, 3);    // evicts key 2
+cache.get(2);       // returns -1 (not found)
+cache.put(4, 4);    // evicts key 1
+cache.get(1);       // returns -1 (not found)
+cache.get(3);       // returns 3
+cache.get(4);       // returns 4
+</code></pre>
+
+<h3 id="lfu-cache">LFU Cache</h3>
+
+<p>Design and implement a data structure for <a href="https://en.wikipedia.org/wiki/Least_frequently_used">Least Frequently Used (LFU)</a> cache. It should support the following operations: <code>get</code> and <code>put</code>.</p>
+
+<p><code>get(key)</code> - Get the value (will always be positive) of the key if the key exists in the cache, otherwise return -1.
+<code>put(key, value)</code> - Set or insert the value if the key is not already present. When the cache reaches its capacity, it should invalidate the least frequently used item before inserting a new item. For the purpose of this problem, when there is a tie (i.e., two or more keys that have the same frequency), the least <strong>recently</strong> used key would be evicted.</p>
+
+<p><strong>Follow up:</strong>
+Could you do both operations in <strong>O(1)</strong> time complexity?</p>
+
+<p><strong>Example:</strong></p>
+
+<pre><code>LFUCache cache = new LFUCache( 2 /* capacity */ );
+
+cache.put(1, 1);
+cache.put(2, 2);
+cache.get(1);       // returns 1
+cache.put(3, 3);    // evicts key 2
+cache.get(2);       // returns -1 (not found)
+cache.get(3);       // returns 3.
+cache.put(4, 4);    // evicts key 1.
+cache.get(1);       // returns -1 (not found)
+cache.get(3);       // returns 3
+cache.get(4);       // returns 4
+</code></pre>
+
+<h2 id="method">Method</h2>
+
+<h3 id="lru-cache-1">LRU Cache</h3>
+
+<p>Basically, use node to store key and value. A hash map in this cache is to store key-node pair for searching key. Node in cache works as a double linked list, which contains previous node and next node.</p>
+
+<p>When <code>put</code> operation finds a existing key, move corresponding node to top of the list.</p>
+
+<p>When put a new pair into cache, first check size to avoid oversize, then add this node to top of list.</p>
+
+<p>If cache is oversize, then remove last Cache in double linked list. And remove corresponding key as well.</p>
+
+<h3 id="lfu-cache-1">LFU Cache</h3>
+
+<p>Use hash map and linked hash set to store key-value pair and key-frequency pair.</p>
+
+<h2 id="code">Code</h2>
+
+<h3 id="lru-cache-2">LRU Cache</h3>
+
+<pre><code class="language-java">public class LRUCache_146 {
+    private int capacity;
+    private Cache head;
+    private Cache end;
+    private int c = 0;      // count total cache size
+    private HashMap&lt;Integer, Cache&gt; cache = new HashMap&lt;&gt;();
+
+    /**
+     * Structure of cache:
+     * Basically, use node to store key and value. A hash map in this cache is to store key-node pair for searching key.
+     * Cache works as a double linked list, which contains previous Cache and next Cache.
+     * When &lt;code&gt;put&lt;/code&gt; operation finds a existing key, move corresponding node to top of the list.
+     * When put a new pair into cache, first check size to avoid oversize, then add this node to top of list.
+     * If cache is oversize, then remove last Cache in double linked list. And remove corresponding key as well.
+     *
+     * @param capacity cache capacity
+     */
+    public LRUCache_146(int capacity) {
+        this.capacity = capacity;
+        this.head = new Cache();
+        head.previous = null;
+        this.end = new Cache();
+        end.next = null;
+        head.next = end;
+        end.previous = head;
+    }
+
+    /**
+     * &lt;code&gt;get&lt;/code&gt; operation. Return -1 if key is not found in cache.
+     *
+     * @param key requesting key
+     * @return corresponding value, or -1.
+     */
+    public int get(int key) {
+        Cache temp = cache.get(key);
+        if (temp == null) {
+            return -1;
+        }
+        lastUsed(temp);
+        return temp.val;
+    }
+
+    /**
+     * &lt;code&gt;put&lt;/code&gt; operation, put new key-value pair into cache.
+     * If cache is oversize, it will remove Least Recently Used (LRU) Cache store in cache.
+     *
+     * @param key   new key
+     * @param value new value
+     */
+    public void put(int key, int value) {
+
+        Cache node = cache.get(key);
+
+        if (node == null) {
+            Cache add = new Cache();
+            add.key = key;
+            add.val = value;
+            c++;
+            if (c &gt; capacity) {
+                cache.remove(popEnd().key);
+                addNode(add);
+                cache.put(key, add);
+                c--;
+            } else {
+                addNode(add);
+                cache.put(key, add);
+            }
+        } else {
+            cache.get(key).val = value;
+            lastUsed(cache.get(key));
+        }
+    }
+
+    /**
+     * Remove given Cache.
+     *
+     * @param node given Cache
+     */
+    private void removeNode(Cache node) {
+        Cache pre = node.previous;
+        Cache next = node.next;
+        pre.next = next;
+        next.previous = pre;
+    }
+
+    /**
+     * Move given node next to head node.
+     * Note that this node will be removed.
+     *
+     * @param node
+     */
+    private void lastUsed(Cache node) {
+        removeNode(node);
+        addNode(node);
+    }
+
+    /**
+     * Add a new Cache next to head.
+     *
+     * @param node Cache to be moved
+     */
+    private void addNode(Cache node) {
+        node.previous = head;
+        node.next = head.next;
+        head.next.previous = node;
+        head.next = node;
+    }
+
+    /**
+     * Remove last Cache.
+     * Hash map needs to know which key to remove, hence pop node is required.
+     *
+     * @return pop node
+     */
+    private Cache popEnd() {
+        Cache old = end.previous;
+        this.removeNode(old);
+        return old;
+    }
+
+    /**
+     * Definition of Cache.
+     * Worked as double linked list.
+     */
+    class Cache {
+        public int key;     // cache key
+        public int val;     // value store in cache
+        public Cache previous;      // previous cache block pointer
+        public Cache next;          // next cache block pointer
+    }
+
+    public static void main(String[] args) {
+        LRUCache_146 testCache = new LRUCache_146(2);
+
+        testCache.put(1, 1);
+        testCache.put(2, 2);
+        System.out.println(testCache.get(1));
+        testCache.put(3, 3);
+        System.out.println(testCache.get(2));
+        testCache.put(4, 4);
+        System.out.println(testCache.get(1));
+        System.out.println(testCache.get(3));
+        System.out.println(testCache.get(4));
+        System.out.println(testCache);
+    }
+}
+</code></pre>
+
+<h3 id="lfu-cache-2">LFU Cache</h3>
+
+<pre><code class="language-java">public class LFUCache_460 {
+    private HashMap&lt;Integer, Integer&gt; pair;       // store key-value pair
+    private HashMap&lt;Integer, Integer&gt; count;      // store frequency as key-count pair
+    private HashMap&lt;Integer, LinkedHashSet&lt;Integer&gt;&gt; frequency;        // determine which to be removed
+    private int min = -1;
+    private int capacity;
+
+    /**
+     * Init the cache.
+     *
+     * @param capacity cache capacity
+     */
+    public LFUCache_460(int capacity) {
+        this.capacity = capacity;
+        this.pair = new HashMap&lt;&gt;();
+        this.count = new HashMap&lt;&gt;();
+        this.frequency = new HashMap&lt;&gt;();
+        this.frequency.put(1, new LinkedHashSet&lt;&gt;());     // first value
+    }
+
+    /**
+     * &lt;code&gt;get&lt;/code&gt; operation. Return -1 if key is not found in cache.
+     * Use a hash map to record the frequency.
+     *
+     * @param key requesting key
+     * @return corresponding value, or -1.
+     */
+    public int get(int key) {
+
+        if (!this.pair.containsKey(key)) {
+            return -1;      // key does not exist
+        }
+        int f = this.count.get(key);
+        this.count.put(key, f + 1);      // update frequency
+
+        /* Update hash map frequency for later eviction policy */
+        this.frequency.get(f).remove(key);        // current key's frequency has updated, recreate key-frequency pair
+        if (f == this.min &amp;&amp; this.frequency.get(f).size() == 0) {
+            this.min++;      // Update min if min frequency in map has changed
+        }
+        if (!this.frequency.containsKey(f + 1)) {
+            this.frequency.put(f + 1, new LinkedHashSet&lt;&gt;());
+        }
+        this.frequency.get(f + 1).add(key);
+
+        return this.pair.get(key);
+    }
+
+    /**
+     * &lt;code&gt;put&lt;/code&gt; operation, put new key-value pair into cache.
+     * If cache is oversize, it will remove Least Recently Used (LRU) Cache store in cache.
+     *
+     * @param key   new key
+     * @param value new value
+     */
+    public void put(int key, int value) {
+
+        if (this.capacity &lt; 1) {
+            return;
+        }
+
+        if (this.pair.containsKey(key)) {
+            this.pair.put(key, value);
+            get(key);
+            return;
+        }
+        if (this.pair.size() &gt;= this.capacity) {
+            int removeLeast = this.frequency.get(this.min).iterator().next();
+            this.frequency.get(this.min).remove(removeLeast);
+            this.count.remove(removeLeast);
+            this.pair.remove(removeLeast);
+        }
+
+        this.pair.put(key, value);
+        this.count.put(key, 1);
+        this.min = 1;
+        this.frequency.get(1).add(key);
+    }
+
+    public static void main(String[] args) {
+        LFUCache_460 testCache = new LFUCache_460(2);
+
+        testCache.put(1, 1);
+        testCache.put(2, 2);
+        System.out.println(testCache.get(1));
+        testCache.put(3, 3);
+        System.out.println(testCache.get(2));
+        System.out.println(testCache.get(3));
+        testCache.put(4, 4);
+        System.out.println(testCache.get(1));
+        System.out.println(testCache.get(3));
+        System.out.println(testCache.get(4));
+        System.out.println(testCache);
+    }
+}
+</code></pre>
+              
+            </div>
+          </div>
+          <div id="post-footer" class="post-footer main-content-wrap">
+            
+              
+                
+                
+                  <div class="post-footer-tags">
+                    <span class="text-color-light text-small">TAGGED IN</span><br/>
+                    
+  <a class="tag tag--primary tag--small" href="https://yyzhou95.github.io/tags/linked-list/">Linked List</a>
+
+  <a class="tag tag--primary tag--small" href="https://yyzhou95.github.io/tags/hashmap/hashset/">HashMap/HashSet</a>
+
+                  </div>
+                
+              
+            
+            <div class="post-actions-wrap">
+  
+      <nav >
+        <ul class="post-actions post-action-nav">
+          
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/07/word-pattern/" data-tooltip="Word Pattern">
+              
+                  <i class="fa fa-angle-left"></i>
+                  <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
+                </a>
+            </li>
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/07/permutations/" data-tooltip="Permutations">
+              
+                  <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
+                  <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+          
+        </ul>
+      </nav>
+    <ul class="post-actions post-action-share" >
+      
+        <li class="post-action hide-lg hide-md hide-sm">
+          <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+            <i class="fa fa-share-alt"></i>
+          </a>
+        </li>
+        
+      
+      
+      <li class="post-action">
+        
+          <a class="post-action-btn btn btn--default" href="#">
+        
+          <i class="fa fa-list"></i>
+        </a>
+      </li>
+    </ul>
+  
+</div>
+
+            
+              
+            
+          </div>
+        </article>
+        <footer id="footer" class="main-content-wrap">
+  <span class="copyrights">
+    &copy; 2019 Steve Zhou. All Rights Reserved
+  </span>
+</footer>
+
+      </div>
+      <div id="bottom-bar" class="post-bottom-bar" data-behavior="5">
+        <div class="post-actions-wrap">
+  
+      <nav >
+        <ul class="post-actions post-action-nav">
+          
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/07/word-pattern/" data-tooltip="Word Pattern">
+              
+                  <i class="fa fa-angle-left"></i>
+                  <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
+                </a>
+            </li>
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/07/permutations/" data-tooltip="Permutations">
+              
+                  <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
+                  <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+          
+        </ul>
+      </nav>
+    <ul class="post-actions post-action-share" >
+      
+        <li class="post-action hide-lg hide-md hide-sm">
+          <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+            <i class="fa fa-share-alt"></i>
+          </a>
+        </li>
+        
+      
+      
+      <li class="post-action">
+        
+          <a class="post-action-btn btn btn--default" href="#">
+        
+          <i class="fa fa-list"></i>
+        </a>
+      </li>
+    </ul>
+  
+</div>
+
+      </div>
+      <div id="share-options-bar" class="share-options-bar" data-behavior="5">
+  <i id="btn-close-shareoptions" class="fa fa-close"></i>
+  <ul class="share-options">
+    
+  </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+    </div>
+    
+    <div id="about">
+  <div id="about-card">
+    <div id="about-btn-close">
+      <i class="fa fa-remove"></i>
+    </div>
+    
+      <img id="about-card-picture" src="https://yyzhou95.github.io/img/avatar.jpg" alt="Author&#39;s picture" />
+    
+    <h4 id="about-card-name">Steve Zhou</h4>
+    
+      <div id="about-card-bio">Bingo!</div>
+    
+    
+      <div id="about-card-job">
+        <i class="fa fa-briefcase"></i>
+        <br/>
+        Software Engineer
+      </div>
+    
+    
+      <div id="about-card-location">
+        <i class="fa fa-map-marker"></i>
+        <br/>
+        Los Angeles
+      </div>
+    
+  </div>
+</div>
+
+    
+
+    
+  
+    
+      <div id="cover" style="background-image:url('https://yyzhou95.github.io/img/bg.jpeg');"></div>
+    
+  
+
+
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js" integrity="sha256-/BfiIkHlHoVihZdc6TFuj7MmJ0TWcWsMXkeDFwhi0zw=" crossorigin="anonymous"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.7/js/jquery.fancybox.min.js" integrity="sha256-GEAnjcTqVP+vBp3SSc8bEDQqvWAZMiHyUSIorrWwH50=" crossorigin="anonymous"></script>
+
+
+<script src="https://yyzhou95.github.io/js/script-pcw6v3xilnxydl1vddzazdverrnn9ctynvnxgwho987mfyqkuylcb1nlt.min.js"></script>
+
+
+<script lang="javascript">
+window.onload = updateMinWidth;
+window.onresize = updateMinWidth;
+document.getElementById("sidebar").addEventListener("transitionend", updateMinWidth);
+function updateMinWidth() {
+  var sidebar = document.getElementById("sidebar");
+  var main = document.getElementById("main");
+  main.style.minWidth = "";
+  var w1 = getComputedStyle(main).getPropertyValue("min-width");
+  var w2 = getComputedStyle(sidebar).getPropertyValue("width");
+  var w3 = getComputedStyle(sidebar).getPropertyValue("left");
+  main.style.minWidth = `calc(${w1} - ${w2} - ${w3})`;
+}
+</script>
+
+<script>
+$(document).ready(function() {
+  hljs.configure({ classPrefix: '', useBR: false });
+  $('pre.code-highlight > code, pre > code').each(function(i, block) {
+    if (!$(this).hasClass('codeblock')) {
+      $(this).addClass('codeblock');
+    }
+    hljs.highlightBlock(block);
+  });
+});
+</script>
+
+
+  
+    
+  
+
+
+
+
+    
+  </body>
+</html>
+
