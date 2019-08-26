@@ -243,6 +243,7 @@
             <div class="main-content-wrap">
               <p>Links:
 - <a href="https://leetcode.com/problems/first-bad-version">First Bad Version</a>
+- <a href="https://leetcode.com/problems/compare-strings-by-frequency-of-the-smallest-character/">Compare Strings by Frequency of the Smallest Character</a>
 - <a href="https://leetcode.com/problems/find-first-and-last-position-of-element-in-sorted-array">Find First and Last Position of Element in Sorted Array</a>
 - <a href="https://leetcode.com/problems/search-insert-position/">Search Insert Position</a>
 - <a href="https://leetcode.com/problems/sqrtx">Sqrt(x)</a>
@@ -304,9 +305,96 @@ public int firstBadVersion(int n) {
 }
 </code></pre>
 
-<h2 id="find-first-and-last-position-of-element-in-sorted-array">Find First and Last Position of Element in Sorted Array</h2>
+<h2 id="compare-strings-by-frequency-of-the-smallest-character">Compare Strings by Frequency of the Smallest Character</h2>
 
 <h3 id="problem-description-1">Problem description</h3>
+
+<p>Let&rsquo;s define a function <code>f(s)</code> over a non-empty string <code>s</code>, which calculates the frequency of the smallest character in <code>s</code>. For example, if <code>s = &quot;dcce&quot;</code> then <code>f(s) = 2</code> because the smallest character is <code>&quot;c&quot;</code> and its frequency is 2.</p>
+
+<p>Now, given string arrays <code>queries</code> and <code>words</code>, return an integer array <code>answer</code>, where each <code>answer[i]</code> is the number of words such that <code>f(queries[i])</code> &lt; <code>f(W)</code>, where <code>W</code> is a word in <code>words</code>.</p>
+
+<p><strong>Example 1:</strong></p>
+
+<pre><code>Input: queries = [&quot;cbd&quot;], words = [&quot;zaaaz&quot;]
+Output: [1]
+Explanation: On the first query we have f(&quot;cbd&quot;) = 1, f(&quot;zaaaz&quot;) = 3 so f(&quot;cbd&quot;) &lt; f(&quot;zaaaz&quot;).
+</code></pre>
+
+<p><strong>Example 2:</strong></p>
+
+<pre><code>Input: queries = [&quot;bbb&quot;,&quot;cc&quot;], words = [&quot;a&quot;,&quot;aa&quot;,&quot;aaa&quot;,&quot;aaaa&quot;]
+Output: [1,2]
+Explanation: On the first query only f(&quot;bbb&quot;) &lt; f(&quot;aaaa&quot;). On the second query both f(&quot;aaa&quot;) and f(&quot;aaaa&quot;) are both &gt; f(&quot;cc&quot;).
+</code></pre>
+
+<p><strong>Constraints:</strong></p>
+
+<ul>
+<li><code>1 &lt;= queries.length &lt;= 2000</code></li>
+<li><code>1 &lt;= words.length &lt;= 2000</code></li>
+<li><code>1 &lt;= queries[i].length, words[i].length &lt;= 10</code></li>
+<li><code>queries[i][j]</code>, <code>words[i][j]</code> are English lowercase letters.</li>
+</ul>
+
+<h3 id="method-1">Method</h3>
+
+<p>Use binary search to find how many string in words has higher score.</p>
+
+<h3 id="code-1">Code</h3>
+
+<pre><code class="language-java">/**
+ * Use binary search to find how many string in words has higher score.
+ *
+ * @param queries given queries
+ * @param words   given words
+ * @return each answer[i] is the number of words such that f(queries[i]) &lt; f(W)
+ */
+public int[] numSmallerByFrequency(String[] queries, String[] words) {
+    int[] q = new int[queries.length], w = new int[words.length];
+    for (int i = 0; i &lt; q.length; i++) {
+        q[i] = countScore(queries[i]);
+    }
+    for (int i = 0; i &lt; w.length; i++) {
+        w[i] = countScore(words[i]);
+    }
+    Arrays.sort(w);
+    int[] ans = new int[q.length];
+    for (int i = 0; i &lt; q.length; i++) {
+        int l = 0, r = w.length - 1;
+        while (l &lt;= r) {
+            int mid = (l + r) / 2;
+            if (w[mid] &lt;= q[i]) {
+                l = mid + 1;
+            } else {
+                r = mid - 1;
+            }
+        }
+        ans[i] = w.length - l;
+    }
+    return ans;
+}
+
+/**
+ * Count score of words.
+ *
+ * @param str given words
+ * @return score of words
+ */
+private int countScore(String str) {
+    int[] arr = new int[26];
+    for (char ch : str.toCharArray())
+        arr[ch - 'a']++;
+    for (int i = 0; i &lt; 26; i++) {
+        if (arr[i] != 0)
+            return arr[i];
+    }
+    return 0;
+}
+</code></pre>
+
+<h2 id="find-first-and-last-position-of-element-in-sorted-array">Find First and Last Position of Element in Sorted Array</h2>
+
+<h3 id="problem-description-2">Problem description</h3>
 
 <p>Given an array of integers <code>nums</code> sorted in ascending order, find the starting and ending position of a given <code>target</code> value.</p>
 
@@ -326,11 +414,11 @@ Output: [3,4]
 Output: [-1,-1]
 </code></pre>
 
-<h3 id="method-1">Method</h3>
+<h3 id="method-2">Method</h3>
 
 <p>Normal binary search problem. After the target is found, search left and right of target position to find range.</p>
 
-<h3 id="code-1">Code</h3>
+<h3 id="code-2">Code</h3>
 
 <pre><code class="language-java">/**
  * Normal binary search problem.
@@ -377,9 +465,9 @@ public int[] searchRange(int[] nums, int target) {
 }
 </code></pre>
 
-<h3 id="search-insert-position">Search Insert Position</h3>
+<h2 id="search-insert-position">Search Insert Position</h2>
 
-<h3 id="problem-description-2">Problem description</h3>
+<h3 id="problem-description-3">Problem description</h3>
 
 <p>Given a sorted array and a target value, return the index if the target is found. If not, return the index where it would be if it were inserted in order.</p>
 
@@ -409,11 +497,11 @@ Output: 4
 Output: 0
 </code></pre>
 
-<h3 id="method-2">Method</h3>
+<h3 id="method-3">Method</h3>
 
 <p>Binary search. If binary search can not find the answer, return the insert position.</p>
 
-<h3 id="code-2">Code</h3>
+<h3 id="code-3">Code</h3>
 
 <pre><code class="language-java">/**
  * Binary search.
@@ -452,7 +540,7 @@ public int searchInsert(int[] nums, int target) {
 
 <h2 id="sqrt-x">Sqrt(x)</h2>
 
-<h3 id="problem-description-3">Problem description</h3>
+<h3 id="problem-description-4">Problem description</h3>
 
 <p>Implement <code>int sqrt(int x)</code>.</p>
 
@@ -474,11 +562,11 @@ Explanation: The square root of 8 is 2.82842..., and since
              the decimal part is truncated, 2 is returned.
 </code></pre>
 
-<h3 id="method-3">Method</h3>
+<h3 id="method-4">Method</h3>
 
 <p>Binary search to find square root of x from 1 to x / 2.</p>
 
-<h3 id="code-3">Code</h3>
+<h3 id="code-4">Code</h3>
 
 <pre><code class="language-java">/**
  * Binary search to find square root of x.
@@ -513,7 +601,7 @@ public int binarySearch(int x) {
 
 <h2 id="find-peak-element">Find Peak Element</h2>
 
-<h3 id="problem-description-4">Problem description</h3>
+<h3 id="problem-description-5">Problem description</h3>
 
 <p>A peak element is an element that is greater than its neighbors.</p>
 
@@ -542,11 +630,11 @@ Explanation: Your function can return either index number 1 where the peak eleme
 
 <p>Your solution should be in logarithmic complexity.</p>
 
-<h3 id="method-4">Method</h3>
+<h3 id="method-5">Method</h3>
 
 <p>Each local maximum in array is one valid peak, therefore, find this local maximum will suffice.</p>
 
-<h3 id="code-4">Code</h3>
+<h3 id="code-5">Code</h3>
 
 <pre><code class="language-java">/**
  * Binary search.
