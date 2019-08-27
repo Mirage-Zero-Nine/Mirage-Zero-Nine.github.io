@@ -191,6 +191,16 @@
       
   <li class="sidebar-button">
     
+      <a class="sidebar-button-link " href="https://yyzhou95.github.io/index.xml">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-rss"></i>
+      
+      <span class="sidebar-button-desc">RSS</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
       <a class="sidebar-button-link " href="https://github.com/yyzhou95/yyzhou95.github.io" target="_blank" rel="noopener">
     
       <i class="sidebar-button-icon fa fa-lg fa-link"></i>
@@ -253,9 +263,9 @@
 <li><a href="https://leetcode.com/problems/merge-k-sorted-lists/">Merge k Sorted Lists</a></li>
 </ul>
 
-<h2 id="problem-description">Problem description</h2>
+<h2 id="add-two-numbers">Add Two Numbers</h2>
 
-<h3 id="add-two-numbers">Add Two Numbers</h3>
+<h3 id="problem-description">Problem description</h3>
 
 <p>You are given two <strong>non-empty</strong> linked lists representing two non-negative integers. The digits are stored in <strong>reverse order</strong> and each of their nodes contain a single digit. Add the two numbers and return it as a linked list.</p>
 
@@ -268,71 +278,67 @@ Output: 7 -&gt; 0 -&gt; 8
 Explanation: 342 + 465 = 807.
 </code></pre>
 
-<h3 id="merge-two-sorted-lists">Merge Two Sorted Lists</h3>
+<h3 id="method">Method</h3>
 
-<p>Merge two sorted linked lists and return it as a new list. The new list should be made by splicing together the nodes of the first two lists.</p>
+<p>Both integer is given in <code>ListNode</code>, yet it is actually a <code>LinkedList</code>.</p>
 
-<p><strong>Example:</strong></p>
+<p>This problem can be solved by recursion, but it is suggested that using iteration instead, as iteration can save extra stack cost compare to recursion (which would add extra O(logN) memory consumption).</p>
 
-<pre><code>Input: 1-&gt;2-&gt;4, 1-&gt;3-&gt;4
-Output: 1-&gt;1-&gt;2-&gt;3-&gt;4-&gt;4
-</code></pre>
+<p>The iterative version idea is almost same as recursion:</p>
 
-<h3 id="merge-k-sorted-lists">Merge k Sorted Lists</h3>
+<ul>
+<li>Add two nodes in list each time, and if current node is <code>null</code> then set current node value as 0.</li>
+<li>Add node value and create a new list node to store it.</li>
+<li>Check carry.</li>
+<li>Move to next node. If current node is <code>null</code> then keep it as null to avoid <code>NullPointerException</code>.</li>
+</ul>
 
-<p>Merge <em>k</em> sorted linked lists and return it as one sorted list. Analyze and describe its complexity.</p>
+<p>Finally, check if carry is not 0, be sure the last carry is added into final result.</p>
 
-<p><strong>Example:</strong></p>
-
-<pre><code>Input:
-[
-  1-&gt;4-&gt;5,
-  1-&gt;3-&gt;4,
-  2-&gt;6
-]
-Output: 1-&gt;1-&gt;2-&gt;3-&gt;4-&gt;4-&gt;5-&gt;6
-</code></pre>
-
-<h2 id="method">Method</h2>
-
-<h3 id="add-two-numbers-1">Add Two Numbers</h3>
-
-<p>Both integer is given in <code>ListNode</code>, yet it is actually a <code>LinkedList</code>. It is a little complicated if one has no experience in pointer. The return value for this problem is a head node that store first digit of sum, and the following node is the rest digits of sum, where every single node contains one digit.</p>
-
-<p>The way to solve this problem is recursion.</p>
-
-<p>Each time in the entry point of recursion, check whether both nodes and carry from previous sum (the initially sum would set carry to 0). If both nodes are null and carry is 0, then end the recursion. This situation would be either both list is empty, which is one corner case, or the recursion has reached the end point that no more nodes and carry should be added to result.</p>
-
-<p>If at least one node is non-empty, then add it to carry respectively. Carry can only be 0 or 1 and will be updated in each calculation. By doing so, memory consumption can be reduced slightly and sum process will not be required.</p>
-
-<p>After both nodes are checked, create a new node to save value. Note that value is <code>sum % 10</code>. If it is in the first iteration, then it is the head node that will be returned. Then set the next pointer to the recursion function calling. In this way can all nodes be linked to head node. Also, remember to pass carry to next iteration.</p>
-
-<h3 id="merge-two-sorted-lists-1">Merge Two Sorted Lists</h3>
-
-<p>Simply compare value in two ListNode. Point smaller one as next node.</p>
-
-<h3 id="merge-k-sorted-lists-1">Merge k Sorted Lists</h3>
-
-<p>Two approaches.</p>
-
-<ol>
-<li>Divide and conquer. Divide <code>k</code> lists to <code>k/2</code> list pairs. Then sort each two lists respectively. Finally, the k lists will be sorted.</li>
-
-<li><p>Use heap to store the head of list. Heap will sort the list in <code>nlogk</code> and finally it can sort <code>k</code> lists.</p>
-
-<h2 id="code">Code</h2></li>
-</ol>
-
-<h3 id="add-two-numbers-2">Add Two Numbers</h3>
+<h3 id="code">Code</h3>
 
 <pre><code class="language-java">/**
- * Sum two nodes and return the sum node until List is empty.
+ * Sum two nodes and return the sum node until list is empty.
  *
  * @param l1 first int contains in ListNode
  * @param l2 second int contains in ListNode
  * @return result in ListNode
  */
 public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+
+    int carry = 0;
+    ListNode dummy = new ListNode(0);
+    ListNode current = dummy;
+
+    while (l1 != null || l2 != null) {
+        int v1 = (l1 == null) ? 0 : l1.val;
+        int v2 = (l2 == null) ? 0 : l2.val;
+
+        carry = carry + v1 + v2;
+
+        current.next = new ListNode(carry % 10);        // link node to (sum/10)
+        current = current.next;                             // move result to its next
+
+        carry = carry / 10;
+        l1 = (l1 == null) ? null : l1.next;
+        l2 = (l2 == null) ? null : l2.next;
+    }
+
+    if (carry != 0) {
+        current.next = new ListNode(carry);
+    }
+
+    return dummy.next;
+}
+
+/**
+ * Sum two nodes and return the sum node until list is empty.
+ *
+ * @param l1 first int contains in ListNode
+ * @param l2 second int contains in ListNode
+ * @return result in ListNode
+ */
+public ListNode recursion(ListNode l1, ListNode l2) {
     return helper(l1, l2, 0);
 }
 
@@ -365,7 +371,23 @@ public ListNode helper(ListNode n1, ListNode n2, int carry) {
 }
 </code></pre>
 
-<h3 id="merge-two-sorted-lists-2">Merge Two Sorted Lists</h3>
+<h2 id="merge-two-sorted-lists">Merge Two Sorted Lists</h2>
+
+<h3 id="problem-description-1">Problem description</h3>
+
+<p>Merge two sorted linked lists and return it as a new list. The new list should be made by splicing together the nodes of the first two lists.</p>
+
+<p><strong>Example:</strong></p>
+
+<pre><code>Input: 1-&gt;2-&gt;4, 1-&gt;3-&gt;4
+Output: 1-&gt;1-&gt;2-&gt;3-&gt;4-&gt;4
+</code></pre>
+
+<h3 id="method-1">Method</h3>
+
+<p>Simply compare value in two ListNode. Point smaller one as next node.</p>
+
+<h3 id="code-1">Code</h3>
 
 <pre><code class="language-java">/**
  * Simply compare value in two ListNode. Point smaller one as next node.
@@ -393,7 +415,33 @@ public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
 }
 </code></pre>
 
-<h3 id="merge-k-sorted-lists-2">Merge k Sorted Lists</h3>
+<h3 id="merge-k-sorted-lists">Merge k Sorted Lists</h3>
+
+<h3 id="problem-description-2">Problem description</h3>
+
+<p>Merge <em>k</em> sorted linked lists and return it as one sorted list. Analyze and describe its complexity.</p>
+
+<p><strong>Example:</strong></p>
+
+<pre><code>Input:
+[
+  1-&gt;4-&gt;5,
+  1-&gt;3-&gt;4,
+  2-&gt;6
+]
+Output: 1-&gt;1-&gt;2-&gt;3-&gt;4-&gt;4-&gt;5-&gt;6
+</code></pre>
+
+<h3 id="method-2">Method</h3>
+
+<p>Two approaches.</p>
+
+<ol>
+<li>Divide and conquer. Divide <code>k</code> lists to <code>k/2</code> list pairs. Then sort each two lists respectively. Finally, the k lists will be sorted.</li>
+<li>Use heap to store the head of list. Heap will sort the list in <code>nlogk</code> and finally it can sort <code>k</code> lists.</li>
+</ol>
+
+<h3 id="code-2">Code</h3>
 
 <pre><code class="language-java">/**
  * Use divide and conquer to merge each two lists and recursively complete this process until only one list left.
