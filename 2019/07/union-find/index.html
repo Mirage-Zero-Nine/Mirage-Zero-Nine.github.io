@@ -33,6 +33,10 @@
     
       <meta property="article:section" content="LeetCode Solution">
     
+      <meta property="article:section" content="Problem Set">
+    
+      <meta property="article:section" content="Comparator">
+    
   
   
     
@@ -233,7 +237,11 @@
   
     <span>in</span>
     
-      <a class="category-link" href="https://yyzhou95.github.io/categories/leetcode-solution">LeetCode Solution</a>
+      <a class="category-link" href="https://yyzhou95.github.io/categories/leetcode-solution">LeetCode Solution</a>, 
+    
+      <a class="category-link" href="https://yyzhou95.github.io/categories/problem-set">Problem Set</a>, 
+    
+      <a class="category-link" href="https://yyzhou95.github.io/categories/comparator">Comparator</a>
     
   
 
@@ -251,38 +259,9 @@
 <li><a href="https://leetcode.com/problems/number-of-connected-components-in-an-undirected-graph">Number of Connected Components in an Undirected Graph</a></li>
 </ul>
 
-<h2 id="problem-description">Problem description</h2>
+<h2 id="number-of-islands">Number of Islands</h2>
 
-<h3 id="number-of-connected-components-in-an-undirected-graph">Number of Connected Components in an Undirected Graph</h3>
-
-<p>Given <code>n</code> nodes labeled from <code>0</code> to <code>n - 1</code> and a list of undirected edges (each edge is a pair of nodes), write a function to find the number of connected components in an undirected graph.</p>
-
-<p><strong>Example 1:</strong></p>
-
-<pre><code>Input: n = 5 and edges = [[0, 1], [1, 2], [3, 4]]
-
-     0          3
-     |          |
-     1 --- 2    4 
-
-Output: 2
-</code></pre>
-
-<p><strong>Example 2:</strong></p>
-
-<pre><code>Input: n = 5 and edges = [[0, 1], [1, 2], [2, 3], [3, 4]]
-
-     0           4
-     |           |
-     1 --- 2 --- 3
-
-Output:  1
-</code></pre>
-
-<p><strong>Note:</strong>
-You can assume that no duplicate edges will appear in <code>edges</code>. Since all edges are undirected, <code>[0, 1]</code> is the same as <code>[1, 0]</code> and thus will not appear together in <code>edges</code>.</p>
-
-<h3 id="number-of-islands">Number of Islands</h3>
+<h3 id="problem-description">Problem description</h3>
 
 <p>Given a 2d grid map of <code>'1'</code>s (land) and <code>'0'</code>s (water), count the number of islands. An island is surrounded by water and is formed by connecting adjacent lands horizontally or vertically. You may assume all four edges of the grid are all surrounded by water.</p>
 
@@ -308,48 +287,7 @@ Output: 1
 Output: 3
 </code></pre>
 
-<h3 id="most-stones-removed-with-same-row-or-column">Most Stones Removed with Same Row or Column</h3>
-
-<p>On a 2D plane, we place stones at some integer coordinate points.  Each coordinate point may have at most one stone.</p>
-
-<p>Now, a <em>move</em> consists of removing a stone that shares a column or row with another stone on the grid.</p>
-
-<p>What is the largest possible number of moves we can make?</p>
-
-<p><strong>Example 1:</strong></p>
-
-<pre><code>Input: stones = [[0,0],[0,1],[1,0],[1,2],[2,1],[2,2]]
-Output: 5
-</code></pre>
-
-<p><strong>Example 2:</strong></p>
-
-<pre><code>Input: stones = [[0,0],[0,2],[1,1],[2,0],[2,2]]
-Output: 3
-</code></pre>
-
-<p><strong>Example 3:</strong></p>
-
-<pre><code>Input: stones = [[0,0]]
-Output: 0
-</code></pre>
-
-<p><strong>Note:</strong></p>
-
-<ol>
-<li><code>1 &lt;= stones.length &lt;= 1000</code></li>
-<li><code>0 &lt;= stones[i][j] &lt; 10000</code></li>
-</ol>
-
-<h2 id="method">Method</h2>
-
-<h3 id="number-of-connected-components-in-an-undirected-graph-1">Number of Connected Components in an Undirected Graph</h3>
-
-<p>Classic 1D union find problem. The way to solve it is to find the root of each node.</p>
-
-<p>Assume all nodes are unconnected and the # of unconnected nodes equal to n. If root of node is different, then reduce one on # of unconnected nodes. Finally, the # of unconnected nodes is the # of connected components.</p>
-
-<h3 id="number-of-islands-1">Number of Islands</h3>
+<h3 id="method">Method</h3>
 
 <p>Two approaches: DFS and Union Find.</p>
 
@@ -361,59 +299,7 @@ Output: 0
 
 <p>First find all nodes and mark them all as individual node. The traverse the whole grid, when two nodes are both ‘1’, union them and find root of them. If they have same root, then the number of islands should be reduced by 1.</p>
 
-<h3 id="most-stones-removed-with-same-row-or-column-1">Most Stones Removed with Same Row or Column</h3>
-
-<p>Union find. Note that in this problem, it is not union find on stone, it is based on coord, i.e., x and y.</p>
-
-<p>Count total connected island in whole map, the max move is the total # of 1 reduce # of islands.</p>
-
-<h2 id="code">Code</h2>
-
-<h3 id="number-of-connected-components-in-an-undirected-graph-2">Number of Connected Components in an Undirected Graph</h3>
-
-<pre><code class="language-java">/**
- * Union find.
- * Initially, consider all nodes as individual nodes.
- * Then traverse all given edges. Union two vertices that connected by edge.
- *
- * @param n     # of nodes
- * @param edges edges connect nodes
- * @return # of connected components in an undirected graph
- */
-public int countComponents(int n, int[][] edges) {
-    int[] union = new int[n];
-
-    for (int i = 0; i &lt; union.length; i++) {
-        union[i] = i;       // count each node as individual node
-    }
-    for (int[] e : edges) {
-        int r1 = find(e[0], union);
-        int r2 = find(e[1], union);
-        if (r1 != r2) {
-            union[r1] = union[r2];      // union two nodes as connected
-            n--;
-        }
-    }
-    return n;
-}
-
-/**
- * Find operation.
- *
- * @param i   given node
- * @param arr array of union situation
- * @return root of current node
- */
-private int find(int i, int[] arr) {
-    while (i != arr[i]) {
-        arr[i] = arr[arr[i]];       // update root if current node is not root
-        i = arr[i];
-    }
-    return i;
-}
-</code></pre>
-
-<h3 id="number-of-islands-2">Number of Islands</h3>
+<h3 id="code">Code</h3>
 
 <pre><code class="language-java">/**
  * DFS.
@@ -558,7 +444,153 @@ class UnionFind {
 }
 </code></pre>
 
-<h3 id="most-stones-removed-with-same-row-or-column-2">Most Stones Removed with Same Row or Column</h3>
+<h2 id="number-of-connected-components-in-an-undirected-graph">Number of Connected Components in an Undirected Graph</h2>
+
+<h3 id="problem-description-1">Problem description</h3>
+
+<p>Given <code>n</code> nodes labeled from <code>0</code> to <code>n - 1</code> and a list of undirected edges (each edge is a pair of nodes), write a function to find the number of connected components in an undirected graph.</p>
+
+<p><strong>Example 1:</strong></p>
+
+<pre><code>Input: n = 5 and edges = [[0, 1], [1, 2], [3, 4]]
+
+     0          3
+     |          |
+     1 --- 2    4 
+
+Output: 2
+</code></pre>
+
+<p><strong>Example 2:</strong></p>
+
+<pre><code>Input: n = 5 and edges = [[0, 1], [1, 2], [2, 3], [3, 4]]
+
+     0           4
+     |           |
+     1 --- 2 --- 3
+
+Output:  1
+</code></pre>
+
+<p><strong>Note:</strong>
+You can assume that no duplicate edges will appear in <code>edges</code>. Since all edges are undirected, <code>[0, 1]</code> is the same as <code>[1, 0]</code> and thus will not appear together in <code>edges</code>.</p>
+
+<p>Given a 2d grid map of <code>'1'</code>s (land) and <code>'0'</code>s (water), count the number of islands. An island is surrounded by water and is formed by connecting adjacent lands horizontally or vertically. You may assume all four edges of the grid are all surrounded by water.</p>
+
+<p><strong>Example 1:</strong></p>
+
+<pre><code>Input:
+11110
+11010
+11000
+00000
+
+Output: 1
+</code></pre>
+
+<p><strong>Example 2:</strong></p>
+
+<pre><code>Input:
+11000
+11000
+00100
+00011
+
+Output: 3
+</code></pre>
+
+<h3 id="method-1">Method</h3>
+
+<p>Classic 1D union find problem. The way to solve it is to find the root of each node.</p>
+
+<p>Assume all nodes are unconnected and the # of unconnected nodes equal to n. If root of node is different, then reduce one on # of unconnected nodes. Finally, the # of unconnected nodes is the # of connected components.</p>
+
+<h3 id="code-1">Code</h3>
+
+<pre><code class="language-java">/**
+ * Union find.
+ * Initially, consider all nodes as individual nodes.
+ * Then traverse all given edges. Union two vertices that connected by edge.
+ *
+ * @param n     # of nodes
+ * @param edges edges connect nodes
+ * @return # of connected components in an undirected graph
+ */
+public int countComponents(int n, int[][] edges) {
+    int[] union = new int[n];
+
+    for (int i = 0; i &lt; union.length; i++) {
+        union[i] = i;       // count each node as individual node
+    }
+    for (int[] e : edges) {
+        int r1 = find(e[0], union);
+        int r2 = find(e[1], union);
+        if (r1 != r2) {
+            union[r1] = union[r2];      // union two nodes as connected
+            n--;
+        }
+    }
+    return n;
+}
+
+/**
+ * Find operation.
+ *
+ * @param i   given node
+ * @param arr array of union situation
+ * @return root of current node
+ */
+private int find(int i, int[] arr) {
+    while (i != arr[i]) {
+        arr[i] = arr[arr[i]];       // update root if current node is not root
+        i = arr[i];
+    }
+    return i;
+}
+</code></pre>
+
+<h2 id="most-stones-removed-with-same-row-or-column">Most Stones Removed with Same Row or Column</h2>
+
+<h3 id="problem-description-2">Problem description</h3>
+
+<p>On a 2D plane, we place stones at some integer coordinate points.  Each coordinate point may have at most one stone.</p>
+
+<p>Now, a <em>move</em> consists of removing a stone that shares a column or row with another stone on the grid.</p>
+
+<p>What is the largest possible number of moves we can make?</p>
+
+<p><strong>Example 1:</strong></p>
+
+<pre><code>Input: stones = [[0,0],[0,1],[1,0],[1,2],[2,1],[2,2]]
+Output: 5
+</code></pre>
+
+<p><strong>Example 2:</strong></p>
+
+<pre><code>Input: stones = [[0,0],[0,2],[1,1],[2,0],[2,2]]
+Output: 3
+</code></pre>
+
+<p><strong>Example 3:</strong></p>
+
+<pre><code>Input: stones = [[0,0]]
+Output: 0
+</code></pre>
+
+<p><strong>Note:</strong></p>
+
+<ol>
+<li><code>1 &lt;= stones.length &lt;= 1000</code></li>
+<li><code>0 &lt;= stones[i][j] &lt; 10000</code></li>
+</ol>
+
+<h3 id="method-2">Method</h3>
+
+<p>Union find. Note that in this problem, it is not union find on stone, it is based on coord, i.e., x and y.</p>
+
+<p>Count total connected island in whole map, the max move is the total # of 1 reduce # of islands.</p>
+
+<h3 id="code-2">Code</h3>
 
 <pre><code class="language-java">private HashMap&lt;Integer, Integer&gt; m = new HashMap&lt;&gt;();
 private int count = 0;
@@ -612,6 +644,137 @@ private void union(int id1, int id2) {
         count--;
         m.put(f1, f2);
     }
+}
+</code></pre>
+
+<h2 id="connecting-cities-with-minimum-cost">Connecting Cities With Minimum Cost</h2>
+
+<h3 id="problem-description-3">Problem description</h3>
+
+<p>There are <code>N</code> cities numbered from 1 to <code>N</code>.</p>
+
+<p>You are given <code>connections</code>, where each <code>connections[i] = [city1, city2, cost]</code> represents the cost to connect <code>city1</code> and <code>city2</code>together.  (A <em>connection</em> is bidirectional: connecting <code>city1</code> and <code>city2</code> is the same as connecting <code>city2</code> and <code>city1</code>.)</p>
+
+<p>Return the minimum cost so that for every pair of cities, there exists a path of connections (possibly of length 1) that connects those two cities together.  The cost is the sum of the connection costs used. If the task is impossible, return -1.</p>
+
+<p><strong>Example 1:</strong></p>
+
+<p><img src="../../static/img/1314_ex2-6865767.png" alt="img" /></p>
+
+<pre><code>Input: N = 3, connections = [[1,2,5],[1,3,6],[2,3,1]]
+Output: 6
+Explanation: 
+Choosing any 2 edges will connect all cities so we choose the minimum 2.
+</code></pre>
+
+<p><strong>Example 2:</strong></p>
+
+<p><img src="../../static/img/1314_ex1-6865767.png" alt="img" /></p>
+
+<pre><code>Input: N = 4, connections = [[1,2,3],[3,4,4]]
+Output: -1
+Explanation: 
+There is no way to connect all cities even if all edges are used.
+</code></pre>
+
+<p><strong>Note:</strong></p>
+
+<ol>
+<li><code>1 &lt;= N &lt;= 10000</code></li>
+<li><code>1 &lt;= connections.length &lt;= 10000</code></li>
+<li><code>1 &lt;= connections[i][0], connections[i][1] &lt;= N</code></li>
+<li><code>0 &lt;= connections[i][2] &lt;= 10^5</code></li>
+<li><code>connections[i][0] != connections[i][1]</code></li>
+</ol>
+
+<h3 id="method-3">Method</h3>
+
+<p>Sort connections by distance first, then union each node with sorted distance.</p>
+
+<p>If there is a node that not connected into graph, return -1. Otherwise, return the min distance.</p>
+
+<h3 id="code-3">Code</h3>
+
+<pre><code class="language-java">/**
+ * Union find.
+ */
+static class UnionFind {
+    int[] father;
+    int count;
+
+    /**
+     * Init of class.
+     *
+     * @param n # of cities
+     */
+    public UnionFind(int n) {
+        father = new int[n];
+        for (int i = 0; i &lt; father.length; i++) {
+            father[i] = i;
+        }
+        count = n;
+    }
+
+    /**
+     * Union two nodes in map.
+     *
+     * @param a first node
+     * @param b second node
+     */
+    public void union(int a, int b) {
+        int find1 = find(a);
+        int find2 = find(b);
+
+        if (find1 != find2) {
+            father[find1] = find2;
+            count--;
+        }
+    }
+
+    /**
+     * Find parent of given node.
+     *
+     * @param x given node
+     * @return parent of given node
+     */
+    public int find(int x) {
+        if (father[x] == x) {
+            return x;
+        }
+        father[x] = find(father[x]);        // path compression
+
+        return father[x];
+    }
+}
+
+/**
+ * Sort connections by distance first, then union each node with sorted distance.
+ * If there is a node that not connected into graph, return -1.
+ * Otherwise, return the min distance.
+ *
+ * @param N           given # of cities
+ * @param connections connections between cities with cost
+ * @return minimum cost for every pair of cities, there exists a path of connections connects two cities together
+ */
+public int minimumCost(int N, int[][] connections) {
+    Arrays.sort(connections, new Comparator&lt;int[]&gt;() {
+        @Override
+        public int compare(int[] o1, int[] o2) {
+            return o1[2] - o2[2];
+        }
+    });     // sort connections between each city with min cost
+    int min = 0;
+    UnionFind uf = new UnionFind(N);
+
+    for (int[] c : connections) {
+        int a = c[0], b = c[1];
+        if (uf.find(a) != uf.find(b)) {
+            uf.union(a, b);
+            min += c[2];
+        }
+    }
+
+    return (uf.count == 1) ? -1 : min;
 }
 </code></pre>
               
