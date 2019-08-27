@@ -33,6 +33,8 @@
     
       <meta property="article:section" content="LeetCode Solution">
     
+      <meta property="article:section" content="Star">
+    
   
   
     
@@ -243,7 +245,9 @@
   
     <span>in</span>
     
-      <a class="category-link" href="https://yyzhou95.github.io/categories/leetcode-solution">LeetCode Solution</a>
+      <a class="category-link" href="https://yyzhou95.github.io/categories/leetcode-solution">LeetCode Solution</a>, 
+    
+      <a class="category-link" href="https://yyzhou95.github.io/categories/star">Star</a>
     
   
 
@@ -281,16 +285,22 @@ The median is (2 + 3)/2 = 2.5
 
 <h2 id="method">Method</h2>
 
-<p>Binary search. Try to partition two arrays that sum of elements in two left part is equal to sum of elements in two right part.</p>
+<p>The basic idea is that, to find median, two arrays should be divided into 4 parts, <code>smaller1</code>, <code>smaller2</code>, <code>larger1</code>, <code>larger2</code>. The elements in <code>smaller1</code>, <code>smaller2</code> and <code>larger1</code>, <code>larger2</code> can only at most has a difference of 1. That is to say, <code>abs[(small1 + small2) - (larger1 + larger2)]&lt;=1</code>. If total length of two arrays are even, then it can be evenly divided into two parts. Otherwise, one part will have one more element.</p>
 
-<p>The partition of both array should match the condition: <code>maxLeft1 &lt;= minRight2 &amp;&amp; maxLeft2 &lt;= minRight1</code>.r</p>
+<p>The way to find the correct partition is using binary search in first array. Note that to avoid out of bound exception, the first array should be assured as shorter array. Each time, the first array will be divided into two parts. Since this array is sorted, the two parts will be assured to be one small part, and one large part. Then, the partition position of second array will be fixed as well: <code>middle2 = (nums2.length + nums1.length + 1) / 2 - middle1</code>. Index smaller than <code>middle2</code> will be divided into <code>small2</code> and larger elements will be divided into <code>large2</code>.</p>
+
+<p>To ensure the division is correct, check if this <code>maxLeft1 &lt;= minRight2 &amp;&amp; maxLeft2 &lt;= minRight1</code>  is met. The division above ensure that two arrays is divided into two parts, and this condition assure all elements in small part will be less than or equal to larger part. If both conditions are matched, then median can be found.</p>
 
 <h2 id="code">Code</h2>
 
 <pre><code class="language-java">/**
  * Binary search.
- * Try to partition two arrays that sum of elements in two left part is equal to sum of elements in two right part.
- * The partition of both array should match the condition: maxLeft1 &lt;= minRight2 &amp;&amp; maxLeft2 &lt;= minRight1.
+ * Each time, do binary search at first array (shorter array).
+ * Array will be divided into 2 parts, since array is sorted, it will be one small part and one large part.
+ * To find median, the second array will be divided into two parts.
+ * The # of elements in both part is fixed, that sum of elements # in both parts difference should be less than 2.
+ * To ensure current partition has correctly divided all elements, maxLeft1 &lt;= minRight2 &amp;&amp; maxLeft2 &lt;= minRight1.
+ * If the condition is not matched, keep binary search in first array until the condition is matched.
  *
  * @param nums1 first sorted array with length m
  * @param nums2 second sorted array with length n
@@ -304,7 +314,7 @@ public double findMedianSortedArrays(int[] nums1, int[] nums2) {
 
     int left = 0, right = nums1.length;
 
-    while (left &lt;= right) {
+    while (left &lt;= right) {     // binary search only in first array, partition position in second array is fixed
         int middle1 = left + (right - left) / 2;       // binary search middle index
         int middle2 = (nums2.length + nums1.length + 1) / 2 - middle1;
 
@@ -315,8 +325,7 @@ public double findMedianSortedArrays(int[] nums1, int[] nums2) {
          * minRight2 is the min value in right subarray of second array.
          * Corner case: partition index reaches the end (or beginning) of array.
          * If reaches the end of array, then set to MAX_VALUE.
-         * If reaches the beginning of array, set to MIN_VALUE
-         * */
+         * If reaches the beginning of array, set to MIN_VALUE. */
         int maxLeft1 = (middle1 == 0) ? Integer.MIN_VALUE : nums1[middle1 - 1];     // left of middle index
         int minRight1 = (middle1 == nums1.length) ? Integer.MAX_VALUE : nums1[middle1];     // middle index
         int maxLeft2 = (middle2 == 0) ? Integer.MIN_VALUE : nums2[middle2 - 1];     // left of middle index
@@ -330,8 +339,7 @@ public double findMedianSortedArrays(int[] nums1, int[] nums2) {
          * If the condition is not met, then the partition position is incorrect,
          * If max in left subarray 1 is larger than min in right subarray 2, move partition position to left.
          * Since the partition has include elements that should belong to right sub array.
-         * Otherwise, move partition position to right.
-         * */
+         * Otherwise, move partition position to right. */
         if (maxLeft1 &lt;= minRight2 &amp;&amp; maxLeft2 &lt;= minRight1) {
             return ((nums1.length + nums2.length) % 2 == 0) ? ((double) Math.max(maxLeft1, maxLeft2) + Math.min(minRight1, minRight2)) / 2 : Math.max(maxLeft1, maxLeft2);
         } else if (maxLeft1 &gt; minRight2) {

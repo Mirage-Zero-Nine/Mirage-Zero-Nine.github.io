@@ -8,18 +8,18 @@
 <meta name="generator" content="Hugo 0.57.2 with theme Tranquilpeak 0.4.7-BETA">
 <meta name="author" content="Steve Zhou">
 <meta name="keywords" content="">
-<meta name="description" content="">
+<meta name="description" content="Given a string, find the length of the longest substring without repeating characters.">
 
 
-<meta property="og:description" content="">
+<meta property="og:description" content="Given a string, find the length of the longest substring without repeating characters.">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Longest Substring Without Repeating Characters">
 <meta name="twitter:title" content="Longest Substring Without Repeating Characters">
 <meta property="og:url" content="https://yyzhou95.github.io/2019/06/longest-substring-without-repeating-characters/">
 <meta property="twitter:url" content="https://yyzhou95.github.io/2019/06/longest-substring-without-repeating-characters/">
 <meta property="og:site_name" content="Bingo!">
-<meta property="og:description" content="">
-<meta name="twitter:description" content="">
+<meta property="og:description" content="Given a string, find the length of the longest substring without repeating characters.">
+<meta name="twitter:description" content="Given a string, find the length of the longest substring without repeating characters.">
 <meta property="og:locale" content="en-us">
 
   
@@ -253,7 +253,9 @@
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <p>Link: <a href="https://leetcode.com/problems/longest-substring-without-repeating-characters">Longest Substring Without Repeating Characters</a></p>
+              <p>Given a string, find the length of the <strong>longest substring</strong> without repeating characters.</p>
+
+<p>Link: <a href="https://leetcode.com/problems/longest-substring-without-repeating-characters">Longest Substring Without Repeating Characters</a></p>
 
 <h2 id="problem-description">Problem description</h2>
 
@@ -283,14 +285,22 @@ Explanation: The answer is &quot;wke&quot;, with the length of 3.
 
 <h2 id="method">Method</h2>
 
-<p>Use a hash map to store the char - index pair. And set two pointers to save start position. The reason that requires two pointers is to correctly found the longest substring in string like <code>dvdf</code>.</p>
+<p>Sliding window problem.</p>
+
+<p>Use a pointer to point at the start position, and a hash map to save each char&rsquo;s position.</p>
+
+<ul>
+<li>If current char does not exist in map, then store this char and its next position.</li>
+<li>If current char exists in map, reset the position to current char&rsquo;s next. (No duplication)</li>
+</ul>
+
+<p>Compare current non-repeating substring length to max length and find longer one.</p>
 
 <h2 id="code">Code</h2>
 
 <pre><code class="language-java">/**
- * Construct a new map to store previous chars.
- * key - char
- * value - next position
+ * Sliding window problem.
+ * Use a pointer to point at the start position, and a hash map to save each char's position.
  * If current char does not exist in map, then store this char and its next position.
  * If current char exists in map, reset the position to current char's next. (No duplication)
  * Compare current non-repeating substring length to max length and find longer one.
@@ -306,18 +316,15 @@ public int lengthOfLongestSubstring(String s) {
     }
 
     int max = 0;
-    Map&lt;Character, Integer&gt; m = new HashMap&lt;&gt;();
+    HashMap&lt;Character, Integer&gt; m = new HashMap&lt;&gt;();
 
-    for (int i = 0, j = 0; i &lt; s.length(); i++) {
-
-        if (m.containsKey(s.charAt(i))) {       // current char in map (duplicated)
-            j = Math.max(m.get(s.charAt(i)), j);        // compare current index to previous index
+    for (int i = 0, start = 0; i &lt; s.length(); i++) {      // i is the end of window, start point at window start
+        if (m.containsKey(s.charAt(i))) {
+            start = Math.max(start, m.get(s.charAt(i)));        // update start to largest to avoid duplicate
         }
-        max = Math.max(max, i - j + 1);
-
-        m.put(s.charAt(i), i + 1);      // continue at next char, if char is duplicated, reset start index
+        m.put(s.charAt(i), i + 1);
+        max = Math.max(i - start + 1, max);
     }
-
     return max;
 }
 </code></pre>
