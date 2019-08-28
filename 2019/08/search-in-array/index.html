@@ -422,10 +422,8 @@ Output: false
 <h2 id="code-1">Code</h2>
 
 <pre><code class="language-java">/**
- * Simply apply binary search can not solve array with duplicate elements.
- * Hence, narrowing searching range is needed.
- * When sub-array is neither monotonically increasing nor decreasing, narrow search range left and right by one.
- * Time complexity: Worst case O(n).
+ * Before find the middle value in normal binary search, remove all duplicated elements at left-most or right-most.
+ * After that, the approach is almost same as search in array without duplicated elements.
  *
  * @param nums   input int array
  * @param target search int
@@ -434,24 +432,24 @@ Output: false
 public boolean search(int[] nums, int target) {
 
     /* Corner case */
-    if (nums.length &lt; 1) {
+    if (nums.length == 0) {
         return false;
     }
 
-    int left = 0;
-    int right = nums.length - 1;
+    int left = 0, right = nums.length - 1;
 
-    while (left &lt; right) {
+    while (left &lt;= right) {     // assure to check last element in array
 
-        while (left &lt; right &amp;&amp; nums[left] == nums[right]) {     // avoid duplicated
+        while (left &lt; right &amp;&amp; nums[left] == nums[right]) {     // excludes duplicated elements
             left++;
         }
-        int mid = (left + right) / 2;
+
+        int mid = left + (right - left) / 2;
 
         if (nums[mid] == target) {      // after excludes duplicated elements, it is same as rotated ascending array
             return true;
-        } else if (nums[mid] &gt;= nums[left]) {       // left part
-            if (nums[left] &lt;= target &amp;&amp; target &lt; nums[mid]) {
+        } else if (nums[left] &lt;= nums[mid]) {
+            if (nums[left] &lt;= target &amp;&amp; target &lt; nums[mid]) {       // target can be at left or right, but not mid
                 right = mid - 1;
             } else {
                 left = mid + 1;
@@ -465,11 +463,7 @@ public boolean search(int[] nums, int target) {
         }
     }
 
-    /*
-     * Check if last element in array is target.
-     * If left is larger than array length, then target is not possible in array.
-     * */
-    return (left != nums.length) &amp;&amp; nums[left] == target;
+    return false;
 }
 </code></pre>
 
