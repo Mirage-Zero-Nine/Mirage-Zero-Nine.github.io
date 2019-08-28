@@ -13,10 +13,10 @@
 
 <meta property="og:description" content="">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Find Majority Element in Array">
-<meta name="twitter:title" content="Find Majority Element in Array">
-<meta property="og:url" content="https://yyzhou95.github.io/2019/08/find-majority-element-in-array/">
-<meta property="twitter:url" content="https://yyzhou95.github.io/2019/08/find-majority-element-in-array/">
+<meta property="og:title" content="Online Majority Element In Subarray">
+<meta name="twitter:title" content="Online Majority Element In Subarray">
+<meta property="og:url" content="https://yyzhou95.github.io/2019/08/online-majority-element-in-subarray/">
+<meta property="twitter:url" content="https://yyzhou95.github.io/2019/08/online-majority-element-in-subarray/">
 <meta property="og:site_name" content="Bingo!">
 <meta property="og:description" content="">
 <meta name="twitter:description" content="">
@@ -33,14 +33,8 @@
     
       <meta property="article:section" content="Algorithm">
     
-      <meta property="article:section" content="Object-oriented design">
-    
-      <meta property="article:section" content="Problem Set">
-    
   
   
-    
-      <meta property="article:tag" content="Bit Manipulation">
     
       <meta property="article:tag" content="Voting">
     
@@ -63,14 +57,14 @@
   <meta property="twitter:image" content="https://yyzhou95.github.io/img/avatar.jpg">
 
 
-    <title>Find Majority Element in Array</title>
+    <title>Online Majority Element In Subarray</title>
 
     <link rel="icon" href="https://yyzhou95.github.io/favicon.png">
     
 
     
 
-    <link rel="canonical" href="https://yyzhou95.github.io/2019/08/find-majority-element-in-array/">
+    <link rel="canonical" href="https://yyzhou95.github.io/2019/08/online-majority-element-in-subarray/">
 
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
@@ -227,10 +221,10 @@
         <article class="post" itemscope itemType="http://schema.org/BlogPosting">
           
           
-            <div class="post-header main-content-wrap text-left">
+            <div class="post-header main-content-wrap text-center">
   
     <h1 class="post-title" itemprop="headline">
-      Find Majority Element in Array
+      Online Majority Element In Subarray
     </h1>
   
   
@@ -247,11 +241,7 @@
   
     <span>in</span>
     
-      <a class="category-link" href="https://yyzhou95.github.io/categories/algorithm">Algorithm</a>, 
-    
-      <a class="category-link" href="https://yyzhou95.github.io/categories/object-oriented-design">Object-oriented design</a>, 
-    
-      <a class="category-link" href="https://yyzhou95.github.io/categories/problem-set">Problem Set</a>
+      <a class="category-link" href="https://yyzhou95.github.io/categories/algorithm">Algorithm</a>
     
   
 
@@ -263,159 +253,119 @@
             <div class="main-content-wrap">
               <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
 <ul>
-<li><a href="#majority-element">Majority Element</a>
+<li><a href="#online-majority-element-in-subarray">Online Majority Element In Subarray</a>
 <ul>
 <li><a href="#problem-description">Problem description</a></li>
 <li><a href="#method">Method</a></li>
 <li><a href="#code">Code</a></li>
 </ul></li>
-<li><a href="#majority-element-ii">Majority Element II</a>
-<ul>
-<li><a href="#problem-description-1">Problem description</a></li>
-<li><a href="#method-1">Method</a></li>
-<li><a href="#code-1">Code</a></li>
-</ul></li>
 </ul>
 </nav>
 
-<p>Links:</p>
+<p>Link:</p>
 
 <ul>
-<li><a href="https://leetcode.com/problems/majority-element">Majority Element</a></li>
-<li><a href="https://leetcode.com/problems/majority-element-ii/">Majority Element II</a></li>
+<li><a href="https://leetcode.com/problems/online-majority-element-in-subarray/submissions/">Online Majority Element In Subarray</a></li>
 </ul>
 
-<h1 id="majority-element">Majority Element</h1>
+<h1 id="online-majority-element-in-subarray">Online Majority Element In Subarray</h1>
 
 <h2 id="problem-description">Problem description</h2>
 
-<p>Given an array of size <em>n</em>, find the majority element. The majority element is the element that appears <strong>more than</strong> <code>n/2</code>times.</p>
+<p>Implementing the class <code>MajorityChecker</code>, which has the following API:</p>
 
-<p>You may assume that the array is non-empty and the majority element always exist in the array.</p>
+<ul>
+<li><p><code>MajorityChecker(int[] arr)</code> constructs an instance of MajorityChecker with the given array <code>arr</code>;</p></li>
 
-<p><strong>Example 1:</strong></p>
+<li><pre><code>int query(int left, int right, int threshold)
+</code></pre></li>
+</ul>
 
-<pre><code>Input: [3,2,3]
-Output: 3
+<p>has arguments such that:</p>
+
+<ul>
+<li><code>0 &lt;= left &lt;= right &lt; arr.length</code> representing a subarray of <code>arr</code>;</li>
+<li><code>2 * threshold &gt; right - left + 1</code>, ie. the threshold is always a strict majority of the length of the subarray</li>
+</ul>
+
+<p>Each <code>query(...)</code> returns the element in <code>arr[left], arr[left+1], ..., arr[right]</code> that occurs at least <code>threshold</code>times, or <code>-1</code> if no such element exists.</p>
+
+<p><strong>Example:</strong></p>
+
+<pre><code>MajorityChecker majorityChecker = new MajorityChecker([1,1,2,2,1,1]);
+majorityChecker.query(0,5,4); // returns 1
+majorityChecker.query(0,3,3); // returns -1
+majorityChecker.query(2,3,2); // returns 2
 </code></pre>
 
-<p><strong>Example 2:</strong></p>
+<p><strong>Constraints:</strong></p>
 
-<pre><code>Input: [2,2,1,1,1,2,2]
-Output: 2
-</code></pre>
+<ul>
+<li><code>1 &lt;= arr.length &lt;= 20000</code></li>
+<li><code>1 &lt;= arr[i] &lt;= 20000</code></li>
+<li>For each query, <code>0 &lt;= left &lt;= right &lt; len(arr)</code></li>
+<li>For each query, <code>2 * threshold &gt; right - left + 1</code></li>
+<li>The number of queries is at most <code>10000</code></li>
+</ul>
 
 <h2 id="method">Method</h2>
 
-<p>Count bit sum for each number. The majority element will make each bits make up this majority number appearing more than n/2 times.</p>
+<p>Implement Boyer-Moore voting algorithm to find majority element in subarray.</p>
+
+<p>The idea is same as previous finding majority problem, except in this problem is to find majority element of <code>n/2</code> instead of <code>n/3</code>, which is much more easier.</p>
 
 <h2 id="code">Code</h2>
 
-<pre><code class="language-java">/**
- * Count bit sum for each number.
- * The majority element will make each bits make up this majority number appearing more than n/2 times.
- *
- * @param nums given array
- * @return majority element
- */
-public int majorityElement(int[] nums) {
-    int[] bit = new int[32];
-    for (int num : nums) {
-        for (int i = 0; i &lt; 32; i++)
-            if ((num &gt;&gt; (31 - i) &amp; 1) == 1) {       // count bit appearance
-                bit[i]++;
+<pre><code class="language-java">public class MajorityChecker {
+    private int[] arr;
+
+    /**
+     * Initialization of structure.
+     *
+     * @param arr given array
+     */
+    public MajorityChecker(int[] arr) {
+        this.arr = arr;
+    }
+
+    /**
+     * Boyer-Moore voting algorithm.
+     * Traverse array twice. First time find the majority and second time count if it is satisfied with threshold.
+     * Majority element in array will be at least 2/n times.
+     * Therefore, use a count and a temp to traverse the array.
+     * If current element in array is temp, count++, otherwise, count--. 
+     * And if count == 0, replace temp with current element in array.
+     * The majority element will be the last element in temp when traverse completed.
+     *
+     * @param left      left bound
+     * @param right     right bound
+     * @param threshold limit of occurrence
+     * @return the element in a[left], a[left+1], ..., a[right] that occurs at least threshold times, or -1 if none
+     */
+    public int query(int left, int right, int threshold) {
+        int count = 0, majority = -1;
+        for (int i = left; i &lt;= right; i++) {
+            if (count == 0) {
+                majority = arr[i];
             }
-    }
-
-    int majority = 0;
-    for (int i = 0; i &lt; 32; i++) {
-        bit[i] = bit[i] &gt; nums.length / 2 ? 1 : 0;
-        majority += bit[i] * (1 &lt;&lt; (31 - i));
-    }
-    return majority;
-}
-</code></pre>
-
-<h1 id="majority-element-ii">Majority Element II</h1>
-
-<h2 id="problem-description-1">Problem description</h2>
-
-<p>Given an integer array of size <em>n</em>, find all elements that appear more than <code>n/3</code> times.</p>
-
-<p><strong>Note:</strong> The algorithm should run in linear time and in O(1) space.</p>
-
-<p><strong>Example 1:</strong></p>
-
-<pre><code>Input: [3,2,3]
-Output: [3]
-</code></pre>
-
-<p><strong>Example 2:</strong></p>
-
-<pre><code>Input: [1,1,1,3,3,2,2,2]
-Output: [1,2]
-</code></pre>
-
-<h2 id="method-1">Method</h2>
-
-<p>Boyer-Moore voting algorithm.</p>
-
-<p>The essential concepts is to keep a counter for the majority number X. If find a number Y that is not X, the current counter should deduce 1. The reason is that if there is 5 X and 4 Y, there would be one (5-4) more X than Y.</p>
-
-<h2 id="code-1">Code</h2>
-
-<pre><code class="language-java">/**
- * The essential concepts is to keep a counter for the majority number X.
- * If find a number Y that is not X, the current counter should deduce 1.
- * The reason is that if there is 5 X and 4 Y, there would be one (5-4) more X than Y.
- * This could be explained as &quot;4 X being paired out by 4 Y&quot;.
- *
- * @param nums given array
- * @return find all elements that appear more than n/3 times
- */
-public List&lt;Integer&gt; majorityElement(int[] nums) {
-
-    List&lt;Integer&gt; res = new ArrayList&lt;&gt;();
-
-    /* Corner case */
-    if (nums.length == 0) {
-        return res;
-    }
-
-    int num1 = nums[0], num2 = nums[0], count1 = 1, count2 = 0;
-
-    for (int val : nums) {
-        if (val == num1) {
-            count1++;
-        } else if (val == num2) {
-            count2++;
-        } else if (count1 == 0) {
-            num1 = val;
-            count1++;
-        } else if (count2 == 0) {
-            num2 = val;
-            count2++;
-        } else {
-            count1--;
-            count2--;
+            count = (majority == arr[i]) ? count + 1 : count - 1;
         }
-    }
-    count1 = 0;
-    count2 = 0;
-    for (int val : nums) {
-        if (val == num1) {
-            count1++;
-        } else if (val == num2) {
-            count2++;
+
+        count = 0;
+        for (int i = left; i &lt;= right; i++) {
+            if (arr[i] == majority) {
+                count++;
+            }
         }
+        return (count &gt;= threshold) ? majority : -1;
     }
-    if (count1 &gt; nums.length / 3) {
-        res.add(num1);
+
+    public static void main(String[] args) {
+        MajorityChecker test = new MajorityChecker(new int[]{1, 1, 2, 2, 1, 1});
+        System.out.println(test.query(0, 5, 4));
+        System.out.println(test.query(0, 3, 3));
+        System.out.println(test.query(2, 3, 2));
     }
-    if (count2 &gt; nums.length / 3) {
-        res.add(num2);
-    }
-    return res;
 }
 </code></pre>
               
@@ -429,8 +379,6 @@ public List&lt;Integer&gt; majorityElement(int[] nums) {
                   <div class="post-footer-tags">
                     <span class="text-color-light text-small">TAGGED IN</span><br/>
                     
-  <a class="tag tag--primary tag--small" href="https://yyzhou95.github.io/tags/bit-manipulation/">Bit Manipulation</a>
-
   <a class="tag tag--primary tag--small" href="https://yyzhou95.github.io/tags/voting/">Voting</a>
 
                   </div>
@@ -444,7 +392,7 @@ public List&lt;Integer&gt; majorityElement(int[] nums) {
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/08/vertical-order-traversal-in-tree/" data-tooltip="Vertical Order Traversal in Tree">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/08/find-majority-element-in-array/" data-tooltip="Find Majority Element in Array">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -452,7 +400,7 @@ public List&lt;Integer&gt; majorityElement(int[] nums) {
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/08/online-majority-element-in-subarray/" data-tooltip="Online Majority Element In Subarray">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/08/sliding-window-by-counting-character/" data-tooltip="Sliding Window by Counting Character">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
@@ -502,7 +450,7 @@ public List&lt;Integer&gt; majorityElement(int[] nums) {
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/08/vertical-order-traversal-in-tree/" data-tooltip="Vertical Order Traversal in Tree">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/08/find-majority-element-in-array/" data-tooltip="Find Majority Element in Array">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -510,7 +458,7 @@ public List&lt;Integer&gt; majorityElement(int[] nums) {
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/08/online-majority-element-in-subarray/" data-tooltip="Online Majority Element In Subarray">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/08/sliding-window-by-counting-character/" data-tooltip="Sliding Window by Counting Character">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
