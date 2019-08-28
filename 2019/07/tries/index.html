@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="generator" content="Hugo 0.57.2 with theme Tranquilpeak 0.4.7-BETA">
+<meta name="author" content="Steve Zhou">
+<meta name="keywords" content="">
+<meta name="description" content="">
+
+
+<meta property="og:description" content="">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Tries">
+<meta name="twitter:title" content="Tries">
+<meta property="og:url" content="https://yyzhou95.github.io/2019/07/tries/">
+<meta property="twitter:url" content="https://yyzhou95.github.io/2019/07/tries/">
+<meta property="og:site_name" content="Bingo!">
+<meta property="og:description" content="">
+<meta name="twitter:description" content="">
+<meta property="og:locale" content="en-us">
+
+  
+    <meta property="article:published_time" content="2019-07-03T00:00:00">
+  
+  
+    <meta property="article:modified_time" content="2019-07-03T00:00:00">
+  
+  
+  
+    
+      <meta property="article:section" content="Algorithm">
+    
+      <meta property="article:section" content="Object-oriented design">
+    
+      <meta property="article:section" content="Problem Set">
+    
+  
+  
+    
+      <meta property="article:tag" content="Trie">
+    
+  
+
+
+<meta name="twitter:card" content="summary">
+
+
+
+
+
+
+
+
+
+
+
+  <meta property="og:image" content="https://yyzhou95.github.io/img/avatar.jpg">
+  <meta property="twitter:image" content="https://yyzhou95.github.io/img/avatar.jpg">
+
+
+    <title>Tries</title>
+
+    <link rel="icon" href="https://yyzhou95.github.io/favicon.png">
+    
+
+    
+
+    <link rel="canonical" href="https://yyzhou95.github.io/2019/07/tries/">
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/jquery.fancybox.min.css" integrity="sha256-vuXZ9LGmmwtjqFX1F+EKin1ThZMub58gKULUyf0qECk=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/helpers/jquery.fancybox-thumbs.min.css" integrity="sha256-SEa4XYAHihTcEP1f5gARTB2K26Uk8PsndQYHQC1f4jU=" crossorigin="anonymous" />
+    
+    
+    <link rel="stylesheet" href="https://yyzhou95.github.io/css/style-twzjdbqhmnnacqs0pwwdzcdbt8yhv8giawvjqjmyfoqnvazl0dalmnhdkvp7.min.css" />
+    
+    
+
+    
+      
+    
+    
+  </head>
+
+  <body>
+    <div id="blog">
+      <header id="header" data-behavior="5">
+  <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+  <div class="header-title">
+    <a class="header-title-link" href="https://yyzhou95.github.io/">Bingo!</a>
+  </div>
+  
+    
+      <a class="header-right-picture "
+         href="https://yyzhou95.github.io/#about">
+    
+    
+    
+      
+        <img class="header-picture" src="https://yyzhou95.github.io/img/avatar.jpg" alt="Author&#39;s picture" />
+      
+    
+    </a>
+  
+</header>
+
+      <nav id="sidebar" data-behavior="5">
+  <div class="sidebar-container">
+    
+      <div class="sidebar-profile">
+        <a href="https://yyzhou95.github.io/#about">
+          <img class="sidebar-profile-picture" src="https://yyzhou95.github.io/img/avatar.jpg" alt="Author&#39;s picture" />
+        </a>
+        <h4 class="sidebar-profile-name">Steve Zhou</h4>
+        
+          <h5 class="sidebar-profile-bio">Bingo!</h5>
+        
+      </div>
+    
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://yyzhou95.github.io/">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-home"></i>
+      
+      <span class="sidebar-button-desc">Home</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://yyzhou95.github.io/categories">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-bookmark"></i>
+      
+      <span class="sidebar-button-desc">Categories</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://yyzhou95.github.io/tags">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-tags"></i>
+      
+      <span class="sidebar-button-desc">Tags</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://yyzhou95.github.io/archives">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-archive"></i>
+      
+      <span class="sidebar-button-desc">Archives</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://yyzhou95.github.io/#about">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-question"></i>
+      
+      <span class="sidebar-button-desc">About</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://github.com/yyzhou95" target="_blank" rel="noopener">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+      
+      <span class="sidebar-button-desc">GitHub</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://yyzhou95.github.io/index.xml">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-rss"></i>
+      
+      <span class="sidebar-button-desc">RSS</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://github.com/yyzhou95/yyzhou95.github.io" target="_blank" rel="noopener">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-link"></i>
+      
+      <span class="sidebar-button-desc">Source Code</span>
+    </a>
+  </li>
+
+
+    </ul>
+  </div>
+</nav>
+
+      
+
+      <div id="main" data-behavior="5"
+        class="
+               hasCoverMetaOut
+               ">
+        <article class="post" itemscope itemType="http://schema.org/BlogPosting">
+          
+          
+            <div class="post-header main-content-wrap text-left">
+  
+    <h1 class="post-title" itemprop="headline">
+      Tries
+    </h1>
+  
+  
+  <div class="postShorten-meta post-meta">
+    
+      <time itemprop="datePublished" datetime="2019-07-03T00:00:00Z">
+        
+  July 3, 2019
+
+      </time>
+    
+    
+  
+  
+    <span>in</span>
+    
+      <a class="category-link" href="https://yyzhou95.github.io/categories/algorithm">Algorithm</a>, 
+    
+      <a class="category-link" href="https://yyzhou95.github.io/categories/object-oriented-design">Object-oriented design</a>, 
+    
+      <a class="category-link" href="https://yyzhou95.github.io/categories/problem-set">Problem Set</a>
+    
+  
+
+  </div>
+
+</div>
+          
+          <div class="post-content markdown" itemprop="articleBody">
+            <div class="main-content-wrap">
+              <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
+<ul>
+<li><a href="#implement-trie-prefix-tree">Implement Trie (Prefix Tree)</a>
+<ul>
+<li><a href="#problem-description">Problem description</a></li>
+<li><a href="#method">Method</a></li>
+<li><a href="#code">Code</a></li>
+</ul></li>
+<li><a href="#add-and-search-word-data-structure-design">Add and Search Word - Data structure design</a>
+<ul>
+<li><a href="#problem-description-1">Problem description</a></li>
+<li><a href="#method-1">Method</a></li>
+<li><a href="#code-1">Code</a></li>
+</ul></li>
+<li><a href="#word-search-ii">Word Search II</a>
+<ul>
+<li><a href="#problem-description-2">Problem description</a></li>
+<li><a href="#method-2">Method</a></li>
+<li><a href="#code-2">Code</a></li>
+</ul></li>
+</ul>
+</nav>
+
+<p>Links:</p>
+
+<ul>
+<li><a href="https://leetcode.com/problems/implement-trie-prefix-tree">Implement Trie (Prefix Tree)</a></li>
+<li><a href="https://leetcode.com/problems/add-and-search-word-data-structure-design">Add and Search Word - Data structure design</a></li>
+<li><a href="https://leetcode.com/problems/word-search-ii">Word Search II</a></li>
+</ul>
+
+<h1 id="implement-trie-prefix-tree">Implement Trie (Prefix Tree)</h1>
+
+<h2 id="problem-description">Problem description</h2>
+
+<p>Implement a trie with <code>insert</code>, <code>search</code>, and <code>startsWith</code> methods.</p>
+
+<p><strong>Example:</strong></p>
+
+<pre><code>Trie trie = new Trie();
+
+trie.insert(&quot;apple&quot;);
+trie.search(&quot;apple&quot;);   // returns true
+trie.search(&quot;app&quot;);     // returns false
+trie.startsWith(&quot;app&quot;); // returns true
+trie.insert(&quot;app&quot;);   
+trie.search(&quot;app&quot;);     // returns true
+</code></pre>
+
+<p><strong>Note:</strong></p>
+
+<ul>
+<li>You may assume that all inputs are consist of lowercase letters <code>a-z</code>.</li>
+<li>All inputs are guaranteed to be non-empty strings.</li>
+</ul>
+
+<h2 id="method">Method</h2>
+
+<p>Use a node structure to store each char in given word. Node of Trie has following attributes:</p>
+
+<ol>
+<li>A hash map (or char array) to store children.</li>
+<li>Get/set value in node.</li>
+<li>Get/add children.</li>
+<li>Check/set end flag to mark current node as end of word (to separate it from prefix).</li>
+</ol>
+
+<h2 id="code">Code</h2>
+
+<pre><code class="language-java">public class Trie {
+    private TrieNode root;
+
+    /**
+     * Initialize your data structure here.
+     */
+    public Trie() {
+        root = new TrieNode();
+    }
+
+    /**
+     * Inserts a word into the trie.
+     *
+     * @param word word to be inserted to trie
+     */
+    public void insert(String word) {
+        TrieNode temp = root;
+        for (int i = 0; i &lt; word.length(); i++) {
+            if (!temp.containsChild(word.charAt(i))) {
+                temp.addChild(word.charAt(i));
+            }
+            temp = temp.getChild(word.charAt(i));
+        }
+        temp.setEnd(true);
+    }
+
+    /**
+     * Returns if the word is in the trie.
+     *
+     * @param word given word
+     * @return if word is in trie
+     */
+    public boolean search(String word) {
+        TrieNode temp = root;
+        for (int i = 0; i &lt; word.length(); i++) {
+            if (temp.containsChild(word.charAt(i))) {
+                temp = temp.getChild(word.charAt(i));
+            } else {
+                return false;
+            }
+        }
+        return temp.isEnd();
+    }
+
+    /**
+     * Returns if there is any word in the trie that starts with the given prefix.
+     *
+     * @param prefix given prefix
+     * @return if prefix is in trie
+     */
+    public boolean startsWith(String prefix) {
+        TrieNode temp = root;
+        for (int i = 0; i &lt; prefix.length(); i++) {
+            if (temp.containsChild(prefix.charAt(i))) {
+                temp = temp.getChild(prefix.charAt(i));
+            } else {
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+    /**
+     * Nodes in trie.
+     */
+    class TrieNode {
+        char val;       // value of current node
+        HashMap&lt;Character, TrieNode&gt; m = new HashMap&lt;&gt;();       // save children of current trie
+        boolean end = false;
+
+        /**
+         * Initialize.
+         */
+        TrieNode() {
+        }
+
+
+        /**
+         * Set current node's value.
+         *
+         * @param val value to be set
+         */
+        void setVal(char val) {
+            this.val = val;
+        }
+
+        /**
+         * Add child to current node.
+         *
+         * @param val children value
+         */
+        void addChild(char val) {
+            this.m.put(val, new TrieNode());
+            this.m.get(val).setVal(val);
+        }
+
+        /**
+         * Mark current node as end of word.
+         *
+         * @param b boolean to be set
+         */
+        void setEnd(boolean b) {
+            this.end = b;
+        }
+
+        /**
+         * Check if current node is an end of a word.
+         *
+         * @return true if current node is an end of a word, false otherwise
+         */
+        boolean isEnd() {
+            return this.end;
+        }
+
+        /**
+         * Return the child based on given value.
+         *
+         * @param val value of child
+         * @return child node
+         */
+        TrieNode getChild(char val) {
+            return m.get(val);
+        }
+
+        /**
+         * Get value of current node.
+         *
+         * @return value in current node
+         */
+        char getVal() {
+            return this.val;
+        }
+
+        /**
+         * Check if given char is contained in current node's child.
+         *
+         * @param val given value
+         * @return true if given char is in child
+         */
+        boolean containsChild(char val) {
+            return m.containsKey(val);
+        }
+    }
+
+    public static void main(String[] args) {
+        Trie_208 test = new Trie_208();
+        test.insert(&quot;app&quot;);
+        test.insert(&quot;apple&quot;);
+        test.insert(&quot;beer&quot;);
+        test.insert(&quot;add&quot;);
+        test.insert(&quot;jam&quot;);
+        test.insert(&quot;rental&quot;);
+        System.out.println(test.search(&quot;app&quot;));
+        System.out.println(test.search(&quot;apps&quot;));
+        System.out.println(test.startsWith(&quot;beer&quot;));
+        test.insert(&quot;app&quot;);
+        System.out.println(test.search(&quot;app&quot;));
+    }
+}
+</code></pre>
+
+<h1 id="add-and-search-word-data-structure-design">Add and Search Word - Data structure design</h1>
+
+<h2 id="problem-description-1">Problem description</h2>
+
+<p>Design a data structure that supports the following two operations:</p>
+
+<pre><code>void addWord(word)
+bool search(word)
+</code></pre>
+
+<p>search(word) can search a literal word or a regular expression string containing only letters <code>a-z</code> or <code>.</code>. A <code>.</code> means it can represent any one letter.</p>
+
+<p><strong>Example:</strong></p>
+
+<pre><code>addWord(&quot;bad&quot;)
+addWord(&quot;dad&quot;)
+addWord(&quot;mad&quot;)
+search(&quot;pad&quot;) -&gt; false
+search(&quot;bad&quot;) -&gt; true
+search(&quot;.ad&quot;) -&gt; true
+search(&quot;b..&quot;) -&gt; true
+</code></pre>
+
+<p><strong>Note:</strong>
+You may assume that all words are consist of lowercase letters <code>a-z</code>.</p>
+
+<h2 id="method-1">Method</h2>
+
+<p>Use the Trie designed in last problem. One thing to modify is that the addition of <code>.</code>. The <code>search()</code> has to handle the <code>.</code> problem.</p>
+
+<p>If current char is <code>.</code>, then find all children under current node and do the DFS on it until find all possible combinations.</p>
+
+<p>If current char is <code>.</code> and it is the end of given searching word, find if passing node is end of word. If it is not the end of it, return false. For instance, if a dictionary has a word <code>a</code>, then search <code>a.</code> should return false.</p>
+
+<h2 id="code-1">Code</h2>
+
+<pre><code class="language-java">public class WordDictionary {
+
+    private TrieNode root;
+
+    /**
+     * Initialization.
+     */
+    public WordDictionary() {
+        this.root = new TrieNode();
+    }
+
+    /**
+     * Adds a word into the data structure.
+     *
+     * @param word given word to be added
+     */
+    public void addWord(String word) {
+        TrieNode temp = root;
+        for (int i = 0; i &lt; word.length(); i++) {
+            if (!temp.containsChild(word.charAt(i))) {
+                temp.addChild(word.charAt(i));
+            }
+            temp = temp.getChild(word.charAt(i));
+        }
+        temp.setEnd(true);
+    }
+
+    /**
+     * Returns if the word is in the data structure.
+     * A word could contain the dot character '.' to represent any one letter.
+     *
+     * @param word given word
+     * @return if the word is in dictionary
+     */
+    public boolean search(String word) {
+        return find(word.toCharArray(), 0, root);
+    }
+
+    /**
+     * @param word  given word in char array
+     * @param index current index in word
+     * @param n     root node
+     * @return if given word can be found in trie
+     */
+    private boolean find(char[] word, int index, TrieNode n) {
+
+        if (index == word.length) {
+            return n.isEnd();
+
+        } else if (word[index] == '.') {
+
+            List&lt;TrieNode&gt; temp = n.getAllChildren();
+            for (TrieNode node : temp) {
+                if (find(word, index + 1, node)) {
+                    return true;
+                }
+            }
+
+        } else if (n.containsChild(word[index])) {
+            return find(word, index + 1, n.getChild(word[index]));
+        }
+        return false;
+    }
+
+
+    /**
+     * Nodes in trie.
+     */
+    class TrieNode {
+        private char val;       // value of current node
+        private HashMap&lt;Character, TrieNode&gt; m = new HashMap&lt;&gt;();       // save children of current trie
+        private boolean end = false;
+
+        /**
+         * Initialization.
+         */
+        TrieNode() {
+        }
+
+        /**
+         * Set current node's value.
+         *
+         * @param val value to be set
+         */
+        void setVal(char val) {
+            this.val = val;
+        }
+
+        /**
+         * Add child to current node.
+         *
+         * @param val children value
+         */
+        void addChild(char val) {
+            this.m.put(val, new TrieNode());
+            this.m.get(val).setVal(val);
+        }
+
+        /**
+         * Mark current node as end of word.
+         *
+         * @param b boolean to be set
+         */
+        void setEnd(boolean b) {
+            this.end = b;
+        }
+
+        /**
+         * Check if current node is an end of a word.
+         *
+         * @return true if current node is an end of a word, false otherwise
+         */
+        boolean isEnd() {
+            return this.end;
+        }
+
+        /**
+         * Return the child based on given value.
+         *
+         * @param val value of child
+         * @return child node
+         */
+        TrieNode getChild(char val) {
+            return m.get(val);
+        }
+
+        /**
+         * Get value of current node.
+         *
+         * @return value in current node
+         */
+        char getVal() {
+            return this.val;
+        }
+
+        /**
+         * Check if given char is contained in current node's child.
+         *
+         * @param val given value
+         * @return true if given char is in child
+         */
+        boolean containsChild(char val) {
+            return m.containsKey(val);
+        }
+
+        List&lt;TrieNode&gt; getAllChildren() {
+            return new ArrayList&lt;&gt;(m.values());
+        }
+    }
+
+    public static void main(String[] args) {
+        WordDictionary test = new WordDictionary();
+        test.addWord(&quot;bad&quot;);
+        test.addWord(&quot;dad&quot;);
+        test.addWord(&quot;mad&quot;);
+        System.out.println(test.search(&quot;bad.&quot;));
+        System.out.println(test.search(&quot;b..&quot;));
+        System.out.println(test.search(&quot;...&quot;));
+        System.out.println(test.search(&quot;bad&quot;));
+        System.out.println(test.search(&quot;.ad&quot;));
+        System.out.println(test.search(&quot;dap&quot;));
+
+    }
+}
+</code></pre>
+
+<h1 id="word-search-ii">Word Search II</h1>
+
+<h2 id="problem-description-2">Problem description</h2>
+
+<p>Given a 2D board and a list of words from the dictionary, find all words in the board.</p>
+
+<p>Each word must be constructed from letters of sequentially adjacent cell, where &ldquo;adjacent&rdquo; cells are those horizontally or vertically neighboring. The same letter cell may not be used more than once in a word.</p>
+
+<p><strong>Example:</strong></p>
+
+<pre><code>Input: 
+board = [
+  ['o','a','a','n'],
+  ['e','t','a','e'],
+  ['i','h','k','r'],
+  ['i','f','l','v']
+]
+words = [&quot;oath&quot;,&quot;pea&quot;,&quot;eat&quot;,&quot;rain&quot;]
+
+Output: [&quot;eat&quot;,&quot;oath&quot;]
+</code></pre>
+
+<p><strong>Note:</strong></p>
+
+<ol>
+<li>All inputs are consist of lowercase letters <code>a-z</code>.</li>
+<li>The values of <code>words</code> are distinct.</li>
+</ol>
+
+<h2 id="method-2">Method</h2>
+
+<p>Use a simplified trie that store nodes by array instead of hash map to store given words. Search in board to see if board contains words from list.</p>
+
+<h2 id="code-2">Code</h2>
+
+<pre><code class="language-java">/**
+ * Use a simplified trie that store nodes by array instead of hash map to store given words.
+ * Search in board to see if board contains words from list.
+ *
+ * @param board given board
+ * @param words words list
+ * @return all words in list
+ */
+public List&lt;String&gt; findWords(char[][] board, String[] words) {
+
+    List&lt;String&gt; out = new ArrayList&lt;&gt;();
+    TrieNode root = trie(words);
+
+    for (int i = 0; i &lt; board.length; i++) {
+        for (int j = 0; j &lt; board[0].length; j++) {
+            dfs(board, i, j, root, out);
+        }
+    }
+    
+    return out;
+}
+
+/**
+ * DFS search in board.
+ *
+ * @param board given board
+ * @param i     row
+ * @param j     column
+ * @param p     trie node
+ * @param out   output list
+ */
+private void dfs(char[][] board, int i, int j, TrieNode p, List&lt;String&gt; out) {
+    char c = board[i][j];
+    if (c == '#' || p.next[c - 'a'] == null) {
+        return;
+    }
+    p = p.next[c - 'a'];
+    if (p.word != null) {   // found one
+        out.add(p.word);
+        p.word = null;     // de-duplicate
+    }
+
+    board[i][j] = '#';
+    if (i &gt; 0) {
+        dfs(board, i - 1, j, p, out);
+    }
+    if (j &gt; 0) {
+        dfs(board, i, j - 1, p, out);
+    }
+    if (i &lt; board.length - 1) {
+        dfs(board, i + 1, j, p, out);
+    }
+    if (j &lt; board[0].length - 1) {
+        dfs(board, i, j + 1, p, out);
+    }
+    board[i][j] = c;
+}
+
+/**
+ * Simplified trie constructed by array.
+ *
+ * @param words given words list
+ * @return new trie
+ */
+private TrieNode trie(String[] words) {
+    TrieNode root = new TrieNode();
+    for (String w : words) {
+        TrieNode p = root;
+        for (char c : w.toCharArray()) {
+            int i = c - 'a';
+            if (p.next[i] == null) p.next[i] = new TrieNode();
+            p = p.next[i];
+        }
+        p.word = w;
+    }
+    return root;
+}
+
+/**
+ * Node in trie.
+ */
+class TrieNode {
+    TrieNode[] next = new TrieNode[26];
+    String word;
+}
+</code></pre>
+              
+            </div>
+          </div>
+          <div id="post-footer" class="post-footer main-content-wrap">
+            
+              
+                
+                
+                  <div class="post-footer-tags">
+                    <span class="text-color-light text-small">TAGGED IN</span><br/>
+                    
+  <a class="tag tag--primary tag--small" href="https://yyzhou95.github.io/tags/trie/">Trie</a>
+
+                  </div>
+                
+              
+            
+            <div class="post-actions-wrap">
+  
+      <nav >
+        <ul class="post-actions post-action-nav">
+          
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/07/peeking-iterator/" data-tooltip="Peeking Iterator">
+              
+                  <i class="fa fa-angle-left"></i>
+                  <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
+                </a>
+            </li>
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/07/accounts-merge/" data-tooltip="Accounts Merge">
+              
+                  <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
+                  <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+          
+        </ul>
+      </nav>
+    <ul class="post-actions post-action-share" >
+      
+        <li class="post-action hide-lg hide-md hide-sm">
+          <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+            <i class="fa fa-share-alt"></i>
+          </a>
+        </li>
+        
+      
+      
+      <li class="post-action">
+        
+          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+        
+          <i class="fa fa-list"></i>
+        </a>
+      </li>
+    </ul>
+  
+</div>
+
+            
+              
+            
+          </div>
+        </article>
+        <footer id="footer" class="main-content-wrap">
+  <span class="copyrights">
+    &copy; 2019 Steve Zhou. All Rights Reserved
+  </span>
+</footer>
+
+      </div>
+      <div id="bottom-bar" class="post-bottom-bar" data-behavior="5">
+        <div class="post-actions-wrap">
+  
+      <nav >
+        <ul class="post-actions post-action-nav">
+          
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/07/peeking-iterator/" data-tooltip="Peeking Iterator">
+              
+                  <i class="fa fa-angle-left"></i>
+                  <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
+                </a>
+            </li>
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/07/accounts-merge/" data-tooltip="Accounts Merge">
+              
+                  <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
+                  <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+          
+        </ul>
+      </nav>
+    <ul class="post-actions post-action-share" >
+      
+        <li class="post-action hide-lg hide-md hide-sm">
+          <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+            <i class="fa fa-share-alt"></i>
+          </a>
+        </li>
+        
+      
+      
+      <li class="post-action">
+        
+          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+        
+          <i class="fa fa-list"></i>
+        </a>
+      </li>
+    </ul>
+  
+</div>
+
+      </div>
+      <div id="share-options-bar" class="share-options-bar" data-behavior="5">
+  <i id="btn-close-shareoptions" class="fa fa-close"></i>
+  <ul class="share-options">
+    
+  </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+    </div>
+    
+    <div id="about">
+  <div id="about-card">
+    <div id="about-btn-close">
+      <i class="fa fa-remove"></i>
+    </div>
+    
+      <img id="about-card-picture" src="https://yyzhou95.github.io/img/avatar.jpg" alt="Author&#39;s picture" />
+    
+    <h4 id="about-card-name">Steve Zhou</h4>
+    
+      <div id="about-card-bio">Bingo!</div>
+    
+    
+      <div id="about-card-job">
+        <i class="fa fa-briefcase"></i>
+        <br/>
+        Software Engineer
+      </div>
+    
+    
+      <div id="about-card-location">
+        <i class="fa fa-map-marker"></i>
+        <br/>
+        Los Angeles
+      </div>
+    
+  </div>
+</div>
+
+    
+
+    
+  
+    
+      <div id="cover" style="background-image:url('https://yyzhou95.github.io/img/bg.jpeg');"></div>
+    
+  
+
+
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js" integrity="sha256-/BfiIkHlHoVihZdc6TFuj7MmJ0TWcWsMXkeDFwhi0zw=" crossorigin="anonymous"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.7/js/jquery.fancybox.min.js" integrity="sha256-GEAnjcTqVP+vBp3SSc8bEDQqvWAZMiHyUSIorrWwH50=" crossorigin="anonymous"></script>
+
+
+<script src="https://yyzhou95.github.io/js/script-pcw6v3xilnxydl1vddzazdverrnn9ctynvnxgwho987mfyqkuylcb1nlt.min.js"></script>
+
+
+<script lang="javascript">
+window.onload = updateMinWidth;
+window.onresize = updateMinWidth;
+document.getElementById("sidebar").addEventListener("transitionend", updateMinWidth);
+function updateMinWidth() {
+  var sidebar = document.getElementById("sidebar");
+  var main = document.getElementById("main");
+  main.style.minWidth = "";
+  var w1 = getComputedStyle(main).getPropertyValue("min-width");
+  var w2 = getComputedStyle(sidebar).getPropertyValue("width");
+  var w3 = getComputedStyle(sidebar).getPropertyValue("left");
+  main.style.minWidth = `calc(${w1} - ${w2} - ${w3})`;
+}
+</script>
+
+<script>
+$(document).ready(function() {
+  hljs.configure({ classPrefix: '', useBR: false });
+  $('pre.code-highlight > code, pre > code').each(function(i, block) {
+    if (!$(this).hasClass('codeblock')) {
+      $(this).addClass('codeblock');
+    }
+    hljs.highlightBlock(block);
+  });
+});
+</script>
+
+
+  
+    
+  
+
+
+
+
+    
+  </body>
+</html>
+
