@@ -255,23 +255,17 @@
             <div class="main-content-wrap">
               <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
 <ul>
-<li>
+<li><a href="#lowest-common-ancestor-of-a-binary-search-tree">Lowest Common Ancestor of a Binary Search Tree</a>
 <ul>
-<li><a href="#problem-description">Problem description</a>
-<ul>
-<li><a href="#lowest-common-ancestor-of-a-binary-search-tree">Lowest Common Ancestor of a Binary Search Tree</a></li>
-<li><a href="#lowest-common-ancestor-of-a-binary-tree">Lowest Common Ancestor of a Binary Tree</a></li>
+<li><a href="#problem-description">Problem description</a></li>
+<li><a href="#method">Method</a></li>
+<li><a href="#code">Code</a></li>
 </ul></li>
-<li><a href="#method">Method</a>
+<li><a href="#lowest-common-ancestor-of-a-binary-tree">Lowest Common Ancestor of a Binary Tree</a>
 <ul>
-<li><a href="#lowest-common-ancestor-of-a-binary-search-tree-1">Lowest Common Ancestor of a Binary Search Tree</a></li>
-<li><a href="#lowest-common-ancestor-of-a-binary-tree-1">Lowest Common Ancestor of a Binary Tree</a></li>
-</ul></li>
-<li><a href="#code">Code</a>
-<ul>
-<li><a href="#lowest-common-ancestor-of-a-binary-search-tree-2">Lowest Common Ancestor of a Binary Search Tree</a></li>
-<li><a href="#lowest-common-ancestor-of-a-binary-tree-2">Lowest Common Ancestor of a Binary Tree</a></li>
-</ul></li>
+<li><a href="#problem-description-1">Problem description</a></li>
+<li><a href="#method-1">Method</a></li>
+<li><a href="#code-1">Code</a></li>
 </ul></li>
 </ul>
 </nav>
@@ -283,9 +277,9 @@
 <li><a href="https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-tree/">Lowest Common Ancestor of a Binary Tree</a></li>
 </ul>
 
-<h2 id="problem-description">Problem description</h2>
+<h1 id="lowest-common-ancestor-of-a-binary-search-tree">Lowest Common Ancestor of a Binary Search Tree</h1>
 
-<h3 id="lowest-common-ancestor-of-a-binary-search-tree">Lowest Common Ancestor of a Binary Search Tree</h3>
+<h2 id="problem-description">Problem description</h2>
 
 <p>Given a binary search tree (BST), find the lowest common ancestor (LCA) of two given nodes in the BST.</p>
 
@@ -314,7 +308,33 @@ Explanation: The LCA of nodes 2 and 4 is 2, since a node can be a descendant of 
 <li>p and q are different and both values will exist in the BST.</li>
 </ul>
 
-<h3 id="lowest-common-ancestor-of-a-binary-tree">Lowest Common Ancestor of a Binary Tree</h3>
+<h2 id="method">Method</h2>
+
+<p>Smaller node will be left part of BST, while larger node will be in right part of BST.
+- If <code>p &lt; root &lt; q</code>, then root is LCA.
+- If <code>(root - p) * (root - q) &gt; 0</code>, then they will be both left or right, depend on p and q&rsquo;s value.</p>
+
+<h2 id="code">Code</h2>
+
+<pre><code class="language-java">/**
+ * Smaller node will be left part of BST, while larger node will be in right part of BST.
+ * Therefore, if p &lt; root &lt; q, then root is LCA.
+ * If (root - p) * (root - q) &gt; 0, then they will be both left or right, depend on p and q's value.
+ *
+ * @param root root node
+ * @param p    node
+ * @param q    node
+ * @return lowest common ancestor
+ */
+public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+    while ((root.val - p.val) * (root.val - q.val) &gt; 0) {
+        root = root.val &gt; p.val ? root.left : root.right;
+    }
+    return root;
+}
+</code></pre>
+
+<h1 id="lowest-common-ancestor-of-a-binary-tree">Lowest Common Ancestor of a Binary Tree</h1>
 
 <p>Given a binary tree, find the lowest common ancestor (LCA) of two given nodes in the tree.</p>
 
@@ -343,15 +363,9 @@ Explanation: The LCA of nodes 5 and 4 is 5, since a node can be a descendant of 
 <li>p and q are different and both values will exist in the binary tree.</li>
 </ul>
 
-<h2 id="method">Method</h2>
+<h2 id="problem-description-1">Problem description</h2>
 
-<h3 id="lowest-common-ancestor-of-a-binary-search-tree-1">Lowest Common Ancestor of a Binary Search Tree</h3>
-
-<p>Smaller node will be left part of BST, while larger node will be in right part of BST.
- * If p &lt; root &lt; q, then root is LCA.
- * If (root - p) * (root - q) &gt; 0, then they will be both left or right, depend on p and q&rsquo;s value.</p>
-
-<h3 id="lowest-common-ancestor-of-a-binary-tree-1">Lowest Common Ancestor of a Binary Tree</h3>
+<h2 id="method-1">Method</h2>
 
 <p>Three conditions:</p>
 
@@ -370,31 +384,62 @@ Explanation: The LCA of nodes 5 and 4 is 5, since a node can be a descendant of 
 <li>If the other node is found, then the LCA is current root.</li>
 </ul>
 
-<h2 id="code">Code</h2>
-
-<h3 id="lowest-common-ancestor-of-a-binary-search-tree-2">Lowest Common Ancestor of a Binary Search Tree</h3>
+<h2 id="code-1">Code</h2>
 
 <pre><code class="language-java">/**
- * Smaller node will be left part of BST, while larger node will be in right part of BST.
- * Therefore, if p &lt; root &lt; q, then root is LCA.
- * If (root - p) * (root - q) &gt; 0, then they will be both left or right, depend on p and q's value.
+ * BFS + HashMap + HashSet.
+ * HashMap save node's ancestor, HashSet save ancestor when trace back from p (or q).
+ * Use BFS to find p and q, with a hash map to save the parents.
+ * Then trace back to p, use a hash set to save the ancestor during tracing back until reach root.
+ * Do the same thing on q, if there is any ancestor of q is in set, return this node.
  *
  * @param root root node
- * @param p    node
- * @param q    node
- * @return lowest common ancestor
+ * @param p    first node
+ * @param q    second node
+ * @return lowest common ancestor (LCA) of two given nodes
  */
 public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
-    while ((root.val - p.val) * (root.val - q.val) &gt; 0) {
-        root = root.val &gt; p.val ? root.left : root.right;
+
+    /* Corner case */
+    if (root == null) {
+        return null;
     }
-    return root;
+
+    Queue&lt;TreeNode&gt; queue = new LinkedList&lt;&gt;();
+    queue.add(root);
+    HashMap&lt;TreeNode, TreeNode&gt; m = new HashMap&lt;&gt;();
+    m.put(root, null);
+
+    while (!m.containsKey(p) || !m.containsKey(q)) {
+        TreeNode current = queue.poll();
+        if (current != null) {
+            if (current.left != null) {
+                queue.add(current.left);
+                m.put(current.left, current);
+            }
+            if (current.right != null) {
+                queue.add(current.right);
+                m.put(current.right, current);
+            }
+        }
+    }
+
+    HashSet&lt;TreeNode&gt; s = new HashSet&lt;&gt;();
+
+    while (p != null) {
+        s.add(p);
+        p = m.get(p);
+    }
+
+    while (!s.contains(q)) {
+        q = m.get(q);
+    }
+
+    return q;
 }
-</code></pre>
 
-<h3 id="lowest-common-ancestor-of-a-binary-tree-2">Lowest Common Ancestor of a Binary Tree</h3>
-
-<pre><code class="language-java">/**
+/**
+ * Recursion DFS version.
  * Three conditions:
  * 1. p and q are under same node -&gt; LCA is the node
  * 2. One of p or q is the LCA -&gt; LCA is p or q
@@ -410,7 +455,7 @@ public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
  * @param q    second node
  * @return lowest common ancestor (LCA) of two given nodes
  */
-public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
+public TreeNode recursion(TreeNode root, TreeNode p, TreeNode q) {
     if (root == null || root.val == p.val || root.val == q.val) {
         return root;
     }
