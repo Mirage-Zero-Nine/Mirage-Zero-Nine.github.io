@@ -257,7 +257,18 @@
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <p>Link: <a href="https://leetcode.com/problems/longest-valid-parentheses/">Longest Valid Parentheses</a></p>
+              <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
+<ul>
+<li>
+<ul>
+<li><a href="#problem-description">Problem description</a></li>
+<li><a href="#method">Method</a></li>
+<li><a href="#code">Code</a></li>
+</ul></li>
+</ul>
+</nav>
+
+<p>Link: <a href="https://leetcode.com/problems/longest-valid-parentheses/">Longest Valid Parentheses</a></p>
 
 <h2 id="problem-description">Problem description</h2>
 
@@ -319,7 +330,7 @@ Explanation: The longest valid parentheses substring is &quot;()()&quot;
 <h2 id="code">Code</h2>
 
 <pre><code class="language-java">/**
- * Traverse s for two times, set two counter &quot;left&quot; and &quot;right&quot; to count &quot;(&quot;, &quot;)&quot; respectively.
+ * Traverse given string for two times, set two counter &quot;left&quot; and &quot;right&quot; to count &quot;(&quot;, &quot;)&quot; respectively.
  * First from left to right, if left equals to right and none of them are 0, then one valid length is found.
  * Compare current length to max length. If larger then switch it. Then reset both counters.
  * When first traverse completed, traverse string from right to left with same process.
@@ -357,10 +368,10 @@ public int longestValidParentheses(String s) {
     right = 0;
 
     for (int i = s.length() - 1; i &gt; -1; i--) {     // traverse from right to left
-        if (s.charAt(i) == '(') {
-            left++;
-        } else {
+        if (s.charAt(i) == ')') {
             right++;
+        } else {
+            left++;
         }
         if (left == right) {
             max = Math.max(max, left + right);
@@ -369,6 +380,7 @@ public int longestValidParentheses(String s) {
             right = 0;
         }
     }
+
     return max;
 }
 
@@ -427,8 +439,7 @@ public int longestValidParenthesesStack(String s) {
  */
 public int longestValidParenthesesDP(String s) {
 
-    /* Record temp max length result */
-    int[] arr = new int[s.length()];
+    int[] dp = new int[s.length()];        // save temp max
     int maxParentheses = 0;
 
     for (int i = 1; i &lt; s.length(); i++) {
@@ -436,21 +447,19 @@ public int longestValidParenthesesDP(String s) {
         /* If current char is ')', then find previous state */
         if (s.charAt(i) == ')') {
             if (s.charAt(i - 1) == '(') {       // add a new pair
-                if (i &gt; 1) {
-                    arr[i] = arr[i - 2] + 2;
-                } else {
-                    arr[i] = 2;
-                }
-            } else if (i &gt; arr[i - 1] &amp;&amp; s.charAt(i - arr[i - 1] - 1) == '(') {
 
-                /* i - arr[i - 1] - 1: find first '(' */
-                if (i - arr[i - 1] &gt; 1) {
-                    arr[i] = arr[i - 1] + arr[i - arr[i - 1] - 2] + 2;		// a new valid pair immediatelly 
-                } else {
-                    arr[i] = arr[i - 1] + 2;
-                }
+                dp[i] = (i &gt; 1) ? dp[i - 2] + 2 : 2;
+
+            } else if (i &gt; dp[i - 1] &amp;&amp; s.charAt(i - dp[i - 1] - 1) == '(') {
+
+                /*
+                 * i - dp[i - 1] - 1: find first '('.
+                 * If i - dp[i - 1] - 1 &gt; 0, then there may be previous valid pair. Add to dp[i].
+                 * Otherwise, if i - dp[i - 1] - 1 == 0, then the valid pair starts from start.
+                 * Under this condition, dp[i - 1] + 2 will include all valid pair from start. */
+                dp[i] = (i - dp[i - 1] &gt; 1) ? dp[i - 1] + dp[i - dp[i - 1] - 2] + 2 : dp[i - 1] + 2;
             }
-            maxParentheses = Math.max(maxParentheses, arr[i]);
+            maxParentheses = Math.max(maxParentheses, dp[i]);
         }
     }
     return maxParentheses;
@@ -511,7 +520,7 @@ public int longestValidParenthesesDP(String s) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#">
+          <a class="post-action-btn btn btn--default" href="#table-of-contents">
         
           <i class="fa fa-list"></i>
         </a>
@@ -569,7 +578,7 @@ public int longestValidParenthesesDP(String s) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#">
+          <a class="post-action-btn btn btn--default" href="#table-of-contents">
         
           <i class="fa fa-list"></i>
         </a>

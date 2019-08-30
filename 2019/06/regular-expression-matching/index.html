@@ -255,16 +255,33 @@
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <p>Links:</p>
+              <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
+<ul>
+<li><a href="#regular-expression-matching">Regular Expression Matching</a>
+<ul>
+<li><a href="#problem-description">Problem description</a></li>
+<li><a href="#method">Method</a></li>
+<li><a href="#code">Code</a></li>
+</ul></li>
+<li><a href="#wildcard-matching">Wildcard Matching</a>
+<ul>
+<li><a href="#problem-description-1">Problem description</a></li>
+<li><a href="#method-1">Method</a></li>
+<li><a href="#code-1">Code</a></li>
+</ul></li>
+</ul>
+</nav>
+
+<p>Links:</p>
 
 <ul>
 <li><a href="https://leetcode.com/problems/regular-expression-matching">Regular Expression Matching</a></li>
 <li><a href="https://leetcode.com/problems/wildcard-matching/">Wildcard Matching</a></li>
 </ul>
 
-<h2 id="problem-description">Problem description</h2>
+<h1 id="regular-expression-matching">Regular Expression Matching</h1>
 
-<p><strong>Regular Expression Matching</strong></p>
+<h2 id="problem-description">Problem description</h2>
 
 <p>Given an input string (<code>s</code>) and a pattern (<code>p</code>), implement regular expression matching with support for <code>'.'</code> and <code>'*'</code>.</p>
 
@@ -325,7 +342,102 @@ p = &quot;mis*is*p*.&quot;
 Output: false
 </code></pre>
 
-<p><strong>Wildcard Matching</strong></p>
+<h2 id="method">Method</h2>
+
+<p>Dynamic programming with 2D table.</p>
+
+<p>There are several conditions for state transition, assuming column of boolean table representing pattern string.</p>
+
+<p>Note that boolean table has one more row and column than string, hence, if using table index in iteration, corresponding string index should be <code>index - 1</code>.</p>
+
+<ul>
+<li>First of all, iterate the first row of table, and if <code>*</code>is met, fill <code>dp[0][i]</code> with value in <code>dp[0][i]</code>. This is for the case of pattern starts with <code>.*</code>.</li>
+<li>Then iterating table start from second row and column. If current char in string and pattern is not matched and none of them are <code>.</code> or <code>*</code>, leave it.</li>
+<li>If current char in pattern is <code>.</code>, then it matches with any char in <code>s</code>. The current char is matched depends on <code>s</code> and <code>p</code> that removing these matched char, which is <code>dp[i - 1][j - 1]</code>. The same situation happens when pattern and string has same char.</li>
+<li>If current char in pattern is <code>*</code>, then there are two conditions. First, if <code>p.charAt(j - 2) != s.charAt(i) &amp;&amp; p.charAt(j - 2) != '.'</code>, then it means this <code>*</code> can only match previous pattern in 0 time, since previous char in pattern is not match to the char in string. The second condition is the rest situations. In this situation it means char before <code>*</code> can match more than one time. The <code>.</code> has same function as two same char.</li>
+<li>Finally, return <code>dp[s.length()][p.length()]</code>.</li>
+</ul>
+
+<h2 id="code">Code</h2>
+
+<pre><code class="language-java">/**
+ * Dynamic programming with 2D table.
+ * Each time, find current matched string and pattern. Check if string matches pattern before current matched part.
+ * State transition:
+ * If (p.charAt(j) == s.charAt(i) || p.charAt(j) == '.') -&gt;  dp[i + 1][j + 1] = dp[i][j]
+ * If (p.charAt(j) == '*'):
+ * 1. p(j - 2) could only be matched for 0 time.
+ * 2. Match p(j - 2) for 1 time.
+ * 3. Match p(j - 1) for n times.
+ * 4. Match p in format as &quot;.*&quot; 0 ~ n times.
+ * If no condition satisfied, return false.
+ *
+ * @param s string
+ * @param p pattern string
+ * @return if string is matched to pattern
+ */
+public boolean isMatch(String s, String p) {
+
+    /* Corner case */
+    if (s == null || p == null) {
+        return false;
+    }
+
+    int l1 = s.length();
+    int l2 = p.length();
+
+    boolean[][] dp = new boolean[l1 + 1][l2 + 1];
+    dp[0][0] = true;
+    for (int i = 1; i &lt;= l2; i++) {
+        if (p.charAt(i - 1) == '*') {
+            dp[0][i] = dp[0][i - 2];        // for the case of pattern starts with .*
+        }
+    }
+
+    for (int i = 1; i &lt;= l1; i++) {
+        for (int j = 1; j &lt;= l2; j++) {
+
+            /*
+             * If current char matches, or pattern is '.', then dp[i][j] = dp[i - 1][j - 1].
+             * Both pattern char and string char is matched, check string and pattern before matched. */
+            if (s.charAt(i - 1) == p.charAt(j - 1) || p.charAt(j - 1) == '.') {
+                dp[i][j] = dp[i - 1][j - 1];
+            }
+
+            /*
+             * If p.charAt(j - 1) == '*', then matched pattern will be:
+             * 1. p(j - 2) could only be matched for 0 time.
+             * 2. Match p(j - 2) for 1 time.
+             * 3. Match p(j - 1) for n times.
+             * 4. Match p in format as &quot;.*&quot; 0 ~ n times. */
+            if (p.charAt(j - 1) == '*') {
+
+                /*
+                 * If s(i - 1) != p(j - 2) &amp;&amp; p(j - 2) != '.', then no match found in p.
+                 * p(j - 2) could only be matched for 0 time.
+                 * Check if string matches pattern before '*' and its previous char. */
+                if (s.charAt(i - 1) != p.charAt(j - 2) &amp;&amp; p.charAt(j - 2) != '.') {
+                    dp[i][j] = dp[i][j - 2];
+                } else {
+
+                    /*
+                     * Otherwise, there are three conditions:
+                     * 1. Match p(j - 2) for 1 time: dp[i][j - 1]
+                     * 2. Match p(j - 1) for n times: dp[i - 1][j] (this is actually only matched in s, not in p)
+                     * 3. Match p in format as &quot;.*&quot; 0 ~ n times: dp[i][j - 2] || dp[i][j - 1] || dp[i - 1][j] */
+                    dp[i][j] = dp[i][j - 1] || dp[i - 1][j] || dp[i][j - 2];
+                }
+            }
+        }
+    }
+
+    return dp[l1][l2];
+}
+</code></pre>
+
+<h1 id="wildcard-matching">Wildcard Matching</h1>
+
+<h2 id="problem-description-1">Problem description</h2>
 
 <p>Given an input string (<code>s</code>) and a pattern (<code>p</code>), implement wildcard pattern matching with support for <code>'?'</code> and <code>'*'</code>.</p>
 
@@ -386,87 +498,11 @@ p = &quot;a*c?b&quot;
 Output: false
 </code></pre>
 
-<h2 id="method">Method</h2>
-
-<p><strong>Regular Expression Matching</strong></p>
-
-<p>This is a typical dynamic programming with 2D table problem. The key is to find the state transition formulation.</p>
-
-<p>The idea would be to reduce the problem to simple ones. For example, there is a string <code>adcebdk</code> and pattern <code>*a*b?k</code>, and we want to compute if there is a match for them: <code>D = True/False</code>. One could notice that it seems to be more simple for short strings and patterns and so it would be logical to relate a match <code>D[p_len][s_len]</code> with the lengths <code>p_len</code> and <code>s_len</code> of input pattern and string correspondingly.</p>
-
-<p>There are several conditions for state transition, assuming column of boolean table representing pattern string. Note that boolean table has one more row and column than string, hence, if using string index in iteration, corresponding table index should be index + 1.</p>
-
-<ul>
-<li>First of all, iterate the first row of table, and if <code>*</code>is met, fill <code>dp[0][i+1]</code> with value in <code>dp[0][i+1]</code>. This is for the case of pattern starts with <code>.*</code>.</li>
-<li>Then iterating table start from second row and column.</li>
-<li>If current char in string and pattern is not matched and none of them are <code>.</code> or <code>*</code>, fill false in current table cell.</li>
-<li>If current char in pattern is <code>.</code>, then it means matching any char, therefore, fill current table cell with previous cell, which is <code>dp[i][j]</code>.</li>
-<li>The same situation happens when pattern and string has same char.</li>
-<li>If current char in pattern is <code>*</code>, then there are two conditions. First, if <code>p.charAt(j - 1) != s.charAt(i) &amp;&amp; p.charAt(j - 1) != '.'</code>, then it means this <code>*</code> can only match previous pattern in 0 time, since previous char in pattern is not match to the char in string. The second condition is the rest situations. In this situation it means char before <code>*</code> can match more than one time. The <code>.</code> has same function as two same char.</li>
-<li>Finally, return <code>dp[s.length()][p.length()]</code>.</li>
-</ul>
-
-<p><strong>Wildcard Matching</strong></p>
+<h2 id="method-1">Method</h2>
 
 <p>This problem’s only difference to previous one is the matching field of <code>*</code>. In this problem, the <code>*</code> can match any sequence including empty sequence. Therefore, <code>*</code> is the real wildcard in this problem. If current char in pattern is <code>*</code>, then <code>dp[i + 1][j + 1] = dp[i + 1][j] || dp[i][j + 1]</code>.</p>
 
-<h2 id="code">Code</h2>
-
-<h3 id="regular-expression-matching">Regular Expression Matching</h3>
-
-<pre><code class="language-java">/**
- * Dynamic programming with 2D table.
- * Conditions:
- * if (p.charAt(j) == s.charAt(i) || p.charAt(j) == '.') -&gt;  dp[i + 1][j + 1] = dp[i][j]
- * if (p.charAt(j) == '*'):
- * 1. p.charAt(j - 1) != s.charAt(i): match previous char in 0 time
- * 2. p.charAt(j - 1) == s.charAt(i): match either previous char in string or pattern, or match previous char 0 time
- * If either condition is satisfied, return false.
- *
- * @param s string
- * @param p pattern string
- * @return if string is matched to pattern
- */
-public boolean isMatch(String s, String p) {
-
-    /* Corner case */
-    if (s == null || p == null) {
-        return false;
-    }
-
-    boolean[][] dp = new boolean[s.length() + 1][p.length() + 1];
-    dp[0][0] = true;
-
-    for (int i = 0; i &lt; p.length(); i++) {
-        if (p.charAt(i) == '*' &amp;&amp; dp[0][i - 1]) {       // only p contains '.' or '*'
-            dp[0][i + 1] = true;
-        }
-    }
-
-    for (int i = 0; i &lt; s.length(); i++) {
-        for (int j = 0; j &lt; p.length(); j++) {
-            if (s.charAt(i) == p.charAt(j) || p.charAt(j) == '.') {
-                dp[i + 1][j + 1] = dp[i][j];        // if previous string &amp; pattern is matched, then it matches now
-            }
-
-            if (p.charAt(j) == '*') {
-                if (p.charAt(j - 1) != s.charAt(i) &amp;&amp; p.charAt(j - 1) != '.') {
-                    dp[i + 1][j + 1] = dp[i + 1][j - 1];        // match char before '*' pattern
-                } else {
-                    dp[i + 1][j + 1] = dp[i + 1][j] || dp[i][j + 1] || dp[i + 1][j - 1];        // match either previous string or pattern, or 0 time
-                }
-            }
-        }
-    }
-
-    for (boolean[] booleans : dp) {
-        System.out.println(Arrays.toString(booleans));
-    }
-    return dp[s.length()][p.length()];
-}
-</code></pre>
-
-<h3 id="wildcard-matching">Wildcard Matching</h3>
+<h2 id="code-1">Code</h2>
 
 <pre><code class="language-java">/**
  * Dynamic programming with 2D table.
@@ -564,7 +600,7 @@ public boolean isMatch(String s, String p) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#">
+          <a class="post-action-btn btn btn--default" href="#table-of-contents">
         
           <i class="fa fa-list"></i>
         </a>
@@ -622,7 +658,7 @@ public boolean isMatch(String s, String p) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#">
+          <a class="post-action-btn btn btn--default" href="#table-of-contents">
         
           <i class="fa fa-list"></i>
         </a>
