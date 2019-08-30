@@ -13,20 +13,20 @@
 
 <meta property="og:description" content="">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Longest Palindromic Substring">
-<meta name="twitter:title" content="Longest Palindromic Substring">
-<meta property="og:url" content="https://yyzhou95.github.io/2019/08/longest-palindromic-substring/">
-<meta property="twitter:url" content="https://yyzhou95.github.io/2019/08/longest-palindromic-substring/">
+<meta property="og:title" content="Unique Paths">
+<meta name="twitter:title" content="Unique Paths">
+<meta property="og:url" content="https://yyzhou95.github.io/2019/08/unique-paths/">
+<meta property="twitter:url" content="https://yyzhou95.github.io/2019/08/unique-paths/">
 <meta property="og:site_name" content="Bingo!">
 <meta property="og:description" content="">
 <meta name="twitter:description" content="">
 <meta property="og:locale" content="en-us">
 
   
-    <meta property="article:published_time" content="2019-08-29T00:00:00">
+    <meta property="article:published_time" content="2019-08-30T00:00:00">
   
   
-    <meta property="article:modified_time" content="2019-08-29T00:00:00">
+    <meta property="article:modified_time" content="2019-08-30T00:00:00">
   
   
   
@@ -57,14 +57,14 @@
   <meta property="twitter:image" content="https://yyzhou95.github.io/img/avatar.jpg">
 
 
-    <title>Longest Palindromic Substring</title>
+    <title>Unique Paths</title>
 
     <link rel="icon" href="https://yyzhou95.github.io/favicon.png">
     
 
     
 
-    <link rel="canonical" href="https://yyzhou95.github.io/2019/08/longest-palindromic-substring/">
+    <link rel="canonical" href="https://yyzhou95.github.io/2019/08/unique-paths/">
 
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
@@ -228,15 +228,15 @@
             <div class="post-header main-content-wrap text-center">
   
     <h1 class="post-title" itemprop="headline">
-      Longest Palindromic Substring
+      Unique Paths
     </h1>
   
   
   <div class="postShorten-meta post-meta">
     
-      <time itemprop="datePublished" datetime="2019-08-29T00:00:00Z">
+      <time itemprop="datePublished" datetime="2019-08-30T00:00:00Z">
         
-  August 29, 2019
+  August 30, 2019
 
       </time>
     
@@ -257,152 +257,210 @@
             <div class="main-content-wrap">
               <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
 <ul>
-<li><a href="#longest-palindromic-substring">Longest Palindromic Substring</a>
+<li><a href="#unique-paths">Unique Paths</a>
 <ul>
 <li><a href="#problem-description">Problem description</a></li>
 <li><a href="#method">Method</a></li>
 <li><a href="#code">Code</a></li>
 </ul></li>
+<li><a href="#unique-paths-ii">Unique Paths II</a>
+<ul>
+<li><a href="#problem-description-1">Problem description</a></li>
+<li><a href="#method-1">Method</a></li>
+<li><a href="#code-1">Code</a></li>
+</ul></li>
 </ul>
 </nav>
 
-<h1 id="longest-palindromic-substring">Longest Palindromic Substring</h1>
-
-<p>Link: <a href="https://leetcode.com/problems/longest-palindromic-substring/">Longest Palindromic Substring</a></p>
+<h1 id="unique-paths">Unique Paths</h1>
 
 <h2 id="problem-description">Problem description</h2>
 
-<p>Given a string <strong>s</strong>, find the longest palindromic substring in <strong>s</strong>. You may assume that the maximum length of <strong>s</strong> is 1000.</p>
+<p>A robot is located at the top-left corner of a <em>m</em> x <em>n</em> grid (marked &lsquo;Start&rsquo; in the diagram below).</p>
+
+<p>The robot can only move either down or right at any point in time. The robot is trying to reach the bottom-right corner of the grid (marked &lsquo;Finish&rsquo; in the diagram below).</p>
+
+<p>How many possible unique paths are there?</p>
+
+<p><img src="../../static/img/robot_maze-7206638.png" alt="img" />
+Above is a 7 x 3 grid. How many possible unique paths are there?</p>
+
+<p><strong>Note:</strong> <em>m</em> and <em>n</em> will be at most 100.</p>
 
 <p><strong>Example 1:</strong></p>
 
-<pre><code>Input: &quot;babad&quot;
-Output: &quot;bab&quot;
-Note: &quot;aba&quot; is also a valid answer.
+<pre><code>Input: m = 3, n = 2
+Output: 3
+Explanation:
+From the top-left corner, there are a total of 3 ways to reach the bottom-right corner:
+1. Right -&gt; Right -&gt; Down
+2. Right -&gt; Down -&gt; Right
+3. Down -&gt; Right -&gt; Right
 </code></pre>
 
 <p><strong>Example 2:</strong></p>
 
-<pre><code>Input: &quot;cbbd&quot;
-Output: &quot;bb&quot;
+<pre><code>Input: m = 7, n = 3
+Output: 28
 </code></pre>
 
 <h2 id="method">Method</h2>
 
-<p><strong>Normal Solution</strong></p>
+<p>Find total paths via fill m x n table. If block is in first row or first column, fill 1. Otherwise, fill the sum of left block and upper block.</p>
 
-<p>There are two conditions of palindromic substring.</p>
+<p>Start point: (0,0). End point: (m-1, n-1)</p>
 
-<ul>
-<li>First is that the center only contains one letter, such as &ldquo;aba&rdquo;.</li>
-<li>Second is that the center contains two letters, such as &ldquo;abba&rdquo;.</li>
-</ul>
+<p>State transition:</p>
 
-<p>Hence, Each one or two adjacent letters could be center of palindromic substring.</p>
-
-<p><strong>Dynamic Programming</strong></p>
-
-<p>Dynamic programming.</p>
-
-<p>This solution is slower than brute force approach.</p>
-
-<p><code>dp[i][j]</code>: <code>string(j, i)</code> is palindromic.
-<code>dp[i][j] = ((i - j) &lt;= 2 || dp[i - 1][j + 1]) &amp;&amp; s.charAt(i) == s.charAt(j)</code></p>
-
-<ul>
-<li><code>(i - j) &lt;= 2</code>: Only one char</li>
-<li><code>s.charAt(i) == s.charAt(j) &amp;&amp; dp[i - 1][j + 1]</code>: Two bound chars are equal, and <code>string(j+1, i-1)</code> is palindromic.</li>
-</ul>
+<ol>
+<li><code>dp[m - 1][n - 1] = 1</code></li>
+<li><code>dp[i][j] = dp[i + 1][j] + dp[i][j + 1], if (i != m - 1 || j != n - 1)</code></li>
+</ol>
 
 <h2 id="code">Code</h2>
 
 <pre><code class="language-java">/**
- * There are two conditions of palindromic substring.
- * First is that the center only contains one letter, such as &quot;aba&quot;.
- * Second is that the center contains two letters, such as &quot;abba&quot;.
- * Hence, Each one or two adjacent letters could be center of palindromic substring.
+ * Find total paths via fill m x n table.
+ * If block is in first row or first column, fill 1.
+ * Otherwise, fill the sum of left block and upper block.
+ * Start point: (0,0)
+ * End point: (m-1, n-1)
+ * State transition:
+ * 1. dp[m - 1][n - 1]=1
+ * 2. dp[i][j] = dp[i + 1][j] + dp[i][j + 1], if (i != m - 1 || j != n - 1)
  *
- * @param s given string
- * @return longest palindromic substring
+ * @param m m rows
+ * @param n n columns
+ * @return total number of path
  */
-public String longestPalindrome(String s) {
-    if (s.length() &lt; 2) {
-        return s;
-    }
-
-    int maxStart = 0;       // return first letter if there is no palindromic substring
-    int maxEnd = 0;
-
-    for (int i = 0; i &lt; s.length() - 1; i++) {      // traverse s to find center of Palindromic Substring
-
-        int oddCenter = findLength(s, i, i);        // center has one letter
-        int evenCenter = findLength(s, i, i + 1);       // center has two letters
-
-        int currentLength = Math.max(oddCenter, evenCenter);
-
-        /* Set max length's start and end for slicing when loop is over */
-        if (currentLength &gt; maxEnd - maxStart) {
-            maxStart = i - (currentLength - 1) / 2;
-            maxEnd = i + currentLength / 2;
-        }
-
-    }
-    return s.substring(maxStart, maxEnd + 1);
-}
-
-/**
- * Find center of palindromic substring.
- *
- * @param s     given string
- * @param left  left bound of palindromic substring
- * @param right right bound of palindromic substring
- * @return length of palindromic substring
- */
-private int findLength(String s, int left, int right) {
-    while (left &gt;= 0 &amp;&amp; right &lt; s.length() &amp;&amp; s.charAt(left) == s.charAt(right)) {
-        left--;
-        right++;
-    }
-    return right - left - 1;
-}
-
-/**
- * Dynamic programming.
- * This solution is slower than brute force approach.
- * dp[i][j]: string(j, i) is palindromic.
- * dp[i][j] = ((i - j) &lt;= 2 || dp[i - 1][j + 1]) &amp;&amp; s.charAt(i) == s.charAt(j)
- * 1. Only one char
- * 2. Two bound chars are equal, and string(j+1, i-1) is palindromic.
- *
- * @param s given string
- * @return longest palindromic substring in s
- */
-public String dynamicProgramming(String s) {
+public int uniquePaths(int m, int n) {
 
     /* Corner case */
-    if (s.length() &lt; 2) {
-        return s;
+    if (m == 0 || n == 0) {
+        return 0;
     }
 
-    int n = s.length(), start = 0, maxLength = 1;
-    boolean[][] dp = new boolean[n][n];
+    int[][] dp = new int[m + 1][n + 1];
 
-    for (int i = 0; i &lt; n; i++) {
-        dp[i][i] = true;
-    }
+    dp[m - 1][n - 1] = 1;
 
-    for (int i = 1; i &lt; n; i++) {
-        for (int j = i; j &gt;= 0; j--) {
-            dp[i][j] = ((i - j) &lt;= 2 || dp[i - 1][j + 1]) &amp;&amp; s.charAt(i) == s.charAt(j);
-
-            if (dp[i][j] &amp;&amp; maxLength &lt; (i - j + 1)) {
-                start = j;                  // max palindromic substring start position
-                maxLength = i - j + 1;      // max palindromic substring length
+    for (int i = m - 1; i &gt;= 0; i--) {
+        for (int j = n - 1; j &gt;= 0; j--) {
+            if (i != m - 1 || j != n - 1) {
+                dp[i][j] = dp[i + 1][j] + dp[i][j + 1];
             }
         }
     }
 
-    return s.substring(start, start + maxLength);
+    return dp[0][0];
+}
+</code></pre>
+
+<h1 id="unique-paths-ii">Unique Paths II</h1>
+
+<h2 id="problem-description-1">Problem description</h2>
+
+<p>A robot is located at the top-left corner of a <em>m</em> x <em>n</em> grid (marked &lsquo;Start&rsquo; in the diagram below).</p>
+
+<p>The robot can only move either down or right at any point in time. The robot is trying to reach the bottom-right corner of the grid (marked &lsquo;Finish&rsquo; in the diagram below).</p>
+
+<p>Now consider if some obstacles are added to the grids. How many unique paths would there be?</p>
+
+<p><img src="../../static/img/robot_maze-7206638.png" alt="img" />
+An obstacle and empty space is marked as <code>1</code> and <code>0</code> respectively in the grid.</p>
+
+<p><strong>Note:</strong> <em>m</em> and <em>n</em> will be at most 100.</p>
+
+<p><strong>Example 1:</strong></p>
+
+<pre><code>Input:
+[
+  [0,0,0],
+  [0,1,0],
+  [0,0,0]
+]
+Output: 2
+Explanation:
+There is one obstacle in the middle of the 3x3 grid above.
+There are two ways to reach the bottom-right corner:
+1. Right -&gt; Right -&gt; Down -&gt; Down
+2. Down -&gt; Down -&gt; Right -&gt; Right
+</code></pre>
+
+<h2 id="method-1">Method</h2>
+
+<p>Similar to find path without obstacle. The only difference is that when searching path the block with obstacle needs to be excluded.</p>
+
+<p>Use a new int array to record path number since the obstacle exists.</p>
+
+<p>Fill each grid row, simply check left block of current block, if there is obstacle at left, leave it.</p>
+
+<h2 id="code-1">Code</h2>
+
+<pre><code class="language-java">/**
+ * Similar to find path without obstacle.
+ * The only difference is that when searching path the block with obstacle needs to be excluded.
+ * Use a new int array to record path number since the obstacle exists.
+ * Fill each grid row, simply check left block of current block, if there is obstacle at left, leave it.
+ *
+ * @param obstacleGrid input grid with obstacle
+ * @return total paths number
+ */
+public int uniquePathsWithObstacles(int[][] obstacleGrid) {
+
+    int m = obstacleGrid.length;
+    int n = obstacleGrid[0].length;
+
+    /* Corner case */
+    if (n == 0 || obstacleGrid[m - 1][n - 1] == 1 || obstacleGrid[0][0] == 1) {
+        return 0;
+    }
+
+    int[][] dp = new int[m + 1][n + 1];
+
+    dp[m - 1][n - 1] = 1;
+
+    for (int i = m - 1; i &gt;= 0; i--) {
+        for (int j = n - 1; j &gt;= 0; j--) {
+
+            if ((i != m - 1 || j != n - 1) &amp;&amp; obstacleGrid[i][j] != 1) {
+                if (i &lt; m - 1 &amp;&amp; obstacleGrid[i + 1][j] != 1) {
+                    dp[i][j] += dp[i + 1][j];
+                }
+                if (j &lt; n - 1 &amp;&amp; obstacleGrid[i][j + 1] != 1) {
+                    dp[i][j] += dp[i][j + 1];
+                }
+            }
+        }
+    }
+
+    return dp[0][0];
+}
+
+/**
+ * A compact dynamic programming solution.
+ *
+ * @param obstacleGrid input grid with obstacle
+ * @return total paths number
+ */
+public int compact(int[][] obstacleGrid) {
+    int width = obstacleGrid[0].length;
+    int[] dp = new int[width];
+
+    /* Set Start */
+    dp[0] = 1;
+
+    for (int[] row : obstacleGrid) {
+        for (int j = 0; j &lt; width; j++) {
+            if (row[j] == 1) {
+                dp[j] = 0;
+            } else if (j &gt; 0) {
+                dp[j] += dp[j - 1];
+            }
+        }
+    }
+
+    return dp[width - 1];
 }
 </code></pre>
               
@@ -429,7 +487,7 @@ public String dynamicProgramming(String s) {
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/08/unique-paths/" data-tooltip="Unique Paths">
+                <a class="post-action-btn btn btn--disabled">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -437,7 +495,7 @@ public String dynamicProgramming(String s) {
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/08/rotate-array/" data-tooltip="Rotate Array">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/08/longest-palindromic-substring/" data-tooltip="Longest Palindromic Substring">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
@@ -487,7 +545,7 @@ public String dynamicProgramming(String s) {
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/08/unique-paths/" data-tooltip="Unique Paths">
+                <a class="post-action-btn btn btn--disabled">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -495,7 +553,7 @@ public String dynamicProgramming(String s) {
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/08/rotate-array/" data-tooltip="Rotate Array">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/08/longest-palindromic-substring/" data-tooltip="Longest Palindromic Substring">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
