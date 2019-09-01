@@ -13,10 +13,10 @@
 
 <meta property="og:description" content="">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Can Make Palindrome from Substring">
-<meta name="twitter:title" content="Can Make Palindrome from Substring">
-<meta property="og:url" content="https://yyzhou95.github.io/2019/09/can-make-palindrome-from-substring/">
-<meta property="twitter:url" content="https://yyzhou95.github.io/2019/09/can-make-palindrome-from-substring/">
+<meta property="og:title" content="Bingo!">
+<meta name="twitter:title" content="Bingo!">
+<meta property="og:url" content="https://yyzhou95.github.io/2019/09/">
+<meta property="twitter:url" content="https://yyzhou95.github.io/2019/09/">
 <meta property="og:site_name" content="Bingo!">
 <meta property="og:description" content="">
 <meta name="twitter:description" content="">
@@ -36,9 +36,7 @@
   
   
     
-      <meta property="article:tag" content="Prefix Sum">
-    
-      <meta property="article:tag" content="Pruning">
+      <meta property="article:tag" content="Two Pointers/Sliding Window">
     
   
 
@@ -59,14 +57,14 @@
   <meta property="twitter:image" content="https://yyzhou95.github.io/img/avatar.jpg">
 
 
-    <title>Can Make Palindrome from Substring</title>
+    <title>Bingo!</title>
 
     <link rel="icon" href="https://yyzhou95.github.io/favicon.png">
     
 
     
 
-    <link rel="canonical" href="https://yyzhou95.github.io/2019/09/can-make-palindrome-from-substring/">
+    <link rel="canonical" href="https://yyzhou95.github.io/2019/09/">
 
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
@@ -230,7 +228,7 @@
             <div class="post-header main-content-wrap text-center">
   
     <h1 class="post-title" itemprop="headline">
-      Can Make Palindrome from Substring
+      
     </h1>
   
   
@@ -259,7 +257,7 @@
             <div class="main-content-wrap">
               <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
 <ul>
-<li><a href="#can-make-palindrome-from-substring">Can Make Palindrome from Substring</a>
+<li><a href="#diet-plan-performance">Diet Plan Performance</a>
 <ul>
 <li><a href="#problem-description">Problem description</a></li>
 <li><a href="#method">Method</a></li>
@@ -268,137 +266,84 @@
 </ul>
 </nav>
 
-<h1 id="can-make-palindrome-from-substring">Can Make Palindrome from Substring</h1>
+<h1 id="diet-plan-performance">Diet Plan Performance</h1>
 
-<p>Link: <a href="https://leetcode.com/problems/can-make-palindrome-from-substring/">Can Make Palindrome from Substring</a></p>
+<p>Link: <a href="https://leetcode.com/problems/diet-plan-performance/">Diet Plan Performance</a></p>
 
 <h2 id="problem-description">Problem description</h2>
 
-<p>Given a string <code>s</code>, we make queries on substrings of <code>s</code>.</p>
+<p>A dieter consumes <code>calories[i]</code> calories on the <code>i</code>-th day.  For every consecutive sequence of <code>k</code> days, they look at <em>T</em>, the total calories consumed during that sequence of <code>k</code> days:</p>
 
-<p>For each query <code>queries[i] = [left, right, k]</code>, we may <strong>rearrange</strong> the substring <code>s[left], ..., s[right]</code>, and then choose <strong>up to</strong><code>k</code> of them to replace with any lowercase English letter.</p>
+<ul>
+<li>If <code>T &lt; lower</code>, they performed poorly on their diet and lose 1 point;</li>
+<li>If <code>T &gt; upper</code>, they performed well on their diet and gain 1 point;</li>
+<li>Otherwise, they performed normally and there is no change in points.</li>
+</ul>
 
-<p>If the substring is possible to be a palindrome string after the operations above, the result of the query is <code>true</code>. Otherwise, the result is <code>false</code>.</p>
+<p>Return the total number of points the dieter has after all <code>calories.length</code> days.</p>
 
-<p>Return an array <code>answer[]</code>, where <code>answer[i]</code> is the result of the <code>i</code>-th query <code>queries[i]</code>.</p>
+<p>Note that: The total points could be negative.</p>
 
-<p>Note that: Each letter is counted <strong>individually</strong> for replacement so if for example <code>s[left..right] = &quot;aaa&quot;</code>, and <code>k = 2</code>, we can only replace two of the letters.  (Also, note that the initial string <code>s</code> is never modified by any query.)</p>
+<p><strong>Example 1:</strong></p>
 
-<p><strong>Example :</strong></p>
+<pre><code>Input: calories = [1,2,3,4,5], k = 1, lower = 3, upper = 3
+Output: 0
+Explaination: calories[0], calories[1] &lt; lower and calories[3], calories[4] &gt; upper, total points = 0.
+</code></pre>
 
-<pre><code>Input: s = &quot;abcda&quot;, queries = [[3,3,0],[1,2,0],[0,3,1],[0,3,2],[0,4,1]]
-Output: [true,false,false,true,true]
-Explanation:
-queries[0] : substring = &quot;d&quot;, is palidrome.
-queries[1] : substring = &quot;bc&quot;, is not palidrome.
-queries[2] : substring = &quot;abcd&quot;, is not palidrome after replacing only 1 character.
-queries[3] : substring = &quot;abcd&quot;, could be changed to &quot;abba&quot; which is palidrome. Also this can be changed to &quot;baab&quot; first rearrange it &quot;bacd&quot; then replace &quot;cd&quot; with &quot;ab&quot;.
-queries[4] : substring = &quot;abcda&quot;, could be changed to &quot;abcba&quot; which is palidrome.
+<p><strong>Example 2:</strong></p>
+
+<pre><code>Input: calories = [3,2], k = 2, lower = 0, upper = 1
+Output: 1
+Explaination: calories[0] + calories[1] &gt; upper, total points = 1.
+</code></pre>
+
+<p><strong>Example 3:</strong></p>
+
+<pre><code>Input: calories = [6,5,0,0], k = 2, lower = 1, upper = 5
+Output: 0
+Explaination: calories[0] + calories[1] &gt; upper, calories[2] + calories[3] &lt; lower, total points = 0.
 </code></pre>
 
 <p><strong>Constraints:</strong></p>
 
 <ul>
-<li><code>1 &lt;= s.length, queries.length &lt;= 10^5</code></li>
-<li><code>0 &lt;= queries[i][0] &lt;= queries[i][1] &lt; s.length</code></li>
-<li><code>0 &lt;= queries[i][2] &lt;= s.length</code></li>
-<li><code>s</code> only contains lowercase English letters.</li>
+<li><code>1 &lt;= k &lt;= calories.length &lt;= 10^5</code></li>
+<li><code>0 &lt;= calories[i] &lt;= 20000</code></li>
+<li><code>0 &lt;= lower &lt;= upper</code></li>
 </ul>
 
 <h2 id="method">Method</h2>
 
+<p>Basic sliding window. Each time, move window 1 step forward.</p>
+
 <h2 id="code">Code</h2>
 
 <pre><code class="language-java">/**
- * Prefix sum.
- * Traverse s, find all char appearance from 0 to i.
- * Then based on given range, count the char frequency.
- * Find all odd chars and see if they are more than replacement limit.
+ * Basic sliding window.
+ * Each time, move window 1 step forward.
  *
- * @param s       given string
- * @param queries given queries
- * @return array answer[], answer[i] is the result of the i-th query queries[i]
+ * @param calories given calories
+ * @param k        window size
+ * @param lower    lower bound
+ * @param upper    upper bound
+ * @return total number of points the dieter has after all days
  */
-public List&lt;Boolean&gt; canMakePaliQueries(String s, int[][] queries) {
+public int dietPlanPerformance(int[] calories, int k, int lower, int upper) {
+    int score = 0, sum = 0;
 
-    List&lt;Boolean&gt; out = new ArrayList&lt;&gt;();
-    int[][] prefixSum = new int[s.length() + 1][26];
-    for (int i = 1; i &lt;= s.length(); i++) {
-        prefixSum[i] = prefixSum[i - 1].clone();
-        prefixSum[i][s.charAt(i - 1) - 'a']++;
+    for (int i = 0; i &lt; k; i++) {
+        sum += calories[i];
     }
 
-    for (int[] query : queries) {
-        if (query[2] &gt; 13) {
-            out.add(true);
-        } else {
-            int count = 0;
-            for (int i = 0; i &lt; 26; i++) {
-                count += (prefixSum[query[1] + 1][i] - prefixSum[query[0]][i]) % 2;
-            }
+    score = (sum &lt; lower) ? score - 1 : (sum &gt; upper) ? score + 1 : score;
 
-            out.add(count / 2 &lt;= query[2]);
-        }
+    for (int i = 1; i + k - 1 &lt; calories.length; i++) {
+        sum = sum - calories[i - 1] + calories[i + k - 1];
+        score = (sum &lt; lower) ? score - 1 : (sum &gt; upper) ? score + 1 : score;
     }
 
-    return out;
-}
-
-/**
- * Count char each time directly.
- * If replacement can be taken for more than 13 times, then it will always be palindrome.
- * Otherwise, count the char that appears odd times. These char may requires replacement.
- *
- * @param s       given string
- * @param queries given queries
- * @return array answer[], answer[i] is the result of the i-th query queries[i]
- */
-public List&lt;Boolean&gt; countChar(String s, int[][] queries) {
-
-    List&lt;Boolean&gt; out = new ArrayList&lt;&gt;();
-
-    for (int[] cur : queries) {
-
-        /*
-         * If can replace more than 13 times, then all chars can be replaced.
-         * Otherwise, count the total number of odd chars, which requires replacement. */
-        out.add((cur[2] &gt; 13) || Helper(s, cur[0], cur[1], cur[2]));
-    }
-
-    return out;
-}
-
-/**
- * Count char appearance.
- *
- * @param s       given string
- * @param start   start position
- * @param end     end position
- * @param replace replace time
- * @return if current range can be palindrome after replace and rearrange
- */
-private boolean Helper(String s, int start, int end, int replace) {
-    if (start == end) {
-        return true;
-    }
-
-    int[] index = new int[26];
-    for (int i = start; i &lt;= end; i++) {
-        index[s.charAt(i) - 'a']++;
-    }
-
-    int check = 0;
-    for (int i = 0; i &lt; 26; i++) {
-        if (index[i] % 2 != 0) {
-            check++;
-        }
-    }
-
-    if ((end - start + 1) % 2 == 1) {       // if range is odd, then one odd char can be at center
-        check = check - 1;
-    }
-
-    return check &lt;= replace * 2;
+    return score;
 }
 </code></pre>
               
@@ -412,9 +357,7 @@ private boolean Helper(String s, int start, int end, int replace) {
                   <div class="post-footer-tags">
                     <span class="text-color-light text-small">TAGGED IN</span><br/>
                     
-  <a class="tag tag--primary tag--small" href="https://yyzhou95.github.io/tags/prefix-sum/">Prefix Sum</a>
-
-  <a class="tag tag--primary tag--small" href="https://yyzhou95.github.io/tags/pruning/">Pruning</a>
+  <a class="tag tag--primary tag--small" href="https://yyzhou95.github.io/tags/two-pointers/sliding-window/">Two Pointers/Sliding Window</a>
 
                   </div>
                 
@@ -427,7 +370,7 @@ private boolean Helper(String s, int start, int end, int replace) {
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/09/" data-tooltip="">
+                <a class="post-action-btn btn btn--disabled">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -435,7 +378,7 @@ private boolean Helper(String s, int start, int end, int replace) {
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/09/number-of-valid-words-for-each-puzzle/" data-tooltip="Number of Valid Words for Each Puzzle">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/09/can-make-palindrome-from-substring/" data-tooltip="Can Make Palindrome from Substring">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
@@ -485,7 +428,7 @@ private boolean Helper(String s, int start, int end, int replace) {
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/09/" data-tooltip="">
+                <a class="post-action-btn btn btn--disabled">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -493,7 +436,7 @@ private boolean Helper(String s, int start, int end, int replace) {
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/09/number-of-valid-words-for-each-puzzle/" data-tooltip="Number of Valid Words for Each Puzzle">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/09/can-make-palindrome-from-substring/" data-tooltip="Can Make Palindrome from Substring">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
