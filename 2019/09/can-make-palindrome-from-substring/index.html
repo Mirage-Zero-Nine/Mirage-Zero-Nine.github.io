@@ -13,10 +13,10 @@
 
 <meta property="og:description" content="">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Number of Valid Words for Each Puzzle">
-<meta name="twitter:title" content="Number of Valid Words for Each Puzzle">
-<meta property="og:url" content="https://yyzhou95.github.io/2019/09/number-of-valid-words-for-each-puzzle/">
-<meta property="twitter:url" content="https://yyzhou95.github.io/2019/09/number-of-valid-words-for-each-puzzle/">
+<meta property="og:title" content="Can Make Palindrome from Substring">
+<meta name="twitter:title" content="Can Make Palindrome from Substring">
+<meta property="og:url" content="https://yyzhou95.github.io/2019/09/can-make-palindrome-from-substring/">
+<meta property="twitter:url" content="https://yyzhou95.github.io/2019/09/can-make-palindrome-from-substring/">
 <meta property="og:site_name" content="Bingo!">
 <meta property="og:description" content="">
 <meta name="twitter:description" content="">
@@ -36,7 +36,7 @@
   
   
     
-      <meta property="article:tag" content="Bit Manipulation">
+      <meta property="article:tag" content="Prefix Sum">
     
       <meta property="article:tag" content="Pruning">
     
@@ -59,14 +59,14 @@
   <meta property="twitter:image" content="https://yyzhou95.github.io/img/avatar.jpg">
 
 
-    <title>Number of Valid Words for Each Puzzle</title>
+    <title>Can Make Palindrome from Substring</title>
 
     <link rel="icon" href="https://yyzhou95.github.io/favicon.png">
     
 
     
 
-    <link rel="canonical" href="https://yyzhou95.github.io/2019/09/number-of-valid-words-for-each-puzzle/">
+    <link rel="canonical" href="https://yyzhou95.github.io/2019/09/can-make-palindrome-from-substring/">
 
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
@@ -230,7 +230,7 @@
             <div class="post-header main-content-wrap text-center">
   
     <h1 class="post-title" itemprop="headline">
-      Number of Valid Words for Each Puzzle
+      Can Make Palindrome from Substring
     </h1>
   
   
@@ -259,7 +259,7 @@
             <div class="main-content-wrap">
               <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
 <ul>
-<li><a href="#number-of-valid-words-for-each-puzzle">Number of Valid Words for Each Puzzle</a>
+<li><a href="#can-make-palindrome-from-substring">Can Make Palindrome from Substring</a>
 <ul>
 <li><a href="#problem-description">Problem description</a></li>
 <li><a href="#method">Method</a></li>
@@ -268,105 +268,137 @@
 </ul>
 </nav>
 
-<h1 id="number-of-valid-words-for-each-puzzle">Number of Valid Words for Each Puzzle</h1>
+<h1 id="can-make-palindrome-from-substring">Can Make Palindrome from Substring</h1>
 
-<p>Link: <a href="https://leetcode.com/problems/number-of-valid-words-for-each-puzzle/">Number of Valid Words for Each Puzzle</a></p>
+<p>Link: <a href="https://leetcode.com/problems/can-make-palindrome-from-substring/">Can Make Palindrome from Substring</a></p>
 
 <h2 id="problem-description">Problem description</h2>
 
-<p>With respect to a given <code>puzzle</code><code>word</code><em>valid</em></p>
+<p>Given a string <code>s</code>, we make queries on substrings of <code>s</code>.</p>
 
-<ul>
-<li><code>word</code> contains the first letter of <code>puzzle</code>.</li>
-<li>For each letter in <code>word</code>, that letter is in <code>puzzle</code>.
-For example, if the puzzle is &ldquo;abcdefg&rdquo;, then valid words are &ldquo;faced&rdquo;, &ldquo;cabbage&rdquo;, and &ldquo;baggage&rdquo;; while invalid words are &ldquo;beefed&rdquo; (doesn&rsquo;t include &ldquo;a&rdquo;) and &ldquo;based&rdquo; (includes &ldquo;s&rdquo; which isn&rsquo;t in the puzzle).</li>
-</ul>
+<p>For each query <code>queries[i] = [left, right, k]</code>, we may <strong>rearrange</strong> the substring <code>s[left], ..., s[right]</code>, and then choose <strong>up to</strong><code>k</code> of them to replace with any lowercase English letter.</p>
 
-<p>Return an array <code>answer</code><code>answer[i]</code><code>words</code><code>puzzles[i]</code></p>
+<p>If the substring is possible to be a palindrome string after the operations above, the result of the query is <code>true</code>. Otherwise, the result is <code>false</code>.</p>
+
+<p>Return an array <code>answer[]</code>, where <code>answer[i]</code> is the result of the <code>i</code>-th query <code>queries[i]</code>.</p>
+
+<p>Note that: Each letter is counted <strong>individually</strong> for replacement so if for example <code>s[left..right] = &quot;aaa&quot;</code>, and <code>k = 2</code>, we can only replace two of the letters.  (Also, note that the initial string <code>s</code> is never modified by any query.)</p>
 
 <p><strong>Example :</strong></p>
 
-<pre><code>Input: 
-words = [&quot;aaaa&quot;,&quot;asas&quot;,&quot;able&quot;,&quot;ability&quot;,&quot;actt&quot;,&quot;actor&quot;,&quot;access&quot;], 
-puzzles = [&quot;aboveyz&quot;,&quot;abrodyz&quot;,&quot;abslute&quot;,&quot;absoryz&quot;,&quot;actresz&quot;,&quot;gaswxyz&quot;]
-Output: [1,1,3,2,4,0]
+<pre><code>Input: s = &quot;abcda&quot;, queries = [[3,3,0],[1,2,0],[0,3,1],[0,3,2],[0,4,1]]
+Output: [true,false,false,true,true]
 Explanation:
-1 valid word for &quot;aboveyz&quot; : &quot;aaaa&quot; 
-1 valid word for &quot;abrodyz&quot; : &quot;aaaa&quot;
-3 valid words for &quot;abslute&quot; : &quot;aaaa&quot;, &quot;asas&quot;, &quot;able&quot;
-2 valid words for &quot;absoryz&quot; : &quot;aaaa&quot;, &quot;asas&quot;
-4 valid words for &quot;actresz&quot; : &quot;aaaa&quot;, &quot;asas&quot;, &quot;actt&quot;, &quot;access&quot;
-There're no valid words for &quot;gaswxyz&quot; cause none of the words in the list contains letter 'g'.
+queries[0] : substring = &quot;d&quot;, is palidrome.
+queries[1] : substring = &quot;bc&quot;, is not palidrome.
+queries[2] : substring = &quot;abcd&quot;, is not palidrome after replacing only 1 character.
+queries[3] : substring = &quot;abcd&quot;, could be changed to &quot;abba&quot; which is palidrome. Also this can be changed to &quot;baab&quot; first rearrange it &quot;bacd&quot; then replace &quot;cd&quot; with &quot;ab&quot;.
+queries[4] : substring = &quot;abcda&quot;, could be changed to &quot;abcba&quot; which is palidrome.
 </code></pre>
 
 <p><strong>Constraints:</strong></p>
 
 <ul>
-<li><code>1 &lt;= words.length &lt;= 10^5</code></li>
-<li><code>4 &lt;= words[i].length &lt;= 50</code></li>
-<li><code>1 &lt;= puzzles.length &lt;= 10^4</code></li>
-<li><code>puzzles[i].length == 7</code></li>
-<li><code>words[i][j]</code>, <code>puzzles[i][j]</code> are English lowercase letters.</li>
-<li>Each <code>puzzles[i]</code>doesn&rsquo;t contain repeated characters.</li>
+<li><code>1 &lt;= s.length, queries.length &lt;= 10^5</code></li>
+<li><code>0 &lt;= queries[i][0] &lt;= queries[i][1] &lt; s.length</code></li>
+<li><code>0 &lt;= queries[i][2] &lt;= s.length</code></li>
+<li><code>s</code> only contains lowercase English letters.</li>
 </ul>
 
 <h2 id="method">Method</h2>
 
-<p>Use a bit map as hash map.</p>
-
-<p>First convert all words into bit map. Each time, check if all chars in words is in puzzle and if first char in puzzle in word.</p>
-
-<p>Use <code>&amp;</code> to check if all chars in word is in puzzle: <code>word &amp; puzzle == word</code>. If <code>word &amp; puzzle != word</code>, then there exists chars that in word but not in puzzle.</p>
-
 <h2 id="code">Code</h2>
 
 <pre><code class="language-java">/**
- * Use a bit map as hash map.
- * First convert all words into bit map.
- * Each time, check if all chars in words is in puzzle and if first char in puzzle in word.
- * Use &quot;&amp;&quot; to check if all chars in word is in puzzle: word &amp; puzzle == word
- * If word &amp; puzzle != word, then there exists chars that in word but not in puzzle.
+ * Prefix sum.
+ * Traverse s, find all char appearance from 0 to i.
+ * Then based on given range, count the char frequency.
+ * Find all odd chars and see if they are more than replacement limit.
  *
- * @param words   given words
- * @param puzzles given puzzles
- * @return list contains # of words in the given list words that are valid to the puzzles[i]
+ * @param s       given string
+ * @param queries given queries
+ * @return array answer[], answer[i] is the result of the i-th query queries[i]
  */
-public List&lt;Integer&gt; findNumOfValidWords(String[] words, String[] puzzles) {
+public List&lt;Boolean&gt; canMakePaliQueries(String s, int[][] queries) {
 
-    int[] convertedWords = new int[words.length];
-
-    for (int i = 0; i &lt; words.length; i++) {
-        int chars = 0;
-        for (int j = 0; j &lt; words[i].length(); j++) {
-            chars |= 1 &lt;&lt; (words[i].charAt(j) - 'a');
-        }
-        convertedWords[i] = chars;
+    List&lt;Boolean&gt; out = new ArrayList&lt;&gt;();
+    int[][] prefixSum = new int[s.length() + 1][26];
+    for (int i = 1; i &lt;= s.length(); i++) {
+        prefixSum[i] = prefixSum[i - 1].clone();
+        prefixSum[i][s.charAt(i - 1) - 'a']++;
     }
 
-    List&lt;Integer&gt; out = new ArrayList&lt;&gt;(puzzles.length);
-
-    for (String puzzle : puzzles) {
-        char first = puzzle.charAt(0);      // first char should be in word
-        int firstMask = 1 &lt;&lt; first - 'a';
-
-        int chars = 0;
-        for (int i = 0; i &lt; puzzle.length(); i++) {
-            chars |= 1 &lt;&lt; (puzzle.charAt(i) - 'a');
-        }
-
-        int num = 0;
-        for (int word : convertedWords) {
-            /*
-             * 1. Check if first char in words: (word &amp; chars) == word
-             * 2. Check if all chars in word are in puzzle: (firstMask &amp; word) == firstMask */
-            if ((word &amp; chars) == word &amp;&amp; (firstMask &amp; word) == firstMask) {
-                num++;
+    for (int[] query : queries) {
+        if (query[2] &gt; 13) {
+            out.add(true);
+        } else {
+            int count = 0;
+            for (int i = 0; i &lt; 26; i++) {
+                count += (prefixSum[query[1] + 1][i] - prefixSum[query[0]][i]) % 2;
             }
-        }
 
-        out.add(num);
+            out.add(count / 2 &lt;= query[2]);
+        }
     }
+
     return out;
+}
+
+/**
+ * Count char each time directly.
+ * If replacement can be taken for more than 13 times, then it will always be palindrome.
+ * Otherwise, count the char that appears odd times. These char may requires replacement.
+ *
+ * @param s       given string
+ * @param queries given queries
+ * @return array answer[], answer[i] is the result of the i-th query queries[i]
+ */
+public List&lt;Boolean&gt; countChar(String s, int[][] queries) {
+
+    List&lt;Boolean&gt; out = new ArrayList&lt;&gt;();
+
+    for (int[] cur : queries) {
+
+        /*
+         * If can replace more than 13 times, then all chars can be replaced.
+         * Otherwise, count the total number of odd chars, which requires replacement. */
+        out.add((cur[2] &gt; 13) || Helper(s, cur[0], cur[1], cur[2]));
+    }
+
+    return out;
+}
+
+/**
+ * Count char appearance.
+ *
+ * @param s       given string
+ * @param start   start position
+ * @param end     end position
+ * @param replace replace time
+ * @return if current range can be palindrome after replace and rearrange
+ */
+private boolean Helper(String s, int start, int end, int replace) {
+    if (start == end) {
+        return true;
+    }
+
+    int[] index = new int[26];
+    for (int i = start; i &lt;= end; i++) {
+        index[s.charAt(i) - 'a']++;
+    }
+
+    int check = 0;
+    for (int i = 0; i &lt; 26; i++) {
+        if (index[i] % 2 != 0) {
+            check++;
+        }
+    }
+
+    if ((end - start + 1) % 2 == 1) {       // if range is odd, then one odd char can be at center
+        check = check - 1;
+    }
+
+    return check &lt;= replace * 2;
 }
 </code></pre>
               
@@ -380,7 +412,7 @@ public List&lt;Integer&gt; findNumOfValidWords(String[] words, String[] puzzles)
                   <div class="post-footer-tags">
                     <span class="text-color-light text-small">TAGGED IN</span><br/>
                     
-  <a class="tag tag--primary tag--small" href="https://yyzhou95.github.io/tags/bit-manipulation/">Bit Manipulation</a>
+  <a class="tag tag--primary tag--small" href="https://yyzhou95.github.io/tags/prefix-sum/">Prefix Sum</a>
 
   <a class="tag tag--primary tag--small" href="https://yyzhou95.github.io/tags/pruning/">Pruning</a>
 
@@ -395,7 +427,7 @@ public List&lt;Integer&gt; findNumOfValidWords(String[] words, String[] puzzles)
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/09/can-make-palindrome-from-substring/" data-tooltip="Can Make Palindrome from Substring">
+                <a class="post-action-btn btn btn--disabled">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -403,7 +435,7 @@ public List&lt;Integer&gt; findNumOfValidWords(String[] words, String[] puzzles)
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/09/prime-numbers/" data-tooltip="Prime Numbers">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/09/number-of-valid-words-for-each-puzzle/" data-tooltip="Number of Valid Words for Each Puzzle">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
@@ -453,7 +485,7 @@ public List&lt;Integer&gt; findNumOfValidWords(String[] words, String[] puzzles)
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/09/can-make-palindrome-from-substring/" data-tooltip="Can Make Palindrome from Substring">
+                <a class="post-action-btn btn btn--disabled">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -461,7 +493,7 @@ public List&lt;Integer&gt; findNumOfValidWords(String[] words, String[] puzzles)
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/09/prime-numbers/" data-tooltip="Prime Numbers">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/09/number-of-valid-words-for-each-puzzle/" data-tooltip="Number of Valid Words for Each Puzzle">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
