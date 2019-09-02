@@ -13,20 +13,20 @@
 
 <meta property="og:description" content="">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Design File System">
-<meta name="twitter:title" content="Design File System">
-<meta property="og:url" content="https://yyzhou95.github.io/2019/08/design-file-system/">
-<meta property="twitter:url" content="https://yyzhou95.github.io/2019/08/design-file-system/">
+<meta property="og:title" content="Serialize and Deserialize Tree">
+<meta name="twitter:title" content="Serialize and Deserialize Tree">
+<meta property="og:url" content="https://yyzhou95.github.io/2019/08/serialize-and-deserialize-tree/">
+<meta property="twitter:url" content="https://yyzhou95.github.io/2019/08/serialize-and-deserialize-tree/">
 <meta property="og:site_name" content="Bingo!">
 <meta property="og:description" content="">
 <meta name="twitter:description" content="">
 <meta property="og:locale" content="en-us">
 
   
-    <meta property="article:published_time" content="2019-08-26T00:00:00">
+    <meta property="article:published_time" content="2019-08-27T00:00:00">
   
   
-    <meta property="article:modified_time" content="2019-08-26T00:00:00">
+    <meta property="article:modified_time" content="2019-08-27T00:00:00">
   
   
   
@@ -35,10 +35,14 @@
     
       <meta property="article:section" content="Object-oriented design">
     
+      <meta property="article:section" content="Problem Set">
+    
   
   
     
-      <meta property="article:tag" content="HashMap/HashSet">
+      <meta property="article:tag" content="Tree">
+    
+      <meta property="article:tag" content="DFS">
     
   
 
@@ -59,14 +63,14 @@
   <meta property="twitter:image" content="https://yyzhou95.github.io/img/avatar.jpg">
 
 
-    <title>Design File System</title>
+    <title>Serialize and Deserialize Tree</title>
 
     <link rel="icon" href="https://yyzhou95.github.io/favicon.png">
     
 
     
 
-    <link rel="canonical" href="https://yyzhou95.github.io/2019/08/design-file-system/">
+    <link rel="canonical" href="https://yyzhou95.github.io/2019/08/serialize-and-deserialize-tree/">
 
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
@@ -230,15 +234,15 @@
             <div class="post-header main-content-wrap text-left">
   
     <h1 class="post-title" itemprop="headline">
-      Design File System
+      Serialize and Deserialize Tree
     </h1>
   
   
   <div class="postShorten-meta post-meta">
     
-      <time itemprop="datePublished" datetime="2019-08-26T00:00:00Z">
+      <time itemprop="datePublished" datetime="2019-08-27T00:00:00Z">
         
-  August 26, 2019
+  August 27, 2019
 
       </time>
     
@@ -249,7 +253,9 @@
     
       <a class="category-link" href="https://yyzhou95.github.io/categories/algorithm">Algorithm</a>, 
     
-      <a class="category-link" href="https://yyzhou95.github.io/categories/object-oriented-design">Object-oriented design</a>
+      <a class="category-link" href="https://yyzhou95.github.io/categories/object-oriented-design">Object-oriented design</a>, 
+    
+      <a class="category-link" href="https://yyzhou95.github.io/categories/problem-set">Problem Set</a>
     
   
 
@@ -259,104 +265,207 @@
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <p>Link: <a href="https://leetcode.com/problems/design-file-system/">Design File System</a></p>
+              <h1 id="serialize-and-deserialize-bst">Serialize and Deserialize BST</h1>
 
-<h3 id="problem-description">Problem description</h3>
+<p>Link: <a href="https://leetcode.com/problems/serialize-and-deserialize-bst/">Serialize and Deserialize BST</a></p>
 
-<p>You are asked to design a file system which provides two functions:</p>
+<h2 id="problem-description">Problem description</h2>
 
-<ul>
-<li><strong>create(path, value):</strong> Creates a new path and associates a value to it if possible and returns <code>True</code>. Returns <code>False</code> if the path already exists or its parent path doesn&rsquo;t exist.</li>
-<li><strong>get(path):</strong> Returns the value associated with a path or returns <code>-1</code> if the path doesn&rsquo;t exist.</li>
-</ul>
+<p>Serialization is the process of converting a data structure or object into a sequence of bits so that it can be stored in a file or memory buffer, or transmitted across a network connection link to be reconstructed later in the same or another computer environment.</p>
 
-<p>The format of a path is one or more concatenated strings of the form: <code>/</code> followed by one or more lowercase English letters. For example, <code>/leetcode</code> and <code>/leetcode/problems</code> are valid paths while an empty string and <code>/</code> are not.</p>
+<p>Design an algorithm to serialize and deserialize a <strong>binary search tree</strong>. There is no restriction on how your serialization/deserialization algorithm should work. You just need to ensure that a binary search tree can be serialized to a string and this string can be deserialized to the original tree structure.</p>
 
-<p>Implement the two functions.</p>
+<p><strong>The encoded string should be as compact as possible.</strong></p>
 
-<p><strong>Example 1:</strong></p>
+<p><strong>Note:</strong> Do not use class member/global/static variables to store states. Your serialize and deserialize algorithms should be stateless.</p>
 
-<pre><code>Input: 
-[&quot;FileSystem&quot;,&quot;create&quot;,&quot;get&quot;]
-[[],[&quot;/a&quot;,1],[&quot;/a&quot;]]
-Output: 
-[null,true,1]
-Explanation: 
-FileSystem fileSystem = new FileSystem();
+<h2 id="method">Method</h2>
 
-fileSystem.create(&quot;/a&quot;, 1); // return true
-fileSystem.get(&quot;/a&quot;); // return 1
-</code></pre>
+<p>Encoding: DFS traversal to add node values into a <code>StringBuilder</code>.</p>
 
-<p><strong>Example 2:</strong></p>
+<p>Decoding: Firstly, use a queue to store all nodes. Each time, peek the head of node. Since BST left child is smaller than root, and right child is larger than root, if current value is out of limitation, then return <code>Null</code>. Otherwise, create a new node as current tree’s root node and keep the DFS process.</p>
 
-<pre><code>Input: 
-[&quot;FileSystem&quot;,&quot;create&quot;,&quot;create&quot;,&quot;get&quot;,&quot;create&quot;,&quot;get&quot;]
-[[],[&quot;/leet&quot;,1],[&quot;/leet/code&quot;,2],[&quot;/leet/code&quot;],[&quot;/c/d&quot;,1],[&quot;/c&quot;]]
-Output: 
-[null,true,true,2,false,-1]
-Explanation: 
-FileSystem fileSystem = new FileSystem();
+<p>If the serialize and deserialize is targeted to BT, then add special mark to null node, such as <code>#</code>. During the decode process, when current value is <code>#</code>, return null.</p>
 
-fileSystem.create(&quot;/leet&quot;, 1); // return true
-fileSystem.create(&quot;/leet/code&quot;, 2); // return true
-fileSystem.get(&quot;/leet/code&quot;); // return 2
-fileSystem.create(&quot;/c/d&quot;, 1); // return false because the parent path &quot;/c&quot; doesn't exist.
-fileSystem.get(&quot;/c&quot;); // return -1 because this path doesn't exist.
-</code></pre>
+<h2 id="code">Code</h2>
 
-<p><strong>Constraints:</strong></p>
-
-<ul>
-<li>The number of calls to the two functions is less than or equal to <code>10^4</code> in total.</li>
-<li><code>2 &lt;= path.length &lt;= 100</code></li>
-<li><code>1 &lt;= value &lt;= 10^9</code></li>
-</ul>
-
-<h3 id="method">Method</h3>
-
-<p>Use a hash map to store the path and value.</p>
-
-<p>The valid path&rsquo;s parent is the path before the last <code>/</code>. Hence, check parent and then put the path into map if it is valid. If the path has already exist, return false.</p>
-
-<h3 id="code">Code</h3>
-
-<pre><code class="language-java">public class FileSystem_1166 {
-
-    private HashMap&lt;String, Integer&gt; m = new HashMap&lt;&gt;();
+<pre><code class="language-java">public class Codec {
 
     /**
-     * Initialization of class.
-     * Use a hash map to store the path and value.
-     */
-    public FileSystem_1166() {
-        m.put(&quot;&quot;, -1);      // avoid initially when path is &quot;/a&quot; regarded as false
-    }
-
-    /**
-     * Creates a new path and associates a value to it if possible and returns True.
-     * The valid path's parent is the path before the last &quot;/&quot;.
-     * Hence, check parent and then put the path into map if it is valid.
-     * If the path has already exist, return false.
+     * Encodes a tree to a single string.
+     * Use DFS during the encoding process.
      *
-     * @param path  given path
-     * @param value given value
-     * @return true to create a new path with value, false if the path already exists or its parent path doesn't exist
+     * @param root given root of BST
+     * @return serialize tree
      */
-    public boolean create(String path, int value) {
-        if (path.charAt(0) != '/') {
-            return false;
-        }
-        String parent = path.substring(0, path.lastIndexOf(&quot;/&quot;));
-        if (!m.containsKey(parent)) {
-            return false;
-        }
-
-        return m.putIfAbsent(path, value) == null;      // if the path exist, m.putIfAbsent(path, value) will be null
+    public String serialize(TreeNode root) {
+        StringBuilder sb = new StringBuilder();
+        encoding(root, sb);
+        return sb.toString();
     }
 
-    public int get(String path) {
-        return m.getOrDefault(path, -1);
+    /**
+     * DFS traverse the tree and convert data into string.
+     *
+     * @param root root node
+     * @param sb   string builder
+     */
+    private void encoding(TreeNode root, StringBuilder sb) {
+        if (root == null) {
+            return;
+        }
+        sb.append(root.val).append(&quot;,&quot;);
+
+        encoding(root.left, sb);
+        encoding(root.right, sb);
+    }
+
+    /**
+     * Decodes encoded data to tree.
+     *
+     * @param data given serialized tree
+     * @return origin BST
+     */
+    public TreeNode deserialize(String data) {
+        if (data.length() == 0) {
+            return null;
+        }
+
+        Queue&lt;String&gt; nodes = new LinkedList&lt;&gt;(Arrays.asList(data.split(&quot;,&quot;)));
+
+        return decoding(nodes, Integer.MIN_VALUE, Integer.MAX_VALUE);
+    }
+
+
+    /**
+     * Decoding serialized string to tree.
+     * Each time, if the peek value in tree is larger than max or smaller than min, then return null.
+     * Otherwise, poll out the head of queue and create a new tree node with value.
+     *
+     * @param q   queue stores all nodes
+     * @param min min value under current BST
+     * @param max max value under current BST
+     * @return tree
+     */
+    private TreeNode decoding(Queue&lt;String&gt; q, int min, int max) {
+        if (q.isEmpty()) {
+            return null;
+        }
+
+        int val = Integer.parseInt(q.peek());
+        if (val &lt; min || val &gt; max) {
+            return null;        // BST
+        }
+        q.poll();
+        TreeNode r = new TreeNode(val);
+
+        r.left = decoding(q, min, val);
+        r.right = decoding(q, val, max);
+
+        return r;
+    }
+}
+</code></pre>
+
+<h1 id="serialize-and-deserialize-binary-tree">Serialize and Deserialize Binary Tree</h1>
+
+<p>Link: <a href="https://leetcode.com/problems/serialize-and-deserialize-binary-tree/">Serialize and Deserialize Binary Tree</a></p>
+
+<h2 id="problem-description-1">Problem description</h2>
+
+<p>Serialization is the process of converting a data structure or object into a sequence of bits so that it can be stored in a file or memory buffer, or transmitted across a network connection link to be reconstructed later in the same or another computer environment.</p>
+
+<p>Design an algorithm to serialize and deserialize a binary tree. There is no restriction on how your serialization/deserialization algorithm should work. You just need to ensure that a binary tree can be serialized to a string and this string can be deserialized to the original tree structure.</p>
+
+<p><strong>Example:</strong></p>
+
+<pre><code>You may serialize the following tree:
+
+    1
+   / \
+  2   3
+     / \
+    4   5
+
+as &quot;[1,2,3,null,null,4,5]&quot;
+</code></pre>
+
+<p><strong>Clarification:</strong> The above format is the same as <a href="https://leetcode.com/faq/#binary-tree">how LeetCode serializes a binary tree</a>. You do not necessarily need to follow this format, so please be creative and come up with different approaches yourself.</p>
+
+<p><strong>Note:</strong> Do not use class member/global/static variables to store states. Your serialize and deserialize algorithms should be stateless.</p>
+
+<h2 id="method-1">Method</h2>
+
+<p>The process is almost same as previous problem. The difference is that binary tree does not have the character that binary search tree has. Hence, use a mark such as <code>#</code> to mark all <code>Null</code> nodes. When deserialize data to tree, return null if current head of queue is <code>#</code>.</p>
+
+<h2 id="code-1">Code</h2>
+
+<pre><code class="language-java">public class Codec {
+
+    /**
+     * Encodes a tree to a single string by DFS.
+     *
+     * @param root root node
+     * @return serialized tree
+     */
+    public String serialize(TreeNode root) {
+        StringBuilder sb = new StringBuilder();
+        encode(root, sb);
+        return sb.toString();
+    }
+
+    /**
+     * DFS to encode tree to string. Use &quot;#&quot; to mark null nodes.
+     *
+     * @param r  root node
+     * @param sb string builder to save tree value.
+     */
+    private void encode(TreeNode r, StringBuilder sb) {
+        if (r == null) {
+            sb.append(&quot;#&quot;).append(',');
+            return;
+        }
+        sb.append(r.val).append(',');
+        encode(r.left, sb);
+        encode(r.right, sb);
+    }
+
+
+    /**
+     * Decodes your encoded data to tree.
+     *
+     * @param data encoded string
+     * @return deserialized root of tree
+     */
+    public TreeNode deserialize(String data) {
+        Queue&lt;String&gt; nodes = new LinkedList&lt;&gt;(Arrays.asList(data.split(&quot;,&quot;)));
+        return decode(nodes);
+    }
+
+    /**
+     * Build tree by queue. Right node and left node is recursively completed.
+     * If current head of queue is &quot;#&quot;, add null to current node.
+     *
+     * @param q queue stores serialized node value
+     * @return deserialized root of tree
+     */
+    private TreeNode decode(Queue&lt;String&gt; q) {
+        if (q.isEmpty()) {
+            return null;
+        }
+
+        String val = q.poll();
+
+        if (val.equals(&quot;#&quot;)) {
+            return null;
+        }
+
+        TreeNode r = new TreeNode(Integer.parseInt(val));
+
+        r.left = decode(q);
+        r.right = decode(q);
+
+        return r;
     }
 }
 </code></pre>
@@ -371,7 +480,9 @@ fileSystem.get(&quot;/c&quot;); // return -1 because this path doesn't exist.
                   <div class="post-footer-tags">
                     <span class="text-color-light text-small">TAGGED IN</span><br/>
                     
-  <a class="tag tag--primary tag--small" href="https://yyzhou95.github.io/tags/hashmap/hashset/">HashMap/HashSet</a>
+  <a class="tag tag--primary tag--small" href="https://yyzhou95.github.io/tags/tree/">Tree</a>
+
+  <a class="tag tag--primary tag--small" href="https://yyzhou95.github.io/tags/dfs/">DFS</a>
 
                   </div>
                 
@@ -384,7 +495,7 @@ fileSystem.get(&quot;/c&quot;); // return -1 because this path doesn't exist.
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/08/serialize-and-deserialize-tree/" data-tooltip="Serialize and Deserialize Tree">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/08/maximum-gap/" data-tooltip="Maximum Gap">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -392,7 +503,7 @@ fileSystem.get(&quot;/c&quot;); // return -1 because this path doesn't exist.
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/08/map/set/" data-tooltip="Map/Set">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/08/design-file-system/" data-tooltip="Design File System">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
@@ -442,7 +553,7 @@ fileSystem.get(&quot;/c&quot;); // return -1 because this path doesn't exist.
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/08/serialize-and-deserialize-tree/" data-tooltip="Serialize and Deserialize Tree">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/08/maximum-gap/" data-tooltip="Maximum Gap">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -450,7 +561,7 @@ fileSystem.get(&quot;/c&quot;); // return -1 because this path doesn't exist.
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/08/map/set/" data-tooltip="Map/Set">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/08/design-file-system/" data-tooltip="Design File System">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
