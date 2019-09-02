@@ -13,10 +13,10 @@
 
 <meta property="og:description" content="">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Prime Numbers">
-<meta name="twitter:title" content="Prime Numbers">
-<meta property="og:url" content="https://yyzhou95.github.io/2019/09/prime-numbers/">
-<meta property="twitter:url" content="https://yyzhou95.github.io/2019/09/prime-numbers/">
+<meta property="og:title" content="Remove Invalid Parentheses">
+<meta name="twitter:title" content="Remove Invalid Parentheses">
+<meta property="og:url" content="https://yyzhou95.github.io/2019/09/remove-invalid-parentheses/">
+<meta property="twitter:url" content="https://yyzhou95.github.io/2019/09/remove-invalid-parentheses/">
 <meta property="og:site_name" content="Bingo!">
 <meta property="og:description" content="">
 <meta name="twitter:description" content="">
@@ -36,7 +36,9 @@
   
   
     
-      <meta property="article:tag" content="Math">
+      <meta property="article:tag" content="DFS">
+    
+      <meta property="article:tag" content="Backtracking">
     
   
 
@@ -57,14 +59,14 @@
   <meta property="twitter:image" content="https://yyzhou95.github.io/img/avatar.jpg">
 
 
-    <title>Prime Numbers</title>
+    <title>Remove Invalid Parentheses</title>
 
     <link rel="icon" href="https://yyzhou95.github.io/favicon.png">
     
 
     
 
-    <link rel="canonical" href="https://yyzhou95.github.io/2019/09/prime-numbers/">
+    <link rel="canonical" href="https://yyzhou95.github.io/2019/09/remove-invalid-parentheses/">
 
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
@@ -228,7 +230,7 @@
             <div class="post-header main-content-wrap text-center">
   
     <h1 class="post-title" itemprop="headline">
-      Prime Numbers
+      Remove Invalid Parentheses
     </h1>
   
   
@@ -257,151 +259,108 @@
             <div class="main-content-wrap">
               <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
 <ul>
-<li><a href="#count-primes">Count Primes</a>
+<li><a href="#remove-invalid-parentheses">Remove Invalid Parentheses</a>
 <ul>
 <li><a href="#problem-description">Problem description</a></li>
 <li><a href="#method">Method</a></li>
 <li><a href="#code">Code</a></li>
 </ul></li>
-<li><a href="#prime-arrangements">Prime Arrangements</a>
-<ul>
-<li><a href="#problem-description-1">Problem description</a></li>
-<li><a href="#method-1">Method</a></li>
-<li><a href="#code-1">Code</a></li>
-</ul></li>
 </ul>
 </nav>
 
-<h1 id="count-primes">Count Primes</h1>
+<h1 id="remove-invalid-parentheses">Remove Invalid Parentheses</h1>
 
-<p>Link: <a href="https://leetcode.com/problems/count-primes/">Count Primes</a></p>
+<p>Link: <a href="https://leetcode.com/problems/remove-invalid-parentheses/">Remove Invalid Parentheses</a></p>
 
 <h2 id="problem-description">Problem description</h2>
 
-<p>Count the number of prime numbers less than a non-negative number, <strong>n</strong>.</p>
+<p>Remove the minimum number of invalid parentheses in order to make the input string valid. Return all possible results.</p>
 
-<p><strong>Example:</strong></p>
+<p><strong>Note:</strong> The input string may contain letters other than the parentheses <code>(</code> and <code>)</code>.</p>
 
-<pre><code>Input: 10
-Output: 4
-Explanation: There are 4 prime numbers less than 10, they are 2, 3, 5, 7.
+<p><strong>Example 1:</strong></p>
+
+<pre><code>Input: &quot;()())()&quot;
+Output: [&quot;()()()&quot;, &quot;(())()&quot;]
+</code></pre>
+
+<p><strong>Example 2:</strong></p>
+
+<pre><code>Input: &quot;(a)())()&quot;
+Output: [&quot;(a)()()&quot;, &quot;(a())()&quot;]
+</code></pre>
+
+<p><strong>Example 3:</strong></p>
+
+<pre><code>Input: &quot;)(&quot;
+Output: [&quot;&quot;]
 </code></pre>
 
 <h2 id="method">Method</h2>
 
-<p>Count prime number.</p>
+<p>Iterate all chars in given string. If find any invalid pair in string, backtrack to find all possible valid parentheses.</p>
 
-<p>First, filter out all even number (<code>n / 2</code>). Then filter out all odd composite #.</p>
-
-<p>Since even number has been filter out, only odd composite # should be checked. Started from min odd prime # 3, and multiple 3 (even # has been filtered). Each time, add 2i, the inner loop will actually be <code>j = i * i + 2 * i * n</code>.</p>
-
-<p>In this way to filter out all composite #.</p>
+<p>Finally, reverse string and do it again.</p>
 
 <h2 id="code">Code</h2>
 
 <pre><code class="language-java">/**
- * Count prime number.
- * First, filter out all even number (n / 2).
- * Then filter out all odd composite #.
- * Since even number has been filter out, only odd composite # should be checked.
- * Started from min odd prime # 3, and multiple 3 (even # has been filtered).
- * Each time, add 2 * i, the inner loop will actually be j = i * i + 2 * i * n.
- * In this way to filter out all composite #.
+ * Iterate all chars in given string.
+ * If find any invalid pair in string, backtrack to find all possible valid parentheses.
+ * Finally, reverse string and do it again.
  *
- * @param n less than a non-negative number, n
- * @return number of prime numbers less than a non-negative number, n
+ * @param s given parentheses pairs
+ * @return all possible results.
  */
-public int countPrimes(int n) {
-    if (n &lt; 3) {
-        return 0;
-    }
-
-    boolean[] f = new boolean[n];
-    int count = n / 2;      // filter out all even numbers
-
-    for (int i = 3; i * i &lt; n; i += 2) {        // filter out multiple of odd # from 3 to sqrt(n)
-        for (int j = i * i; j &lt; n &amp;&amp; !f[i]; j += 2 * i) {       // j = i * i + 2 * i * n, i will be the factor
-            if (!f[j]) {        // odd # + even # = odd #, filter out odd composite #
-                count--;
-                f[j] = true;
-            }
-        }
-    }
-
-    return count;
-}
-</code></pre>
-
-<h1 id="prime-arrangements">Prime Arrangements</h1>
-
-<p>Link: <a href="https://leetcode.com/problems/prime-arrangements/">Prime Arrangements</a></p>
-
-<h2 id="problem-description-1">Problem description</h2>
-
-<h2 id="method-1">Method</h2>
-
-<p>Count prime number first, then count the factorial from 1 to number of prime number, then multiple from 1 to number of compost numbers.</p>
-
-<h2 id="code-1">Code</h2>
-
-<pre><code class="language-java">/**
- * Count # of prime number and do the factorial from 1 to # of prime number, and from 1 to # of composite number.
- *
- * @param n permutations of 1 to n
- * @return number of permutations of 1 to n that prime numbers are at prime indices (1-indexed)
- */
-public int numPrimeArrangements(int n) {
-
-    /* Corner case */
-    if (n &lt;= 2) {
-        return 1;
-    }
-
-    int count = countPrimes(n + 1);
-
-    long total = 1;
-
-    for (int i = 1; i &lt;= count; i++) {
-        total = total * i % ((int) Math.pow(10, 9) + 7);
-    }
-    for (int i = 1; i &lt;= n - count; i++) {
-        total = total * i % ((int) Math.pow(10, 9) + 7);
-    }
-
-    return (int) total;
+public List&lt;String&gt; removeInvalidParentheses(String s) {
+    List&lt;String&gt; output = new ArrayList&lt;&gt;();
+    checkInvalid(output, s, 0, 0, '(', ')');
+    return output;
 }
 
 /**
- * Count prime number.
- * First, filter out all even number (n / 2).
- * Then filter out all odd composite #.
- * Since even number has been filter out, only odd composite # should be checked.
- * Started from min odd prime # 3, and multiple 3 (even # has been filtered).
- * Each time, add 2 * i, the inner loop will actually be j = i * i + 2 * i * n.
- * In this way to filter out all composite #.
+ * If found invalid parenthesis, then use backtracking to find all possible substrings.
  *
- * @param n count # of prime number from 1 to n
- * @return # of prime numbers
+ * @param output output list
+ * @param s      parentheses string
+ * @param a      index of parentheses string
+ * @param b      index of invalid parenthesis right part
+ * @param open   left part of parenthesis
+ * @param close  right part of parenthesis
+ *               when traverse from end to beginning, open and close will be swapped
  */
-public int countPrimes(int n) {
+private void checkInvalid(List&lt;String&gt; output, String s, int a, int b, char open, char close) {
 
-    if (n &lt; 2) {
-        return 0;
-    }
+    int left = 0, right = 0;
 
-    boolean[] f = new boolean[n];
-    int count = n / 2;      // filter out all even numbers
+    for (int i = a; i &lt; s.length(); i++) {
 
-    for (int i = 3; i * i &lt; n; i += 2) {       // filter out multiple of odd # from 3 to sqrt(n)
+        if (s.charAt(i) == open) {
+            left++;
+        } else if (s.charAt(i) == close) {
+            right++;
+        }
 
-        for (int j = i * i; j &lt; n &amp;&amp; !f[i]; j += 2 * i) {        // j = i * i + 2 * i * n, i will be the factor
-            if (!f[j]) {        // odd # + even # = odd #, filter out odd composite #
-                --count;
-                f[j] = true;
+        if (right &gt; left) {     // if right is more than left, then current parenthesis is invalid pair
+
+            for (int j = b; j &lt;= i; j++) {      // backtracking to find all possibility
+
+                /* Try every possible substring without one invalid right parenthesis */
+                if (s.charAt(j) == close &amp;&amp; (j == b || s.charAt(j - 1) != close)) {     // avoid duplication
+                    checkInvalid(output, s.substring(0, j) + s.substring(j + 1), i, j, open, close);
+                }
             }
+            return;
         }
     }
-    return count;
+
+    /* Check reversed string in each iteration to find if left parenthesis is more than right parenthesis */
+    String reversed = new StringBuilder(s).reverse().toString();
+    if (open == '(') {
+        checkInvalid(output, reversed, 0, 0, ')', '(');
+    } else {
+        output.add(reversed);       // if s is valid pairs both directions, then add it to final output
+    }
 }
 </code></pre>
               
@@ -415,7 +374,9 @@ public int countPrimes(int n) {
                   <div class="post-footer-tags">
                     <span class="text-color-light text-small">TAGGED IN</span><br/>
                     
-  <a class="tag tag--primary tag--small" href="https://yyzhou95.github.io/tags/math/">Math</a>
+  <a class="tag tag--primary tag--small" href="https://yyzhou95.github.io/tags/dfs/">DFS</a>
+
+  <a class="tag tag--primary tag--small" href="https://yyzhou95.github.io/tags/backtracking/">Backtracking</a>
 
                   </div>
                 
@@ -428,7 +389,7 @@ public int countPrimes(int n) {
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/09/number-of-valid-words-for-each-puzzle/" data-tooltip="Number of Valid Words for Each Puzzle">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/09/prime-numbers/" data-tooltip="Prime Numbers">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -436,7 +397,7 @@ public int countPrimes(int n) {
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/09/remove-invalid-parentheses/" data-tooltip="Remove Invalid Parentheses">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/08/contains-duplicate/" data-tooltip="Contains Duplicate">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
@@ -486,7 +447,7 @@ public int countPrimes(int n) {
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/09/number-of-valid-words-for-each-puzzle/" data-tooltip="Number of Valid Words for Each Puzzle">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/09/prime-numbers/" data-tooltip="Prime Numbers">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -494,7 +455,7 @@ public int countPrimes(int n) {
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/09/remove-invalid-parentheses/" data-tooltip="Remove Invalid Parentheses">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/08/contains-duplicate/" data-tooltip="Contains Duplicate">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
