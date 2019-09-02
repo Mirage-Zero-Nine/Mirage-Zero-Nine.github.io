@@ -13,32 +13,34 @@
 
 <meta property="og:description" content="">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Can Make Palindrome from Substring">
-<meta name="twitter:title" content="Can Make Palindrome from Substring">
-<meta property="og:url" content="https://yyzhou95.github.io/2019/09/can-make-palindrome-from-substring/">
-<meta property="twitter:url" content="https://yyzhou95.github.io/2019/09/can-make-palindrome-from-substring/">
+<meta property="og:title" content="Queue Reconstruction by Height">
+<meta name="twitter:title" content="Queue Reconstruction by Height">
+<meta property="og:url" content="https://yyzhou95.github.io/2019/09/queue-reconstruction-by-height/">
+<meta property="twitter:url" content="https://yyzhou95.github.io/2019/09/queue-reconstruction-by-height/">
 <meta property="og:site_name" content="Bingo!">
 <meta property="og:description" content="">
 <meta name="twitter:description" content="">
 <meta property="og:locale" content="en-us">
 
   
-    <meta property="article:published_time" content="2019-09-01T00:00:00">
+    <meta property="article:published_time" content="2019-09-02T00:00:00">
   
   
-    <meta property="article:modified_time" content="2019-09-01T00:00:00">
+    <meta property="article:modified_time" content="2019-09-02T00:00:00">
   
   
   
     
       <meta property="article:section" content="Algorithm">
     
+      <meta property="article:section" content="Star">
+    
+      <meta property="article:section" content="Comparator">
+    
   
   
     
-      <meta property="article:tag" content="Prefix Sum">
-    
-      <meta property="article:tag" content="Pruning">
+      <meta property="article:tag" content="Greedy">
     
   
 
@@ -59,14 +61,14 @@
   <meta property="twitter:image" content="https://yyzhou95.github.io/img/avatar.jpg">
 
 
-    <title>Can Make Palindrome from Substring</title>
+    <title>Queue Reconstruction by Height</title>
 
     <link rel="icon" href="https://yyzhou95.github.io/favicon.png">
     
 
     
 
-    <link rel="canonical" href="https://yyzhou95.github.io/2019/09/can-make-palindrome-from-substring/">
+    <link rel="canonical" href="https://yyzhou95.github.io/2019/09/queue-reconstruction-by-height/">
 
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
@@ -230,15 +232,15 @@
             <div class="post-header main-content-wrap text-left">
   
     <h1 class="post-title" itemprop="headline">
-      Can Make Palindrome from Substring
+      Queue Reconstruction by Height
     </h1>
   
   
   <div class="postShorten-meta post-meta">
     
-      <time itemprop="datePublished" datetime="2019-09-01T00:00:00Z">
+      <time itemprop="datePublished" datetime="2019-09-02T00:00:00Z">
         
-  September 1, 2019
+  September 2, 2019
 
       </time>
     
@@ -247,7 +249,11 @@
   
     <span>in</span>
     
-      <a class="category-link" href="https://yyzhou95.github.io/categories/algorithm">Algorithm</a>
+      <a class="category-link" href="https://yyzhou95.github.io/categories/algorithm">Algorithm</a>, 
+    
+      <a class="category-link" href="https://yyzhou95.github.io/categories/star">Star</a>, 
+    
+      <a class="category-link" href="https://yyzhou95.github.io/categories/comparator">Comparator</a>
     
   
 
@@ -259,7 +265,7 @@
             <div class="main-content-wrap">
               <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
 <ul>
-<li><a href="#can-make-palindrome-from-substring">Can Make Palindrome from Substring</a>
+<li><a href="#queue-reconstruction-by-height">Queue Reconstruction by Height</a>
 <ul>
 <li><a href="#problem-description">Problem description</a></li>
 <li><a href="#method">Method</a></li>
@@ -268,143 +274,72 @@
 </ul>
 </nav>
 
-<h1 id="can-make-palindrome-from-substring">Can Make Palindrome from Substring</h1>
+<h1 id="queue-reconstruction-by-height">Queue Reconstruction by Height</h1>
 
-<p>Link: <a href="https://leetcode.com/problems/can-make-palindrome-from-substring/">Can Make Palindrome from Substring</a></p>
+<p>Link: <a href="https://leetcode.com/problems/queue-reconstruction-by-height/">Queue Reconstruction by Height</a></p>
 
 <h2 id="problem-description">Problem description</h2>
 
-<p>Given a string <code>s</code>, we make queries on substrings of <code>s</code>.</p>
+<p>Suppose you have a random list of people standing in a queue. Each person is described by a pair of integers <code>(h, k)</code>, where <code>h</code> is the height of the person and <code>k</code> is the number of people in front of this person who have a height greater than or equal to <code>h</code>. Write an algorithm to reconstruct the queue.</p>
 
-<p>For each query <code>queries[i] = [left, right, k]</code>, we may <strong>rearrange</strong> the substring <code>s[left], ..., s[right]</code>, and then choose <strong>up to</strong><code>k</code> of them to replace with any lowercase English letter.</p>
+<p><strong>Note:</strong></p>
 
-<p>If the substring is possible to be a palindrome string after the operations above, the result of the query is <code>true</code>. Otherwise, the result is <code>false</code>.</p>
+<p>The number of people is less than 1,100.</p>
 
-<p>Return an array <code>answer[]</code>, where <code>answer[i]</code> is the result of the <code>i</code>-th query <code>queries[i]</code>.</p>
+<p><strong>Example</strong></p>
 
-<p>Note that: Each letter is counted <strong>individually</strong> for replacement so if for example <code>s[left..right] = &quot;aaa&quot;</code>, and <code>k = 2</code>, we can only replace two of the letters.  (Also, note that the initial string <code>s</code> is never modified by any query.)</p>
+<pre><code>Input:
+[[7,0], [4,4], [7,1], [5,0], [6,1], [5,2]]
 
-<p><strong>Example :</strong></p>
-
-<pre><code>Input: s = &quot;abcda&quot;, queries = [[3,3,0],[1,2,0],[0,3,1],[0,3,2],[0,4,1]]
-Output: [true,false,false,true,true]
-Explanation:
-queries[0] : substring = &quot;d&quot;, is palidrome.
-queries[1] : substring = &quot;bc&quot;, is not palidrome.
-queries[2] : substring = &quot;abcd&quot;, is not palidrome after replacing only 1 character.
-queries[3] : substring = &quot;abcd&quot;, could be changed to &quot;abba&quot; which is palidrome. Also this can be changed to &quot;baab&quot; first rearrange it &quot;bacd&quot; then replace &quot;cd&quot; with &quot;ab&quot;.
-queries[4] : substring = &quot;abcda&quot;, could be changed to &quot;abcba&quot; which is palidrome.
+Output:
+[[5,0], [7,0], [5,2], [6,1], [4,4], [7,1]]
 </code></pre>
-
-<p><strong>Constraints:</strong></p>
-
-<ul>
-<li><code>1 &lt;= s.length, queries.length &lt;= 10^5</code></li>
-<li><code>0 &lt;= queries[i][0] &lt;= queries[i][1] &lt; s.length</code></li>
-<li><code>0 &lt;= queries[i][2] &lt;= s.length</code></li>
-<li><code>s</code> only contains lowercase English letters.</li>
-</ul>
 
 <h2 id="method">Method</h2>
 
-<p>Prefix sum.</p>
+<p>Greedy.</p>
 
-<p>Traverse <code>s</code>, find all char appearance from 0 to i. Then based on given range, count the char frequency.</p>
+<p>Sort the given array by height from high to low. If height is same, smaller <code>people[1]</code> first.</p>
 
-<p>Find all odd chars and see if they are more than replacement limit.</p>
+<p>Then insert into a linked list. Each time, insert index is people[1]. The reason is based on sorting. Array is sorted by height. Hence, if two people have same height, higher person will be inserted into output first. Then the shorter one will be inserted into output, and the higher person will be moved one forward.</p>
+
+<p>In this way to assure the arrangement of ascending array.</p>
 
 <h2 id="code">Code</h2>
 
 <pre><code class="language-java">/**
- * Prefix sum.
- * Traverse s, find all char appearance from 0 to i.
- * Then based on given range, count the char frequency.
- * Find all odd chars and see if they are more than replacement limit.
+ * Greedy.
+ * Sort the given array by height from high to low. If height is same, smaller people[1] first.
+ * Then insert into a linked list. Each time, insert index == people[1].
+ * The reason is based on sorting. Array is sorted by height.
+ * Hence, if two people have same height, higher person will be inserted into output first.
+ * Then the shorter one will be inserted into output, and the higher person will be moved one forward.
+ * In this way to assure the arrangement of ascending array.
  *
- * @param s       given string
- * @param queries given queries
- * @return array answer[], answer[i] is the result of the i-th query queries[i]
+ * @param people given array, people[0]: height of each person, people[1]: # of people in front whose height &gt;= h
+ * @return reconstructed queue
  */
-public List&lt;Boolean&gt; canMakePaliQueries(String s, int[][] queries) {
+public int[][] reconstructQueue(int[][] people) {
+    int p = people.length;
 
-    List&lt;Boolean&gt; out = new ArrayList&lt;&gt;();
-    int[][] prefixSum = new int[s.length() + 1][26];
-    for (int i = 1; i &lt;= s.length(); i++) {
-        prefixSum[i] = prefixSum[i - 1].clone();
-        prefixSum[i][s.charAt(i - 1) - 'a']++;
-    }
-
-    for (int[] query : queries) {
-        if (query[2] &gt; 13) {
-            out.add(true);
-        } else {
-            int count = 0;
-            for (int i = 0; i &lt; 26; i++) {
-                count += (prefixSum[query[1] + 1][i] - prefixSum[query[0]][i]) % 2;
+    Arrays.sort(people, new Comparator&lt;int[]&gt;() {
+        @Override
+        public int compare(int[] a, int[] b) {
+            if (a[0] == b[0]) {
+                return a[1] - b[1];     // if heights are same, less higher people first
             }
 
-            out.add(count / 2 &lt;= query[2]);
+            return b[0] - a[0];         // higher people first
         }
+    });
+
+    List&lt;int[]&gt; tmp = new LinkedList&lt;&gt;();
+
+    for (int[] a : people) {
+        tmp.add(a[1], a);               // insert based on how many higher people front
     }
 
-    return out;
-}
-
-/**
- * Count char each time directly.
- * If replacement can be taken for more than 13 times, then it will always be palindrome.
- * Otherwise, count the char that appears odd times. These char may requires replacement.
- *
- * @param s       given string
- * @param queries given queries
- * @return array answer[], answer[i] is the result of the i-th query queries[i]
- */
-public List&lt;Boolean&gt; countChar(String s, int[][] queries) {
-
-    List&lt;Boolean&gt; out = new ArrayList&lt;&gt;();
-
-    for (int[] cur : queries) {
-
-        /*
-         * If can replace more than 13 times, then all chars can be replaced.
-         * Otherwise, count the total number of odd chars, which requires replacement. */
-        out.add((cur[2] &gt; 13) || Helper(s, cur[0], cur[1], cur[2]));
-    }
-
-    return out;
-}
-
-/**
- * Count char appearance.
- *
- * @param s       given string
- * @param start   start position
- * @param end     end position
- * @param replace replace time
- * @return if current range can be palindrome after replace and rearrange
- */
-private boolean Helper(String s, int start, int end, int replace) {
-    if (start == end) {
-        return true;
-    }
-
-    int[] index = new int[26];
-    for (int i = start; i &lt;= end; i++) {
-        index[s.charAt(i) - 'a']++;
-    }
-
-    int check = 0;
-    for (int i = 0; i &lt; 26; i++) {
-        if (index[i] % 2 != 0) {
-            check++;
-        }
-    }
-
-    if ((end - start + 1) % 2 == 1) {       // if range is odd, then one odd char can be at center
-        check = check - 1;
-    }
-
-    return check &lt;= replace * 2;
+    return tmp.toArray(new int[p][2]);
 }
 </code></pre>
               
@@ -418,9 +353,7 @@ private boolean Helper(String s, int start, int end, int replace) {
                   <div class="post-footer-tags">
                     <span class="text-color-light text-small">TAGGED IN</span><br/>
                     
-  <a class="tag tag--primary tag--small" href="https://yyzhou95.github.io/tags/prefix-sum/">Prefix Sum</a>
-
-  <a class="tag tag--primary tag--small" href="https://yyzhou95.github.io/tags/pruning/">Pruning</a>
+  <a class="tag tag--primary tag--small" href="https://yyzhou95.github.io/tags/greedy/">Greedy</a>
 
                   </div>
                 
@@ -433,7 +366,7 @@ private boolean Helper(String s, int start, int end, int replace) {
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/09/queue-reconstruction-by-height/" data-tooltip="Queue Reconstruction by Height">
+                <a class="post-action-btn btn btn--disabled">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -441,7 +374,7 @@ private boolean Helper(String s, int start, int end, int replace) {
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/09/diet-plan-performance/" data-tooltip="Diet Plan Performance">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/09/can-make-palindrome-from-substring/" data-tooltip="Can Make Palindrome from Substring">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
@@ -491,7 +424,7 @@ private boolean Helper(String s, int start, int end, int replace) {
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/09/queue-reconstruction-by-height/" data-tooltip="Queue Reconstruction by Height">
+                <a class="post-action-btn btn btn--disabled">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -499,7 +432,7 @@ private boolean Helper(String s, int start, int end, int replace) {
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/09/diet-plan-performance/" data-tooltip="Diet Plan Performance">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/09/can-make-palindrome-from-substring/" data-tooltip="Can Make Palindrome from Substring">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
