@@ -229,7 +229,7 @@
         <article class="post" itemscope itemType="http://schema.org/BlogPosting">
           
           
-            <div class="post-header main-content-wrap text-center">
+            <div class="post-header main-content-wrap text-left">
   
     <h1 class="post-title" itemprop="headline">
       Remove Invalid Parentheses
@@ -304,6 +304,10 @@ Output: [&quot;&quot;]
 
 <p>Iterate all chars in given string. If find any invalid pair in string, backtrack to find all possible valid parentheses.</p>
 
+<p>During the backtracking process, remove only one invalid parenthesis and pass this string without this invalid right pair into backtracking. Hence, avoid duplicated close parenthesis before passing ot to backtracking.</p>
+
+<p>From <code>s(0, i)</code>, right part is more than left part by 1. Try to remove one right part each time to make <code>s(0, i)</code> valid. The next iteration starts at valid part, since it is not necessary to check valid part of string. If later there exist invalid pair, remove one invalid char. Removing starts from previous backtrack removing position.</p>
+
 <p>Finally, reverse string and do it again.</p>
 
 <h2 id="code">Code</h2>
@@ -317,27 +321,27 @@ Output: [&quot;&quot;]
  * @return all possible results.
  */
 public List&lt;String&gt; removeInvalidParentheses(String s) {
-    List&lt;String&gt; output = new ArrayList&lt;&gt;();
-    checkInvalid(output, s, 0, 0, '(', ')');
-    return output;
+    List&lt;String&gt; out = new ArrayList&lt;&gt;();
+    checkInvalid(out, s, 0, 0, '(', ')');
+    return out;
 }
 
 /**
  * If found invalid parenthesis, then use backtracking to find all possible substrings.
  *
- * @param output output list
- * @param s      parentheses string
- * @param a      index of parentheses string
- * @param b      index of invalid parenthesis right part
- * @param open   left part of parenthesis
- * @param close  right part of parenthesis
- *               when traverse from end to beginning, open and close will be swapped
+ * @param output  output list
+ * @param s       parentheses string
+ * @param valid   start of valid parentheses string, initially starts at 0
+ * @param invalid start of invalid parenthesis right part, initially starts at 0
+ * @param open    left part of parenthesis
+ * @param close   right part of parenthesis
+ *                when traverse from end to beginning, open and close will be swapped
  */
-private void checkInvalid(List&lt;String&gt; output, String s, int a, int b, char open, char close) {
+private void checkInvalid(List&lt;String&gt; output, String s, int valid, int invalid, char open, char close) {
 
     int left = 0, right = 0;
 
-    for (int i = a; i &lt; s.length(); i++) {
+    for (int i = valid; i &lt; s.length(); i++) {      // start at valid position
 
         if (s.charAt(i) == open) {
             left++;
@@ -347,14 +351,21 @@ private void checkInvalid(List&lt;String&gt; output, String s, int a, int b, cha
 
         if (right &gt; left) {     // if right is more than left, then current parenthesis is invalid pair
 
-            for (int j = b; j &lt;= i; j++) {      // backtracking to find all possibility
+            for (int j = invalid; j &lt;= i; j++) {      // find all possible position to remove one invalid pair
 
-                /* Try every possible substring without one invalid right parenthesis */
-                if (s.charAt(j) == close &amp;&amp; (j == b || s.charAt(j - 1) != close)) {     // avoid duplication
+                /*
+                 * Each time, remove only one invalid parenthesis and pass it without this char into backtracking.
+                 * Hence, avoid duplicated close parenthesis.
+                 * This problem requires all valid output, therefore, use backtracking to find all.
+                 * From s(0, i), right part is more than left part by 1.
+                 * Try to remove one right part each time to make s(0, i) valid.
+                 * The next iteration starts at valid part, since it is not necessary to check valid part of string.
+                 * If later there exist invalid pair, repeat this process starts at previous removing position. */
+                if (s.charAt(j) == close &amp;&amp; (j == invalid || s.charAt(j - 1) != close)) {     // avoid duplication
                     checkInvalid(output, s.substring(0, j) + s.substring(j + 1), i, j, open, close);
                 }
             }
-            return;
+            return;     // if current string is invalid, it should not be added to result
         }
     }
 
