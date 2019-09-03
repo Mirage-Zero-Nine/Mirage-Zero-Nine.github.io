@@ -13,10 +13,10 @@
 
 <meta property="og:description" content="">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Verify Order Sequence in Binary Search Tree">
-<meta name="twitter:title" content="Verify Order Sequence in Binary Search Tree">
-<meta property="og:url" content="https://yyzhou95.github.io/2019/09/verify-order-sequence-in-binary-search-tree/">
-<meta property="twitter:url" content="https://yyzhou95.github.io/2019/09/verify-order-sequence-in-binary-search-tree/">
+<meta property="og:title" content="Power of Two">
+<meta name="twitter:title" content="Power of Two">
+<meta property="og:url" content="https://yyzhou95.github.io/2019/09/power-of-two/">
+<meta property="twitter:url" content="https://yyzhou95.github.io/2019/09/power-of-two/">
 <meta property="og:site_name" content="Bingo!">
 <meta property="og:description" content="">
 <meta name="twitter:description" content="">
@@ -36,11 +36,9 @@
   
   
     
-      <meta property="article:tag" content="Stack">
+      <meta property="article:tag" content="Math">
     
-      <meta property="article:tag" content="Tree">
-    
-      <meta property="article:tag" content="Star">
+      <meta property="article:tag" content="Bit Manipulation">
     
   
 
@@ -61,14 +59,14 @@
   <meta property="twitter:image" content="https://yyzhou95.github.io/img/avatar.jpg">
 
 
-    <title>Verify Order Sequence in Binary Search Tree</title>
+    <title>Power of Two</title>
 
     <link rel="icon" href="https://yyzhou95.github.io/favicon.png">
     
 
     
 
-    <link rel="canonical" href="https://yyzhou95.github.io/2019/09/verify-order-sequence-in-binary-search-tree/">
+    <link rel="canonical" href="https://yyzhou95.github.io/2019/09/power-of-two/">
 
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
@@ -232,7 +230,7 @@
             <div class="post-header main-content-wrap text-left">
   
     <h1 class="post-title" itemprop="headline">
-      Verify Order Sequence in Binary Search Tree
+      Power of Two
     </h1>
   
   
@@ -261,321 +259,65 @@
             <div class="main-content-wrap">
               <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
 <ul>
-<li><a href="#verify-preorder-sequence-in-binary-search-tree">Verify Preorder Sequence in Binary Search Tree</a>
+<li><a href="#power-of-two">Power of Two</a>
 <ul>
 <li><a href="#problem-description">Problem description</a></li>
 <li><a href="#method">Method</a></li>
 <li><a href="#code">Code</a></li>
 </ul></li>
-<li><a href="#verify-preorder-serialization-of-a-binary-tree">Verify Preorder Serialization of a Binary Tree</a>
-<ul>
-<li><a href="#problem-description-1">Problem description</a></li>
-<li><a href="#method-1">Method</a>
-<ul>
-<li><a href="#pre-order-traversal">Pre-order traversal</a></li>
-<li><a href="#stack">Stack</a></li>
-<li><a href="#degree">Degree</a></li>
-</ul></li>
-<li><a href="#code-1">Code</a></li>
-</ul></li>
 </ul>
 </nav>
 
-<h1 id="verify-preorder-sequence-in-binary-search-tree">Verify Preorder Sequence in Binary Search Tree</h1>
+<h1 id="power-of-two">Power of Two</h1>
 
-<p>Link: <a href="https://leetcode.com/problems/verify-preorder-sequence-in-binary-search-tree">Verify Preorder Sequence in Binary Search Tree</a></p>
+<p>Link: <a href="https://leetcode.com/problems/power-of-two/">Power of Two</a></p>
 
 <h2 id="problem-description">Problem description</h2>
 
-<p>Given an array of numbers, verify whether it is the correct preorder traversal sequence of a binary search tree.</p>
-
-<p>You may assume each number in the sequence is unique.</p>
-
-<p>Consider the following binary search tree:</p>
-
-<pre><code>     5
-    / \
-   2   6
-  / \
- 1   3
-</code></pre>
+<p>Given an integer, write a function to determine if it is a power of two.</p>
 
 <p><strong>Example 1:</strong></p>
 
-<pre><code>Input: [5,2,6,1,3]
-Output: false
+<pre><code>Input: 1
+Output: true 
+Explanation: 20 = 1
 </code></pre>
 
 <p><strong>Example 2:</strong></p>
 
-<pre><code>Input: [5,2,1,3,6]
+<pre><code>Input: 16
 Output: true
-</code></pre>
-
-<p><strong>Follow up:</strong>
-Could you do it using only constant space complexity?</p>
-
-<h2 id="method">Method</h2>
-
-<p>If current element is smaller than top of stack, it is left subtree of all stack nodes, push the it into stack.</p>
-
-<p>Update min value to current subtree&rsquo;s root when traverse to right subtree.</p>
-
-<h2 id="code">Code</h2>
-
-<pre><code class="language-java">/**
- * Follow the pre-order traversal rule.
- * If current element is smaller than top of stack, current node is still in left sub tree.
- * Otherwise, current node is previous node's right child.
- * Update min value to current subtree's root when traverse to right subtree.
- * Each time, check if current node is smaller than current tree's root node.
- * Since the traversal process is to find left child in BST, if current node is smaller than root, return false.
- * In BST, left children is always smaller than root node.
- *
- * @param preorder given array
- * @return whether it is the correct preorder traversal sequence of a binary search tree
- */
-public boolean verifyPreorder(int[] preorder) {
-    int min = Integer.MIN_VALUE;
-    Stack&lt;Integer&gt; s = new Stack&lt;&gt;();
-
-    for (int i : preorder) {
-        if (i &lt; min) {      // if left subtree is smaller than root value, then it is invalid BST
-            return false;
-        }
-        while (!s.empty() &amp;&amp; i &gt; s.peek()) {        // if i &gt; s.peek(), then i is in right subtree
-            min = s.pop();      // update min value to current subtree's root when traverse to right subtree
-        }
-        s.push(i);
-    }
-    return true;
-}
-
-/**
- * Use array instead of stack to find root of subtree.
- * Use a pointer to point at current root of tree.
- * The predecessor in array can be used as stack to store current root.
- *
- * @param preorder given array
- * @return whether it is the correct preorder traversal sequence of a binary search tree
- */
-private boolean constantSpace(int[] preorder) {
-
-    /* Corner case */
-    if (preorder.length &lt; 2) {
-        return true;
-    }
-
-    int min = Integer.MIN_VALUE, p = -1;
-
-    for (int i : preorder) {
-        if (i &lt; min) {
-            return false;
-        }
-        while (p &gt;= 0 &amp;&amp; i &gt; preorder[p]) {
-            min = preorder[p--];        // in-place find root node of current right subtree
-        }
-        preorder[++p] = i;              // in-place fill new root of current tree
-    }
-
-    return true;
-}
-</code></pre>
-
-<h1 id="verify-preorder-serialization-of-a-binary-tree">Verify Preorder Serialization of a Binary Tree</h1>
-
-<p>Link: <a href="https://leetcode.com/problems/verify-preorder-serialization-of-a-binary-tree">Verify Preorder Serialization of a Binary Tree</a></p>
-
-<h2 id="problem-description-1">Problem description</h2>
-
-<p>One way to serialize a binary tree is to use pre-order traversal. When we encounter a non-null node, we record the node&rsquo;s value. If it is a null node, we record using a sentinel value such as <code>#</code>.</p>
-
-<pre><code>     _9_
-    /   \
-   3     2
-  / \   / \
- 4   1  #  6
-/ \ / \   / \
-# # # #   # #
-</code></pre>
-
-<p>For example, the above binary tree can be serialized to the string <code>&quot;9,3,4,#,#,1,#,#,2,#,6,#,#&quot;</code>, where <code>#</code> represents a null node.</p>
-
-<p>Given a string of comma separated values, verify whether it is a correct preorder traversal serialization of a binary tree. Find an algorithm without reconstructing the tree.</p>
-
-<p>Each comma separated value in the string must be either an integer or a character <code>'#'</code> representing <code>null</code> pointer.</p>
-
-<p>You may assume that the input format is always valid, for example it could never contain two consecutive commas such as <code>&quot;1,,3&quot;</code>.</p>
-
-<p><strong>Example 1:</strong></p>
-
-<pre><code>Input: &quot;9,3,4,#,#,1,#,#,2,#,6,#,#&quot;
-Output: true
-</code></pre>
-
-<p><strong>Example 2:</strong></p>
-
-<pre><code>Input: &quot;1,#&quot;
-Output: false
+Explanation: 24 = 16
 </code></pre>
 
 <p><strong>Example 3:</strong></p>
 
-<pre><code>Input: &quot;9,#,#,1&quot;
+<pre><code>Input: 218
 Output: false
 </code></pre>
 
-<h2 id="method-1">Method</h2>
+<h2 id="method">Method</h2>
 
-<p>Three approaches.</p>
+<ol>
+<li>If <code>n</code> &lt; 1, then <code>n</code> is not power of 2.</li>
+<li>If <code>n</code> is power of 2, then it will only contain one bit of 1. And this bit is the first bit.</li>
+</ol>
 
-<h3 id="pre-order-traversal">Pre-order traversal</h3>
+<p>Therefore, if <code>n</code> is the power of 2, then all bits in <code>n - 1</code> will be 1. <code>n &amp; n - 1</code> will convert all bits to 0 if n is power of 2.</p>
 
-<p>First approach is use a counter to count how many slot left for nodes. It&rsquo;s like to use pre order traversal to &ldquo;build&rdquo; the tree.</p>
-
-<p>The basic rule is, each non-empty node creates two slots for null node (left, right child). Each non-empty node requires one slot, and null node consume one slot of node. Therefore, use &ldquo;,&rdquo; as one slot is used.</p>
-
-<ul>
-<li>If one non-empty node is found, slot + 2.</li>
-<li>If one null node is found, slot remains unchanged.</li>
-<li>If meet a &ldquo;,&rdquo;, regraded as one node is used, slot - 1.</li>
-</ul>
-
-<p>Finally, check if slot is exactly 0.</p>
-
-<h3 id="stack">Stack</h3>
-
-<p>Using stack to store nodes including &ldquo;#&rdquo;.</p>
-
-<ul>
-<li>Case 1: number -&gt; push it to the stack.</li>
-<li>Case 2: # -&gt; check if the top of stack is also #.</li>
-</ul>
-
-<p>If so, pop until top of stack is not #.</p>
-
-<p>Finally, check if stack size is 1, and stack top is #.</p>
-
-<h3 id="degree">Degree</h3>
-
-<p>All non-null node provides 2 outdegree and 1 indegree (2 children and 1 parent), except root. All null node provides 0 outdegree and 1 indegree (0 child and 1 parent).</p>
-
-<p>Difference between out degree and in degree: <code>outdegree - indegree</code>.</p>
-
-<p>If the node is not null, increase diff by 2, because it provides two out degrees.</p>
-
-<p>If a serialization is correct, <code>outdegree - indegree</code> should never be negative and diff will be zero when finished.</p>
-
-<h2 id="code-1">Code</h2>
+<h2 id="code">Code</h2>
 
 <pre><code class="language-java">/**
- * Pre order traversal to &quot;build&quot; the tree.
- * The basic rule is, each non-empty node creates two slots for null node (left, right child).
- * Each non-empty node requires one slot, and null node consume one slot of node.
- * Therefore, use &quot;,&quot; as one slot is used.
- * If one non-empty node is found, slot + 2.
- * If one null node is found, slot remains unchanged.
- * If meet a &quot;,&quot;, regraded as one node is used, slot - 1.
+ * 1. All numbers &lt; 1 are not power of 2.
+ * 2. If an integer is power of 2, then it will only contain one bit of 1. And this bit is the first bit.
+ * Therefore, if n is the power of 2, then all bits in n - 1 will be 1.
+ * n &amp; n - 1 will convert all bits to 0 if n is power of 2.
  *
- * @param preorder given preorder nodes
- * @return whether it is a correct preorder traversal serialization of a binary tree
+ * @param n given integer n
+ * @return if n is a power of two
  */
-public boolean isValidSerialization(String preorder) {
-    int count = 1;
-    int n = preorder.length();
-
-    for (int i = 0; i &lt; n; ++i) {
-
-        /*
-         * &quot;,&quot;: use one node
-         * number: create two slot for nodes (null &amp; non-empty)
-         * &quot;#&quot;: null node does not take node, combine with &quot;,&quot; to use one slot. */
-        if (preorder.charAt(i) == ',') {
-
-            count--;        // one node takes one slot
-
-            if (count &lt; 0) {        // no more slots available
-                return false;
-            }
-
-
-            if (preorder.charAt(i - 1) != '#') {         // non-empty node creates two children slots
-                count += 2;
-            }
-        }
-    }
-
-    /*
-     * Check the last node.
-     * Since last node does not have &quot;,&quot;, it requires extra check. */
-    count = (preorder.charAt(n - 1) == '#') ? count - 1 : count + 1;
-
-    return count == 0;      // all slots should be used up
-}
-
-/**
- * Using stack to store nodes including &quot;#&quot;.
- * Case 1: number -&gt; push it to the stack.
- * Case 2: # -&gt; check if the top of stack is also #.
- * If so, pop until top of stack is not #.
- * Finally, check if stack size is 1, and stack top is #.
- *
- * @param preorder given preorder nodes
- * @return whether it is a correct preorder traversal serialization of a binary tree
- */
-public boolean stack(String preorder) {
-
-    /* Corner case */
-    if (preorder.charAt(0) == '#' &amp;&amp; preorder.length() &gt; 1) {
-        return false;
-    }
-
-    Stack&lt;String&gt; s = new Stack&lt;&gt;();
-    String[] arr = preorder.split(&quot;,&quot;);
-
-    for (int i = 0; i &lt; arr.length; i++) {
-
-        while (arr[i].equals(&quot;#&quot;) &amp;&amp; !s.isEmpty() &amp;&amp; s.peek().equals(&quot;#&quot;)) {
-            s.pop();
-            if (s.isEmpty()) {
-                return false;       // pop out root -&gt; invalid tree
-            }
-            s.pop();
-        }
-        s.push(arr[i]);
-    }
-    System.out.println(s);
-    return s.size() == 1 &amp;&amp; s.peek().equals(&quot;#&quot;);
-}
-
-/**
- * All non-null node provides 2 outdegree and 1 indegree (2 children and 1 parent), except root.
- * All null node provides 0 outdegree and 1 indegree (0 child and 1 parent).
- * Difference between out degree and in degree: outdegree - indegree
- * If the node is not null, increase diff by 2, because it provides two out degrees.
- * If a serialization is correct, outdegree - indegree should never be negative and diff will be zero when finished.
- *
- * @param preorder given preorder nodes
- * @return whether it is a correct preorder traversal serialization of a binary tree
- */
-public boolean degree(String preorder) {
-
-    /* Corner case */
-    if (preorder.charAt(0) == '#' &amp;&amp; preorder.length() &gt; 1) {
-        return false;
-    }
-
-    String[] nodes = preorder.split(&quot;,&quot;);
-    int diff = 1;       // root has
-    for (String node : nodes) {
-        if (--diff &lt; 0) {
-            return false;
-        }
-        if (!node.equals(&quot;#&quot;)) {
-            diff += 2;
-        }
-    }
-    return diff == 0;
+public boolean isPowerOfTwo(int n) {
+    return (n &gt; 0 &amp;&amp; (n &amp; (n - 1)) == 0);
 }
 </code></pre>
               
@@ -589,11 +331,9 @@ public boolean degree(String preorder) {
                   <div class="post-footer-tags">
                     <span class="text-color-light text-small">TAGGED IN</span><br/>
                     
-  <a class="tag tag--primary tag--small" href="https://yyzhou95.github.io/tags/stack/">Stack</a>
+  <a class="tag tag--primary tag--small" href="https://yyzhou95.github.io/tags/math/">Math</a>
 
-  <a class="tag tag--primary tag--small" href="https://yyzhou95.github.io/tags/tree/">Tree</a>
-
-  <a class="tag tag--primary tag--small" href="https://yyzhou95.github.io/tags/star/">Star</a>
+  <a class="tag tag--primary tag--small" href="https://yyzhou95.github.io/tags/bit-manipulation/">Bit Manipulation</a>
 
                   </div>
                 
@@ -606,7 +346,7 @@ public boolean degree(String preorder) {
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/09/queue-reconstruction-by-height/" data-tooltip="Queue Reconstruction by Height">
+                <a class="post-action-btn btn btn--disabled">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -614,7 +354,7 @@ public boolean degree(String preorder) {
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/09/can-make-palindrome-from-substring/" data-tooltip="Can Make Palindrome from Substring">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/09/queue-reconstruction-by-height/" data-tooltip="Queue Reconstruction by Height">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
@@ -664,7 +404,7 @@ public boolean degree(String preorder) {
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/09/queue-reconstruction-by-height/" data-tooltip="Queue Reconstruction by Height">
+                <a class="post-action-btn btn btn--disabled">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -672,7 +412,7 @@ public boolean degree(String preorder) {
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/09/can-make-palindrome-from-substring/" data-tooltip="Can Make Palindrome from Substring">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/09/queue-reconstruction-by-height/" data-tooltip="Queue Reconstruction by Height">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
