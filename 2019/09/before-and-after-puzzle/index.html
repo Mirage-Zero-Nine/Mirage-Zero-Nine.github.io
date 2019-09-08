@@ -13,10 +13,10 @@
 
 <meta property="og:description" content="">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Count Substrings with Only One Distinct Letter">
-<meta name="twitter:title" content="Count Substrings with Only One Distinct Letter">
-<meta property="og:url" content="https://yyzhou95.github.io/2019/09/count-substrings-with-only-one-distinct-letter/">
-<meta property="twitter:url" content="https://yyzhou95.github.io/2019/09/count-substrings-with-only-one-distinct-letter/">
+<meta property="og:title" content="Before and After Puzzle">
+<meta name="twitter:title" content="Before and After Puzzle">
+<meta property="og:url" content="https://yyzhou95.github.io/2019/09/before-and-after-puzzle/">
+<meta property="twitter:url" content="https://yyzhou95.github.io/2019/09/before-and-after-puzzle/">
 <meta property="og:site_name" content="Bingo!">
 <meta property="og:description" content="">
 <meta name="twitter:description" content="">
@@ -36,9 +36,9 @@
   
   
     
-      <meta property="article:tag" content="Dynamic Programming">
+      <meta property="article:tag" content="HashMap/HashSet">
     
-      <meta property="article:tag" content="Math">
+      <meta property="article:tag" content="TreeMap/TreeSet">
     
   
 
@@ -59,14 +59,14 @@
   <meta property="twitter:image" content="https://yyzhou95.github.io/img/avatar.jpg">
 
 
-    <title>Count Substrings with Only One Distinct Letter</title>
+    <title>Before and After Puzzle</title>
 
     <link rel="icon" href="https://yyzhou95.github.io/favicon.png">
     
 
     
 
-    <link rel="canonical" href="https://yyzhou95.github.io/2019/09/count-substrings-with-only-one-distinct-letter/">
+    <link rel="canonical" href="https://yyzhou95.github.io/2019/09/before-and-after-puzzle/">
 
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
@@ -230,7 +230,7 @@
             <div class="post-header main-content-wrap text-left">
   
     <h1 class="post-title" itemprop="headline">
-      Count Substrings with Only One Distinct Letter
+      Before and After Puzzle
     </h1>
   
   
@@ -259,7 +259,7 @@
             <div class="main-content-wrap">
               <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
 <ul>
-<li><a href="#count-substrings-with-only-one-distinct-letter">Count Substrings with Only One Distinct Letter</a>
+<li><a href="#before-and-after-puzzle">Before and After Puzzle</a>
 <ul>
 <li><a href="#problem-description">Problem description</a></li>
 <li><a href="#method">Method</a></li>
@@ -268,69 +268,99 @@
 </ul>
 </nav>
 
-<h1 id="count-substrings-with-only-one-distinct-letter">Count Substrings with Only One Distinct Letter</h1>
+<h1 id="before-and-after-puzzle">Before and After Puzzle</h1>
 
-<p>Link: <a href="https://leetcode.com/problems/count-substrings-with-only-one-distinct-letter/">Count Substrings with Only One Distinct Letter</a></p>
+<p>Link: <a href="https://leetcode.com/problems/before-and-after-puzzle/">Before and After Puzzle</a></p>
 
 <h2 id="problem-description">Problem description</h2>
 
-<p>Given a string <code>S</code>, return the number of substrings that have only <strong>one distinct</strong> letter.</p>
+<p>Given a list of <code>phrases</code>, generate a list of Before and After puzzles.</p>
+
+<p>A <em>phrase</em> is a string that consists of lowercase English letters and spaces only. No space appears in the start or the end of a phrase. There are no consecutive spaces in a phrase.</p>
+
+<p><em>Before and After puzzles</em> are phrases that are formed by merging two phrases where the <strong>last word of the first phrase</strong> is the same as the <strong>first word of the second phrase</strong>.</p>
+
+<p>Return the Before and After puzzles that can be formed by every two phrases <code>phrases[i]</code> and <code>phrases[j]</code> where <code>i != j</code>. Note that the order of matching two phrases matters, we want to consider both orders.</p>
+
+<p>You should return a list of <strong>distinct</strong> strings <strong>sorted lexicographically</strong>.</p>
 
 <p><strong>Example 1:</strong></p>
 
-<pre><code>Input: S = &quot;aaaba&quot;
-Output: 8
-Explanation: The substrings with one distinct letter are &quot;aaa&quot;, &quot;aa&quot;, &quot;a&quot;, &quot;b&quot;.
-&quot;aaa&quot; occurs 1 time.
-&quot;aa&quot; occurs 2 times.
-&quot;a&quot; occurs 4 times.
-&quot;b&quot; occurs 1 time.
-So the answer is 1 + 2 + 4 + 1 = 8.
+<pre><code>Input: phrases = [&quot;writing code&quot;,&quot;code rocks&quot;]
+Output: [&quot;writing code rocks&quot;]
 </code></pre>
 
 <p><strong>Example 2:</strong></p>
 
-<pre><code>Input: S = &quot;aaaaaaaaaa&quot;
-Output: 55
+<pre><code>Input: phrases = [&quot;mission statement&quot;,
+                  &quot;a quick bite to eat&quot;,
+                  &quot;a chip off the old block&quot;,
+                  &quot;chocolate bar&quot;,
+                  &quot;mission impossible&quot;,
+                  &quot;a man on a mission&quot;,
+                  &quot;block party&quot;,
+                  &quot;eat my words&quot;,
+                  &quot;bar of soap&quot;]
+Output: [&quot;a chip off the old block party&quot;,
+         &quot;a man on a mission impossible&quot;,
+         &quot;a man on a mission statement&quot;,
+         &quot;a quick bite to eat my words&quot;,
+         &quot;chocolate bar of soap&quot;]
+</code></pre>
+
+<p><strong>Example 3:</strong></p>
+
+<pre><code>Input: phrases = [&quot;a&quot;,&quot;b&quot;,&quot;a&quot;]
+Output: [&quot;a&quot;]
 </code></pre>
 
 <p><strong>Constraints:</strong></p>
 
 <ul>
-<li><code>1 &lt;= S.length &lt;= 1000</code></li>
-<li><code>S[i]</code> consists of only lowercase English letters.</li>
+<li><code>1 &lt;= phrases.length &lt;= 100</code></li>
+<li><code>1 &lt;= phrases[i].length &lt;= 100</code></li>
 </ul>
 
 <h2 id="method">Method</h2>
 
-<p>Similar to max sub array sum problem.</p>
+<p>Use 2 HashMap&rsquo;s to store first and last words as keys respectively, and the corresponding phrases as the values.</p>
 
-<p><code>dp[i] = (s[i] == s[i + 1]) ? dp[i + 1] + 1 : 1</code>.</p>
+<p>Use the 3rd HashMap to check if there are duplicate phrases - a sole one can NOT create a puzzle.</p>
+
+<p>Use a TreeSet to guarantee distinct and ascending result.</p>
 
 <h2 id="code">Code</h2>
 
 <pre><code class="language-java">/**
- * Similar to max sub array sum problem.
- * dp[i] = (s[i] == s[i + 1]) ? dp[i + 1] + 1 : 1
- * @param S given string
- * @return number of substrings that have only one distinct letter
+ * Use 2 HashMap's to store first and last words as keys respectively, and the corresponding phrases as the values.
+ * Use the 3rd HashMap to check if there are duplicate phrases - a sole one can NOT create a puzzle.
+ * Use a TreeSet to guarantee distinct and ascending result.
+ *
+ * @param phrases given phrases
+ * @return a list of distinct strings sorted lexicographically
  */
-public int countLetters(String S) {
-    char pre = S.charAt(0);
-    int count = 1, sum = 1;
+public List&lt;String&gt; beforeAndAfterPuzzles(String[] phrases) {
+    Map&lt;String, Set&lt;String&gt;&gt; head = new HashMap&lt;&gt;(), tail = new HashMap&lt;&gt;();
+    Map&lt;String, Integer&gt; count = new HashMap&lt;&gt;();
 
-    for (int i = 1; i &lt; S.length(); i++) {
-        if (S.charAt(i) == pre) {
-            count++;
-        } else {
-            pre = S.charAt(i);
-            count = 1;
-        }
-
-        sum += count;
+    for (String p : phrases) {
+        String[] w = p.split(&quot; &quot;);
+        head.computeIfAbsent(w[0], s -&gt; new HashSet&lt;&gt;()).add(p);
+        tail.computeIfAbsent(w[w.length - 1], s -&gt; new HashSet&lt;&gt;()).add(p);
+        count.put(p, 1 + count.getOrDefault(p, 0));
     }
 
-    return sum;
+    TreeSet&lt;String&gt; ans = new TreeSet&lt;&gt;();
+    for (String end : tail.keySet()) {
+        for (String p : head.getOrDefault(end, Collections.emptySet())) {
+            for (String t : tail.get(end)) {
+                if (!t.equals(p) || count.get(p) &gt; 1) {
+                    ans.add(t + p.substring(end.length()));
+                }
+            }
+        }
+    }
+    return new ArrayList&lt;&gt;(ans);
 }
 </code></pre>
               
@@ -344,9 +374,9 @@ public int countLetters(String S) {
                   <div class="post-footer-tags">
                     <span class="text-color-light text-small">TAGGED IN</span><br/>
                     
-  <a class="tag tag--primary tag--small" href="https://yyzhou95.github.io/tags/dynamic-programming/">Dynamic Programming</a>
+  <a class="tag tag--primary tag--small" href="https://yyzhou95.github.io/tags/hashmap/hashset/">HashMap/HashSet</a>
 
-  <a class="tag tag--primary tag--small" href="https://yyzhou95.github.io/tags/math/">Math</a>
+  <a class="tag tag--primary tag--small" href="https://yyzhou95.github.io/tags/treemap/treeset/">TreeMap/TreeSet</a>
 
                   </div>
                 
@@ -359,7 +389,7 @@ public int countLetters(String S) {
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/09/before-and-after-puzzle/" data-tooltip="Before and After Puzzle">
+                <a class="post-action-btn btn btn--disabled">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -367,7 +397,7 @@ public int countLetters(String S) {
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/09/make-array-strictly-increasing/" data-tooltip="Make Array Strictly Increasing">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/09/count-substrings-with-only-one-distinct-letter/" data-tooltip="Count Substrings with Only One Distinct Letter">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
@@ -417,7 +447,7 @@ public int countLetters(String S) {
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/09/before-and-after-puzzle/" data-tooltip="Before and After Puzzle">
+                <a class="post-action-btn btn btn--disabled">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -425,7 +455,7 @@ public int countLetters(String S) {
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/09/make-array-strictly-increasing/" data-tooltip="Make Array Strictly Increasing">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/09/count-substrings-with-only-one-distinct-letter/" data-tooltip="Count Substrings with Only One Distinct Letter">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
