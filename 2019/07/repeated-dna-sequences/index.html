@@ -294,43 +294,58 @@ Output: [&quot;AAAAACCCCC&quot;, &quot;CCCCCAAAAA&quot;]
 
 <p>Encoding each &lsquo;A&rsquo;, &lsquo;C&rsquo;, &lsquo;G&rsquo;, &rsquo;T&rsquo; into binary digit, such as 00, 01, 10, 11. In this way, each 10-letter-long sequences will be 20 bits long, which is under size of an int. Map each subsequence into bits and check if each sequence has been shown before.</p>
 
+<p>Note that to set n-th bit of bitmask equal to 0: <code>mask &amp;= ~(1 &lt;&lt; n)</code>. Hence, to unset first two bits in mask, simply do <code>mask &amp;= ~(3 &lt;&lt; 20)</code>.</p>
+
 <h2 id="code">Code</h2>
 
 <pre><code class="language-java">/**
  * Encoding each 'A', 'C', 'G', 'T' into binary digit, such as 00, 01, 10, 11.
  * In this way, each 10-letter-long sequences will be 20 bits long, which is under size of an int.
  * Map each subsequence into bits and check if each sequence has been shown before.
+ * Note that to set n-th bit of bitmask equal to 0: bitmask &amp;= ~(1 &lt;&lt; n).
  *
  * @param s given DNA molecule
  * @return all the 10-letter-long sequences in s
  */
 public List&lt;String&gt; findRepeatedDnaSequences(String s) {
 
-    List&lt;String&gt; out = new ArrayList&lt;&gt;();
-    HashSet&lt;Integer&gt; sequence = new HashSet&lt;&gt;();                // save previous sequence
-    HashSet&lt;Integer&gt; duplicatedSequence = new HashSet&lt;&gt;();      // save previous result added into list
-    char[] map = new char[26];
+    /* Corner case */
+    if (s.length() &lt; 10) {
+        return new ArrayList&lt;&gt;();
+    }
 
-    map['C' - 'A'] = 1;     // mapping 'C' to 01, 'A' is 00
-    map['G' - 'A'] = 2;     // mapping 'G' to 10
-    map['T' - 'A'] = 3;     // mapping 'T' to 11
+    int n = s.length();
 
-    for (int i = 0; i &lt; s.length() - 9; i++) {
-        int v = 0;
+    HashMap&lt;Character, Integer&gt; m = new HashMap&lt;&gt;();        // save mapping relation
+    m.put('A', 0);
+    m.put('C', 1);
+    m.put('G', 2);
+    m.put('T', 3);
 
-        for (int j = i; j &lt; i + 10; j++) {      // search 10 chars ahead
-            v &lt;&lt;= 2;                            // left shift 2 digit for new incoming char
-            v |= map[s.charAt(j) - 'A'];        // add coding to the end to extend
-        }
+    int mask = 0;
+    Set&lt;Integer&gt; sequence = new HashSet&lt;&gt;();        // save previous sequence
+    Set&lt;String&gt; out = new HashSet&lt;&gt;();
 
-        /*
-         * 1. This sequence is not a new sequence (duplicated)
-         * 2. This duplicated sequence has not been added to result (avoid duplicated result in output list) */
-        if (!sequence.add(v) &amp;&amp; duplicatedSequence.add(v)) {
+    for (int i = 0; i &lt; 10; i++) {      // first sequence
+        mask &lt;&lt;= 2;
+        mask |= m.get(s.charAt(i));
+    }
+    sequence.add(mask);
+
+    for (int i = 1; i &lt; n - 9; i++) {           // rolling hash
+
+        mask &lt;&lt;= 2;                             // left shift to free the last 2 bit
+        mask |= m.get(s.charAt(i + 9));         // add a new 2-bits number in the last two bits
+        mask &amp;= ~(3 &lt;&lt; 20);                     // unset first two bits: 2L-bit and (2L + 1)-bit
+
+        if (sequence.contains(mask)) {
             out.add(s.substring(i, i + 10));
         }
+        sequence.add(mask);
     }
-    return out;
+
+    return new ArrayList&lt;&gt;(out);
+}
 </code></pre>
               
             </div>
