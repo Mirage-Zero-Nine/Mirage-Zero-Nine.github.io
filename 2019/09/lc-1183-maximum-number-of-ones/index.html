@@ -13,20 +13,20 @@
 
 <meta property="og:description" content="">
 <meta property="og:type" content="article">
-<meta property="og:title" content="LC 115/940 - Distinct Subsequences">
-<meta name="twitter:title" content="LC 115/940 - Distinct Subsequences">
-<meta property="og:url" content="https://yyzhou95.github.io/2019/09/lc-115/940-distinct-subsequences/">
-<meta property="twitter:url" content="https://yyzhou95.github.io/2019/09/lc-115/940-distinct-subsequences/">
+<meta property="og:title" content="LC 1183 - Maximum Number of Ones">
+<meta name="twitter:title" content="LC 1183 - Maximum Number of Ones">
+<meta property="og:url" content="https://yyzhou95.github.io/2019/09/lc-1183-maximum-number-of-ones/">
+<meta property="twitter:url" content="https://yyzhou95.github.io/2019/09/lc-1183-maximum-number-of-ones/">
 <meta property="og:site_name" content="Bingo!">
 <meta property="og:description" content="">
 <meta name="twitter:description" content="">
 <meta property="og:locale" content="en-us">
 
   
-    <meta property="article:published_time" content="2019-09-11T00:00:00">
+    <meta property="article:published_time" content="2019-09-12T00:00:00">
   
   
-    <meta property="article:modified_time" content="2019-09-11T00:00:00">
+    <meta property="article:modified_time" content="2019-09-12T00:00:00">
   
   
   
@@ -38,7 +38,9 @@
   
   
     
-      <meta property="article:tag" content="Dynamic Programming">
+      <meta property="article:tag" content="Math">
+    
+      <meta property="article:tag" content="Greedy">
     
   
 
@@ -59,14 +61,14 @@
   <meta property="twitter:image" content="https://yyzhou95.github.io/img/avatar.jpg">
 
 
-    <title>LC 115/940 - Distinct Subsequences</title>
+    <title>LC 1183 - Maximum Number of Ones</title>
 
     <link rel="icon" href="https://yyzhou95.github.io/favicon.png">
     
 
     
 
-    <link rel="canonical" href="https://yyzhou95.github.io/2019/09/lc-115/940-distinct-subsequences/">
+    <link rel="canonical" href="https://yyzhou95.github.io/2019/09/lc-1183-maximum-number-of-ones/">
 
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
@@ -250,15 +252,15 @@
             <div class="post-header main-content-wrap text-left">
   
     <h1 class="post-title" itemprop="headline">
-      LC 115/940 - Distinct Subsequences
+      LC 1183 - Maximum Number of Ones
     </h1>
   
   
   <div class="postShorten-meta post-meta">
     
-      <time itemprop="datePublished" datetime="2019-09-11T00:00:00Z">
+      <time itemprop="datePublished" datetime="2019-09-12T00:00:00Z">
         
-  September 11, 2019
+  September 12, 2019
 
       </time>
     
@@ -279,196 +281,103 @@
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <h1 id="distinct-subsequences">Distinct Subsequences</h1>
+              <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
+<ul>
+<li><a href="#maximum-number-of-ones">Maximum Number of Ones</a>
+<ul>
+<li><a href="#problem-description">Problem description</a></li>
+<li><a href="#method">Method</a></li>
+<li><a href="#code">Code</a></li>
+</ul></li>
+</ul>
+</nav>
 
-<p>Link: <a href="https://leetcode.com/problems/distinct-subsequences/">Distinct Subsequences</a></p>
+<h1 id="maximum-number-of-ones">Maximum Number of Ones</h1>
+
+<p>Link: <a href="https://leetcode.com/problems/maximum-number-of-ones/">Maximum Number of Ones</a></p>
 
 <h2 id="problem-description">Problem description</h2>
 
-<p>Given a string <strong>S</strong> and a string <strong>T</strong>, count the number of distinct subsequences of <strong>S</strong> which equals <strong>T</strong>.</p>
+<p>Consider a matrix <code>M</code> with dimensions <code>width * height</code>, such that every cell has value <code>0</code> or <code>1</code>, and any <strong>square</strong> sub-matrix of <code>M</code> of size <code>sideLength * sideLength</code> has at most <code>maxOnes</code> ones.</p>
 
-<p>A subsequence of a string is a new string which is formed from the original string by deleting some (can be none) of the characters without disturbing the relative positions of the remaining characters. (ie, <code>&quot;ACE&quot;</code> is a subsequence of <code>&quot;ABCDE&quot;</code> while <code>&quot;AEC&quot;</code> is not).</p>
+<p>Return the maximum possible number of ones that the matrix <code>M</code> can have.</p>
 
 <p><strong>Example 1:</strong></p>
 
-<pre><code>Input: S = &quot;rabbbit&quot;, T = &quot;rabbit&quot;
-Output: 3
+<pre><code>Input: width = 3, height = 3, sideLength = 2, maxOnes = 1
+Output: 4
 Explanation:
-
-As shown below, there are 3 ways you can generate &quot;rabbit&quot; from S.
-(The caret symbol ^ means the chosen letters)
-
-rabbbit
-^^^^ ^^
-rabbbit
-^^ ^^^^
-rabbbit
-^^^ ^^^
+In a 3*3 matrix, no 2*2 sub-matrix can have more than 1 one.
+The best solution that has 4 ones is:
+[1,0,1]
+[0,0,0]
+[1,0,1]
 </code></pre>
 
 <p><strong>Example 2:</strong></p>
 
-<pre><code>Input: S = &quot;babgbag&quot;, T = &quot;bag&quot;
-Output: 5
+<pre><code>Input: width = 3, height = 3, sideLength = 2, maxOnes = 2
+Output: 6
 Explanation:
-
-As shown below, there are 5 ways you can generate &quot;bag&quot; from S.
-(The caret symbol ^ means the chosen letters)
-
-babgbag
-^^ ^
-babgbag
-^^    ^
-babgbag
-^    ^^
-babgbag
-  ^  ^^
-babgbag
-    ^^^
+[1,0,1]
+[1,0,1]
+[1,0,1]
 </code></pre>
+
+<p><strong>Constraints:</strong></p>
+
+<ul>
+<li><code>1 &lt;= width, height &lt;= 100</code></li>
+<li><code>1 &lt;= sideLength &lt;= width, height</code></li>
+<li><code>0 &lt;= maxOnes &lt;= sideLength * sideLength</code></li>
+</ul>
 
 <h2 id="method">Method</h2>
 
-<p>Dynamic programming.</p>
+<p>If creating the first square matrix, the big matrix will be the copies of this one (translation copies).</p>
 
-<p>State transition:</p>
+<p>The value of each location in the square matrix will appear at multiple locations in the big matrix. Count the number of locations and sort them.</p>
 
-<p><code>dp[i][j]</code>: Numbers of distinct subsequences of <code>s[1..i]</code> which equals <code>t[1..j]</code>.</p>
-
-<ol>
-<li><code>dp[i][j] = dp[i][j - 1]</code>.</li>
-<li>If <code>s.charAt(j - 1) == t.charAt(i - 1)</code>, then <code>dp[i][j] += dp[i - 1][j - 1]</code>.</li>
-</ol>
-
-<p>If <code>s.charAt(j - 1) != t.charAt(i - 1)</code>, then <code>dp[i, j] = dp[i, j - 1]</code>, since current char will not be taken.</p>
-
-<p>If <code>s.charAt(j - 1) == t.charAt(i - 1)</code>, then current char can be taken to make the last char of T. Under this condition, <code>dp[i][j] = dp[i - 1][j - 1]</code>, which is # of previous condition. Current char is last char that made up of subsequence, therefore, no extra value needed under this condition. But it is also possible that current char is not taken, which is same as first situation. Therefore, no matter which condition is triggered, <code>dp[i][j]</code> should be at least <code>dp[i][j - 1]</code>.</p>
-
-<p>Time complexity: <code>O(n^2)</code>.</p>
-
-<p>Space complexity: <code>O(n)</code> by rolling array.</p>
+<p>Then assign the ones in the square matrix with more occurrences with 1.</p>
 
 <h2 id="code">Code</h2>
 
 <pre><code class="language-java">/**
- * Dynamic programming.
- * State transition:
- * dp[i][j] = dp[i][j - 1], if s.charAt(j - 1) == t.charAt(i - 1), then dp[i][j] += dp[i - 1][j - 1]
- * dp[i][j]: S(0, j) contains distinct subsequences of T(0, i).
- * If T[i] != S[j], then dp[i,j] = dp[i,j-1], since current char will not be taken.
- * If T[i] == S[j], then current char can be taken to make the last char of T.
- * Under this condition, dp[i][j] = dp[i-1][j-1], which is # of previous condition.
- * Current char is last char that made up of subsequence, therefore, no extra value needed under this condition.
- * But it is also possible that current char is not taken, which is same as first situation.
+ * If creating the first square matrix, the big matrix will be the copies of this one (translation copies).
+ * The value of each location in the square matrix will appear at multiple locations in the big matrix.
+ * Count the number of locations and sort them.
+ * Then assign the ones in the square matrix with more occurrences with 1.
  *
- * @param s string not longer than t
- * @param t second string
- * @return number of distinct subsequences of S which equals T
+ * @param width      given width of matrix M
+ * @param height     given height of matrix M
+ * @param sideLength given sub square matrix length
+ * @param maxOnes    limit of ones shown in sub matrix
+ * @return maximum possible number of ones that the matrix M can have
  */
-public int numDistinct(String s, String t) {
-    int n = s.length(), m = t.length();
+public int maximumNumberOfOnes(int width, int height, int sideLength, int maxOnes) {
 
-    int[][] dp = new int[m + 1][n + 1];
+    /* Corner case */
+    if (maxOnes == 0) {
+        return 0;
+    }
 
-    Arrays.fill(dp[0], 1);      // empty string is a subsequence
+    ArrayList&lt;Integer&gt; l = new ArrayList&lt;&gt;();
 
-    for (int i = 1; i &lt; dp.length; i++) {     // row: char in t
-        for (int j = 1; j &lt; dp[0].length; j++) {      // column: char in s
-
-            /*
-             * Two conditions:
-             * 1. If chars in S and T is not matched, then dp[i][j] = dp[i][j-1]. Char in S will not influence [j-1]
-             * 2. If two chars is matched, then based on condition 1, dp[i][j] += dp[i - 1][j - 1].
-             * dp[i - 1][j - 1]: S(0, j - 1) contains distinct subsequences of T(0, i - 1) */
-            dp[i][j] = dp[i][j - 1];
-
-            if (s.charAt(j - 1) == t.charAt(i - 1)) {
-                dp[i][j] += dp[i - 1][j - 1];
-            }
+    for (int i = 0; i &lt; sideLength; i++) {
+        for (int j = 0; j &lt; sideLength; j++) {
+            l.add(((width - i - 1) / sideLength + 1) * ((height - j - 1) / sideLength + 1));
         }
     }
 
-    return dp[m][n];
-}
-</code></pre>
+    Collections.sort(l);
+    int max = 0;
+    int n = l.size() - 1;
 
-<h1 id="distinct-subsequences-ii">Distinct Subsequences II</h1>
-
-<p>Link: <a href="https://leetcode.com/problems/distinct-subsequences-ii/">Distinct Subsequences II</a></p>
-
-<h2 id="problem-description-1">Problem description</h2>
-
-<p>Given a string <code>S</code>, count the number of distinct, non-empty subsequences of <code>S</code> .</p>
-
-<p>Since the result may be large, <strong>return the answer modulo 10^9 + 7</strong>.</p>
-
-<p><strong>Example 1:</strong></p>
-
-<pre><code>Input: &quot;abc&quot;
-Output: 7
-Explanation: The 7 distinct subsequences are &quot;a&quot;, &quot;b&quot;, &quot;c&quot;, &quot;ab&quot;, &quot;ac&quot;, &quot;bc&quot;, and &quot;abc&quot;.
-</code></pre>
-
-<p><strong>Example 2:</strong></p>
-
-<pre><code>Input: &quot;aba&quot;
-Output: 6
-Explanation: The 6 distinct subsequences are &quot;a&quot;, &quot;b&quot;, &quot;ab&quot;, &quot;ba&quot;, &quot;aa&quot; and &quot;aba&quot;.
-</code></pre>
-
-<p><strong>Example 3:</strong></p>
-
-<pre><code>Input: &quot;aaa&quot;
-Output: 3
-Explanation: The 3 distinct subsequences are &quot;a&quot;, &quot;aa&quot; and &quot;aaa&quot;.
-</code></pre>
-
-<h2 id="method-1">Method</h2>
-
-<p>Dynamic programming.</p>
-
-<p><code>dp[i]</code> represents the count of unique subsequence ends with <code>S[i]</code>. <code>dp[i]</code> is initialized to 1 for <code>S[0 ... i]</code>.
-For each <code>dp[i]</code>, define <code>j</code> from <code>0</code> to <code>i - 1</code>:</p>
-
-<ol>
-<li>If <code>s[j] != s[i]</code>, then <code>dp[i] += dp[j]</code>.</li>
-<li>If <code>s[j] == s[i]</code>, do nothing to avoid duplicates.</li>
-</ol>
-
-<p>Finally, <code>result = sum(dp[0], ... dp[n - 1])</code>.</p>
-
-<p>As optimization, use a int represent current # of sequence.</p>
-
-<p>Each time, count current sum of subsequence minus duplicated # of subsequence.</p>
-
-<h2 id="code-1">Code</h2>
-
-<pre><code class="language-java">/**
- * Dynamic programming.
- * dp[i] represents the count of unique subsequence ends with S[i].
- * dp[i] is initialized to 1 for S[0 ... i].
- * For each dp[i], define j from 0 to i - 1:
- * 1. If s[j] != s[i], then dp[i] += dp[j]
- * 2. If s[j] == s[i], do nothing to avoid duplicates.
- * Finally, result = sum(dp[0], ... dp[n - 1]).
- * As optimization, use a int represent current # of sequence.
- * Each time, count current sum of subsequence minus duplicated # of subsequence.
- *
- * @param S given string
- * @return count the number of distinct, non-empty subsequences of S modulo 10^9 + 7
- */
-public int distinctSubseqII(String S) {
-    int mod = (int) 1e9 + 7, n = S.length(), sum = 0;
-    int[] count = new int[26];      // count # of subsequence under each character
-
-    for (int i = 0; i &lt; n; i++) {
-        int c = S.charAt(i) - 'a';
-        int cur = (1 + sum - count[c] + mod) % mod;     // current sum is based on previous sum minus duplicated #
-        sum = (sum + cur) % mod;
-        count[c] = (count[c] + cur) % mod;
+    for (int i = 0; i &lt; maxOnes; i++) {
+        max += l.get(n - i);        // count max ones from the largest appearance
     }
 
-    return sum;
+    return max;
 }
 </code></pre>
               
@@ -482,7 +391,9 @@ public int distinctSubseqII(String S) {
                   <div class="post-footer-tags">
                     <span class="text-color-light text-small">TAGGED IN</span><br/>
                     
-  <a class="tag tag--primary tag--small" href="https://yyzhou95.github.io/tags/dynamic-programming/">Dynamic Programming</a>
+  <a class="tag tag--primary tag--small" href="https://yyzhou95.github.io/tags/math/">Math</a>
+
+  <a class="tag tag--primary tag--small" href="https://yyzhou95.github.io/tags/greedy/">Greedy</a>
 
                   </div>
                 
@@ -495,7 +406,7 @@ public int distinctSubseqII(String S) {
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/09/lc-1183-maximum-number-of-ones/" data-tooltip="LC 1183 - Maximum Number of Ones">
+                <a class="post-action-btn btn btn--disabled">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -503,7 +414,7 @@ public int distinctSubseqII(String S) {
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/09/lc-187-repeated-dna-sequences/" data-tooltip="LC 187 - Repeated DNA Sequences">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/09/lc-115/940-distinct-subsequences/" data-tooltip="LC 115/940 - Distinct Subsequences">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
@@ -524,7 +435,7 @@ public int distinctSubseqII(String S) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#">
+          <a class="post-action-btn btn btn--default" href="#table-of-contents">
         
           <i class="fa fa-list"></i>
         </a>
@@ -553,7 +464,7 @@ public int distinctSubseqII(String S) {
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/09/lc-1183-maximum-number-of-ones/" data-tooltip="LC 1183 - Maximum Number of Ones">
+                <a class="post-action-btn btn btn--disabled">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -561,7 +472,7 @@ public int distinctSubseqII(String S) {
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/09/lc-187-repeated-dna-sequences/" data-tooltip="LC 187 - Repeated DNA Sequences">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/09/lc-115/940-distinct-subsequences/" data-tooltip="LC 115/940 - Distinct Subsequences">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
@@ -582,7 +493,7 @@ public int distinctSubseqII(String S) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#">
+          <a class="post-action-btn btn btn--default" href="#table-of-contents">
         
           <i class="fa fa-list"></i>
         </a>
