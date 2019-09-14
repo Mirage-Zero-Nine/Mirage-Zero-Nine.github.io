@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="generator" content="Hugo 0.57.2 with theme Tranquilpeak 0.4.7-BETA">
+<meta name="author" content="Steve Zhou">
+<meta name="keywords" content="">
+<meta name="description" content="">
+
+
+<meta property="og:description" content="">
+<meta property="og:type" content="article">
+<meta property="og:title" content="LC 56/57/252/253/986 - Merge/Insert Intervals with Overlap">
+<meta name="twitter:title" content="LC 56/57/252/253/986 - Merge/Insert Intervals with Overlap">
+<meta property="og:url" content="https://yyzhou95.github.io/2019/07/lc-56/57/252/253/986-merge/insert-intervals-with-overlap/">
+<meta property="twitter:url" content="https://yyzhou95.github.io/2019/07/lc-56/57/252/253/986-merge/insert-intervals-with-overlap/">
+<meta property="og:site_name" content="Bingo!">
+<meta property="og:description" content="">
+<meta name="twitter:description" content="">
+<meta property="og:locale" content="en-us">
+
+  
+    <meta property="article:published_time" content="2019-07-25T00:00:00">
+  
+  
+    <meta property="article:modified_time" content="2019-07-25T00:00:00">
+  
+  
+  
+    
+      <meta property="article:section" content="Algorithm">
+    
+      <meta property="article:section" content="Problem Set">
+    
+  
+  
+    
+      <meta property="article:tag" content="Sorting">
+    
+      <meta property="article:tag" content="Two Pointers/Sliding Window">
+    
+      <meta property="article:tag" content="Heap">
+    
+  
+
+
+<meta name="twitter:card" content="summary">
+
+
+
+
+
+
+
+
+
+
+
+  <meta property="og:image" content="https://yyzhou95.github.io/img/avatar.jpg">
+  <meta property="twitter:image" content="https://yyzhou95.github.io/img/avatar.jpg">
+
+
+    <title>LC 56/57/252/253/986 - Merge/Insert Intervals with Overlap</title>
+
+    <link rel="icon" href="https://yyzhou95.github.io/favicon.png">
+    
+
+    
+
+    <link rel="canonical" href="https://yyzhou95.github.io/2019/07/lc-56/57/252/253/986-merge/insert-intervals-with-overlap/">
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/jquery.fancybox.min.css" integrity="sha256-vuXZ9LGmmwtjqFX1F+EKin1ThZMub58gKULUyf0qECk=" crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.4/helpers/jquery.fancybox-thumbs.min.css" integrity="sha256-SEa4XYAHihTcEP1f5gARTB2K26Uk8PsndQYHQC1f4jU=" crossorigin="anonymous" />
+    
+    
+    <link rel="stylesheet" href="https://yyzhou95.github.io/css/style-twzjdbqhmnnacqs0pwwdzcdbt8yhv8giawvjqjmyfoqnvazl0dalmnhdkvp7.min.css" />
+    
+    
+      
+        <link rel="stylesheet"  href="https://yyzhou95.github.io/css/about.css">
+      
+    
+
+    
+      
+    
+    
+  </head>
+
+  <body>
+    <div id="blog">
+      <header id="header" data-behavior="5">
+  <i id="btn-open-sidebar" class="fa fa-lg fa-bars"></i>
+  <div class="header-title">
+    <a class="header-title-link" href="https://yyzhou95.github.io/">Bingo!</a>
+  </div>
+  
+    
+      <a class="header-right-picture "
+         href="https://yyzhou95.github.io/about">
+    
+    
+    
+      
+        <img class="header-picture" src="https://yyzhou95.github.io/img/avatar.jpg" alt="Author&#39;s picture" />
+      
+    
+    </a>
+  
+</header>
+
+      <nav id="sidebar" data-behavior="5">
+  <div class="sidebar-container">
+    
+      <div class="sidebar-profile">
+        <a href="https://yyzhou95.github.io/about">
+          <img class="sidebar-profile-picture" src="https://yyzhou95.github.io/img/avatar.jpg" alt="Author&#39;s picture" />
+        </a>
+        <h4 class="sidebar-profile-name">Steve Zhou</h4>
+        
+          <h5 class="sidebar-profile-bio">Bingo!</h5>
+        
+      </div>
+    
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://yyzhou95.github.io/">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-home"></i>
+      
+      <span class="sidebar-button-desc">Home</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://yyzhou95.github.io/categories/algorithm/">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-flag-o"></i>
+      
+      <span class="sidebar-button-desc">Algorithm</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://yyzhou95.github.io/categories/notes/">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-sticky-note"></i>
+      
+      <span class="sidebar-button-desc">Notebook</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://yyzhou95.github.io/categories">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-bookmark"></i>
+      
+      <span class="sidebar-button-desc">Categories</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://yyzhou95.github.io/tags">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-tags"></i>
+      
+      <span class="sidebar-button-desc">Tags</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://yyzhou95.github.io/archives">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-archive"></i>
+      
+      <span class="sidebar-button-desc">Archives</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://yyzhou95.github.io/about">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-question"></i>
+      
+      <span class="sidebar-button-desc">About</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://github.com/yyzhou95" target="_blank" rel="noopener">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-github"></i>
+      
+      <span class="sidebar-button-desc">GitHub</span>
+    </a>
+  </li>
+
+
+    </ul>
+    <ul class="sidebar-buttons">
+      
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://yyzhou95.github.io/index.xml">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-rss"></i>
+      
+      <span class="sidebar-button-desc">RSS</span>
+    </a>
+  </li>
+
+  <li class="sidebar-button">
+    
+      <a class="sidebar-button-link " href="https://github.com/yyzhou95/yyzhou95.github.io" target="_blank" rel="noopener">
+    
+      <i class="sidebar-button-icon fa fa-lg fa-link"></i>
+      
+      <span class="sidebar-button-desc">Source Code</span>
+    </a>
+  </li>
+
+
+    </ul>
+  </div>
+</nav>
+
+      
+
+      <div id="main" data-behavior="5"
+        class="
+               hasCoverMetaOut
+               ">
+        <article class="post" itemscope itemType="http://schema.org/BlogPosting">
+          
+          
+            <div class="post-header main-content-wrap text-left">
+  
+    <h1 class="post-title" itemprop="headline">
+      LC 56/57/252/253/986 - Merge/Insert Intervals with Overlap
+    </h1>
+  
+  
+  <div class="postShorten-meta post-meta">
+    
+      <time itemprop="datePublished" datetime="2019-07-25T00:00:00Z">
+        
+  July 25, 2019
+
+      </time>
+    
+    
+  
+  
+    <span>in</span>
+    
+      <a class="category-link" href="https://yyzhou95.github.io/categories/algorithm">Algorithm</a>, 
+    
+      <a class="category-link" href="https://yyzhou95.github.io/categories/problem-set">Problem Set</a>
+    
+  
+
+  </div>
+
+</div>
+          
+          <div class="post-content markdown" itemprop="articleBody">
+            <div class="main-content-wrap">
+              <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
+<ul>
+<li><a href="#merge-intervals">Merge Intervals</a>
+<ul>
+<li><a href="#problem-description">Problem description</a></li>
+<li><a href="#method">Method</a></li>
+<li><a href="#code">Code</a></li>
+</ul></li>
+<li><a href="#insert-interval">Insert Interval</a>
+<ul>
+<li><a href="#problem-description-1">Problem description</a></li>
+<li><a href="#method-1">Method</a></li>
+<li><a href="#code-1">Code</a></li>
+</ul></li>
+<li><a href="#meeting-rooms">Meeting Rooms</a>
+<ul>
+<li><a href="#problem-description-2">Problem description</a></li>
+<li><a href="#method-2">Method</a></li>
+<li><a href="#code-2">Code</a></li>
+</ul></li>
+<li><a href="#meeting-rooms-ii">Meeting Rooms II</a>
+<ul>
+<li><a href="#problem-description-3">Problem description</a></li>
+<li><a href="#method-3">Method</a></li>
+<li><a href="#code-3">Code</a></li>
+</ul></li>
+<li><a href="#interval-list-intersections">Interval List Intersections</a>
+<ul>
+<li><a href="#problem-description-4">Problem description</a></li>
+<li><a href="#method-4">Method</a></li>
+<li><a href="#code-4">Code</a></li>
+</ul></li>
+</ul>
+</nav>
+
+<h1 id="merge-intervals">Merge Intervals</h1>
+
+<p>Link: <a href="https://leetcode.com/problems/merge-intervals/">Merge Intervals</a></p>
+
+<h2 id="problem-description">Problem description</h2>
+
+<p>Given a collection of intervals, merge all overlapping intervals.</p>
+
+<p><strong>Example 1:</strong></p>
+
+<pre><code>Input: [[1,3],[2,6],[8,10],[15,18]]
+Output: [[1,6],[8,10],[15,18]]
+Explanation: Since intervals [1,3] and [2,6] overlaps, merge them into [1,6].
+</code></pre>
+
+<p><strong>Example 2:</strong></p>
+
+<pre><code>Input: [[1,4],[4,5]]
+Output: [[1,5]]
+Explanation: Intervals [1,4] and [4,5] are considered overlapping.
+</code></pre>
+
+<h2 id="method">Method</h2>
+
+<p>Sort the array first by each interval&rsquo;s first element. Then add each interval.</p>
+
+<p>After sorting,<code>interval[i][0] &lt;= interval[i+1][0]</code>. Therefore, to check overlapping, compare<code>interval[i][1]</code>.</p>
+
+<ul>
+<li>If current interval left bound is smaller than previous interval right bound, then there is an overlapping. Reset right bound to larger one.</li>
+<li>If two intervals have no overlapping, add it to result and update previous checking interval to current one.</li>
+</ul>
+
+<h2 id="code">Code</h2>
+
+<pre><code class="language-java">/**
+ * Sort the array first by each interval's first element.
+ * Then add each interval.
+ * After sorting, interval[i][0] &lt;= interval[i+1][0]. Therefore, to check overlapping, compare interval[i][1].
+ * If current interval left bound is smaller than previous interval right bound, then there is an overlapping.
+ * Reset right bound to larger one.
+ * If two intervals have no overlapping, add it to result and update previous checking interval to current one.
+ *
+ * @param intervals input Interval list
+ * @return merged result
+ */
+public int[][] merge(int[][] intervals) {
+
+    /* Corner case */
+    if (intervals.length &lt;= 1) {
+        return intervals;
+    }
+
+    Arrays.sort(intervals, Comparator.comparingInt(i -&gt; i[0]));     // sort based on intervals[i][0]
+
+    List&lt;int[]&gt; result = new ArrayList&lt;&gt;();
+    int[] temp = intervals[0];
+    result.add(temp);
+
+    for (int[] interval : intervals) {      // during the iteration, interval[i][0] &lt;= interval[i+1][0]
+        if (interval[0] &lt;= temp[1]) {        // overlapping intervals
+            temp[1] = Math.max(temp[1], interval[1]);     // find larger right bound to merge interval
+        } else {                             // disjoint intervals
+            temp = interval;
+            result.add(temp);       // add the new interval to the list and update temp
+        }
+    }
+
+    return result.toArray(new int[result.size()][]);
+}
+</code></pre>
+
+<h1 id="insert-interval">Insert Interval</h1>
+
+<p>Link: <a href="https://leetcode.com/problems/insert-interval/">Insert Interval</a></p>
+
+<h2 id="problem-description-1">Problem description</h2>
+
+<p>Given a set of <em>non-overlapping</em> intervals, insert a new interval into the intervals (merge if necessary).</p>
+
+<p>You may assume that the intervals were initially sorted according to their start times.</p>
+
+<p><strong>Example 1:</strong></p>
+
+<pre><code>Input: intervals = [[1,3],[6,9]], newInterval = [2,5]
+Output: [[1,5],[6,9]]
+</code></pre>
+
+<p><strong>Example 2:</strong></p>
+
+<pre><code>Input: intervals = [[1,2],[3,5],[6,7],[8,10],[12,16]], newInterval = [4,8]
+Output: [[1,2],[3,10],[12,16]]
+Explanation: Because the new interval [4,8] overlaps with [3,5],[6,7],[8,10].
+</code></pre>
+
+<h2 id="method-1">Method</h2>
+
+<p>Starts from new interval. New interval is the temporary value.
+- If given internal&rsquo;s right bound is smaller than left bound of new interval, insert given interval into list.
+- If new interval is smaller than given internal, insert new interval into list, replace temp value by given interval.
+-  These two situations are both non-overlapping. If found a overlapping, find larger bound of each value and continue.</p>
+
+<p>Finally, after the iteration, add final temp value into list.</p>
+
+<h2 id="code-1">Code</h2>
+
+<pre><code class="language-java">/**
+ * Starts from new interval. New interval is the temporary value.
+ * If given internal's right bound is smaller than left bound of new interval, insert given interval into list.
+ * If new interval is smaller than given internal, insert new interval into list, replace temp value by given interval.
+ * These two situations are both non-overlapping. If found a overlapping, find larger bound of each value and continue.
+ * Finally, after the iteration, add final temp value into list.
+ *
+ * @param intervals   interval list
+ * @param newInterval new interval to be inserted
+ * @return new array with input interval inserted
+ */
+public int[][] insert(int[][] intervals, int[] newInterval) {
+
+    List&lt;int[]&gt; out = new ArrayList&lt;&gt;();
+    int[] temp = newInterval;
+
+    for (int[] interval : intervals) {      // during the iteration, interval[i][0] &lt;= interval[i+1][0]
+
+        if (temp[0] &gt; interval[1]) {
+            out.add(interval);
+        } else if (temp[1] &lt; interval[0]) {
+            out.add(temp);
+            temp = interval;
+        } else {
+            temp[0] = Math.min(temp[0], interval[0]);
+            temp[1] = Math.max(temp[1], interval[1]);
+        }
+    }
+    out.add(temp);
+    return out.toArray(new int[out.size()][]);
+}
+</code></pre>
+
+<h1 id="meeting-rooms">Meeting Rooms</h1>
+
+<p>Link: <a href="https://leetcode.com/problems/meeting-rooms/">Meeting Rooms</a></p>
+
+<h2 id="problem-description-2">Problem description</h2>
+
+<p>Given an array of meeting time intervals consisting of start and end times <code>[[s1,e1],[s2,e2],...]</code> (si &lt; ei), determine if a person could attend all meetings.</p>
+
+<p><strong>Example 1:</strong></p>
+
+<pre><code>Input: [[0,30],[5,10],[15,20]]
+Output: false
+</code></pre>
+
+<p><strong>Example 2:</strong></p>
+
+<pre><code>Input: [[7,10],[2,4]]
+Output: true
+</code></pre>
+
+<h2 id="method-2">Method</h2>
+
+<p>Sort array first, then check if there is overlap that left bound is smaller than right bound.</p>
+
+<h2 id="code-2">Code</h2>
+
+<pre><code class="language-java">/**
+ * Sort array first, then check if there is overlap that left bound is smaller than right bound.
+ *
+ * @param intervals given intervals
+ * @return if there exists overlap.
+ */
+public boolean canAttendMeetings(int[][] intervals) {
+    if (intervals.length &lt; 2) {
+        return true;
+    }
+    Arrays.sort(intervals, Comparator.comparingInt(i -&gt; i[0]));
+    int[] temp = intervals[0];
+
+    for (int i = 1; i &lt; intervals.length; i++) {
+        if (intervals[i][0] &lt; temp[1]) {
+            return false;
+        } else {
+            temp = intervals[i];
+        }
+    }
+    return true;
+}
+</code></pre>
+
+<h1 id="meeting-rooms-ii">Meeting Rooms II</h1>
+
+<p>Link: <a href="https://leetcode.com/problems/meeting-rooms-ii/">Meeting Rooms II</a></p>
+
+<h2 id="problem-description-3">Problem description</h2>
+
+<p>Given an array of meeting time intervals consisting of start and end times <code>[[s1,e1],[s2,e2],...]</code> (si &lt; ei), find the minimum number of conference rooms required.</p>
+
+<p><strong>Example 1:</strong></p>
+
+<pre><code>Input: [[0, 30],[5, 10],[15, 20]]
+Output: 2
+</code></pre>
+
+<p><strong>Example 2:</strong></p>
+
+<pre><code>Input: [[7,10],[2,4]]
+Output: 1
+</code></pre>
+
+<h2 id="method-3">Method</h2>
+
+<p>Since it is only the end time conflict that requires one more room, therefore, use a heap to save ending time.</p>
+
+<p>They are several cases:</p>
+
+<ol>
+<li>Heap is empty.</li>
+<li>Two intervals has same start.</li>
+<li>Interval ends with a time smaller than top of heap (start before the other end).</li>
+<li>Interval ends with a time larger than top of heap (start after the end).</li>
+<li>Interval ends with a time smaller than top of heap.</li>
+</ol>
+
+<p>For situation 1,2,3, add current interval end to heap and one more room is required.</p>
+
+<p>For situation 4, their is no conflict, hence add the end time to heap.</p>
+
+<p>For situation 5, assume it is not required to add a room, do nothing but continue.</p>
+
+<h2 id="code-3">Code</h2>
+
+<pre><code class="language-java">/**
+ * Since it is only the end time conflict that requires one more room, therefore, use a heap to save ending time.
+ * They are several cases:
+ * 1. Heap is empty
+ * 2. two intervals has same start
+ * 3. interval ends with a time smaller than top of heap (start before the other end)
+ * 4. interval ends with a time larger than top of heap (start after the end)
+ * 5. interval ends with a time smaller than top of heap
+ * For situation 1,2,3, add current interval end to heap and one more room is required.
+ * For situation 4, their is no conflict, hence add the end time to heap.
+ * For situation 5, assume it is not required to add a room, do nothing but continue.
+ *
+ * @param intervals given time interval
+ * @return minimum non-overlapped number
+ */
+public int minMeetingRooms(int[][] intervals) {
+
+    /* Corner case */
+    if (intervals.length &lt; 2) {
+        return (intervals.length == 0) ? 0 : 1;
+    }
+
+    Arrays.sort(intervals, Comparator.comparingInt(i -&gt; i[0]));     // sort based on intervals[i][0]
+    int count = 0;
+    PriorityQueue&lt;Integer&gt; q = new PriorityQueue&lt;&gt;();
+
+    for (int i = 0; i &lt; intervals.length; i++) {
+        if (q.isEmpty() || intervals[i][0] &lt; q.peek() || intervals[i][0] == intervals[i - 1][0]) {
+            q.offer(intervals[i][1]);
+            count++;
+        } else if (intervals[i][0] &gt; q.peek()) {
+            q.poll();
+            q.offer(intervals[i][1]);
+        }
+    }
+    return count;
+}
+</code></pre>
+
+<h1 id="interval-list-intersections">Interval List Intersections</h1>
+
+<p>Link: <a href="https://leetcode.com/problems/interval-list-intersections/">Interval List Intersections</a></p>
+
+<h2 id="problem-description-4">Problem description</h2>
+
+<p>Given two lists of <strong>closed</strong> intervals, each list of intervals is pairwise disjoint and in sorted order.</p>
+
+<p>Return the intersection of these two interval lists.</p>
+
+<p><em>(Formally, a closed interval <a href="with a &lt;= b">a, b</a> denotes the set of real numbers x with a &lt;= x &lt;= b.  The intersection of two closed intervals is a set of real numbers that is either empty, or can be represented as a closed interval.  For example, the intersection of [1, 3] and [2, 4] is [2, 3].)</em></p>
+
+<p><strong>Example 1:</strong></p>
+
+<p><strong><img src="../../static/img/interval1-20190725174607450.png" alt="img" /></strong></p>
+
+<pre><code>Input: A = [[0,2],[5,10],[13,23],[24,25]], B = [[1,5],[8,12],[15,24],[25,26]]
+Output: [[1,2],[5,5],[8,10],[15,23],[24,24],[25,25]]
+Reminder: The inputs and the desired output are lists of Interval objects, and not arrays or lists.
+</code></pre>
+
+<p><strong>Note:</strong></p>
+
+<ol>
+<li><code>0 &lt;= A.length &lt; 1000</code></li>
+<li><code>0 &lt;= B.length &lt; 1000</code></li>
+<li><code>0 &lt;= A[i].start, A[i].end, B[i].start, B[i].end &lt; 10^9</code></li>
+</ol>
+
+<h2 id="method-4">Method</h2>
+
+<p>Two pointers, one point at A and one point at B. If there is interval, add result to list, otherwise move pointers.</p>
+
+<h2 id="code-4">Code</h2>
+
+<pre><code class="language-java">/**
+ * Two pointers, one point at A and one point at B. If there is interval, add result to list, otherwise move pointers.
+ *
+ * @param A first array
+ * @param B second array
+ * @return intersection of these two interval lists
+ */
+public int[][] intervalIntersection(int[][] A, int[][] B) {
+    ArrayList&lt;int[]&gt; res = new ArrayList&lt;&gt;();
+    int p1 = 0, p2 = 0;
+    int start, end;
+    while (p1 &lt; A.length &amp;&amp; p2 &lt; B.length) {
+
+        start = Math.max(A[p1][0], B[p2][0]);
+        end = Math.min(A[p1][1], B[p2][1]);
+        if (end &gt;= start) {
+            int[] tmp = new int[2];
+            tmp[0] = start;
+            tmp[1] = end;
+            res.add(tmp);
+        }
+        if (end == A[p1][1]) {
+            p1++;
+        } else {
+            p2++;
+        }
+    }
+    return res.toArray(new int[res.size()][]);
+}
+</code></pre>
+              
+            </div>
+          </div>
+          <div id="post-footer" class="post-footer main-content-wrap">
+            
+              
+                
+                
+                  <div class="post-footer-tags">
+                    <span class="text-color-light text-small">TAGGED IN</span><br/>
+                    
+  <a class="tag tag--primary tag--small" href="https://yyzhou95.github.io/tags/sorting/">Sorting</a>
+
+  <a class="tag tag--primary tag--small" href="https://yyzhou95.github.io/tags/two-pointers/sliding-window/">Two Pointers/Sliding Window</a>
+
+  <a class="tag tag--primary tag--small" href="https://yyzhou95.github.io/tags/heap/">Heap</a>
+
+                  </div>
+                
+              
+            
+            <div class="post-actions-wrap">
+  
+      <nav >
+        <ul class="post-actions post-action-nav">
+          
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/07/lc-1104-path-in-zigzag-labelled-binary-tree/" data-tooltip="LC 1104 - Path In Zigzag Labelled Binary Tree">
+              
+                  <i class="fa fa-angle-left"></i>
+                  <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
+                </a>
+            </li>
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/07/lc-218-the-skyline-problem/" data-tooltip="LC 218 - The Skyline Problem">
+              
+                  <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
+                  <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+          
+        </ul>
+      </nav>
+    <ul class="post-actions post-action-share" >
+      
+        <li class="post-action hide-lg hide-md hide-sm">
+          <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+            <i class="fa fa-share-alt"></i>
+          </a>
+        </li>
+        
+      
+      
+      <li class="post-action">
+        
+          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+        
+          <i class="fa fa-list"></i>
+        </a>
+      </li>
+    </ul>
+  
+</div>
+
+            
+              
+            
+          </div>
+        </article>
+        <footer id="footer" class="main-content-wrap">
+  <span class="copyrights">
+    &copy; 2019 <a href="https://github.com/yyzhou95">BorisMirage</a>. All Rights Reserved
+  </span>
+</footer>
+
+      </div>
+      <div id="bottom-bar" class="post-bottom-bar" data-behavior="5">
+        <div class="post-actions-wrap">
+  
+      <nav >
+        <ul class="post-actions post-action-nav">
+          
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/07/lc-1104-path-in-zigzag-labelled-binary-tree/" data-tooltip="LC 1104 - Path In Zigzag Labelled Binary Tree">
+              
+                  <i class="fa fa-angle-left"></i>
+                  <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
+                </a>
+            </li>
+            <li class="post-action">
+              
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/07/lc-218-the-skyline-problem/" data-tooltip="LC 218 - The Skyline Problem">
+              
+                  <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
+                  <i class="fa fa-angle-right"></i>
+                </a>
+            </li>
+          
+        </ul>
+      </nav>
+    <ul class="post-actions post-action-share" >
+      
+        <li class="post-action hide-lg hide-md hide-sm">
+          <a class="post-action-btn btn btn--default btn-open-shareoptions" href="#btn-open-shareoptions">
+            <i class="fa fa-share-alt"></i>
+          </a>
+        </li>
+        
+      
+      
+      <li class="post-action">
+        
+          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+        
+          <i class="fa fa-list"></i>
+        </a>
+      </li>
+    </ul>
+  
+</div>
+
+      </div>
+      <div id="share-options-bar" class="share-options-bar" data-behavior="5">
+  <i id="btn-close-shareoptions" class="fa fa-close"></i>
+  <ul class="share-options">
+    
+  </ul>
+</div>
+<div id="share-options-mask" class="share-options-mask"></div>
+    </div>
+    
+    <div id="about">
+  <div id="about-card">
+    <div id="about-btn-close">
+      <i class="fa fa-remove"></i>
+    </div>
+    
+      <img id="about-card-picture" src="https://yyzhou95.github.io/img/avatar.jpg" alt="Author&#39;s picture" />
+    
+    <h4 id="about-card-name">Steve Zhou</h4>
+    
+      <div id="about-card-bio">Bingo!</div>
+    
+    
+      <div id="about-card-job">
+        <i class="fa fa-briefcase"></i>
+        <br/>
+        Software Engineer
+      </div>
+    
+    
+      <div id="about-card-location">
+        <i class="fa fa-map-marker"></i>
+        <br/>
+        Los Angeles
+      </div>
+    
+  </div>
+</div>
+
+    
+
+    
+  
+    
+      <div id="cover" style="background-image:url('https://yyzhou95.github.io/img/bg.jpeg');"></div>
+    
+  
+
+
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js" integrity="sha256-/BfiIkHlHoVihZdc6TFuj7MmJ0TWcWsMXkeDFwhi0zw=" crossorigin="anonymous"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/2.1.7/js/jquery.fancybox.min.js" integrity="sha256-GEAnjcTqVP+vBp3SSc8bEDQqvWAZMiHyUSIorrWwH50=" crossorigin="anonymous"></script>
+
+
+<script src="https://yyzhou95.github.io/js/script-pcw6v3xilnxydl1vddzazdverrnn9ctynvnxgwho987mfyqkuylcb1nlt.min.js"></script>
+
+
+<script lang="javascript">
+window.onload = updateMinWidth;
+window.onresize = updateMinWidth;
+document.getElementById("sidebar").addEventListener("transitionend", updateMinWidth);
+function updateMinWidth() {
+  var sidebar = document.getElementById("sidebar");
+  var main = document.getElementById("main");
+  main.style.minWidth = "";
+  var w1 = getComputedStyle(main).getPropertyValue("min-width");
+  var w2 = getComputedStyle(sidebar).getPropertyValue("width");
+  var w3 = getComputedStyle(sidebar).getPropertyValue("left");
+  main.style.minWidth = `calc(${w1} - ${w2} - ${w3})`;
+}
+</script>
+
+<script>
+$(document).ready(function() {
+  hljs.configure({ classPrefix: '', useBR: false });
+  $('pre.code-highlight > code, pre > code').each(function(i, block) {
+    if (!$(this).hasClass('codeblock')) {
+      $(this).addClass('codeblock');
+    }
+    hljs.highlightBlock(block);
+  });
+});
+</script>
+
+
+  
+    
+  
+
+
+
+
+    
+  </body>
+</html>
+
