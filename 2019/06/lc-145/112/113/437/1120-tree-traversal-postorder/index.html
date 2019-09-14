@@ -13,10 +13,10 @@
 
 <meta property="og:description" content="">
 <meta property="og:type" content="article">
-<meta property="og:title" content="LC 145/112/113/437 - Tree Traversal: Postorder">
-<meta name="twitter:title" content="LC 145/112/113/437 - Tree Traversal: Postorder">
-<meta property="og:url" content="https://yyzhou95.github.io/2019/06/lc-145/112/113/437-tree-traversal-postorder/">
-<meta property="twitter:url" content="https://yyzhou95.github.io/2019/06/lc-145/112/113/437-tree-traversal-postorder/">
+<meta property="og:title" content="LC 145/112/113/437/1120 - Tree Traversal: Postorder">
+<meta name="twitter:title" content="LC 145/112/113/437/1120 - Tree Traversal: Postorder">
+<meta property="og:url" content="https://yyzhou95.github.io/2019/06/lc-145/112/113/437/1120-tree-traversal-postorder/">
+<meta property="twitter:url" content="https://yyzhou95.github.io/2019/06/lc-145/112/113/437/1120-tree-traversal-postorder/">
 <meta property="og:site_name" content="Bingo!">
 <meta property="og:description" content="">
 <meta name="twitter:description" content="">
@@ -63,14 +63,14 @@
   <meta property="twitter:image" content="https://yyzhou95.github.io/img/avatar.jpg">
 
 
-    <title>LC 145/112/113/437 - Tree Traversal: Postorder</title>
+    <title>LC 145/112/113/437/1120 - Tree Traversal: Postorder</title>
 
     <link rel="icon" href="https://yyzhou95.github.io/favicon.png">
     
 
     
 
-    <link rel="canonical" href="https://yyzhou95.github.io/2019/06/lc-145/112/113/437-tree-traversal-postorder/">
+    <link rel="canonical" href="https://yyzhou95.github.io/2019/06/lc-145/112/113/437/1120-tree-traversal-postorder/">
 
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
@@ -254,7 +254,7 @@
             <div class="post-header main-content-wrap text-left">
   
     <h1 class="post-title" itemprop="headline">
-      LC 145/112/113/437 - Tree Traversal: Postorder
+      LC 145/112/113/437/1120 - Tree Traversal: Postorder
     </h1>
   
   
@@ -310,6 +310,12 @@
 <li><a href="#problem-description-3">Problem description</a></li>
 <li><a href="#method-3">Method</a></li>
 <li><a href="#code-3">Code</a></li>
+</ul></li>
+<li><a href="#maximum-average-subtree">Maximum Average Subtree</a>
+<ul>
+<li><a href="#problem-description-4">Problem description</a></li>
+<li><a href="#method-4">Method</a></li>
+<li><a href="#code-4">Code</a></li>
 </ul></li>
 </ul>
 </nav>
@@ -590,6 +596,91 @@ private int dfs(TreeNode n, int sum) {
     return (n.val == sum ? 1 : 0) + dfs(n.left, sum - n.val) + dfs(n.right, sum - n.val);
 }
 </code></pre>
+
+<h1 id="maximum-average-subtree">Maximum Average Subtree</h1>
+
+<p>Link: <a href="https://leetcode.com/problems/maximum-average-subtree/">Maximum Average Subtree</a></p>
+
+<h2 id="problem-description-4">Problem description</h2>
+
+<p>Given the <code>root</code> of a binary tree, find the maximum average value of any subtree of that tree.</p>
+
+<p>(A subtree of a tree is any node of that tree plus all its descendants. The average value of a tree is the sum of its values, divided by the number of nodes.)</p>
+
+<p><strong>Example 1:</strong></p>
+
+<p><img src="../../static/img/1308_example_1-20190719170930364.png" alt="img" /></p>
+
+<pre><code>Input: [5,6,1]
+Output: 6.00000
+Explanation: 
+For the node with value = 5 we have and average of (5 + 6 + 1) / 3 = 4.
+For the node with value = 6 we have and average of 6 / 1 = 6.
+For the node with value = 1 we have and average of 1 / 1 = 1.
+So the answer is 6 which is the maximum.
+</code></pre>
+
+<p><strong>Note:</strong></p>
+
+<ol>
+<li>The number of nodes in the tree is between <code>1</code> and <code>5000</code>.</li>
+<li>Each node will have a value between <code>0</code> and <code>100000</code>.</li>
+<li>Answers will be accepted as correct if they are within <code>10^-5</code> of the correct answer.</li>
+</ol>
+
+<h2 id="method-4">Method</h2>
+
+<p>DFS.</p>
+
+<p>Note that the return value in DFS is the average of current tree and count of tree, instead of max average.</p>
+
+<h2 id="code-4">Code</h2>
+
+<pre><code class="language-java">private double max = 0;
+
+/**
+ * DFS.
+ * Note that the return value in DFS is the average of current tree and count of tree, instead of max average.
+ *
+ * @param root root node
+ * @return maximum average value of any subtree of that tree
+ */
+public double maximumAverageSubtree(TreeNode root) {
+    if (root == null) {
+        return 0.0;
+    }
+    dfs(root);
+    return max;
+}
+
+/**
+ * Find current tree's average and node count.
+ *
+ * @param r root node
+ * @return double array, average of nodes value in current tree and count of nodes in current tree.
+ */
+private double[] dfs(TreeNode r) {
+
+    if (r == null) {
+        return new double[]{0, 0};
+    }
+
+    double[] left = dfs(r.left);
+    double[] right = dfs(r.right);
+
+    /*
+     * Average has these parts:
+     * 1. left average * left node count.
+     * 2. right average * right node count.
+     * 3. root value * 1.
+     * Calculate current tree's average and compare to global max average. */
+    double ave = ((left[0] * left[1] + right[0] * right[1] + (double) r.val) / (left[1] + right[1] + 1));
+
+    this.max = Math.max(ave, this.max);     // find new global max
+
+    return new double[]{ave, left[1] + right[1] + 1};
+}
+</code></pre>
               
             </div>
           </div>
@@ -616,7 +707,7 @@ private int dfs(TreeNode n, int sum) {
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/06/lc-144/114/257/100/101/104/111-tree-traversal-preorder/" data-tooltip="LC 144/114/257/100/101/104/111 - Tree Traversal: Preorder">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/06/lc-144/114/257/100/101/104/111/337-tree-traversal-preorder/" data-tooltip="LC 144/114/257/100/101/104/111/337 - Tree Traversal: Preorder">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -674,7 +765,7 @@ private int dfs(TreeNode n, int sum) {
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/06/lc-144/114/257/100/101/104/111-tree-traversal-preorder/" data-tooltip="LC 144/114/257/100/101/104/111 - Tree Traversal: Preorder">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/06/lc-144/114/257/100/101/104/111/337-tree-traversal-preorder/" data-tooltip="LC 144/114/257/100/101/104/111/337 - Tree Traversal: Preorder">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>

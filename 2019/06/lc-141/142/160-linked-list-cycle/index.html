@@ -13,10 +13,10 @@
 
 <meta property="og:description" content="">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Linked List Cycle">
-<meta name="twitter:title" content="Linked List Cycle">
-<meta property="og:url" content="https://yyzhou95.github.io/2019/06/linked-list-cycle/">
-<meta property="twitter:url" content="https://yyzhou95.github.io/2019/06/linked-list-cycle/">
+<meta property="og:title" content="LC 141/142/160 - Linked List Cycle">
+<meta name="twitter:title" content="LC 141/142/160 - Linked List Cycle">
+<meta property="og:url" content="https://yyzhou95.github.io/2019/06/lc-141/142/160-linked-list-cycle/">
+<meta property="twitter:url" content="https://yyzhou95.github.io/2019/06/lc-141/142/160-linked-list-cycle/">
 <meta property="og:site_name" content="Bingo!">
 <meta property="og:description" content="">
 <meta name="twitter:description" content="">
@@ -63,14 +63,14 @@
   <meta property="twitter:image" content="https://yyzhou95.github.io/img/avatar.jpg">
 
 
-    <title>Linked List Cycle</title>
+    <title>LC 141/142/160 - Linked List Cycle</title>
 
     <link rel="icon" href="https://yyzhou95.github.io/favicon.png">
     
 
     
 
-    <link rel="canonical" href="https://yyzhou95.github.io/2019/06/linked-list-cycle/">
+    <link rel="canonical" href="https://yyzhou95.github.io/2019/06/lc-141/142/160-linked-list-cycle/">
 
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
@@ -254,7 +254,7 @@
             <div class="post-header main-content-wrap text-left">
   
     <h1 class="post-title" itemprop="headline">
-      Linked List Cycle
+      LC 141/142/160 - Linked List Cycle
     </h1>
   
   
@@ -287,38 +287,32 @@
             <div class="main-content-wrap">
               <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
 <ul>
-<li><a href="#problem-description">Problem description</a>
+<li><a href="#linked-list-cycle">Linked List Cycle</a>
 <ul>
-<li><a href="#linked-list-cycle">Linked List Cycle</a></li>
-<li><a href="#linked-list-cycle-ii">Linked List Cycle II</a></li>
-<li><a href="#intersection-of-two-linked-lists">Intersection of Two Linked Lists</a></li>
+<li><a href="#problem-description">Problem description</a></li>
+<li><a href="#method">Method</a></li>
+<li><a href="#code">Code</a></li>
 </ul></li>
-<li><a href="#method">Method</a>
+<li><a href="#linked-list-cycle-ii">Linked List Cycle II</a>
 <ul>
-<li><a href="#linked-list-cycle-1">Linked List Cycle</a></li>
-<li><a href="#linked-list-cycle-ii-1">Linked List Cycle II</a></li>
-<li><a href="#intersection-of-two-linked-lists-1">Intersection of Two Linked Lists</a></li>
+<li><a href="#problem-description-1">Problem description</a></li>
+<li><a href="#method-1">Method</a></li>
+<li><a href="#code-1">Code</a></li>
 </ul></li>
-<li><a href="#code">Code</a>
+<li><a href="#intersection-of-two-linked-lists">Intersection of Two Linked Lists</a>
 <ul>
-<li><a href="#linked-list-cycle-2">Linked List Cycle</a></li>
-<li><a href="#linked-list-cycle-ii-2">Linked List Cycle II</a></li>
-<li><a href="#intersection-of-two-linked-lists-2">Intersection of Two Linked Lists</a></li>
+<li><a href="#problem-description-2">Problem description</a></li>
+<li><a href="#method-2">Method</a></li>
+<li><a href="#code-2">Code</a></li>
 </ul></li>
 </ul>
 </nav>
 
-<p>Links:</p>
+<h1 id="linked-list-cycle">Linked List Cycle</h1>
 
-<ul>
-<li><a href="https://leetcode.com/problems/linked-list-cycle">Linked List Cycle</a></li>
-<li><a href="https://leetcode.com/problems/linked-list-cycle-ii">Linked List Cycle II</a></li>
-<li><a href="https://leetcode.com/problems/intersection-of-two-linked-lists">Intersection of Two Linked Lists</a></li>
-</ul>
+<p>Link: <a href="https://leetcode.com/problems/linked-list-cycle">Linked List Cycle</a></p>
 
-<h1 id="problem-description">Problem description</h1>
-
-<h2 id="linked-list-cycle">Linked List Cycle</h2>
+<h2 id="problem-description">Problem description</h2>
 
 <p>Given a linked list, determine if it has a cycle in it.</p>
 
@@ -355,7 +349,53 @@ Explanation: There is no cycle in the linked list.
 
 <p>Can you solve it using <em>O(1)</em> (i.e. constant) memory?</p>
 
-<h2 id="linked-list-cycle-ii">Linked List Cycle II</h2>
+<h2 id="method">Method</h2>
+
+<p>Two pointers. Faster one moves twice as slow pointer. If the given list has a cycle, two pointers will eventually meet.</p>
+
+<h2 id="code">Code</h2>
+
+<pre><code class="language-java">/**
+ * Two pointers. Faster one moves twice as slow pointer.
+ * If the given list has a cycle, two pointers will eventually meet.
+ * Otherwise, if fast reaches null, then there is no cycle in list.
+ *
+ * @param head head of list
+ * @return if it has a cycle in it
+ */
+public boolean hasCycle(ListNode head) {
+
+    /* Corner case */
+    if (head == null || head.next == null) {
+        return false;
+    }
+
+    ListNode slow = head;
+    ListNode fast = head.next;
+
+    while (slow != null) {
+
+        if (slow.val == fast.val) {
+            return true;
+        }
+
+        slow = slow.next;
+
+        if (fast.next != null &amp;&amp; fast.next.next != null) {      // reaches the end of list if no cycle found
+            fast = fast.next.next;
+        } else {
+            return false;
+        }
+    }
+    return false;
+}
+</code></pre>
+
+<h1 id="linked-list-cycle-ii">Linked List Cycle II</h1>
+
+<p>Link: <a href="https://leetcode.com/problems/linked-list-cycle-ii">Linked List Cycle II</a></p>
+
+<h2 id="problem-description-1">Problem description</h2>
 
 <p>Given a linked list, return the node where the cycle begins. If there is no cycle, return <code>null</code>.</p>
 
@@ -393,7 +433,71 @@ Explanation: There is no cycle in the linked list.
 <p><strong>Follow-up</strong>:
 Can you solve it without using extra space?</p>
 
-<h2 id="intersection-of-two-linked-lists">Intersection of Two Linked Lists</h2>
+<h2 id="method-1">Method</h2>
+
+<p>Two pointers. One fast and one slow. Fast pointer moves two nodes one time and slow pointer moves one node each time.</p>
+
+<p>Suppose the first meet at step k, the length of the Cycle is r, then:</p>
+
+<pre><code>2k - k = n * r 
+=&gt; k = n * r
+</code></pre>
+
+<p>Assume distance between the start node of list and the start node of cycle is s, the distance between the start of list and the first meeting node is k, distance between the start node of cycle and the first meeting node is m</p>
+
+<pre><code>=&gt; s = k - m
+=&gt; s = nr - m = (n - 1) * r + (r - m)
+</code></pre>
+
+<p>Take n = 1, using one pointer start at the beginning of list, another pointer start at meeting node. All of them wake one step at a time. The first time they meeting each other is the start of the cycle.</p>
+
+<h2 id="code-1">Code</h2>
+
+<pre><code class="language-java">/**
+ * Two pointers. Fast pointer moves two nodes one time and slow pointer moves one node each time.
+ * Suppose the first meet at step k, the length of the Cycle is r, then, 2k - k = n * r =&gt; k = n * r
+ * Assume distance between the start node of list and the start node of cycle is s.
+ * The distance between the start of list and the first meeting node is k.
+ * The distance between the start node of cycle and the first meeting node is m
+ * =&gt; s = k - m
+ * =&gt; s = nr - m = (n - 1) * r + (r - m)
+ * Take n = 1, using one pointer start at the beginning of list, another pointer start at meeting node.
+ * All of them wake one step at a time.
+ * The first time they meeting each other is the start of the cycle.
+ *
+ * @param head head node of list
+ * @return the node where the cycle begins, return null if there is no cycle
+ */
+public ListNode detectCycle(ListNode head) {
+
+    /* Corner case */
+    if (head == null || head.next == null) {
+        return null;
+    }
+
+    ListNode slow = head, fast = head;
+
+    while (fast != null &amp;&amp; fast.next != null) {
+        slow = slow.next;
+        fast = fast.next.next;
+
+        if (slow == fast) {     // found a cycle
+            while (head != slow) {
+                head = head.next;       // move head (as a pointer) until slow and start meets
+                slow = slow.next;       // actually I think this is not safe (memory)
+            }
+            return head;        // two nodes will meet at cycle start
+        }
+    }
+    return null;
+}
+</code></pre>
+
+<h1 id="intersection-of-two-linked-lists">Intersection of Two Linked Lists</h1>
+
+<p>Link: <a href="https://leetcode.com/problems/intersection-of-two-linked-lists">Intersection of Two Linked Lists</a></p>
+
+<h2 id="problem-description-2">Problem description</h2>
 
 <p>Write a program to find the node at which the intersection of two singly linked lists begins.</p>
 
@@ -440,119 +544,13 @@ Explanation: The two lists do not intersect, so return null.
 <li>Your code should preferably run in O(n) time and use only O(1) memory.</li>
 </ul>
 
-<h1 id="method">Method</h1>
-
-<h2 id="linked-list-cycle-1">Linked List Cycle</h2>
-
-<p>Two pointers. Faster one moves twice as slow pointer. If the given list has a cycle, two pointers will eventually meet.</p>
-
-<h2 id="linked-list-cycle-ii-1">Linked List Cycle II</h2>
-
-<p>Two pointers. One fast and one slow. Fast pointer moves two nodes one time and slow pointer moves one node each time.</p>
-
-<p>Suppose the first meet at step k, the length of the Cycle is r, then:</p>
-
-<pre><code>2k - k = n * r 
-=&gt; k = n * r
-</code></pre>
-
-<p>Assume distance between the start node of list and the start node of cycle is s, the distance between the start of list and the first meeting node is k, distance between the start node of cycle and the first meeting node is m</p>
-
-<pre><code>=&gt; s = k - m
-=&gt; s = nr - m = (n - 1) * r + (r - m)
-</code></pre>
-
-<p>Take n = 1, using one pointer start at the beginning of list, another pointer start at meeting node. All of them wake one step at a time. The first time they meeting each other is the start of the cycle.</p>
-
-<h2 id="intersection-of-two-linked-lists-1">Intersection of Two Linked Lists</h2>
+<h2 id="method-2">Method</h2>
 
 <p>Two pointers. Each pointer starts at the beginning of A/B. When traverse to the end of each list, swap to the other list. If there is an intersection, these two pointers will meet there.</p>
 
 <p>The reason is that if there is an intersection, then the difference between first pointer and second pointer is the path difference before the intersection. Hence, move pointers to the other list will make them have moving distance when they meet.</p>
 
-<h1 id="code">Code</h1>
-
-<h2 id="linked-list-cycle-2">Linked List Cycle</h2>
-
-<pre><code class="language-java">/**
- * Two pointers. Faster one moves twice as slow pointer.
- * If the given list has a cycle, two pointers will eventually meet.
- * Otherwise, if fast reaches null, then there is no cycle in list.
- *
- * @param head head of list
- * @return if it has a cycle in it
- */
-public boolean hasCycle(ListNode head) {
-
-    /* Corner case */
-    if (head == null || head.next == null) {
-        return false;
-    }
-
-    ListNode slow = head;
-    ListNode fast = head.next;
-
-    while (slow != null) {
-
-        if (slow.val == fast.val) {
-            return true;
-        }
-
-        slow = slow.next;
-
-        if (fast.next != null &amp;&amp; fast.next.next != null) {      // reaches the end of list if no cycle found
-            fast = fast.next.next;
-        } else {
-            return false;
-        }
-    }
-    return false;
-}
-</code></pre>
-
-<h2 id="linked-list-cycle-ii-2">Linked List Cycle II</h2>
-
-<pre><code class="language-java">/**
- * Two pointers. Fast pointer moves two nodes one time and slow pointer moves one node each time.
- * Suppose the first meet at step k, the length of the Cycle is r, then, 2k - k = n * r =&gt; k = n * r
- * Assume distance between the start node of list and the start node of cycle is s.
- * The distance between the start of list and the first meeting node is k.
- * The distance between the start node of cycle and the first meeting node is m
- * =&gt; s = k - m
- * =&gt; s = nr - m = (n - 1) * r + (r - m)
- * Take n = 1, using one pointer start at the beginning of list, another pointer start at meeting node.
- * All of them wake one step at a time.
- * The first time they meeting each other is the start of the cycle.
- *
- * @param head head node of list
- * @return the node where the cycle begins, return null if there is no cycle
- */
-public ListNode detectCycle(ListNode head) {
-
-    /* Corner case */
-    if (head == null || head.next == null) {
-        return null;
-    }
-
-    ListNode slow = head, fast = head;
-
-    while (fast != null &amp;&amp; fast.next != null) {
-        slow = slow.next;
-        fast = fast.next.next;
-
-        if (slow == fast) {     // found a cycle
-            while (head != slow) {
-                head = head.next;       // move head (as a pointer) until slow and start meets
-                slow = slow.next;       // actually I think this is not safe (memory)
-            }
-            return head;        // two nodes will meet at cycle start
-        }
-    }
-    return null;
-}
-</code></pre>
-
-<h2 id="intersection-of-two-linked-lists-2">Intersection of Two Linked Lists</h2>
+<h2 id="code-2">Code</h2>
 
 <pre><code class="language-java">/**
  * Two pointers. Each pointer starts at the beginning of A/B.
@@ -606,7 +604,7 @@ public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/06/lc-83/82/19-remove-elements-from-list/" data-tooltip="LC 83/82/19 - Remove Elements from List">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/06/lc-274/275-h-index/" data-tooltip="LC 274/275 - H-Index">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -614,7 +612,7 @@ public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/06/remove-elements-from-array/" data-tooltip="Remove Elements from Array">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/06/lc-26/27/80-remove-elements-from-array/" data-tooltip="LC 26/27/80 - Remove Elements from Array">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
@@ -664,7 +662,7 @@ public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/06/lc-83/82/19-remove-elements-from-list/" data-tooltip="LC 83/82/19 - Remove Elements from List">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/06/lc-274/275-h-index/" data-tooltip="LC 274/275 - H-Index">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -672,7 +670,7 @@ public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/06/remove-elements-from-array/" data-tooltip="Remove Elements from Array">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/06/lc-26/27/80-remove-elements-from-array/" data-tooltip="LC 26/27/80 - Remove Elements from Array">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
