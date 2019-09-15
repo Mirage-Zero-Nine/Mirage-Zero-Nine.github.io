@@ -13,10 +13,10 @@
 
 <meta property="og:description" content="">
 <meta property="og:type" content="article">
-<meta property="og:title" content="LC 1191 - K-Concatenation Maximum Sum">
-<meta name="twitter:title" content="LC 1191 - K-Concatenation Maximum Sum">
-<meta property="og:url" content="https://yyzhou95.github.io/2019/09/lc-1191-k-concatenation-maximum-sum/">
-<meta property="twitter:url" content="https://yyzhou95.github.io/2019/09/lc-1191-k-concatenation-maximum-sum/">
+<meta property="og:title" content="LC 1192 - Critical Connections in a Network">
+<meta name="twitter:title" content="LC 1192 - Critical Connections in a Network">
+<meta property="og:url" content="https://yyzhou95.github.io/2019/09/lc-1192-critical-connections-in-a-network/">
+<meta property="twitter:url" content="https://yyzhou95.github.io/2019/09/lc-1192-critical-connections-in-a-network/">
 <meta property="og:site_name" content="Bingo!">
 <meta property="og:description" content="">
 <meta name="twitter:description" content="">
@@ -36,7 +36,9 @@
   
   
     
-      <meta property="article:tag" content="Others">
+      <meta property="article:tag" content="Graph">
+    
+      <meta property="article:tag" content="Bridge">
     
   
 
@@ -57,14 +59,14 @@
   <meta property="twitter:image" content="https://yyzhou95.github.io/img/avatar.jpg">
 
 
-    <title>LC 1191 - K-Concatenation Maximum Sum</title>
+    <title>LC 1192 - Critical Connections in a Network</title>
 
     <link rel="icon" href="https://yyzhou95.github.io/favicon.png">
     
 
     
 
-    <link rel="canonical" href="https://yyzhou95.github.io/2019/09/lc-1191-k-concatenation-maximum-sum/">
+    <link rel="canonical" href="https://yyzhou95.github.io/2019/09/lc-1192-critical-connections-in-a-network/">
 
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
@@ -248,7 +250,7 @@
             <div class="post-header main-content-wrap text-left">
   
     <h1 class="post-title" itemprop="headline">
-      LC 1191 - K-Concatenation Maximum Sum
+      LC 1192 - Critical Connections in a Network
     </h1>
   
   
@@ -277,7 +279,7 @@
             <div class="main-content-wrap">
               <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
 <ul>
-<li><a href="#k-concatenation-maximum-sum">K-Concatenation Maximum Sum</a>
+<li><a href="#critical-connections-in-a-network">Critical Connections in a Network</a>
 <ul>
 <li><a href="#problem-description">Problem description</a></li>
 <li><a href="#method">Method</a></li>
@@ -286,110 +288,155 @@
 </ul>
 </nav>
 
-<h1 id="k-concatenation-maximum-sum">K-Concatenation Maximum Sum</h1>
+<h1 id="critical-connections-in-a-network">Critical Connections in a Network</h1>
 
-<p>Link: <a href="https://leetcode.com/problems/k-concatenation-maximum-sum/">K-Concatenation Maximum Sum</a></p>
+<p>Link: <a href="https://leetcode.com/problems/critical-connections-in-a-network/">Critical Connections in a Network</a></p>
 
 <h2 id="problem-description">Problem description</h2>
 
-<p>Given an integer array <code>arr</code> and an integer <code>k</code>, modify the array by repeating it <code>k</code>times.</p>
+<p>There are <code>n</code>servers numbered from <code>0</code> to <code>n-1</code>connected by undirected server-to-server <code>connections</code>forming a network where <code>connections[i] = [a, b]</code> represents a connection between servers <code>a</code> and <code>b</code>. Any server can reach any other server directly or indirectly through the network.</p>
 
-<p>For example, if <code>arr = [1, 2]</code>and <code>k = 3</code>then the modified array will be <code>[1, 2, 1, 2, 1, 2]</code>.</p>
+<p>A <em>critical connection</em> is a connection that, if removed, will make some server unable to reach some other server.</p>
 
-<p>Return the maximum sub-array sum in the modified array. Note that the length of the sub-array can be <code>0</code> and its sum in that case is <code>0</code>.</p>
-
-<p>As the answer can be very large, return the answer <strong>modulo</strong> <code>10^9 + 7</code>.</p>
+<p>Return all critical connections in the network in any order.</p>
 
 <p><strong>Example 1:</strong></p>
 
-<pre><code>Input: arr = [1,2], k = 3
-Output: 9
-</code></pre>
+<p><strong><img src="../../../static/img/1537_ex1_2.png" alt="img" /></strong></p>
 
-<p><strong>Example 2:</strong></p>
-
-<pre><code>Input: arr = [1,-2,1], k = 5
-Output: 2
-</code></pre>
-
-<p><strong>Example 3:</strong></p>
-
-<pre><code>Input: arr = [-1,-2], k = 7
-Output: 0
+<pre><code>Input: n = 4, connections = [[0,1],[1,2],[2,0],[1,3]]
+Output: [[1,3]]
+Explanation: [[3,1]] is also accepted.
 </code></pre>
 
 <p><strong>Constraints:</strong></p>
 
 <ul>
-<li><code>1 &lt;= arr.length &lt;= 10^5</code></li>
-<li><code>1 &lt;= k &lt;= 10^5</code></li>
-<li><code>-10^4 &lt;= arr[i] &lt;= 10^4</code></li>
+<li><code>1 &lt;= n &lt;= 10^5</code></li>
+<li><code>n-1 &lt;= connections.length &lt;= 10^5</code></li>
+<li><code>connections[i][0] != connections[i][1]</code></li>
+<li>There are no repeated connections.</li>
 </ul>
 
 <h2 id="method">Method</h2>
 
-<p>Two conditions:
-1. Array sum is larger than 0, then the max sum could be in <code>(k - 2)sum + maxPrefix + maxSuffix</code>.
-2. Array <code>sum &lt;= 0</code>, then the max sum can be found in given array itself.</p>
+<p>In Tarjan algorithm, keep two arrays DFN and LOW in DFS procedure. DFN array records the order of DFS for each node, as an id assigned to each node. LOW array records the lowest order of each node&rsquo;s neighbor except its direct parent.</p>
 
-<p>The max prefix sum is from last element to first element (continuously).</p>
+<p>Initially, <code>LOW[i]</code> equals to <code>DFN[i]</code>.</p>
 
-<p>The max suffix sum is from first element to last element (continuously).</p>
+<p>After DFS, find <code>edge(u,v)</code> where <code>DFN(u) &lt; LOW(v)</code> and get all the bridges.</p>
 
 <h2 id="code">Code</h2>
 
 <pre><code class="language-java">/**
- * Two conditions:
- * 1. Array sum is larger than 0, then the max sum could be in (k - 2) * sum + maxPrefix + maxSuffix
- * 2. Array sum &lt;= 0, then the max sum can be found in given array itself.
- * The max prefix sum is from last element to first element (continuously).
- * The max suffix sum is from first element to last element (continuously).
+ * In Tarjan algorithm, keep two arrays DFN and LOW in DFS procedure.
+ * DFN array records the order of DFS for each node, as an id assigned to each node.
+ * LOW array records the lowest order of each node's neighbor except its direct parent.
+ * Initially, LOW[i] equals to DFN[i].
+ * After DFS, find edge(u,v) where DFN(u) &lt; LOW(v) and get all the bridges.
  *
- * @param arr given array
- * @param k   repeating array k times
- * @return maximum sub-array sum in the modified array
+ * @param n           # of vertices
+ * @param connections given list contains connections between nodes in graph
+ * @return all critical connections in the network in any order
  */
-public int kConcatenationMaxSum(int[] arr, int k) {
-    int mod = (int) Math.pow(10, 9) + 7;
+public List&lt;List&lt;Integer&gt;&gt; criticalConnections(int n, List&lt;List&lt;Integer&gt;&gt; connections) {
+    Graph g = new Graph(n);
+    g.addEdge(connections);
 
-    long tmp = 0, oneMax = 0;
-    for (int i : arr) {
-        tmp = tmp &gt; 0 ? (tmp + i) : i;
-        oneMax = Math.max(tmp, oneMax);
-    }
-    oneMax %= mod;
+    return g.findBridge();
+}
 
-    if (k == 1) {
-        return (int) oneMax;
-    }
+/**
+ * Graph.
+ */
+class Graph {
+    private int V;      // # of vertices
+    private ArrayList&lt;ArrayList&lt;Integer&gt;&gt; connections = new ArrayList&lt;&gt;();
+    int time = 0;       // discover time (as increasing id for nodes)
+    private List&lt;List&lt;Integer&gt;&gt; bridges = new LinkedList&lt;&gt;();
 
-    long sum = 0;
-    for (int i : arr) {
-        sum += i;
-    }
-
-    tmp = 0;
-    long prefixMax = Long.MIN_VALUE;
-    for (int i = arr.length - 1; i &gt;= 0; i--) {
-        tmp = (tmp + arr[i]);
-        prefixMax = Math.max(tmp, prefixMax);
-    }
-
-    tmp = 0;
-    long suffixMax = Long.MIN_VALUE;
-    for (int i : arr) {
-        tmp += i;
-        suffixMax = Math.max(suffixMax, tmp);
+    /**
+     * Constructor of graph.
+     *
+     * @param v # of vertices
+     */
+    Graph(int v) {
+        V = v;
+        for (int i = 0; i &lt; v; i++) {
+            connections.add(new ArrayList&lt;&gt;());
+        }
     }
 
-    /*
-     * Two conditions:
-     * 1. Array sum is larger than 0, then the max sum could be in (k - 2) * sum + maxPrefix + maxSuffix.
-     * 2. Array sum &lt;= 0, then the max sum can be found in given array itself. */
-    long s1 = ((sum * (k - 2)) + prefixMax + suffixMax);
-    long s2 = (prefixMax + suffixMax);
+    /**
+     * Add edges into graph.
+     *
+     * @param connections given list contains connections between nodes in graph
+     */
+    void addEdge(List&lt;List&lt;Integer&gt;&gt; connections) {
+        for (List&lt;Integer&gt; list : connections) {
+            this.connections.get(list.get(0)).add(list.get(1));
+            this.connections.get(list.get(1)).add(list.get(0));
+        }
+    }
 
-    return (sum &gt; 0) ? (int) (Math.max(s1, oneMax) % mod) : (int) (Math.max(s2, oneMax) % mod);
+    /**
+     * Find bridges in graph.
+     *
+     * @return bridges in this graph
+     */
+    List&lt;List&lt;Integer&gt;&gt; findBridge() {
+        boolean[] isVisited = new boolean[V];
+        int[] discovery = new int[V], low = new int[V], parent = new int[V];
+
+        Arrays.fill(parent, -1);        // initially, all nodes has no parent
+
+        for (int i = 0; i &lt; V; i++) {
+            if (!isVisited[i]) {
+                dfs(i, isVisited, discovery, low, parent);
+            }
+        }
+
+        return bridges;
+    }
+
+    /**
+     * DFS search to find bridge in graph.
+     * If child node has only one path to current node's parent, then this edge is bridge in graph.
+     * (low[vertex] &gt; discovery[id])
+     *
+     * @param id        current node
+     * @param isVisited boolean array records if current node has been visited
+     * @param discovery discover time (as increasing id for nodes)
+     * @param low       array records lowest parent that contains more than one path to current node
+     * @param parent    parent of current node that direct connect to it
+     */
+    void dfs(int id, boolean[] isVisited, int[] discovery, int[] low, int[] parent) {
+        isVisited[id] = true;
+        discovery[id] = ++time;     // mark each node uniquely in order of reached time
+        low[id] = ++time;           // initially, mark each node's lowest parent in order of reached time
+
+        for (int vertex : connections.get(id)) {
+            if (!isVisited[vertex]) {
+                parent[vertex] = id;
+                dfs(vertex, isVisited, discovery, low, parent);
+                low[id] = Math.min(low[id], low[vertex]);
+
+                /*
+                 * low[vertex]: child node's lowest parent with more than one route to it.
+                 * discovery[id]: current node id.
+                 * If child node has only one path to current node's parent, then this edge is bridge in graph.
+                 * Since there is only one way from current node's lowest parent to this child. */
+                if (low[vertex] &gt; discovery[id]) {
+                    ArrayList&lt;Integer&gt; tmp = new ArrayList&lt;&gt;();
+                    tmp.add(id);
+                    tmp.add(vertex);
+                    bridges.add(tmp);
+                }
+            } else if (vertex != parent[id]) {
+                low[id] = Math.min(low[id], discovery[vertex]);
+            }
+        }
+    }
 }
 </code></pre>
               
@@ -403,7 +450,9 @@ public int kConcatenationMaxSum(int[] arr, int k) {
                   <div class="post-footer-tags">
                     <span class="text-color-light text-small">TAGGED IN</span><br/>
                     
-  <a class="tag tag--primary tag--small" href="https://yyzhou95.github.io/tags/others/">Others</a>
+  <a class="tag tag--primary tag--small" href="https://yyzhou95.github.io/tags/graph/">Graph</a>
+
+  <a class="tag tag--primary tag--small" href="https://yyzhou95.github.io/tags/bridge/">Bridge</a>
 
                   </div>
                 
@@ -416,7 +465,7 @@ public int kConcatenationMaxSum(int[] arr, int k) {
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/09/lc-1190-reverse-substrings-between-each-pair-of-parentheses/" data-tooltip="LC 1190 - Reverse Substrings Between Each Pair of Parentheses">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/09/lc-1191-k-concatenation-maximum-sum/" data-tooltip="LC 1191 - K-Concatenation Maximum Sum">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -424,7 +473,7 @@ public int kConcatenationMaxSum(int[] arr, int k) {
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/09/lc-1192-critical-connections-in-a-network/" data-tooltip="LC 1192 - Critical Connections in a Network">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/09/lc-217/771/1128/1086/246/1165/1189-map/set/" data-tooltip="LC 217/771/1128/1086/246/1165/1189 - Map/Set">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
@@ -474,7 +523,7 @@ public int kConcatenationMaxSum(int[] arr, int k) {
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/09/lc-1190-reverse-substrings-between-each-pair-of-parentheses/" data-tooltip="LC 1190 - Reverse Substrings Between Each Pair of Parentheses">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/09/lc-1191-k-concatenation-maximum-sum/" data-tooltip="LC 1191 - K-Concatenation Maximum Sum">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -482,7 +531,7 @@ public int kConcatenationMaxSum(int[] arr, int k) {
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/09/lc-1192-critical-connections-in-a-network/" data-tooltip="LC 1192 - Critical Connections in a Network">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/09/lc-217/771/1128/1086/246/1165/1189-map/set/" data-tooltip="LC 217/771/1128/1086/246/1165/1189 - Map/Set">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
