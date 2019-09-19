@@ -311,8 +311,8 @@ Output: 2
 <p><strong>Note:</strong></p>
 
 <ol>
-<li>The length of the array is in range [1, 20,000].</li>
-<li>The range of numbers in the array is [-1000, 1000] and the range of the integer <strong>k</strong>is [-1e7, 1e7].</li>
+<li>The length of the array is in range <code>[1, 20,000]</code>.</li>
+<li>The range of numbers in the array is <code>[-1000, 1000]</code> and the range of the integer <strong>k</strong>is <code>[-1e7, 1e7]</code>.</li>
 </ol>
 
 <h2 id="method">Method</h2>
@@ -329,35 +329,122 @@ Output: 2
  * @return total number of continuous sub arrays whose sum equals to k
  */
 public int subarraySum(int[] nums, int k) {
-    int n = nums.length;
-
-    for (int i = 1; i &lt; n; i++) {       // calculate prefix sum
-        nums[i] = nums[i] + nums[i - 1];
-    }
 
     HashMap&lt;Integer, Integer&gt; m = new HashMap&lt;&gt;();
     int out = 0;
-    m.put(0, 1);
-    int current = 0;
-    
-    for (int i = 0; i &lt; n; i++) {
-        current += nums[i] - ((i &gt; 0) ? nums[i - 1] : 0);
-        out += m.getOrDefault(current - k, 0);
-        m.put(current, m.getOrDefault(current, 0) + 1);
+    m.put(0, 1);        // if prefix sum + current value == target, then at least 1 sub array is found
+
+    int prefix = 0;
+    for (int i : nums) {
+        prefix += i;      // calculate prefix sum
+
+        /*
+         * prefix - k:
+         * Assume prefix from 0 to j has prefix, that sum(0, j) = prefix - k.
+         * Then it means, the sub array sum from j to i is equal to k. */
+        out += m.getOrDefault(prefix - k, 0);
+        m.put(prefix, m.getOrDefault(prefix, 0) + 1);
     }
+    
     return out;
 }
 </code></pre>
 
 <h1 id="number-of-submatrices-that-sum-to-target">Number of Submatrices That Sum to Target</h1>
 
-<p>Link:</p>
+<p>Link: <a href="https://leetcode.com/problems/number-of-submatrices-that-sum-to-target/">Number of Submatrices That Sum to Target</a></p>
 
 <h2 id="problem-description-1">Problem description</h2>
 
+<p>Given a <code>matrix</code>, and a <code>target</code>, return the number of non-empty submatrices that sum to target.</p>
+
+<p>A submatrix <code>x1, y1, x2, y2</code>is the set of all cells <code>matrix[x][y]</code>with <code>x1 &lt;= x &lt;= x2</code>and <code>y1 &lt;= y &lt;= y2</code>.</p>
+
+<p>Two submatrices <code>(x1, y1, x2, y2)</code>and <code>(x1', y1', x2', y2')</code>are different if they have some coordinate that is different: for example, if <code>x1 != x1'</code>.</p>
+
+<p><strong>Example 1:</strong></p>
+
+<pre><code>Input: matrix = [[0,1,0],[1,1,1],[0,1,0]], target = 0
+Output: 4
+Explanation: The four 1x1 submatrices that only contain 0.
+</code></pre>
+
+<p><strong>Example 2:</strong></p>
+
+<pre><code>Input: matrix = [[1,-1],[-1,1]], target = 0
+Output: 5
+Explanation: The two 1x2 submatrices, plus the two 2x1 submatrices, plus the 2x2 submatrix.
+</code></pre>
+
+<p><strong>Note:</strong></p>
+
+<ol>
+<li><code>1 &lt;= matrix.length &lt;= 300</code></li>
+<li><code>1 &lt;= matrix[0].length &lt;= 300</code></li>
+<li><code>-1000 &lt;= matrix[i] &lt;= 1000</code></li>
+<li><code>-10^8 &lt;= target &lt;= 10^8</code></li>
+</ol>
+
 <h2 id="method-1">Method</h2>
 
+<p>Calculate prefix sum in matrix.</p>
+
+<p>Calculate the prefix sum of each row first. Then calculate each possible pair column&rsquo;s accumulative sum from <code>0</code> to <code>matrix.length</code>.</p>
+
+<p>Use a hash map to store previous accumulative sum to find how many sub matrix has a sum of certain value. If the certain value is target, add the corresponding value.</p>
+
 <h2 id="code-1">Code</h2>
+
+<pre><code class="language-java">/**
+ * Calculate prefix sum in matrix.
+ * Calculate the prefix sum of each row first.
+ * Then calculate each possible pair column's accumulative sum from 0 to matrix.length.
+ * Use a hash map to store previous accumulative sum to find how many sub matrix has a sum of certain value.
+ * If the certain value is target, add the corresponding value.
+ *
+ * @param matrix given matrix
+ * @param target target number
+ * @return number of non-empty submatrices that sum to target
+ */
+public int numSubmatrixSumTarget(int[][] matrix, int target) {
+    int m = matrix.length, n = matrix[0].length;
+
+    for (int i = 0; i &lt; m; i++) {
+        for (int j = 1; j &lt; n; j++) {
+            matrix[i][j] += matrix[i][j - 1];
+        }
+    }
+
+    int out = 0;
+    for (int i = 0; i &lt; n; i++) {
+
+        /*
+         * Order of pair:
+         * 1. Start from the column itself only.
+         * 2. Start from jth column - first column, from jth column - ith column, where i &lt;= j &lt; n.
+         * In this way to include all sub matrix.
+         * Use a hash map to store previous sub matrix sum in current round (each j).
+         * In this way to both avoid duplication and save calculation. */
+        for (int j = i; j &lt; n; j++) {       // j &gt;= i
+            HashMap&lt;Integer, Integer&gt; map = new HashMap&lt;&gt;();
+            int current = 0;
+            map.put(0, 1);        // if prefix sum + current value == target, then at least 1 sub matrix is found
+
+            for (int[] k : matrix) {
+
+                /*
+                 * k[j]: prefix sum in row k from 0 to j.
+                 * k[j] - ((i &gt; 0) ? k[i - 1] : 0): prefix sum in row k from i to j. */
+                current += k[j] - ((i &gt; 0) ? k[i - 1] : 0);
+                out += map.getOrDefault(current - target, 0);
+                map.put(current, map.getOrDefault(current, 0) + 1);
+            }
+        }
+    }
+
+    return out;
+}
+</code></pre>
               
             </div>
           </div>
