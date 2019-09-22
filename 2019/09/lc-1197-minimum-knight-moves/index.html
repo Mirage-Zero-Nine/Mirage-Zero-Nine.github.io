@@ -13,10 +13,10 @@
 
 <meta property="og:description" content="">
 <meta property="og:type" content="article">
-<meta property="og:title" content="LC 1198 - Find Smallest Common Element in All Rows">
-<meta name="twitter:title" content="LC 1198 - Find Smallest Common Element in All Rows">
-<meta property="og:url" content="https://yyzhou95.github.io/2019/09/lc-1198-find-smallest-common-element-in-all-rows/">
-<meta property="twitter:url" content="https://yyzhou95.github.io/2019/09/lc-1198-find-smallest-common-element-in-all-rows/">
+<meta property="og:title" content="LC 1197 - Minimum Knight Moves">
+<meta name="twitter:title" content="LC 1197 - Minimum Knight Moves">
+<meta property="og:url" content="https://yyzhou95.github.io/2019/09/lc-1197-minimum-knight-moves/">
+<meta property="twitter:url" content="https://yyzhou95.github.io/2019/09/lc-1197-minimum-knight-moves/">
 <meta property="og:site_name" content="Bingo!">
 <meta property="og:description" content="">
 <meta name="twitter:description" content="">
@@ -36,7 +36,7 @@
   
   
     
-      <meta property="article:tag" content="Binary Search">
+      <meta property="article:tag" content="BFS">
     
       <meta property="article:tag" content="Matrix">
     
@@ -59,14 +59,14 @@
   <meta property="twitter:image" content="https://yyzhou95.github.io/img/avatar.jpg">
 
 
-    <title>LC 1198 - Find Smallest Common Element in All Rows</title>
+    <title>LC 1197 - Minimum Knight Moves</title>
 
     <link rel="icon" href="https://yyzhou95.github.io/favicon.png">
     
 
     
 
-    <link rel="canonical" href="https://yyzhou95.github.io/2019/09/lc-1198-find-smallest-common-element-in-all-rows/">
+    <link rel="canonical" href="https://yyzhou95.github.io/2019/09/lc-1197-minimum-knight-moves/">
 
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
@@ -250,7 +250,7 @@
             <div class="post-header main-content-wrap text-left">
   
     <h1 class="post-title" itemprop="headline">
-      LC 1198 - Find Smallest Common Element in All Rows
+      LC 1197 - Minimum Knight Moves
     </h1>
   
   
@@ -279,7 +279,7 @@
             <div class="main-content-wrap">
               <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
 <ul>
-<li><a href="#find-smallest-common-element-in-all-rows">Find Smallest Common Element in All Rows</a>
+<li><a href="#minimum-knight-moves">Minimum Knight Moves</a>
 <ul>
 <li><a href="#problem-description">Problem description</a></li>
 <li><a href="#method">Method</a></li>
@@ -288,69 +288,140 @@
 </ul>
 </nav>
 
-<h1 id="find-smallest-common-element-in-all-rows">Find Smallest Common Element in All Rows</h1>
+<h1 id="minimum-knight-moves">Minimum Knight Moves</h1>
 
-<p>Link: <a href="https://leetcode.com/problems/find-smallest-common-element-in-all-rows/">Find Smallest Common Element in All Rows</a></p>
+<p>Link: <a href="https://leetcode.com/problems/minimum-knight-moves/">Minimum Knight Moves</a></p>
 
 <h2 id="problem-description">Problem description</h2>
 
-<p>Given a matrix <code>mat</code> where every row is sorted in <strong>increasing</strong>order, return the <strong>smallest common element</strong>in all rows.</p>
+<p>In an <strong>infinite</strong> chess board with coordinates from <code>-infinity</code> to <code>+infinity</code>, you have a <strong>knight</strong> at square <code>[0, 0]</code>.</p>
 
-<p>If there is no common element, return <code>-1</code>.</p>
+<p>A knight has 8 possible moves it can make, as illustrated below. Each move is two squares in a cardinal direction, then one square in an orthogonal direction.</p>
+
+<p><img src="../../../static/img/knight-9117201.png" alt="img" /></p>
+
+<p>Return the minimum number of steps needed to move the knight to the square <code>[x, y]</code>.  It is guaranteed the answer exists.</p>
 
 <p><strong>Example 1:</strong></p>
 
-<pre><code>Input: mat = [[1,2,3,4,5],[2,4,5,8,10],[3,5,7,9,11],[1,3,5,7,9]]
-Output: 5
+<pre><code>Input: x = 2, y = 1
+Output: 1
+Explanation: [0, 0] → [2, 1]
+</code></pre>
+
+<p><strong>Example 2:</strong></p>
+
+<pre><code>Input: x = 5, y = 5
+Output: 4
+Explanation: [0, 0] → [2, 1] → [4, 2] → [3, 4] → [5, 5]
 </code></pre>
 
 <p><strong>Constraints:</strong></p>
 
 <ul>
-<li><code>1 &lt;= mat.length, mat[i].length &lt;= 500</code></li>
-<li><code>1 &lt;= mat[i][j] &lt;= 10^4</code></li>
-<li><code>mat[i]</code>is sorted in increasing order.</li>
+<li><code>|x| + |y| &lt;= 300</code></li>
 </ul>
 
 <h2 id="method">Method</h2>
 
-<p>Sort the matrix by row. The search each row by each element from left to right in first row. If the element in first row contains in all other rows, this element is the smallest common value.</p>
+<p>Two approaches: BFS or formula.</p>
+
+<p><strong>BFS</strong>:</p>
+
+<p>BFS in first quadrant, since the movement of knight is symmetric. The normal BFS has 4 directions, while knight move has 8.</p>
+
+<p>The moves are symmetric. Hence, it can be assumed that the problem to be in the first quadrant. Maintaining the visited state in the count matrix itself.</p>
+
+<p>If it is visited, record the minimum number of steps taken to reach that cell.</p>
+
+<p><strong>Formula</strong>:</p>
+
+<p>See code below.</p>
 
 <h2 id="code">Code</h2>
 
 <pre><code class="language-java">/**
- * Sort the matrix by row. The search each row by each element from left to right in first row.
- * If the element in first row contains in all other rows, this element is the smallest common value.
+ * BFS in first quadrant, since the movement of knight is symmetric.
+ * The normal BFS has 4 directions, while knight move has 8.
+ * The moves are symmetric. Hence, it can be assumed that the problem to be in the first quadrant.
+ * Maintaining the visited state in the count matrix itself.
+ * If it is visited, record the minimum number of steps taken to reach that cell.
  *
- * @param mat given matrix
- * @return smallest common element in all rows
+ * @param x coord x
+ * @param y coord y
+ * @return minimum number of steps needed to move the knight to the square [x, y]
  */
-public int smallestCommonElement(int[][] mat) {
-    int n = mat[0].length;
-    Arrays.sort(mat, new Comparator&lt;int[]&gt;() {
-        @Override
-        public int compare(int[] o1, int[] o2) {
-            for (int i = 0; i &lt; n; i++) {
-                if (o1[i] != o2[i]) {
-                    return o1[0] - o2[0];
-                }
-            }
-            return o1[n - 1] - o2[n - 1];
-        }
-    });
+public int minKnightMoves(int x, int y) {
 
-    for (int i = 0; i &lt; n; i++) {
-        int min = mat[0][i];
-        int j = 1;
-        while (j &lt; mat.length &amp;&amp; Arrays.binarySearch(mat[j], min) &gt;= 0) {
-            j++;
+    if (x == 0 &amp;&amp; y == 0) {
+        return 0;
+    }
+
+    x = Math.abs(x);
+    y = Math.abs(y);
+    int n = 300;
+    int[][] matrix = new int[n][n];
+    for (int[] arr : matrix) {
+        Arrays.fill(arr, -1);
+    }
+
+    int[] dx = {-2, -2, -1, -1, 1, 1, 2, 2}, dy = {-1, 1, -2, 2, -2, 2, -1, 1};
+    Queue&lt;int[]&gt; q = new LinkedList&lt;&gt;();
+    q.add(new int[]{0, 0});
+
+    while (!q.isEmpty()) {
+        int[] tmp = q.poll();
+        int tx = tmp[0];
+        int ty = tmp[1];
+
+        if (matrix[x][y] != -1) {
+            return matrix[x][y] + 1;
         }
-        if (j == mat.length) {
-            return min;
+
+        for (int i = 0; i &lt; 8; i++) {
+            int xx = tx + dx[i];
+            int yy = ty + dy[i];
+            if (xx &gt;= 0 &amp;&amp; xx &lt; n &amp;&amp; yy &gt;= 0 &amp;&amp; yy &lt; n &amp;&amp; matrix[xx][yy] == -1) {
+                matrix[xx][yy] = matrix[tx][ty] + 1;
+                q.add(new int[]{xx, yy});
+            }
         }
     }
 
-    return -1;
+    return matrix[x][y] + 1;
+}
+
+/**
+ * A formula to solve this problem.
+ *
+ * @param x coord x
+ * @param y coord y
+ * @return minimum number of steps needed to move the knight to the square [x, y]
+ */
+public int formula(int x, int y) {
+
+    x = Math.abs(x);        // symmetry for axes
+    y = Math.abs(y);
+
+    if (x &lt; y) {        // symmetry for diagonal
+        int temp = x;
+        x = y;
+        y = temp;
+    }
+
+    if (x == 1 &amp;&amp; y == 0) {
+        return 3;
+    }
+    if (x == 2 &amp;&amp; y == 2) {
+        return 4;
+    }
+
+    int delta = x - y;
+    if (y &gt; delta) {
+        return (int) (delta - 2 * Math.floor((float) (delta - y) / 3));
+    } else {
+        return (int) (delta - 2 * Math.floor((delta - y) / 4));
+    }
 }
 </code></pre>
               
@@ -364,7 +435,7 @@ public int smallestCommonElement(int[][] mat) {
                   <div class="post-footer-tags">
                     <span class="text-color-light text-small">TAGGED IN</span><br/>
                     
-  <a class="tag tag--primary tag--small" href="https://yyzhou95.github.io/tags/binary-search/">Binary Search</a>
+  <a class="tag tag--primary tag--small" href="https://yyzhou95.github.io/tags/bfs/">BFS</a>
 
   <a class="tag tag--primary tag--small" href="https://yyzhou95.github.io/tags/matrix/">Matrix</a>
 
@@ -379,7 +450,7 @@ public int smallestCommonElement(int[][] mat) {
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/09/lc-1197-minimum-knight-moves/" data-tooltip="LC 1197 - Minimum Knight Moves">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/09/lc-1129-shortest-path-with-alternating-colors/" data-tooltip="LC 1129 - Shortest Path with Alternating Colors">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -387,7 +458,7 @@ public int smallestCommonElement(int[][] mat) {
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/09/lc-1199-minimum-time-to-build-blocks/" data-tooltip="LC 1199 - Minimum Time to Build Blocks">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/09/lc-1198-find-smallest-common-element-in-all-rows/" data-tooltip="LC 1198 - Find Smallest Common Element in All Rows">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
@@ -437,7 +508,7 @@ public int smallestCommonElement(int[][] mat) {
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/09/lc-1197-minimum-knight-moves/" data-tooltip="LC 1197 - Minimum Knight Moves">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/09/lc-1129-shortest-path-with-alternating-colors/" data-tooltip="LC 1129 - Shortest Path with Alternating Colors">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -445,7 +516,7 @@ public int smallestCommonElement(int[][] mat) {
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/09/lc-1199-minimum-time-to-build-blocks/" data-tooltip="LC 1199 - Minimum Time to Build Blocks">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/09/lc-1198-find-smallest-common-element-in-all-rows/" data-tooltip="LC 1198 - Find Smallest Common Element in All Rows">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
