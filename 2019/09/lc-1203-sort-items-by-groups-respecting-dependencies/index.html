@@ -13,20 +13,20 @@
 
 <meta property="og:description" content="">
 <meta property="og:type" content="article">
-<meta property="og:title" content="LC 1129 - Shortest Path with Alternating Colors">
-<meta name="twitter:title" content="LC 1129 - Shortest Path with Alternating Colors">
-<meta property="og:url" content="https://yyzhou95.github.io/2019/09/lc-1129-shortest-path-with-alternating-colors/">
-<meta property="twitter:url" content="https://yyzhou95.github.io/2019/09/lc-1129-shortest-path-with-alternating-colors/">
+<meta property="og:title" content="LC 1203 - Sort Items by Groups Respecting Dependencies">
+<meta name="twitter:title" content="LC 1203 - Sort Items by Groups Respecting Dependencies">
+<meta property="og:url" content="https://yyzhou95.github.io/2019/09/lc-1203-sort-items-by-groups-respecting-dependencies/">
+<meta property="twitter:url" content="https://yyzhou95.github.io/2019/09/lc-1203-sort-items-by-groups-respecting-dependencies/">
 <meta property="og:site_name" content="Bingo!">
 <meta property="og:description" content="">
 <meta name="twitter:description" content="">
 <meta property="og:locale" content="en-us">
 
   
-    <meta property="article:published_time" content="2019-09-21T00:00:00">
+    <meta property="article:published_time" content="2019-09-22T00:00:00">
   
   
-    <meta property="article:modified_time" content="2019-09-21T00:00:00">
+    <meta property="article:modified_time" content="2019-09-22T00:00:00">
   
   
   
@@ -38,9 +38,7 @@
   
   
     
-      <meta property="article:tag" content="BFS">
-    
-      <meta property="article:tag" content="Directed Graph">
+      <meta property="article:tag" content="Topological Sorting">
     
   
 
@@ -61,14 +59,14 @@
   <meta property="twitter:image" content="https://yyzhou95.github.io/img/avatar.jpg">
 
 
-    <title>LC 1129 - Shortest Path with Alternating Colors</title>
+    <title>LC 1203 - Sort Items by Groups Respecting Dependencies</title>
 
     <link rel="icon" href="https://yyzhou95.github.io/favicon.png">
     
 
     
 
-    <link rel="canonical" href="https://yyzhou95.github.io/2019/09/lc-1129-shortest-path-with-alternating-colors/">
+    <link rel="canonical" href="https://yyzhou95.github.io/2019/09/lc-1203-sort-items-by-groups-respecting-dependencies/">
 
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
@@ -252,15 +250,15 @@
             <div class="post-header main-content-wrap text-left">
   
     <h1 class="post-title" itemprop="headline">
-      LC 1129 - Shortest Path with Alternating Colors
+      LC 1203 - Sort Items by Groups Respecting Dependencies
     </h1>
   
   
   <div class="postShorten-meta post-meta">
     
-      <time itemprop="datePublished" datetime="2019-09-21T00:00:00Z">
+      <time itemprop="datePublished" datetime="2019-09-22T00:00:00Z">
         
-  September 21, 2019
+  September 22, 2019
 
       </time>
     
@@ -283,7 +281,7 @@
             <div class="main-content-wrap">
               <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
 <ul>
-<li><a href="#shortest-path-with-alternating-colors">Shortest Path with Alternating Colors</a>
+<li><a href="#sort-items-by-groups-respecting-dependencies">Sort Items by Groups Respecting Dependencies</a>
 <ul>
 <li><a href="#problem-description">Problem description</a></li>
 <li><a href="#method">Method</a></li>
@@ -292,136 +290,164 @@
 </ul>
 </nav>
 
-<h1 id="shortest-path-with-alternating-colors">Shortest Path with Alternating Colors</h1>
+<h1 id="sort-items-by-groups-respecting-dependencies">Sort Items by Groups Respecting Dependencies</h1>
 
-<p>Link: <a href="https://leetcode.com/problems/shortest-path-with-alternating-colors/">Shortest Path with Alternating Colors</a></p>
+<p>Link: <a href="https://leetcode.com/problems/sort-items-by-groups-respecting-dependencies/">Sort Items by Groups Respecting Dependencies</a></p>
 
 <h2 id="problem-description">Problem description</h2>
 
-<p>Consider a directed graph, with nodes labelled <code>0, 1, ..., n-1</code>.  In this graph, each edge is either red or blue, and there could be self-edges or parallel edges.</p>
+<p>There are <code>n</code> items each belonging to zero or one of <code>m</code> groups where <code>group[i]</code> is the group that the <code>i</code>-th item belongs to and it&rsquo;s equal to <code>-1</code> if the <code>i</code>-th item belongs to no group. The items and the groups are zero indexed. A group can have no item belonging to it.</p>
 
-<p>Each <code>[i, j]</code>in <code>red_edges</code>denotes a red directed edge from node <code>i</code>to node <code>j</code>.  Similarly, each <code>[i, j]</code>in <code>blue_edges</code>denotes a blue directed edge from node <code>i</code>to node <code>j</code>.</p>
+<p>Return a sorted list of the items such that:</p>
 
-<p>Return an array <code>answer</code> of length <code>n</code>, where each <code>answer[X]</code> is the length of the shortest path from node <code>0</code> to node <code>X</code> such that the edge colors alternate along the path (or <code>-1</code>if such a path doesn&rsquo;t exist).</p>
+<ul>
+<li>The items that belong to the same group are next to each other in the sorted list.</li>
+<li>There are some relations between these items where <code>beforeItems[i]</code> is a list containing all the items that should come before the <code>i</code>-th item in the sorted array (to the left of the <code>i</code>-th item).</li>
+</ul>
+
+<p>Return any solution if there is more than one solution and return an <strong>empty list</strong> if there is no solution.</p>
 
 <p><strong>Example 1:</strong></p>
 
-<pre><code>Input: n = 3, red_edges = [[0,1],[1,2]], blue_edges = []
-Output: [0,1,-1]
+<p><strong><img src="../../../static/img/1359_ex1-9195904.png" alt="img" /></strong></p>
+
+<pre><code>Input: n = 8, m = 2, group = [-1,-1,1,0,0,1,0,-1], beforeItems = [[],[6],[5],[6],[3,6],[],[],[]]
+Output: [6,3,4,1,5,2,0,7]
 </code></pre>
 
 <p><strong>Example 2:</strong></p>
 
-<pre><code>Input: n = 3, red_edges = [[0,1]], blue_edges = [[2,1]]
-Output: [0,1,-1]
-</code></pre>
-
-<p><strong>Example 3:</strong></p>
-
-<pre><code>Input: n = 3, red_edges = [[1,0]], blue_edges = [[2,1]]
-Output: [0,-1,-1]
-</code></pre>
-
-<p><strong>Example 4:</strong></p>
-
-<pre><code>Input: n = 3, red_edges = [[0,1]], blue_edges = [[1,2]]
-Output: [0,1,2]
-</code></pre>
-
-<p><strong>Example 5:</strong></p>
-
-<pre><code>Input: n = 3, red_edges = [[0,1],[0,2]], blue_edges = [[1,0]]
-Output: [0,1,1]
+<pre><code>Input: n = 8, m = 2, group = [-1,-1,1,0,0,1,0,-1], beforeItems = [[],[6],[5],[6],[3],[],[4],[]]
+Output: []
+Explanation: This is the same as example 1 except that 4 needs to be before 6 in the sorted list.
 </code></pre>
 
 <p><strong>Constraints:</strong></p>
 
 <ul>
-<li><code>1 &lt;= n &lt;= 100</code></li>
-<li><code>red_edges.length &lt;= 400</code></li>
-<li><code>blue_edges.length &lt;= 400</code></li>
-<li><code>red_edges[i].length == blue_edges[i].length == 2</code></li>
-<li><code>0 &lt;= red_edges[i][j], blue_edges[i][j] &lt; n</code></li>
+<li><code>1 &lt;= m &lt;= n &lt;= 3*10^4</code></li>
+<li><code>group.length == beforeItems.length == n</code></li>
+<li><code>-1 &lt;= group[i] &lt;= m-1</code></li>
+<li><code>0 &lt;= beforeItems[i].length &lt;= n-1</code></li>
+<li><code>0 &lt;= beforeItems[i][j] &lt;= n-1</code></li>
+<li><code>i != beforeItems[i][j]</code></li>
+<li><code>beforeItems[i]</code>does not contain duplicates elements.</li>
 </ul>
 
 <h2 id="method">Method</h2>
 
-<p>Use BFS to find the shortest path.</p>
+<p>Two level topological sorting.</p>
 
-<p>During BFS, mark nodes connected via red edge to positive id, mark node connected via blue edges as negative id. Then push the upcoming node into queue to continue BFS.</p>
-
-<p>If a node can not be connected through alternate colored edge, leave it.</p>
-
-<p>Use two hash maps to record nodes and its connected edges, to save time.</p>
+<p>Construct the relationship of items and its prior items. Then calculate the topological sort of groups, check if there is any conflict. Finally, calculate topological sort of items in group, find if there is any conflict.</p>
 
 <h2 id="code">Code</h2>
 
 <pre><code class="language-java">/**
- * Use BFS to find the shortest path.
- * During BFS, mark nodes connected via red edge to positive id, mark node connected via blue edges as negative id.
- * Then push the upcoming node into queue to continue BFS.
- * If a node can not be connected through alternate colored edge, leave it.
- * Use two hash maps to record nodes and its connected edges, to save time.
+ * Two level topological sorting.
+ * Construct the relationship of items and its prior items.
+ * Then calculate the topological sort of groups, check if there is any conflict.
+ * Finally, calculate topological sort of items in group, find if there is any conflict.
  *
- * @param n          number of nodes
- * @param red_edges  red edges
- * @param blue_edges blue edges
- * @return from 0 to each node's shortest path
+ * @param n           number of items
+ * @param m           number of group
+ * @param group       group list
+ * @param beforeItems prior item list
+ * @return any solution if there is more than one solution and return an empty list if there is no solution
  */
-public int[] shortestAlternatingPaths(int n, int[][] red_edges, int[][] blue_edges) {
+public int[] sortItems(int n, int m, int[] group, List&lt;List&lt;Integer&gt;&gt; beforeItems) {
+    HashMap&lt;Integer, List&lt;Integer&gt;&gt; groupToItems = new HashMap&lt;&gt;();     // each group's item
+    HashMap&lt;Integer, Integer&gt; groupIn = new HashMap&lt;&gt;();                // indegree of each group
+    HashMap&lt;Integer, HashSet&lt;Integer&gt;&gt; groupAdj = new HashMap&lt;&gt;();      // dependency of group
+    HashMap&lt;Integer, Integer&gt; itemIn = new HashMap&lt;&gt;();                 // indegree of each item
+    HashMap&lt;Integer, HashSet&lt;Integer&gt;&gt; itemAdj = new HashMap&lt;&gt;();       // dependency of item
 
-    HashMap&lt;Integer, List&lt;Integer&gt;&gt; b = new HashMap&lt;&gt;();
-    HashMap&lt;Integer, List&lt;Integer&gt;&gt; r = new HashMap&lt;&gt;();
+    int minGroup = m;
 
-    for (int[] e : red_edges) {
-        List&lt;Integer&gt; list = r.getOrDefault(e[0], new ArrayList&lt;&gt;());
-        list.add(e[1]);
-        r.put(e[0], list);
+    for (int i = 0; i &lt; n; i++) {
+        if (group[i] == -1) {
+            group[i] = minGroup++;      // assign none-group elements a group for mapping
+        }
+
+        List&lt;Integer&gt; l = groupToItems.getOrDefault(group[i], new ArrayList&lt;&gt;());
+        l.add(i);
+        groupToItems.put(group[i], l);
     }
-    for (int[] e : blue_edges) {
-        List&lt;Integer&gt; list = b.getOrDefault(e[0], new ArrayList&lt;&gt;());
-        list.add(e[1]);
-        b.put(e[0], list);
-    }
 
-    int[] out = new int[n];
-    Arrays.fill(out, -1);
-    out[0] = 0;
-    Queue&lt;Integer&gt; q = new LinkedList&lt;&gt;();
-    boolean[] isVisited = new boolean[2 * n];
-    q.add(0);
-    q.add(null);
-    int level = 1;          // distance from 0 to other nodes
-
-    while (!q.isEmpty()) {
-        Integer current = q.poll();
-        if (current == null) {
-            if (!q.isEmpty()) {      // reaches the end of level
-                q.add(null);
-                level++;
-            }
-        } else if (!isVisited[current + n]) {
-            isVisited[current + n] = true;
-            if (current &gt;= 0 &amp;&amp; r.containsKey(current)) {
-                for (int i : r.get(current)) {
-                    if (out[i] == -1) {
-                        out[i] = level;
-                    }
-                    q.add(-i);
+    for (int i = 0; i &lt; beforeItems.size(); i++) {
+        int toGroup = group[i];
+        for (int from : beforeItems.get(i)) {
+            int fromGroup = group[from];
+            if (toGroup != fromGroup) {     // different group
+                HashSet&lt;Integer&gt; set = groupAdj.getOrDefault(fromGroup, new HashSet&lt;&gt;());
+                if (!set.contains(toGroup)) {
+                    set.add(toGroup);
+                    groupAdj.put(fromGroup, set);
+                    groupIn.put(toGroup, groupIn.getOrDefault(toGroup, 0) + 1);
                 }
-            }
-            if (current &lt;= 0 &amp;&amp; b.containsKey(-current)) {
-                for (int i : b.get(-current)) {
-                    if (out[i] == -1) {
-                        out[i] = level;
-                    }
-                    q.add(i);
-                }
+            } else {        // same group
+                HashSet&lt;Integer&gt; set = itemAdj.getOrDefault(from, new HashSet&lt;&gt;());
+                set.add(i);
+                itemAdj.put(from, set);
+                itemIn.put(i, itemIn.getOrDefault(i, 0) + 1);
             }
         }
     }
 
-    return out;
+    Queue&lt;Integer&gt; q = new LinkedList&lt;&gt;();
+    List&lt;Integer&gt; groupAns = new ArrayList&lt;&gt;();
+
+    for (int i = 0; i &lt; minGroup; i++) {         // verify group order
+        if (groupIn.getOrDefault(i, 0) == 0) {
+            q.offer(i);
+            groupAns.add(i);
+        }
+    }
+
+    while (!q.isEmpty()) {
+        int curGroup = q.poll();
+        for (int next : groupAdj.getOrDefault(curGroup, new HashSet&lt;&gt;())) {
+            groupIn.put(next, groupIn.get(next) - 1);
+            if (groupIn.get(next) == 0) {
+                q.offer(next);
+                groupAns.add(next);
+            }
+        }
+    }
+
+    if (groupAns.size() != minGroup) {      // found cycle in groups
+        return new int[0];
+    }
+
+    List&lt;Integer&gt; out = new ArrayList&lt;&gt;();
+
+    for (int groupId : groupAns) {      // verify item order
+        List&lt;Integer&gt; items = groupToItems.getOrDefault(groupId, new ArrayList&lt;&gt;());
+        int num = 0;
+        for (int item : items) {
+            if (itemIn.getOrDefault(item, 0) == 0) {
+                q.offer(item);
+                out.add(item);
+                num++;
+            }
+        }
+
+        while (!q.isEmpty()) {
+            int curItem = q.poll();
+            for (int next : itemAdj.getOrDefault(curItem, new HashSet&lt;&gt;())) {
+                itemIn.put(next, itemIn.get(next) - 1);
+                if (itemIn.get(next) == 0) {
+                    q.offer(next);
+                    out.add(next);
+                    num++;
+                }
+            }
+        }
+        if (num != items.size()) {
+            return new int[0];
+        }
+    }
+
+    return out.stream().mapToInt(i -&gt; i).toArray();
 }
 </code></pre>
               
@@ -435,9 +461,7 @@ public int[] shortestAlternatingPaths(int n, int[][] red_edges, int[][] blue_edg
                   <div class="post-footer-tags">
                     <span class="text-color-light text-small">TAGGED IN</span><br/>
                     
-  <a class="tag tag--primary tag--small" href="https://yyzhou95.github.io/tags/bfs/">BFS</a>
-
-  <a class="tag tag--primary tag--small" href="https://yyzhou95.github.io/tags/directed-graph/">Directed Graph</a>
+  <a class="tag tag--primary tag--small" href="https://yyzhou95.github.io/tags/topological-sorting/">Topological Sorting</a>
 
                   </div>
                 
@@ -450,7 +474,7 @@ public int[] shortestAlternatingPaths(int n, int[][] red_edges, int[][] blue_edg
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/09/lc-1203-sort-items-by-groups-respecting-dependencies/" data-tooltip="LC 1203 - Sort Items by Groups Respecting Dependencies">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/09/lc-1202-smallest-string-with-swaps/" data-tooltip="LC 1202 - Smallest String With Swaps">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -458,7 +482,7 @@ public int[] shortestAlternatingPaths(int n, int[][] red_edges, int[][] blue_edg
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/09/lc-1197-minimum-knight-moves/" data-tooltip="LC 1197 - Minimum Knight Moves">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/09/lc-1129-shortest-path-with-alternating-colors/" data-tooltip="LC 1129 - Shortest Path with Alternating Colors">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
@@ -508,7 +532,7 @@ public int[] shortestAlternatingPaths(int n, int[][] red_edges, int[][] blue_edg
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/09/lc-1203-sort-items-by-groups-respecting-dependencies/" data-tooltip="LC 1203 - Sort Items by Groups Respecting Dependencies">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/09/lc-1202-smallest-string-with-swaps/" data-tooltip="LC 1202 - Smallest String With Swaps">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -516,7 +540,7 @@ public int[] shortestAlternatingPaths(int n, int[][] red_edges, int[][] blue_edg
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/09/lc-1197-minimum-knight-moves/" data-tooltip="LC 1197 - Minimum Knight Moves">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/09/lc-1129-shortest-path-with-alternating-colors/" data-tooltip="LC 1129 - Shortest Path with Alternating Colors">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
