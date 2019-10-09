@@ -13,10 +13,10 @@
 
 <meta property="og:description" content="">
 <meta property="og:type" content="article">
-<meta property="og:title" content="LC 1215 - Stepping Numbers">
-<meta name="twitter:title" content="LC 1215 - Stepping Numbers">
-<meta property="og:url" content="https://yyzhou95.github.io/2019/10/lc-1215-stepping-numbers/">
-<meta property="twitter:url" content="https://yyzhou95.github.io/2019/10/lc-1215-stepping-numbers/">
+<meta property="og:title" content="LC 1214 - Two Sum BSTs">
+<meta name="twitter:title" content="LC 1214 - Two Sum BSTs">
+<meta property="og:url" content="https://yyzhou95.github.io/2019/10/lc-1214-two-sum-bsts/">
+<meta property="twitter:url" content="https://yyzhou95.github.io/2019/10/lc-1214-two-sum-bsts/">
 <meta property="og:site_name" content="Bingo!">
 <meta property="og:description" content="">
 <meta name="twitter:description" content="">
@@ -35,6 +35,8 @@
     
   
   
+    
+      <meta property="article:tag" content="Tree">
     
       <meta property="article:tag" content="DFS">
     
@@ -57,14 +59,14 @@
   <meta property="twitter:image" content="https://yyzhou95.github.io/img/avatar.jpg">
 
 
-    <title>LC 1215 - Stepping Numbers</title>
+    <title>LC 1214 - Two Sum BSTs</title>
 
     <link rel="icon" href="https://yyzhou95.github.io/favicon.png">
     
 
     
 
-    <link rel="canonical" href="https://yyzhou95.github.io/2019/10/lc-1215-stepping-numbers/">
+    <link rel="canonical" href="https://yyzhou95.github.io/2019/10/lc-1214-two-sum-bsts/">
 
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
@@ -248,7 +250,7 @@
             <div class="post-header main-content-wrap text-left">
   
     <h1 class="post-title" itemprop="headline">
-      LC 1215 - Stepping Numbers
+      LC 1214 - Two Sum BSTs
     </h1>
   
   
@@ -277,7 +279,7 @@
             <div class="main-content-wrap">
               <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
 <ul>
-<li><a href="#stepping-numbers">Stepping Numbers</a>
+<li><a href="#two-sum-bsts">Two Sum BSTs</a>
 <ul>
 <li><a href="#problem-description">Problem description</a></li>
 <li><a href="#method">Method</a></li>
@@ -286,81 +288,135 @@
 </ul>
 </nav>
 
-<h1 id="stepping-numbers">Stepping Numbers</h1>
+<h1 id="two-sum-bsts">Two Sum BSTs</h1>
 
-<p>Link: <a href="https://leetcode.com/problems/stepping-numbers/">Stepping Numbers</a></p>
+<p>Link: <a href="https://leetcode.com/problems/two-sum-bsts">Two Sum BSTs</a></p>
 
 <h2 id="problem-description">Problem description</h2>
 
-<p>A <em>Stepping Number</em> is an integer such that all of its adjacent digits have an absolute difference of exactly <code>1</code>. For example, <code>321</code> is a Stepping Number while <code>421</code> is not.</p>
-
-<p>Given two integers <code>low</code> and <code>high</code>, find and return a <strong>sorted</strong> list of all the Stepping Numbers in the range <code>[low, high]</code> inclusive.</p>
+<p>Given two binary search trees, return <code>True</code> if and only if there is a node in the first tree and a node in the second tree whose values sum up to a given integer <code>target</code>.</p>
 
 <p><strong>Example 1:</strong></p>
 
-<pre><code>Input: low = 0, high = 21
-Output: [0,1,2,3,4,5,6,7,8,9,10,12,21]
+<p><strong><img src="../../../static/img/1368_1_a.png" alt="img" /><img src="../../../static/img/1368_1_b.png" alt="img" /></strong></p>
+
+<pre><code>Input: root1 = [2,1,4], root2 = [1,0,3], target = 5
+Output: true
+Explanation: 2 and 3 sum up to 5.
+</code></pre>
+
+<p><strong>Example 2:</strong></p>
+
+<p><strong><img src="../../../static/img/1368_2_a.png" alt="img" /><img src="../../../static/img/1368_2_b.png" alt="img" /></strong></p>
+
+<pre><code>Input: root1 = [0,-10,10], root2 = [5,1,7,0,2], target = 18
+Output: false
 </code></pre>
 
 <p><strong>Constraints:</strong></p>
 
 <ul>
-<li><code>0 &lt;= low &lt;= high &lt;= 2 * 10^9</code></li>
+<li>Each tree has at most <code>5000</code> nodes.</li>
+<li><code>-10^9 &lt;= target, node.val &lt;= 10^9</code></li>
 </ul>
 
 <h2 id="method">Method</h2>
 
-<p>DFS to find each available result.</p>
+<p>Naive approach: do the binary search recursively.</p>
 
-<p>Note that the overflow of temporary value may cause TLE, hence use <code>long</code> to cast temporary value.</p>
+<ul>
+<li>Time complexity: <code>O(n * m)</code></li>
+<li>Space complexity: <code>O(m + n)</code></li>
+</ul>
+
+<p>The other approach is use a hash set to store one BST’s value and then traverse the other one.</p>
+
+<ul>
+<li>Time complexity: <code>O(n + m)</code></li>
+<li>Space complexity: <code>O(m + n)</code></li>
+</ul>
 
 <h2 id="code">Code</h2>
 
 <pre><code class="language-java">/**
- * DFS to find each available result.
+ * Naive approach: do the binary search recursively.
+ * Time complexity: O(n * m)
+ * Space complexity: O(m + n)
  *
- * @param low  low bound
- * @param high high bound
- * @return sorted list of all the Stepping Numbers in the range [low, high] inclusive
+ * @param root1  first BST
+ * @param root2  second BST
+ * @param target target value
+ * @return if there is a node in the first tree and a node in the second tree that sum up to a given target
  */
-public List&lt;Integer&gt; countSteppingNumbers(int low, int high) {
-    List&lt;Integer&gt; out = new LinkedList&lt;&gt;();
-
-    for (int i = 0; i &lt; 10; i++) {
-        dfs(low, high, out, i);
+public boolean twoSumBSTs(TreeNode root1, TreeNode root2, int target) {
+    if (root1 == null || root2 == null) {
+        return false;
     }
-    Collections.sort(out);
-    return out;
+
+    int tmp = root1.val + root2.val;
+    if (tmp == target) {
+        return true;
+    } else if (tmp &gt; target) {
+        return twoSumBSTs(root1.left, root2, target) || twoSumBSTs(root1, root2.left, target);
+    } else {
+        return twoSumBSTs(root1.right, root2, target) || twoSumBSTs(root1, root2.right, target);
+    }
 }
 
 /**
- * DFS search to find all correct answer.
- * Use long for temporary value during DFS.
- * During the traverse, temp value may overflow and hence become negative, which will never end the DFS recursion.
+ * Use hash set to traverse the tree first, then search in second tree.
  *
- * @param low  low bound
- * @param high high bound
- * @param out  output list
- * @param tmp  temp value during DFS, use long to avoid TLE caused by overflow
+ * @param root1  first BST
+ * @param root2  second BST
+ * @param target target value
+ * @return if there is a node in the first tree and a node in the second tree that sum up to a given target
  */
-private void dfs(int low, int high, List&lt;Integer&gt; out, long tmp) {
-
-    if (tmp &gt;= low &amp;&amp; tmp &lt;= high) {
-        out.add((int) tmp);
+public boolean hashSet(TreeNode root1, TreeNode root2, int target) {
+    if (root1 == null || root2 == null) {
+        return false;
     }
 
-    if (tmp &gt; high || tmp == 0) {
+    HashSet&lt;Integer&gt; s = new HashSet&lt;&gt;();
+    inorder(s, root1);
+
+    return search(root2, target, s);
+}
+
+/**
+ * Search two sum target based on given value
+ *
+ * @param r2     second BST
+ * @param target target value
+ * @param s      hash set stores previous tree elements
+ * @return if there is a node in the first tree and a node in the second tree that sum up to a given target
+ */
+private boolean search(TreeNode r2, int target, HashSet&lt;Integer&gt; s) {
+
+    if (r2 == null) {
+        return false;
+    }
+
+    if (s.contains(target - r2.val)) {
+        return true;
+    } else {
+        return search(r2.left, target, s) || search(r2.right, target, s);
+    }
+}
+
+/**
+ * Inorder traversal to save all nodes.
+ *
+ * @param s hash set
+ * @param r root of tree
+ */
+private void inorder(HashSet&lt;Integer&gt; s, TreeNode r) {
+    if (r == null) {
         return;
     }
 
-    if (tmp % 10 == 0) {
-        dfs(low, high, out, tmp % 10 + 1 + tmp * 10);
-    } else if (tmp % 10 == 9) {
-        dfs(low, high, out, tmp % 10 - 1 + tmp * 10);
-    } else {
-        dfs(low, high, out, tmp % 10 + 1 + tmp * 10);
-        dfs(low, high, out, tmp % 10 - 1 + tmp * 10);
-    }
+    inorder(s, r.left);
+    s.add(r.val);
+    inorder(s, r.right);
 }
 </code></pre>
               
@@ -374,6 +430,8 @@ private void dfs(int low, int high, List&lt;Integer&gt; out, long tmp) {
                   <div class="post-footer-tags">
                     <span class="text-color-light text-small">TAGGED IN</span><br/>
                     
+  <a class="tag tag--primary tag--small" href="https://yyzhou95.github.io/tags/tree/">Tree</a>
+
   <a class="tag tag--primary tag--small" href="https://yyzhou95.github.io/tags/dfs/">DFS</a>
 
                   </div>
@@ -387,7 +445,7 @@ private void dfs(int low, int high, List&lt;Integer&gt; out, long tmp) {
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/10/lc-1214-two-sum-bsts/" data-tooltip="LC 1214 - Two Sum BSTs">
+                <a class="post-action-btn btn btn--disabled">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -395,7 +453,7 @@ private void dfs(int low, int high, List&lt;Integer&gt; out, long tmp) {
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/10/lc-1213-intersection-of-three-sorted-arrays/" data-tooltip="LC 1213 - Intersection of Three Sorted Arrays">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/10/lc-1215-stepping-numbers/" data-tooltip="LC 1215 - Stepping Numbers">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
@@ -445,7 +503,7 @@ private void dfs(int low, int high, List&lt;Integer&gt; out, long tmp) {
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/10/lc-1214-two-sum-bsts/" data-tooltip="LC 1214 - Two Sum BSTs">
+                <a class="post-action-btn btn btn--disabled">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -453,7 +511,7 @@ private void dfs(int low, int high, List&lt;Integer&gt; out, long tmp) {
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/10/lc-1213-intersection-of-three-sorted-arrays/" data-tooltip="LC 1213 - Intersection of Three Sorted Arrays">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/10/lc-1215-stepping-numbers/" data-tooltip="LC 1215 - Stepping Numbers">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
