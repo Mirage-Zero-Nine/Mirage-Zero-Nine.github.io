@@ -439,46 +439,48 @@ Explanation: Given the above binary tree (Figure A), your function should popula
  * BFS.
  * Use a Node to store previous node, link to next node.
  * Use a Node to store the next layer's head node for iteration.
+ * Under each level, mark the previous node and head of level node as null.
+ * If head node is null, connect it to first non-empty node under current level.
+ * Each time, if current node is not null, update previous node until the end of level.
+ * Time complexity: O(n)
+ * Space complexity: O(1)
  *
  * @param root root node
  * @return populate tree
  */
 public Node connect(Node root) {
-    Node nextHead = null;
-    Node nextPrevious = null;
+    Node dummyLevelHead = null;
+    Node previous = null;
     Node current = root;
 
-    /* Iterate whole tree */
-    while (current != null) {
-
-        /* Iterate current layer */
-        while (current != null) {
-
-            /* Left child */
+    while (current != null) {       // loop all nodes in tree
+        while (current != null) {       // loop current level
             if (current.left != null) {
-                if (nextPrevious != null) {
-                    nextPrevious.next = current.left;
+                if (previous == null) {     // new level start
+                    dummyLevelHead = current.left;
                 } else {
-                    nextHead = current.left;        // find new layer
+                    previous.next = current.left;
                 }
-                nextPrevious = current.left;
+                previous = current.left;
             }
 
-            /* Right child */
             if (current.right != null) {
-                if (nextPrevious != null) {
-                    nextPrevious.next = current.right;
+                if (previous == null) {
+                    dummyLevelHead = current.right;
                 } else {
-                    nextHead = current.right;       // find new layer
+                    previous.next = current.right;
                 }
-                nextPrevious = current.right;
+                previous = current.right;
             }
-            current = current.next;
+
+            current = current.next;     // update current node
         }
-        current = nextHead;     // going to next layer
-        nextHead = null;
-        nextPrevious = null;
+
+        current = dummyLevelHead;       // move to next level
+        dummyLevelHead = null;          // reset level start node and previous node in new level
+        previous = null;
     }
+
     return root;
 }
 </code></pre>
