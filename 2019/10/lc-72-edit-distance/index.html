@@ -15,18 +15,18 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="LC 72 - Edit Distance">
 <meta name="twitter:title" content="LC 72 - Edit Distance">
-<meta property="og:url" content="https://yyzhou95.github.io/2019/06/lc-72-edit-distance/">
-<meta property="twitter:url" content="https://yyzhou95.github.io/2019/06/lc-72-edit-distance/">
+<meta property="og:url" content="https://yyzhou95.github.io/2019/10/lc-72-edit-distance/">
+<meta property="twitter:url" content="https://yyzhou95.github.io/2019/10/lc-72-edit-distance/">
 <meta property="og:site_name" content="Bingo!">
 <meta property="og:description" content="">
 <meta name="twitter:description" content="">
 <meta property="og:locale" content="en-us">
 
   
-    <meta property="article:published_time" content="2019-06-09T00:00:00">
+    <meta property="article:published_time" content="2019-10-13T00:00:00">
   
   
-    <meta property="article:modified_time" content="2019-06-09T00:00:00">
+    <meta property="article:modified_time" content="2019-10-13T00:00:00">
   
   
   
@@ -64,7 +64,7 @@
 
     
 
-    <link rel="canonical" href="https://yyzhou95.github.io/2019/06/lc-72-edit-distance/">
+    <link rel="canonical" href="https://yyzhou95.github.io/2019/10/lc-72-edit-distance/">
 
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
@@ -254,9 +254,9 @@
   
   <div class="postShorten-meta post-meta">
     
-      <time itemprop="datePublished" datetime="2019-06-09T00:00:00Z">
+      <time itemprop="datePublished" datetime="2019-10-13T00:00:00Z">
         
-  June 9, 2019
+  October 13, 2019
 
       </time>
     
@@ -326,12 +326,20 @@ exection -&gt; execution (insert 'u')
 
 <h2 id="method">Method</h2>
 
+<p>Two approaches. This problem can be solved by both dynamic programming and DFS with pruning.</p>
+
+<p><strong>Dynamic programming</strong></p>
+
 <p>Classic dynamic programming problem. The key to solve this problem is to find out the state transition formula.</p>
 
 <p><code>dp[i][j]</code> = <code>dp[i - 1][j - 1]</code>, if <code>word1.charAt(i - 1) == word2.charAt(j - 1)</code>
 Otherwise, <code>dp[i][j]</code> = <code>min(dp[i - 1][j - 1], dp[i - 1][j], dp[i][j - 1]) + 1</code>.</p>
 
 <p>Since each action takes only one weight, it can be directly used.</p>
+
+<p><strong>DFS with pruning</strong></p>
+
+<p>Search starts at the end of string (start will also be fine). If current char is matched</p>
 
 <h2 id="code">Code</h2>
 
@@ -379,6 +387,67 @@ public int minDistance(String word1, String word2) {
 
     return dp[l1][l2];
 }
+
+/**
+ * Use DFS to find the min edit distance, with a 2D int array as pruning (without that would cause TLE).
+ *
+ * @param word1 string 1
+ * @param word2 target converted string
+ * @return min edit distance
+ */
+public int dfsImpl(String word1, String word2) {
+
+    int n1 = word1.length(), n2 = word2.length();
+
+    /* Corner case */
+    if (n1 == 0 || n2 == 0) {
+        return word1.length() | word2.length();     // if one is empty, then the min distance is the other word
+    }
+    int[][] mem = new int[n1 + 1][n2 + 1];
+
+    for (int[] m : mem) {
+        Arrays.fill(m, -1);
+    }
+
+    return dfs(word1, word2, n1, n2, mem);
+}
+
+/**
+ * DFS search.
+ * The branch of searching is to check if current character is matched.
+ * If matched, then both string move one char forward.
+ * Otherwise, three branches: insert, update, delete.
+ *
+ * @param s1  first string
+ * @param s2  target string
+ * @param i   index of s1
+ * @param j   index of s2
+ * @param mem memorization array
+ * @return min edit distance
+ */
+private int dfs(String s1, String s2, int i, int j, int[][] mem) {
+    if (i == 0 || j == 0) {
+        return j + i;
+    }
+
+    if (mem[i][j] != -1) {
+        return mem[i][j];
+    }
+
+    int insert = dfs(s1, s2, i, j - 1, mem) + 1;
+    int delete = dfs(s1, s2, i - 1, j, mem) + 1;
+
+    /*
+     * If two chars are matched, then the cost will not change.
+     * But both pointer will moving forward (same as replacement)
+     * Otherwise, replace operation will cost one. */
+    int replace = (s1.charAt(i - 1) == s2.charAt(j - 1)) ? dfs(s1, s2, i - 1, j - 1, mem) : dfs(s1, s2, i - 1, j - 1, mem) + 1;
+
+    int min = Math.min(insert, Math.min(delete, replace));
+    mem[i][j] = min;
+
+    return min;
+}
 </code></pre>
               
             </div>
@@ -404,7 +473,7 @@ public int minDistance(String word1, String word2) {
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/06/lc-121/122/123/188-best-time-to-buy-and-sell-stock/" data-tooltip="LC 121/122/123/188 - Best Time to Buy and Sell Stock">
+                <a class="post-action-btn btn btn--disabled">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -412,7 +481,7 @@ public int minDistance(String word1, String word2) {
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/06/lc-32-longest-valid-parentheses/" data-tooltip="LC 32 - Longest Valid Parentheses">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/10/lc-1222-queens-that-can-attack-the-king/" data-tooltip="LC 1222 - Queens That Can Attack the King">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
@@ -462,7 +531,7 @@ public int minDistance(String word1, String word2) {
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/06/lc-121/122/123/188-best-time-to-buy-and-sell-stock/" data-tooltip="LC 121/122/123/188 - Best Time to Buy and Sell Stock">
+                <a class="post-action-btn btn btn--disabled">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -470,7 +539,7 @@ public int minDistance(String word1, String word2) {
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/06/lc-32-longest-valid-parentheses/" data-tooltip="LC 32 - Longest Valid Parentheses">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/10/lc-1222-queens-that-can-attack-the-king/" data-tooltip="LC 1222 - Queens That Can Attack the King">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
