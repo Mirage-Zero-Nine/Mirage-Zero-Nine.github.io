@@ -297,6 +297,12 @@
 <li><a href="#method-2">Method</a></li>
 <li><a href="#code-2">Code</a></li>
 </ul></li>
+<li><a href="#dice-roll-simulation">Dice Roll Simulation</a>
+<ul>
+<li><a href="#problem-description-3">Problem description</a></li>
+<li><a href="#method-3">Method</a></li>
+<li><a href="#code-3">Code</a></li>
+</ul></li>
 </ul>
 </nav>
 
@@ -893,6 +899,114 @@ private int dfs(String s1, String s2, int i, int j, int[][] mem) {
     mem[i][j] = min;
 
     return min;
+}
+</code></pre>
+
+<h1 id="dice-roll-simulation">Dice Roll Simulation</h1>
+
+<p>Link: <a href="https://leetcode.com/problems/dice-roll-simulation">Dice Roll Simulation</a></p>
+
+<h2 id="problem-description-3">Problem description</h2>
+
+<p>A die simulator generates a random number from 1 to 6 for each roll. You introduced a constraint to the generator such that it cannot roll the number <code>i</code> more than <code>rollMax[i]</code> (1-indexed) <strong>consecutive</strong> times.</p>
+
+<p>Given an array of integers <code>rollMax</code> and an integer <code>n</code>, return the number of distinct sequences that can be obtained with exact <code>n</code> rolls.</p>
+
+<p>Two sequences are considered different if at least one element differs from each other. Since the answer may be too large, return it modulo <code>10^9 + 7</code>.</p>
+
+<p><strong>Example 1:</strong></p>
+
+<pre><code>Input: n = 2, rollMax = [1,1,2,2,2,3]
+Output: 34
+Explanation: There will be 2 rolls of die, if there are no constraints on the die, there are 6 * 6 = 36 possible combinations. In this case, looking at rollMax array, the numbers 1 and 2 appear at most once consecutively, therefore sequences (1,1) and (2,2) cannot occur, so the final answer is 36-2 = 34.
+</code></pre>
+
+<p><strong>Example 2:</strong></p>
+
+<pre><code>Input: n = 2, rollMax = [1,1,1,1,1,1]
+Output: 30
+</code></pre>
+
+<p><strong>Example 3:</strong></p>
+
+<pre><code>Input: n = 3, rollMax = [1,1,1,2,2,3]
+Output: 181
+</code></pre>
+
+<p><strong>Constraints:</strong></p>
+
+<ul>
+<li><code>1 &lt;= n &lt;= 5000</code></li>
+<li><code>rollMax.length == 6</code></li>
+<li><code>1 &lt;= rollMax[i] &lt;= 15</code></li>
+</ul>
+
+<h2 id="method-3">Method</h2>
+
+<p>DFS with memorization.</p>
+
+<p>The memorization array stores value under specific remaining dices, roll limit, and dice value.</p>
+
+<p>The constraint of DFS is that, first, if remaining dice is 0, then current dice has only one combination. Second, if consecutive roll has reached the limit, current dice roll can not be the limited value.</p>
+
+<h2 id="code-3">Code</h2>
+
+<pre><code class="language-java">private int MOD = 1000000000 + 7;
+
+/**
+ * DFS with memorization.
+ * The memorization array stores value under specific remaining dices, roll limit, and dice value.
+ *
+ * @param n       n dices
+ * @param rollMax max consecutive rolls of one dice value
+ * @return the number of distinct sequences that can be obtained with exact n rolls
+ */
+public int dieSimulator(int n, int[] rollMax) {
+    int[][][] mem = new int[n][16][6];      // n remaining dices, at most roll 16 times, dice has 6 facet
+
+    int out = 0;
+    for (int i = 0; i &lt; 6; i++) {
+        out = (out + dfs(mem, rollMax, n - 1, 1, i)) % MOD;     // first dice roll
+    }
+
+    return out;
+}
+
+/**
+ * DFS with memorization.
+ * The constraint of DFS is that, first, if remaining dice is 0, then current dice has only one combination.
+ * Second, if consecutive roll has reached the limit, current dice roll can not be the limited value.
+ * A memorization array is used to store the previous result of specific remaining dice, roll limit and dice value.
+ *
+ * @param mem         memory array
+ * @param max         max consecutive rolls of one dice value
+ * @param remaining   remaining dice roll
+ * @param consecutive previous consecutive roll
+ * @param i           previous dice value
+ * @return the number of distinct sequences that can be obtained with exact n rolls
+ */
+private int dfs(int[][][] mem, int[] max, int remaining, int consecutive, int i) {
+
+    if (remaining == 0) {
+        return 1;       // last dice has only one combination
+    }
+
+    if (mem[remaining][consecutive][i] != 0) {
+        return mem[remaining][consecutive][i];      // memorization
+    }
+
+    int out = 0;
+    for (int j = 0; j &lt; 6; j++) {
+        if (j != i) {
+            out = (out + dfs(mem, max, remaining - 1, 1, j)) % MOD;
+        } else if (consecutive &lt; max[i]) {
+            out = (out + dfs(mem, max, remaining - 1, consecutive + 1, j)) % MOD;
+        }
+    }
+
+    mem[remaining][consecutive][i] = out;
+
+    return out;
 }
 </code></pre>
               
