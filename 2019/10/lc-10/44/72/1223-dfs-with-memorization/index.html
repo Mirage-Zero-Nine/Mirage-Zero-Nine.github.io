@@ -13,20 +13,20 @@
 
 <meta property="og:description" content="">
 <meta property="og:type" content="article">
-<meta property="og:title" content="LC 10/44 - Regular Expression Matching">
-<meta name="twitter:title" content="LC 10/44 - Regular Expression Matching">
-<meta property="og:url" content="https://yyzhou95.github.io/2019/06/lc-10/44-regular-expression-matching/">
-<meta property="twitter:url" content="https://yyzhou95.github.io/2019/06/lc-10/44-regular-expression-matching/">
+<meta property="og:title" content="LC 10/44/72/1223 - DFS with Memorization">
+<meta name="twitter:title" content="LC 10/44/72/1223 - DFS with Memorization">
+<meta property="og:url" content="https://yyzhou95.github.io/2019/10/lc-10/44/72/1223-dfs-with-memorization/">
+<meta property="twitter:url" content="https://yyzhou95.github.io/2019/10/lc-10/44/72/1223-dfs-with-memorization/">
 <meta property="og:site_name" content="Bingo!">
 <meta property="og:description" content="">
 <meta name="twitter:description" content="">
 <meta property="og:locale" content="en-us">
 
   
-    <meta property="article:published_time" content="2019-06-06T00:00:00">
+    <meta property="article:published_time" content="2019-10-14T00:00:00">
   
   
-    <meta property="article:modified_time" content="2019-06-06T00:00:00">
+    <meta property="article:modified_time" content="2019-10-14T00:00:00">
   
   
   
@@ -36,7 +36,7 @@
   
   
     
-      <meta property="article:tag" content="Dynamic programming">
+      <meta property="article:tag" content="Dynamic Programming">
     
       <meta property="article:tag" content="DFS">
     
@@ -59,14 +59,14 @@
   <meta property="twitter:image" content="https://yyzhou95.github.io/img/avatar.jpg">
 
 
-    <title>LC 10/44 - Regular Expression Matching</title>
+    <title>LC 10/44/72/1223 - DFS with Memorization</title>
 
     <link rel="icon" href="https://yyzhou95.github.io/favicon.png">
     
 
     
 
-    <link rel="canonical" href="https://yyzhou95.github.io/2019/06/lc-10/44-regular-expression-matching/">
+    <link rel="canonical" href="https://yyzhou95.github.io/2019/10/lc-10/44/72/1223-dfs-with-memorization/">
 
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
@@ -250,15 +250,15 @@
             <div class="post-header main-content-wrap text-left">
   
     <h1 class="post-title" itemprop="headline">
-      LC 10/44 - Regular Expression Matching
+      LC 10/44/72/1223 - DFS with Memorization
     </h1>
   
   
   <div class="postShorten-meta post-meta">
     
-      <time itemprop="datePublished" datetime="2019-06-06T00:00:00Z">
+      <time itemprop="datePublished" datetime="2019-10-14T00:00:00Z">
         
-  June 6, 2019
+  October 14, 2019
 
       </time>
     
@@ -290,6 +290,12 @@
 <li><a href="#problem-description-1">Problem description</a></li>
 <li><a href="#method-1">Method</a></li>
 <li><a href="#code-1">Code</a></li>
+</ul></li>
+<li><a href="#edit-distance">Edit Distance</a>
+<ul>
+<li><a href="#problem-description-2">Problem description</a></li>
+<li><a href="#method-2">Method</a></li>
+<li><a href="#code-2">Code</a></li>
 </ul></li>
 </ul>
 </nav>
@@ -375,7 +381,21 @@ Output: false
 <li>Finally, return <code>dp[s.length()][p.length()]</code>.</li>
 </ul>
 
-<p>This problem can also be solved by DFS. See code below.</p>
+<p>This problem can also be solved by DFS. The branch of DFS is as following:</p>
+
+<ol>
+<li>If <code>*</code> is the second char in pattern (<code>n == i - 2</code> ) to match if <code>*</code> is the second char in pattern.</li>
+<li>If <code>*</code> matches 0 times in <code>s</code>.</li>
+</ol>
+
+<p>The above two conditions requires to move <code>i</code> backward one and <code>j</code> move forward 1.</p>
+
+<ol>
+<li><code>s.charAt(i) == p.charAt(j)</code> or <code>p.charAt(j) == ‘.’</code>.</li>
+<li><code>j + 1 &lt; p.length() &amp;&amp; p.charAt(j + 1) == '*’</code> to match previous char more than 1 time.</li>
+</ol>
+
+<p>The above conditions can only move <code>i</code> and <code>j</code> forward. See code below.</p>
 
 <h2 id="code">Code</h2>
 
@@ -467,18 +487,11 @@ public boolean dfsImpl(String s, String p) {
     if (p == null || s == null) {
         return false;
     }
+
     int[][] mem = new int[s.length() + 1][p.length() + 1];
 
-    for (int[] i : mem) {
-        Arrays.fill(i, -1);
-    }
-
-    for (int i = p.length(); i &gt;= 0; i -= 2) {
-        if (i == p.length() || (i &lt; p.length() &amp;&amp; p.charAt(i + 1) == '*')) {
-            mem[s.length()][i] = 1;
-        } else {
-            break;
-        }
+    for (int i = p.length(); i &gt;= 0 &amp;&amp; (i == p.length() || (i &lt; p.length() &amp;&amp; p.charAt(i + 1) == '*')); i -= 2) {
+        mem[s.length()][i] = 1;
     }
 
     return dfs(s, p, 0, 0, mem);
@@ -496,7 +509,7 @@ public boolean dfsImpl(String s, String p) {
  */
 private boolean dfs(String s, String p, int i, int j, int[][] mem) {
 
-    if (mem[i][j] != -1) {      // reuse previous result
+    if (mem[i][j] != 0) {      // reuse previous result
         return mem[i][j] == 1;
     }
 
@@ -519,9 +532,11 @@ private boolean dfs(String s, String p, int i, int j, int[][] mem) {
             }
         }
     } else if (i &lt; s.length() &amp;&amp; (s.charAt(i) == p.charAt(j) || p.charAt(j) == '.')) {
-        return dfs(s, p, i + 1, j + 1, mem);
+        mem[i][j] = dfs(s, p, i + 1, j + 1, mem) ? 1 : -1;
+        return mem[i][j] == 1;
     } else if (j + 1 &lt; p.length() &amp;&amp; p.charAt(j + 1) == '*') {      // match previous char more than 1 time
-        return dfs(s, p, i, j + 2, mem);
+        mem[i][j] = dfs(s, p, i, j + 2, mem) ? 1 : -1;
+        return mem[i][j] == 1;
     }
 
     return false;
@@ -597,6 +612,15 @@ Output: false
 
 <p>This problem’s only difference to previous one is the matching field of <code>*</code>. In this problem, the <code>*</code> can match any sequence including empty sequence. Therefore, <code>*</code> is the real wildcard in this problem. If current char in pattern is <code>*</code>, then <code>dp[i + 1][j + 1] = dp[i + 1][j] || dp[i][j + 1]</code>.</p>
 
+<p>Also, this problem can be solved by DFS with memorization. The condition is simpler than previous problem. There will only be these branches:</p>
+
+<ol>
+<li>If current char in <code>p</code> is <code>*</code>, then move string index forward or move pattern pattern index forward.</li>
+<li>If current char in <code>s</code> and <code>p</code> are equal, or current char in <code>p</code> is <code>?</code>, then move both index forward.</li>
+</ol>
+
+<p>See code below.</p>
+
 <h2 id="code-1">Code</h2>
 
 <pre><code class="language-java">/**
@@ -617,29 +641,258 @@ public boolean isMatch(String s, String p) {
         return false;
     }
 
-    boolean[][] dp = new boolean[s.length() + 1][p.length() + 1];
+    int l1 = s.length(), l2 = p.length();
+    boolean[][] dp = new boolean[l1 + 1][l2 + 1];
     dp[0][0] = true;        // empty string matches empty string
 
-    for (int i = 0; i &lt; p.length(); i++) {
-        if (p.charAt(i) == '*') {        // only p contains '.' or '*'
-            dp[0][i + 1] = true;        // '*' can match empty string
-        } else {
-            break;
+    for (int i = 1; i &lt;= l2; i++) {
+        if (p.charAt(i - 1) == '*') {
+            dp[0][i] = dp[0][i - 1];        // '*' can match empty string
         }
     }
 
-    for (int i = 0; i &lt; s.length(); i++) {
-        for (int j = 0; j &lt; p.length(); j++) {
-            if (s.charAt(i) == p.charAt(j) || p.charAt(j) == '?') {
-                dp[i + 1][j + 1] = dp[i][j];
+    for (int i = 1; i &lt;= l1; i++) {
+        for (int j = 1; j &lt;= l2; j++) {
+            if (s.charAt(i - 1) == p.charAt(j - 1) || p.charAt(j - 1) == '?') {
+                dp[i][j] = dp[i - 1][j - 1];
             }
-            if (p.charAt(j) == '*') {
-                dp[i + 1][j + 1] = dp[i + 1][j] || dp[i][j + 1];
+            if (p.charAt(j - 1) == '*') {
+
+                /*
+                 * dp[i + 1][j]: matches any sequence 1 ~ n times.
+                 * dp[i][j + 1]: matches empty sequence. */
+                dp[i][j] = dp[i - 1][j] || dp[i][j - 1];
             }
         }
     }
 
-    return dp[s.length()][p.length()];
+    return dp[l1][l2];
+}
+
+public boolean dfsImple(String s, String p) {
+
+    /* Corner case */
+    if (p == null || s == null) {
+        return false;
+    }
+
+    int l1 = s.length(), l2 = p.length();
+
+    /*
+     * mem[i][j]: whether string (0, i) and pattern(0, j) is matched.
+     * -1: not matched
+     * 1: matched
+     * 0: don't know */
+    int[][] mem = new int[l1 + 1][l2 + 1];
+
+    /*
+     * 1. last cell (mem[l1][l2]) should be true (end point of both string and pattern reaches the end)
+     * 2. If last char in pattern is '*', then it can match all subsequence as long as previous part is matched. */
+    for (int i = l2; i &gt;= 0 &amp;&amp; (i == l2 || (i &lt; l2 &amp;&amp; p.charAt(i) == '*')); i--) {
+        mem[l1][i] = 1;
+    }
+
+    return dfs(s, p, 0, 0, mem);
+}
+
+/**
+ * DFS searching with a 2D int table to accomplish pruning.
+ * During the searching process, if the table cell has been filled, return the value.
+ * mem[i][j]: whether string (0, i) and pattern(0, j) is matched. -1: not matched; 1: matched; 0: don't know
+ *
+ * @param s   string
+ * @param p   pattern string
+ * @param i   current index of string
+ * @param j   current index of pattern
+ * @param mem 2D boolean array to store the previous result
+ * @return if string is matched to pattern
+ */
+private boolean dfs(String s, String p, int i, int j, int[][] mem) {
+
+    if (mem[i][j] != 0) {      // reuse previous result
+        return mem[i][j] == 1;
+    }
+
+    if (j &gt;= p.length()) {      // avoid overflow
+        return false;
+    }
+
+    if (p.charAt(j) == '*') {
+        if ((i &lt; s.length() &amp;&amp; dfs(s, p, i + 1, j, mem)) || dfs(s, p, i, j + 1, mem)) {
+            mem[i][j] = 1;
+            return true;
+        }
+    } else if (i &lt; s.length() &amp;&amp; (s.charAt(i) == p.charAt(j) || p.charAt(j) == '?')) {
+        mem[i][j] = dfs(s, p, i + 1, j + 1, mem) ? 1 : -1;      // if
+        return mem[i][j] == 1;
+    }
+
+    mem[i][j] = -1;
+    return false;
+}
+</code></pre>
+
+<h1 id="edit-distance">Edit Distance</h1>
+
+<p>Link: <a href="https://leetcode.com/problems/edit-distance">Edit Distance</a></p>
+
+<h2 id="problem-description-2">Problem description</h2>
+
+<p>Given two words <em>word1</em> and <em>word2</em>, find the minimum number of operations required to convert <em>word1</em> to <em>word2</em>.</p>
+
+<p>You have the following 3 operations permitted on a word:</p>
+
+<ol>
+<li>Insert a character</li>
+<li>Delete a character</li>
+<li>Replace a character</li>
+</ol>
+
+<p><strong>Example 1:</strong></p>
+
+<pre><code>Input: word1 = &quot;horse&quot;, word2 = &quot;ros&quot;
+Output: 3
+Explanation: 
+horse -&gt; rorse (replace 'h' with 'r')
+rorse -&gt; rose (remove 'r')
+rose -&gt; ros (remove 'e')
+</code></pre>
+
+<p><strong>Example 2:</strong></p>
+
+<pre><code>Input: word1 = &quot;intention&quot;, word2 = &quot;execution&quot;
+Output: 5
+Explanation: 
+intention -&gt; inention (remove 't')
+inention -&gt; enention (replace 'i' with 'e')
+enention -&gt; exention (replace 'n' with 'x')
+exention -&gt; exection (replace 'n' with 'c')
+exection -&gt; execution (insert 'u') 
+</code></pre>
+
+<h2 id="method-2">Method</h2>
+
+<p>Two approaches. This problem can be solved by both dynamic programming and DFS with pruning.</p>
+
+<p><strong>Dynamic programming</strong></p>
+
+<p>Classic dynamic programming problem. The key to solve this problem is to find out the state transition formula.</p>
+
+<p><code>dp[i][j]</code> = <code>dp[i - 1][j - 1]</code>, if <code>word1.charAt(i - 1) == word2.charAt(j - 1)</code>
+Otherwise, <code>dp[i][j]</code> = <code>min(dp[i - 1][j - 1], dp[i - 1][j], dp[i][j - 1]) + 1</code>.</p>
+
+<p>Since each action takes only one weight, it can be directly used.</p>
+
+<p><strong>DFS with pruning</strong></p>
+
+<p>Search starts at the end of string (start will also be fine). If current char is matched</p>
+
+<h2 id="code-2">Code</h2>
+
+<pre><code class="language-java">/**
+ * Dynamic programming with a 2D array.
+ * State transition:
+ * dp[i][j] = dp[i - 1][j - 1], if word1.charAt(i - 1) == word2.charAt(j - 1)
+ * dp[i + 1][j + 1] = min(dp[i][j], Math.min(dp[i + 1][j], dp[i][j + 1]) + 1, otherwise.
+ *
+ * @param word1 string 1
+ * @param word2 target converted string
+ * @return min edit distance
+ */
+public int minDistance(String word1, String word2) {
+    int l1 = word1.length(), l2 = word2.length();
+
+    /* Corner case */
+    if (l1 == 0 || l2 == 0) {
+        return word1.length() | word2.length();     // if one is empty, then the min distance is the other word
+    }
+
+    if (word1.equals(word2)) {
+        return 0;
+    }
+
+    int[][] dp = new int[l1 + 1][l2 + 1];
+
+    for (int i = 1; i &lt; l1 + 1; i++) {
+        dp[i][0] = i;
+    }
+
+    for (int i = 1; i &lt; l2 + 1; i++) {
+        dp[0][i] = i;
+    }
+
+    for (int i = 1; i &lt; l1 + 1; i++) {
+        for (int j = 1; j &lt; l2 + 1; j++) {
+            if (word1.charAt(i - 1) == word2.charAt(j - 1)) {
+                dp[i][j] = dp[i - 1][j - 1];
+            } else {
+                dp[i][j] = Math.min(Math.min(dp[i - 1][j], dp[i][j - 1]), dp[i - 1][j - 1]) + 1;
+            }
+        }
+    }
+
+    return dp[l1][l2];
+}
+
+/**
+ * Use DFS to find the min edit distance, with a 2D int array as pruning (without that would cause TLE).
+ *
+ * @param word1 string 1
+ * @param word2 target converted string
+ * @return min edit distance
+ */
+public int dfsImpl(String word1, String word2) {
+
+    int n1 = word1.length(), n2 = word2.length();
+
+    /* Corner case */
+    if (n1 == 0 || n2 == 0) {
+        return word1.length() | word2.length();     // if one is empty, then the min distance is the other word
+    }
+    int[][] mem = new int[n1 + 1][n2 + 1];
+
+    for (int[] m : mem) {
+        Arrays.fill(m, -1);
+    }
+
+    return dfs(word1, word2, n1, n2, mem);
+}
+
+/**
+ * DFS search.
+ * The branch of searching is to check if current character is matched.
+ * If matched, then both string move one char forward.
+ * Otherwise, three branches: insert, update, delete.
+ *
+ * @param s1  first string
+ * @param s2  target string
+ * @param i   index of s1
+ * @param j   index of s2
+ * @param mem memorization array
+ * @return min edit distance
+ */
+private int dfs(String s1, String s2, int i, int j, int[][] mem) {
+    if (i == 0 || j == 0) {
+        return j + i;
+    }
+
+    if (mem[i][j] != -1) {
+        return mem[i][j];
+    }
+
+    int insert = dfs(s1, s2, i, j - 1, mem) + 1;
+    int delete = dfs(s1, s2, i - 1, j, mem) + 1;
+
+    /*
+     * If two chars are matched, then the cost will not change.
+     * But both pointer will moving forward (same as replacement)
+     * Otherwise, replace operation will cost one. */
+    int replace = (s1.charAt(i - 1) == s2.charAt(j - 1)) ? dfs(s1, s2, i - 1, j - 1, mem) : dfs(s1, s2, i - 1, j - 1, mem) + 1;
+
+    int min = Math.min(insert, Math.min(delete, replace));
+    mem[i][j] = min;
+
+    return min;
 }
 </code></pre>
               
@@ -653,7 +906,7 @@ public boolean isMatch(String s, String p) {
                   <div class="post-footer-tags">
                     <span class="text-color-light text-small">TAGGED IN</span><br/>
                     
-  <a class="tag tag--primary tag--small" href="https://yyzhou95.github.io/tags/dynamic-programming/">Dynamic programming</a>
+  <a class="tag tag--primary tag--small" href="https://yyzhou95.github.io/tags/dynamic-programming/">Dynamic Programming</a>
 
   <a class="tag tag--primary tag--small" href="https://yyzhou95.github.io/tags/dfs/">DFS</a>
 
@@ -668,7 +921,7 @@ public boolean isMatch(String s, String p) {
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/06/lc-91-decode-ways/" data-tooltip="LC 91 - Decode Ways">
+                <a class="post-action-btn btn btn--disabled">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -676,7 +929,7 @@ public boolean isMatch(String s, String p) {
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/06/lc-131/132-palindrome-partitioning/" data-tooltip="LC 131/132 - Palindrome Partitioning">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/10/lc-448-find-all-numbers-disappeared-in-an-array/" data-tooltip="LC 448 - Find All Numbers Disappeared in an Array">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
@@ -726,7 +979,7 @@ public boolean isMatch(String s, String p) {
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/06/lc-91-decode-ways/" data-tooltip="LC 91 - Decode Ways">
+                <a class="post-action-btn btn btn--disabled">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -734,7 +987,7 @@ public boolean isMatch(String s, String p) {
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/06/lc-131/132-palindrome-partitioning/" data-tooltip="LC 131/132 - Palindrome Partitioning">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/10/lc-448-find-all-numbers-disappeared-in-an-array/" data-tooltip="LC 448 - Find All Numbers Disappeared in an Array">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
