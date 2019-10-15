@@ -347,7 +347,7 @@ Explanation: The root node's value is 5 but its right child's value is 4.
 <h2 id="code">Code</h2>
 
 <pre><code class="language-java">/**
- * In-order traversal with each root's value. Compare left subtree and right subtree.
+ * Bottom-up traverse with each root's value. Compare left subtree and right subtree.
  *
  * @param root root TreeNode
  * @return is this tree a BST
@@ -357,7 +357,7 @@ public boolean isValidBST(TreeNode root) {
 }
 
 /**
- * In-order traversal that compare root's value to left and right.
+ * Bottom-up traverse that compare root's value to left and right.
  *
  * @param root current root
  * @param min  min value
@@ -372,6 +372,49 @@ private boolean recursion(TreeNode root, long min, long max) {
         return false;
     }
     return recursion(root.left, min, root.val) &amp;&amp; recursion(root.right, root.val, max);
+}
+
+/**
+ * Inorder traversal.
+ *
+ * @param root root node
+ * @return is this tree a BST
+ */
+public boolean inOrder(TreeNode root) {
+
+    /* Corner case */
+    if (root == null || (root.left == null &amp;&amp; root.right == null)) {
+        return true;
+    }
+
+    long[] arr = new long[]{Long.MIN_VALUE};
+
+    return helper(root, arr);
+}
+
+/**
+ * In order traversal to traverse all nodes.
+ * Inorder traversal can traverse all nodes by increasing order if the tree is a valid BST.
+ *
+ * @param r        current node
+ * @param previous previous node value
+ * @return is this tree a BST
+ */
+private boolean helper(TreeNode r, long[] previous) {
+    if (r == null) {
+        return true;
+    }
+
+    boolean out;
+    out = helper(r.left, previous);
+
+    if ((long) r.val &lt;= previous[0]) {
+        return false;
+    }
+
+    previous[0] = r.val;
+
+    return out &amp; helper(r.right, previous);
 }
 </code></pre>
               
