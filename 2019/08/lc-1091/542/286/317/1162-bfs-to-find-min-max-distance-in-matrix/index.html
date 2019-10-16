@@ -461,44 +461,38 @@ Output:
 public int[][] updateMatrix(int[][] matrix) {
 
     /* Corner case */
-    if (matrix.length == 0) {
+    if (matrix == null) {
+        return matrix;
+    }
+    if (matrix.length == 0 || matrix[0].length == 0) {
         return matrix;
     }
 
-    Queue&lt;int[]&gt; l = new LinkedList&lt;&gt;();
-    int r = matrix.length;
-    int c = matrix[0].length;
+    Queue&lt;int[]&gt; q = new LinkedList&lt;&gt;();
+    int row = matrix.length;
+    int col = matrix[0].length;
 
-    for (int i = 0; i &lt; r; i++) {
-        for (int j = 0; j &lt; c; j++) {
+    for (int i = 0; i &lt; row; i++) {
+        for (int j = 0; j &lt; col; j++) {
             if (matrix[i][j] == 0) {
-                l.offer(new int[]{i, j});
+                q.add(new int[]{i, j});
             } else {
                 matrix[i][j] = Integer.MAX_VALUE;
             }
         }
     }
-    while (!l.isEmpty()) {
-        int[] t = l.remove();
-        int x = t[0];
-        int y = t[1];
+    int[] d = new int[]{1, -1, 0, 0, 0, 0, 1, -1};
+    while (!q.isEmpty()) {
+        int[] tmp = q.poll();
 
-        if (x + 1 &lt; r &amp;&amp; matrix[x + 1][y] &gt; 0 &amp;&amp; (matrix[x + 1][y] &gt; matrix[x][y] + 1)) {
-            l.add(new int[]{x + 1, y});
-            matrix[x + 1][y] = matrix[x][y] + 1;
-        }
+        for (int i = 0; i &lt; 4; i++) {
+            int xx = tmp[0] + d[i];
+            int yy = tmp[1] + d[i + 4];
 
-        if (x - 1 &gt; -1 &amp;&amp; matrix[x - 1][y] &gt; 0 &amp;&amp; (matrix[x - 1][y] &gt; matrix[x][y] + 1)) {
-            l.add(new int[]{x - 1, y});
-            matrix[x - 1][y] = matrix[x][y] + 1;
-        }
-        if (y + 1 &lt; c &amp;&amp; matrix[x][y + 1] &gt; 0 &amp;&amp; (matrix[x][y + 1] &gt; matrix[x][y] + 1)) {
-            l.add(new int[]{x, y + 1});
-            matrix[x][y + 1] = matrix[x][y] + 1;
-        }
-        if (y - 1 &gt; -1 &amp;&amp; matrix[x][y - 1] &gt; 0 &amp;&amp; (matrix[x][y - 1] &gt; matrix[x][y] + 1)) {
-            l.add(new int[]{x, y - 1});
-            matrix[x][y - 1] = matrix[x][y] + 1;
+            if (xx &gt;= 0 &amp;&amp; xx &lt; row &amp;&amp; yy &gt;= 0 &amp;&amp; yy &lt; col &amp;&amp; matrix[xx][yy] &gt; matrix[tmp[0]][tmp[1]] + 1) {
+                matrix[xx][yy] = matrix[tmp[0]][tmp[1]] + 1;
+                q.add(new int[]{xx, yy});
+            }
         }
     }
 
@@ -552,43 +546,36 @@ INF  -1 INF  -1
  * @param rooms 2D int array
  */
 public void wallsAndGates(int[][] rooms) {
+
+    /* Corner case */
+    if (rooms == null) {
+        return;
+    }
     if (rooms.length == 0) {
         return;
     }
-    Queue&lt;int[]&gt; l = new LinkedList&lt;&gt;();
 
-    int r = rooms.length;
-    int c = rooms[0].length;
-    for (int i = 0; i &lt; r; i++) {
-        for (int j = 0; j &lt; c; j++) {
-
-            if (rooms[i][j] == 0) {     // find one door
-                l.offer(new int[]{i, j});
-
+    int[] directions = new int[]{1, -1, 0, 0, 0, 0, 1, -1};
+    int row = rooms.length;
+    int col = rooms[0].length;
+    Queue&lt;int[]&gt; q = new LinkedList&lt;&gt;();
+    for (int i = 0; i &lt; row; i++) {
+        for (int j = 0; j &lt; col; j++) {
+            if (rooms[i][j] == 0) {
+                q.add(new int[]{i, j});
             }
         }
     }
-    while (!l.isEmpty()) {
-        int[] t = l.remove();
-        int x = t[0];
-        int y = t[1];
 
-        if (x + 1 &lt; r &amp;&amp; rooms[x + 1][y] &gt; 0 &amp;&amp; (rooms[x + 1][y] == Integer.MAX_VALUE || rooms[x + 1][y] &gt; rooms[x][y] + 1)) {
-            l.add(new int[]{x + 1, y});
-            rooms[x + 1][y] = rooms[x][y] + 1;
-        }
-
-        if (x - 1 &gt; -1 &amp;&amp; rooms[x - 1][y] &gt; 0 &amp;&amp; (rooms[x - 1][y] == Integer.MAX_VALUE || rooms[x - 1][y] &gt; rooms[x][y] + 1)) {
-            l.add(new int[]{x - 1, y});
-            rooms[x - 1][y] = rooms[x][y] + 1;
-        }
-        if (y + 1 &lt; c &amp;&amp; rooms[x][y + 1] &gt; 0 &amp;&amp; (rooms[x][y + 1] == Integer.MAX_VALUE || rooms[x][y + 1] &gt; rooms[x][y] + 1)) {
-            l.add(new int[]{x, y + 1});
-            rooms[x][y + 1] = rooms[x][y] + 1;
-        }
-        if (y - 1 &gt; -1 &amp;&amp; rooms[x][y - 1] &gt; 0 &amp;&amp; (rooms[x][y - 1] == Integer.MAX_VALUE || rooms[x][y - 1] &gt; rooms[x][y] + 1)) {
-            l.add(new int[]{x, y - 1});
-            rooms[x][y - 1] = rooms[x][y] + 1;
+    while (!q.isEmpty()) {
+        int[] tmp = q.poll();
+        for (int m = 0; m &lt; 4; m++) {
+            int xx = tmp[0] + directions[m];
+            int yy = tmp[1] + directions[m + 4];
+            if (xx &gt;= 0 &amp;&amp; xx &lt; row &amp;&amp; yy &gt;= 0 &amp;&amp; yy &lt; col &amp;&amp; rooms[xx][yy] != -1 &amp;&amp; (rooms[xx][yy] == Integer.MAX_VALUE || rooms[xx][yy] &gt;= rooms[tmp[0]][tmp[1]] + 1)) {
+                rooms[xx][yy] = rooms[tmp[0]][tmp[1]] + 1;
+                q.add(new int[]{xx, yy});
+            }
         }
     }
 }
