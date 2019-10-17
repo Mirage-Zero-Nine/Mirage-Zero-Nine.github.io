@@ -356,15 +356,24 @@ The user finished the input, the sentence &quot;i a&quot; should be saved as a h
 
 <h2 id="method">Method</h2>
 
-<p>Use a trie to save all chars and its relating sentence/frequency. Note that in this problem, each trie node should record its prefix word and corresponding frequency.</p>
+<p>Use a trie to save all chars and its relating sentence/frequency.</p>
+
+<p>The key points of trie design is as following:</p>
+
+<ol>
+<li>Each trie node will store the relating string for later top 3 output.</li>
+<li>The history list will only be reset when the input is <code>#</code>. Therefore, if the input char is not found in trie, all the later input char will always return an empty list until a <code>#</code> is received.</li>
+<li>Use a heap to sort the entry set to find top 3 most visited.</li>
+<li>The trie build process should not use the <code>put</code> method to build the map. Instead, it should use <code>getOrDefault</code> method, so that it could also complete the update process if user input same sentence twice.</li>
+</ol>
 
 <h2 id="code">Code</h2>
 
 <pre><code class="language-java">public class AutocompleteSystem {
     private List&lt;Character&gt; l = new LinkedList&lt;&gt;();     // history list
     private TrieNode root;      // root node of trie
-    private TrieNode tmp;
-    private int p = 0;
+    private TrieNode tmp;       // current trie node for next search
+    private int p = 0;          // pointer point at current char for searching
 
     /**
      * Use a trie to save all chars and its relating sentence/frequency.
@@ -380,6 +389,8 @@ The user finished the input, the sentence &quot;i a&quot; should be saved as a h
 
     /**
      * Based on given input char, return the result list.
+     * Each TrieNode contains the string that all its sub trie node containing via a hash map.
+     * When a new char comes in, search the trie to find the
      * If input is '#', update trie as new history.
      *
      * @param c given char
@@ -397,16 +408,20 @@ The user finished the input, the sentence &quot;i a&quot; should be saved as a h
             l = new LinkedList&lt;&gt;();
             tmp = root;
             p = 0;
+
             return new LinkedList&lt;&gt;();
         }
 
         l.add(c);
-        for (int i = p; i &lt; l.size(); i++) {
-            if (!tmp.child.containsKey(l.get(p))) {
-                return new LinkedList&lt;&gt;();
-            }
-            tmp = tmp.child.get(l.get(p++));
+
+        /*
+         * If input char is not in trie, stop moving pointer forward.
+         * The history list will not reset until accept a '#'.
+         * Therefore, if a input char is not found in trie, then the later input char will always return empty list. */
+        if (!tmp.child.containsKey(l.get(p))) {
+            return new LinkedList&lt;&gt;();
         }
+        tmp = tmp.child.get(l.get(p++));
 
         PriorityQueue&lt;Map.Entry&lt;String, Integer&gt;&gt; pq = new PriorityQueue&lt;&gt;(new Comparator&lt;Map.Entry&lt;String, Integer&gt;&gt;() {
             @Override
@@ -417,9 +432,9 @@ The user finished the input, the sentence &quot;i a&quot; should be saved as a h
                 return (o2.getValue()).compareTo(o1.getValue());
             }
         });
-        pq.addAll(tmp.sentence.entrySet());
+        pq.addAll(tmp.sentence.entrySet());     // use a heap to add all entries in each trie node, then sort them
 
-        for (int i = 0; !pq.isEmpty() &amp;&amp; i &lt; 3; i++) {
+        for (int i = 0; !pq.isEmpty() &amp;&amp; i &lt; 3; i++) {      // find top 3 most visited
             out.add(pq.poll().getKey());
         }
 
@@ -438,10 +453,12 @@ The user finished the input, the sentence &quot;i a&quot; should be saved as a h
         for (int i = 0; i &lt; sentences.length; i++) {
             String s = sentences[i];
             TrieNode tmp = root;
+
             for (int j = 0; j &lt; s.length(); j++) {
                 if (!tmp.child.containsKey(s.charAt(j))) {
                     tmp.child.put(s.charAt(j), new TrieNode());
                 }
+
                 tmp = tmp.child.get(s.charAt(j));
                 tmp.sentence.put(s, tmp.sentence.getOrDefault(s, 0) + times[i]);
             }
@@ -453,7 +470,7 @@ The user finished the input, the sentence &quot;i a&quot; should be saved as a h
     /**
      * Constructor of trie node.
      */
-    class TrieNode {
+    static class TrieNode {
         HashMap&lt;Character, TrieNode&gt; child = new HashMap&lt;&gt;();       // save child node of current node
         HashMap&lt;String, Integer&gt; sentence = new HashMap&lt;&gt;();        // save each node's relating sentence and count
     }
