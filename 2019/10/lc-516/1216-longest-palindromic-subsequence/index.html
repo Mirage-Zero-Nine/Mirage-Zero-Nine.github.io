@@ -283,6 +283,12 @@
 <li><a href="#method">Method</a></li>
 <li><a href="#code">Code</a></li>
 </ul></li>
+<li><a href="#valid-palindrome-iii">Valid Palindrome III</a>
+<ul>
+<li><a href="#problem-description-1">Problem description</a></li>
+<li><a href="#method-1">Method</a></li>
+<li><a href="#code-1">Code</a></li>
+</ul></li>
 </ul>
 </nav>
 
@@ -369,6 +375,68 @@ public int longestPalindromeSubseq(String s) {
     }
 
     return dp[0][n - 1];
+}
+</code></pre>
+
+<h1 id="valid-palindrome-iii">Valid Palindrome III</h1>
+
+<p>Link: <a href="https://leetcode.com/problems/valid-palindrome-iii/">Valid Palindrome III</a></p>
+
+<h2 id="problem-description-1">Problem description</h2>
+
+<p>Given a string <code>s</code> and an integer <code>k</code>, find out if the given string is a <em>K-Palindrome</em> or not.</p>
+
+<p>A string is K-Palindrome if it can be transformed into a palindrome by removing at most <code>k</code> characters from it.</p>
+
+<p><strong>Example 1:</strong></p>
+
+<pre><code>Input: s = &quot;abcdeca&quot;, k = 2
+Output: true
+Explanation: Remove 'b' and 'e' characters.
+</code></pre>
+
+<p><strong>Constraints:</strong></p>
+
+<ul>
+<li><code>1 &lt;= s.length &lt;= 1000</code></li>
+<li><code>s</code> has only lowercase English letters.</li>
+<li><code>1 &lt;= k &lt;= s.length</code></li>
+</ul>
+
+<h2 id="method-1">Method</h2>
+
+<p>Almost same as previous problem, if the longest subsequence is longer than given string’s length minus <code>k</code>, then this string is K-Palindrome.</p>
+
+<h2 id="code-1">Code</h2>
+
+<pre><code class="language-java">/**
+ * Find the longest palindromic subsequence in given string, check if it is longer than s.length() - k.
+ *
+ * @param s given string
+ * @param k most chars can be removed
+ * @return if the given string is a K-Palindrome or not
+ */
+public boolean isValidPalindrome(String s, int k) {
+
+    /* Corner case */
+    if (s.length() &lt; 2) {
+        return true;
+    }
+
+    int n = s.length();
+    int[][] dp = new int[n][n];
+
+    for (int i = 0; i &lt; n; i++) {
+        dp[i][i] = 1;
+    }
+
+    for (int i = n - 1; i &gt;= 0; i--) {
+        for (int j = i + 1; j &lt; n; j++) {
+            dp[i][j] = (s.charAt(i) == s.charAt(j)) ? dp[i + 1][j - 1] + 2 : Math.max(dp[i + 1][j], dp[i][j - 1]);
+        }
+    }
+
+    return (n - dp[0][n - 1]) &lt;= k;
 }
 </code></pre>
               
