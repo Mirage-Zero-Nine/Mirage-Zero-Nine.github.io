@@ -44,6 +44,8 @@
     
       <meta property="article:tag" content="Binary Search Tree">
     
+      <meta property="article:tag" content="Bottom-Up">
+    
   
 
 
@@ -410,7 +412,8 @@ public TreeNode searchBST(TreeNode root, int val) {
 <h2 id="code-1">Code</h2>
 
 <pre><code class="language-java">/**
- * DFS traversal.
+ * DFS top-bottom traversal.
+ * Time complexity: O(nlogn), each time, the left subtree and right subtree is called in recursion.
  *
  * @param root root node
  * @return if given tree is height-balanced
@@ -424,7 +427,7 @@ public boolean isBalanced(TreeNode root) {
 }
 
 /**
- * DFS traversal. If current tree has a imbalanced tree, return -1.
+ * DFS traversal. If current tree has an imbalanced tree, return -1.
  * Otherwise return the height difference.
  *
  * @param root root node
@@ -432,7 +435,7 @@ public boolean isBalanced(TreeNode root) {
  */
 private int dfs(TreeNode root) {
     if (root == null) {
-        return 0;
+        return 0;       // null node has no height
     }
 
     int left = dfs(root.left);
@@ -443,6 +446,69 @@ private int dfs(TreeNode root) {
     }
 
     return Math.max(left, right) + 1;       // depth + 1
+}
+
+/**
+ * The bottom-up approach is a reverse of the logic of the top-down approach.
+ * Traverse to the bottom of the tree, then compare the height between the height of each subtree.
+ * In this way, the duplicate calculation occurred in top-bottom traversal can be reduced.
+ * Time complexity: O(n).
+ * However, it requires a additional class to record the height of tree.
+ *
+ * @param root root node
+ * @return if given tree is height-balanced
+ */
+public boolean bottomUp(TreeNode root) {
+
+    /* Corner case */
+    if (root == null) {
+        return true;
+    }
+    if (root.left == null &amp;&amp; root.right == null) {
+        return true;
+    }
+
+    return helper(root, 1).isBalanced;
+}
+
+/**
+ * Bottom-up traversal to find if left subtree and right subtree is balanced.
+ *
+ * @param r      current root node
+ * @param height current tree node's height
+ * @return if given tree is height-balanced
+ */
+private TreeNodeWithHeight helper(TreeNode r, int height) {
+    if (r == null) {
+        return new TreeNodeWithHeight(-1, true);
+    }
+
+    TreeNodeWithHeight left = helper(r.left, height + 1);
+    TreeNodeWithHeight right = helper(r.right, height + 1);
+    if (!left.isBalanced || !right.isBalanced || Math.abs(left.height - right.height) &gt; 1) {
+        return new TreeNodeWithHeight(-1, false);
+    }
+
+    return new TreeNodeWithHeight(Math.max(left.height, right.height) + 1, true);
+}
+
+/**
+ * Modified tree node with current node height.
+ */
+static class TreeNodeWithHeight {
+    boolean isBalanced;
+    int height;
+
+    /**
+     * Initialization of node
+     *
+     * @param height     height of current node
+     * @param isBalanced is current tree balanced
+     */
+    TreeNodeWithHeight(int height, boolean isBalanced) {
+        this.height = height;
+        this.isBalanced = isBalanced;
+    }
 }
 </code></pre>
 
@@ -542,6 +608,8 @@ public int dfs(TreeNode r, int n) {
   <a class="tag tag--primary tag--small" href="https://yyzhou95.github.io/tags/dfs/">DFS</a>
 
   <a class="tag tag--primary tag--small" href="https://yyzhou95.github.io/tags/binary-search-tree/">Binary Search Tree</a>
+
+  <a class="tag tag--primary tag--small" href="https://yyzhou95.github.io/tags/bottom-up/">Bottom-Up</a>
 
                   </div>
                 
