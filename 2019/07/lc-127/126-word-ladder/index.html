@@ -364,30 +364,29 @@ public int ladderLength(String beginWord, String endWord, List&lt;String&gt; wor
         return 0;
     }
 
-    Queue&lt;String&gt; layer = new LinkedList&lt;&gt;();
-    Set&lt;String&gt; wordSet = new HashSet&lt;&gt;(wordList);
-    layer.add(beginWord);
+    Queue&lt;String&gt; q = new LinkedList&lt;&gt;();
+    Set&lt;String&gt; s = new HashSet&lt;&gt;(wordList);
+    q.add(beginWord);
 
-    while (!layer.isEmpty()) {
-        int s = layer.size();
+    while (!q.isEmpty()) {
+        int size = q.size();
 
-        for (int i = 0; i &lt; s; i++) {
-            String current = layer.remove();
+        for (int i = 0; i &lt; size; i++) {
+            String current = q.remove();
 
             if (current.equals(endWord)) {
                 return result;
             }
+
             for (int j = 0; j &lt; current.length(); j++) {
                 char[] arr = current.toCharArray();
 
                 for (char l = 'a'; l &lt;= 'z'; l++) {
                     arr[j] = l;
                     String t = new String(arr);
-                    if (wordSet.contains(t)) {
-
-                        layer.offer(t);
-                        // System.out.println(&quot;add!&quot;);
-                        wordSet.remove(t);
+                    if (s.contains(t)) {
+                        q.offer(t);
+                        s.remove(t);
                     }
                 }
             }
@@ -466,13 +465,11 @@ Explanation: The endWord &quot;cog&quot; is not in wordList, therefore no possib
 <h2 id="code-1">Code</h2>
 
 <pre><code class="language-java">/**
- * Save each path while completing BFS using hash map.
- * Three Hash Sets are using in this solution:
- * 1. wordSet: save available words for next BFS search
- * 2. layer: save current layer words, update before each BFS search loop
- * 3. nextLayer: save current layer words, update in each BFS search loop
- * One Hash Map to store all possible path. Key is newest added word in path, value are all paths to this word.
- * Therefore, after each single word BFS, all old path based on this word should be removed to avoid repeated path.
+ * Save each path while completing BFS using hash map and two hash sets.
+ * Hash map stores the path from begin word to current word.
+ * Hash set stores all words in given word list and all words during each layer of BFS (to avoid duplication).
+ * Each time, if word poll out from queue can form up a new word in list, add new word to the end of each list.
+ * Based on character of BFS, if end word is reached, the path will be the shortest.
  *
  * @param beginWord begin word
  * @param endWord   target word
@@ -480,67 +477,56 @@ Explanation: The endWord &quot;cog&quot; is not in wordList, therefore no possib
  * @return all shortest transformation sequence(s) in ListNode
  */
 public List&lt;List&lt;String&gt;&gt; findLadders(String beginWord, String endWord, List&lt;String&gt; wordList) {
-    List&lt;List&lt;String&gt;&gt; res = new LinkedList&lt;&gt;();
+
     Set&lt;String&gt; wordSet = new HashSet&lt;&gt;(wordList);
 
     /* Corner case */
     if (wordList.size() == 0 || !wordList.contains(endWord)) {
-        return res;
+        return new LinkedList&lt;&gt;();
     }
 
-    /* First layer */
-    Set&lt;String&gt; layer = new HashSet&lt;&gt;();        // save current layer words
-    layer.add(beginWord);
+    Queue&lt;String&gt; q = new LinkedList&lt;&gt;();
+    q.add(beginWord);
 
-    /* First path */
     HashMap&lt;String, List&lt;List&lt;String&gt;&gt;&gt; m = new HashMap&lt;&gt;();
-    List&lt;String&gt; path = new LinkedList&lt;&gt;();
-    path.add(beginWord);
+    List&lt;String&gt; init = new LinkedList&lt;&gt;();
+    init.add(beginWord);
     m.put(beginWord, new LinkedList&lt;&gt;());
-    m.get(beginWord).add(path);
+    m.get(beginWord).add(init);
+    boolean found = false;
 
-    boolean found = false;      // if endWord is reached, terminate searching loop
+    while (!q.isEmpty() &amp;&amp; !wordSet.isEmpty() &amp;&amp; !found) {
+        int size = q.size();
+        HashSet&lt;String&gt; current = new HashSet&lt;&gt;();      // save current layer's visited word
 
-    while (!layer.isEmpty() &amp;&amp; !wordSet.isEmpty() &amp;&amp; !found) {
-        wordSet.removeAll(layer);       // avoid repeated words
-        Set&lt;String&gt; nextLayer = new HashSet&lt;&gt;();        // save next layer words
+        for (int n = 0; n &lt; size; n++) {
+            String word = q.poll();
+            List&lt;List&lt;String&gt;&gt; tmp = m.get(word);
+            for (int i = 0; i &lt; word.length(); i++) {
+                char[] arr = word.toCharArray();
+                for (int j = 0; j &lt; 26; j++) {
 
-        for (String s : layer) {        // iter all words in current layer
-            List&lt;List&lt;String&gt;&gt; currentPath = m.get(s);      // path based on current word
-
-            /* BFS to find next layer */
-            for (int i = 0; i &lt; s.length(); i++) {
-                char[] arr = s.toCharArray();
-
-                for (char j = 'a'; j &lt;= 'z'; j++) {
-                    arr[i] = j;
+                    arr[i] = (char) (j + 'a');
                     String w = new String(arr);
-
-                    if (wordSet.contains(w)) {
-                        nextLayer.add(w);
-
-                        /* Iter all possible path and add word to its end */
-                        for (List&lt;String&gt; p : currentPath) {
-                            List&lt;String&gt; nextPath = new LinkedList&lt;&gt;(p);
-                            nextPath.add(w);
-                            m.putIfAbsent(w, new LinkedList&lt;&gt;());       // update key to current word
-                            m.get(w).add(nextPath);                     // add path including current word
-                            if (endWord.equals(w)) {
-                                res.add(nextPath);
-                                found = true;
-                            }
+                    if (wordSet.contains(w) &amp;&amp; !w.equals(word) &amp;&amp; tmp != null) {
+                        q.add(w);
+                        for (List&lt;String&gt; path : tmp) {
+                            List&lt;String&gt; next = new LinkedList&lt;&gt;(path);
+                            next.add(w);
+                            m.putIfAbsent(w, new LinkedList&lt;&gt;());
+                            m.get(w).add(next);
+                            current.add(w);
+                            found |= endWord.equals(w);
                         }
                     }
                 }
             }
-            m.remove(s);        // remove paths using previous layer's word as key, avoid repeated paths
+            m.remove(word);
         }
-
-        layer.clear();                  // clean current layer
-        layer.addAll(nextLayer);        // add next layer
+        wordSet.removeAll(current);
     }
 
-    return res;
+    return m.getOrDefault(endWord, new LinkedList&lt;&gt;());
 }
 </code></pre>
               
