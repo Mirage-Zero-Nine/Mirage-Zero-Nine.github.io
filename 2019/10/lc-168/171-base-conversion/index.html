@@ -13,10 +13,10 @@
 
 <meta property="og:description" content="">
 <meta property="og:type" content="article">
-<meta property="og:title" content="LC 202 - Happy Number">
-<meta name="twitter:title" content="LC 202 - Happy Number">
-<meta property="og:url" content="https://yyzhou95.github.io/2019/10/lc-202-happy-number/">
-<meta property="twitter:url" content="https://yyzhou95.github.io/2019/10/lc-202-happy-number/">
+<meta property="og:title" content="LC 168/171 - Base Conversion">
+<meta name="twitter:title" content="LC 168/171 - Base Conversion">
+<meta property="og:url" content="https://yyzhou95.github.io/2019/10/lc-168/171-base-conversion/">
+<meta property="twitter:url" content="https://yyzhou95.github.io/2019/10/lc-168/171-base-conversion/">
 <meta property="og:site_name" content="Bingo!">
 <meta property="og:description" content="">
 <meta name="twitter:description" content="">
@@ -36,7 +36,7 @@
   
   
     
-      <meta property="article:tag" content="Two Pointers/Sliding Window">
+      <meta property="article:tag" content="Math">
     
   
 
@@ -57,14 +57,14 @@
   <meta property="twitter:image" content="https://yyzhou95.github.io/img/avatar.jpg">
 
 
-    <title>LC 202 - Happy Number</title>
+    <title>LC 168/171 - Base Conversion</title>
 
     <link rel="icon" href="https://yyzhou95.github.io/favicon.png">
     
 
     
 
-    <link rel="canonical" href="https://yyzhou95.github.io/2019/10/lc-202-happy-number/">
+    <link rel="canonical" href="https://yyzhou95.github.io/2019/10/lc-168/171-base-conversion/">
 
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
@@ -248,7 +248,7 @@
             <div class="post-header main-content-wrap text-left">
   
     <h1 class="post-title" itemprop="headline">
-      LC 202 - Happy Number
+      LC 168/171 - Base Conversion
     </h1>
   
   
@@ -277,81 +277,149 @@
             <div class="main-content-wrap">
               <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
 <ul>
-<li><a href="#happy-number">Happy Number</a>
+<li><a href="#excel-sheet-column-title">Excel Sheet Column Title</a>
 <ul>
 <li><a href="#problem-description">Problem description</a></li>
 <li><a href="#method">Method</a></li>
 <li><a href="#code">Code</a></li>
 </ul></li>
+<li><a href="#excel-sheet-column-number">Excel Sheet Column Number</a>
+<ul>
+<li><a href="#problem-description-1">Problem description</a></li>
+<li><a href="#method-1">Method</a></li>
+<li><a href="#code-1">Code</a></li>
+</ul></li>
 </ul>
 </nav>
 
-<h1 id="happy-number">Happy Number</h1>
+<h1 id="excel-sheet-column-title">Excel Sheet Column Title</h1>
 
-<p>Link: <a href="https://leetcode.com/problems/happy-number/">Happy Number</a></p>
+<p>Link: <a href="https://leetcode.com/problems/excel-sheet-column-title/">Excel Sheet Column Title</a></p>
 
 <h2 id="problem-description">Problem description</h2>
 
-<p>Write an algorithm to determine if a number is &ldquo;happy&rdquo;.</p>
+<p>Given a positive integer, return its corresponding column title as appear in an Excel sheet.</p>
 
-<p>A happy number is a number defined by the following process: Starting with any positive integer, replace the number by the sum of the squares of its digits, and repeat the process until the number equals 1 (where it will stay), or it loops endlessly in a cycle which does not include 1. Those numbers for which this process ends in 1 are happy numbers.</p>
+<p>For example:</p>
 
-<p><strong>Example:</strong></p>
+<pre><code>    1 -&gt; A
+    2 -&gt; B
+    3 -&gt; C
+    ...
+    26 -&gt; Z
+    27 -&gt; AA
+    28 -&gt; AB 
+    ...
+</code></pre>
 
-<pre><code>Input: 19
-Output: true
-Explanation: 
-1^2 + 9^2 = 82
-8^2 + 2^2 = 68
-6^2 + 8^2 = 100
-1^2 + 0^2 + 0^2 = 1
+<p><strong>Example 1:</strong></p>
+
+<pre><code>Input: 1
+Output: &quot;A&quot;
+</code></pre>
+
+<p><strong>Example 2:</strong></p>
+
+<pre><code>Input: 28
+Output: &quot;AB&quot;
+</code></pre>
+
+<p><strong>Example 3:</strong></p>
+
+<pre><code>Input: 701
+Output: &quot;ZY&quot;
 </code></pre>
 
 <h2 id="method">Method</h2>
 
-<p>It&rsquo;s like find a meeting point on two linked list. Use two pointers, fast and slow. Fast pointer convert to next int as happy number rules, while slow pointer only follow once. They will eventually meet, since it will all end into an endless loop. If the meeting value is 1, return true.</p>
+<p>Decimal to base-26.</p>
+
+<p>Note that the mapping rule starts at 1, instead of 0 in normal conversion.</p>
 
 <h2 id="code">Code</h2>
 
 <pre><code class="language-java">/**
- * It's like find a meeting point on two linked list. Use two pointers, fast and slow.
- * Fast pointer convert to next int as happy number rules, while slow pointer only follow once.
- * They will eventually meet, since it will all end into an endless loop.
- * If the meeting value is 1, return true.
+ * Decimal to base-26.
+ * Note that the mapping rule starts at 1, instead of 0 in normal conversion.
  *
- * @param n given int
- * @return if a number is &quot;happy&quot;
+ * @param n given column # in Excel
+ * @return corresponding column title as appear in an Excel sheet
  */
-public boolean isHappy(int n) {
-    int fast = n, slow = n;
-    boolean stop = false;
-
-    while (!stop) {
-        fast = helper(fast);
-        fast = helper(fast);
-        slow = helper(slow);
-        if (fast == slow) {
-            stop = true;
-        }
+public String convertToTitle(int n) {
+    if (n == 0) {
+        return &quot;&quot;;
     }
-
-    return slow == 1;
-}
-
-/**
- * Calculate number's each digit square sum.
- *
- * @param n given int
- * @return digit square sum
- */
-private int helper(int n) {
-    int sum = 0;
+    StringBuilder sb = new StringBuilder();
     while (n &gt; 0) {
-        int tmp = n % 10;
-        sum += (tmp * tmp);
-        n /= 10;
+        int tmp = (n - 1) % 26;
+        sb.append((char) (tmp + 'A'));
+        n = (n - 1) / 26;
     }
-    return sum;
+
+    return sb.reverse().toString();
+}
+</code></pre>
+
+<h1 id="excel-sheet-column-number">Excel Sheet Column Number</h1>
+
+<p>Link: <a href="https://leetcode.com/problems/excel-sheet-column-number/">Excel Sheet Column Number</a></p>
+
+<h2 id="problem-description-1">Problem description</h2>
+
+<p>Given a column title as appear in an Excel sheet, return its corresponding column number.</p>
+
+<p>For example:</p>
+
+<pre><code>    A -&gt; 1
+    B -&gt; 2
+    C -&gt; 3
+    ...
+    Z -&gt; 26
+    AA -&gt; 27
+    AB -&gt; 28 
+    ...
+</code></pre>
+
+<p><strong>Example 1:</strong></p>
+
+<pre><code>Input: &quot;A&quot;
+Output: 1
+</code></pre>
+
+<p><strong>Example 2:</strong></p>
+
+<pre><code>Input: &quot;AB&quot;
+Output: 28
+</code></pre>
+
+<p><strong>Example 3:</strong></p>
+
+<pre><code>Input: &quot;ZY&quot;
+Output: 701
+</code></pre>
+
+<h2 id="method-1">Method</h2>
+
+<p>Base-26 to decimal.</p>
+
+<p><code>c1 * 26^(n - 1) + c2 * 26^(n - 2) + ... + cn * 26^(0)</code>, where n is the length of given string.</p>
+
+<h2 id="code-1">Code</h2>
+
+<pre><code class="language-java">/**
+ * Base-26 to decimal.
+ * c1 * 26^(n - 1) + c2 * 26^(n - 2) + ... + cn * 26^(0), where n is the length of given string.
+ *
+ * @param s given base-26 string
+ * @return representing decimal number
+ */
+public int titleToNumber(String s) {
+    int n = s.length();
+    int out = 0;
+    for (int i = 0; i &lt; n; i++) {
+        out += ((s.charAt(i) - 'A' + 1) * (int) Math.pow(26, n - i - 1));
+    }
+    return out;
 }
 </code></pre>
               
@@ -365,7 +433,7 @@ private int helper(int n) {
                   <div class="post-footer-tags">
                     <span class="text-color-light text-small">TAGGED IN</span><br/>
                     
-  <a class="tag tag--primary tag--small" href="https://yyzhou95.github.io/tags/two-pointers/sliding-window/">Two Pointers/Sliding Window</a>
+  <a class="tag tag--primary tag--small" href="https://yyzhou95.github.io/tags/math/">Math</a>
 
                   </div>
                 
@@ -378,7 +446,7 @@ private int helper(int n) {
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/10/lc-168/171-base-conversion/" data-tooltip="LC 168/171 - Base Conversion">
+                <a class="post-action-btn btn btn--disabled">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -386,7 +454,7 @@ private int helper(int n) {
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/10/lc-485/487/1004-max-consecutive-ones/" data-tooltip="LC 485/487/1004 - Max Consecutive Ones">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/10/lc-202-happy-number/" data-tooltip="LC 202 - Happy Number">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
@@ -436,7 +504,7 @@ private int helper(int n) {
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/10/lc-168/171-base-conversion/" data-tooltip="LC 168/171 - Base Conversion">
+                <a class="post-action-btn btn btn--disabled">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -444,7 +512,7 @@ private int helper(int n) {
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/10/lc-485/487/1004-max-consecutive-ones/" data-tooltip="LC 485/487/1004 - Max Consecutive Ones">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/10/lc-202-happy-number/" data-tooltip="LC 202 - Happy Number">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
