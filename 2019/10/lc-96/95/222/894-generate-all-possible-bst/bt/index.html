@@ -13,10 +13,10 @@
 
 <meta property="og:description" content="">
 <meta property="og:type" content="article">
-<meta property="og:title" content="LC 96/95/222 - Generate All Possible BST/BT">
-<meta name="twitter:title" content="LC 96/95/222 - Generate All Possible BST/BT">
-<meta property="og:url" content="https://yyzhou95.github.io/2019/10/lc-96/95/222-generate-all-possible-bst/bt/">
-<meta property="twitter:url" content="https://yyzhou95.github.io/2019/10/lc-96/95/222-generate-all-possible-bst/bt/">
+<meta property="og:title" content="LC 96/95/222/894 - Generate All Possible BST/BT">
+<meta name="twitter:title" content="LC 96/95/222/894 - Generate All Possible BST/BT">
+<meta property="og:url" content="https://yyzhou95.github.io/2019/10/lc-96/95/222/894-generate-all-possible-bst/bt/">
+<meta property="twitter:url" content="https://yyzhou95.github.io/2019/10/lc-96/95/222/894-generate-all-possible-bst/bt/">
 <meta property="og:site_name" content="Bingo!">
 <meta property="og:description" content="">
 <meta name="twitter:description" content="">
@@ -67,14 +67,14 @@
   <meta property="twitter:image" content="https://yyzhou95.github.io/img/avatar.jpg">
 
 
-    <title>LC 96/95/222 - Generate All Possible BST/BT</title>
+    <title>LC 96/95/222/894 - Generate All Possible BST/BT</title>
 
     <link rel="icon" href="https://yyzhou95.github.io/favicon.png">
     
 
     
 
-    <link rel="canonical" href="https://yyzhou95.github.io/2019/10/lc-96/95/222-generate-all-possible-bst/bt/">
+    <link rel="canonical" href="https://yyzhou95.github.io/2019/10/lc-96/95/222/894-generate-all-possible-bst/bt/">
 
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
@@ -258,7 +258,7 @@
             <div class="post-header main-content-wrap text-left">
   
     <h1 class="post-title" itemprop="headline">
-      LC 96/95/222 - Generate All Possible BST/BT
+      LC 96/95/222/894 - Generate All Possible BST/BT
     </h1>
   
   
@@ -306,6 +306,12 @@
 <li><a href="#problem-description-2">Problem description</a></li>
 <li><a href="#method-2">Method</a></li>
 <li><a href="#code-2">Code</a></li>
+</ul></li>
+<li><a href="#all-possible-full-binary-trees-sdasda">All Possible Full Binary Trees sdasda</a>
+<ul>
+<li><a href="#problem-description-3">Problem description</a></li>
+<li><a href="#method-3">Method</a></li>
+<li><a href="#code-3">Code</a></li>
 </ul></li>
 </ul>
 </nav>
@@ -538,6 +544,81 @@ public List&lt;TreeNode&gt; allPossibleFBT(int n) {
     return out;
 }
 </code></pre>
+
+<h1 id="all-possible-full-binary-trees-sdasda">All Possible Full Binary Trees sdasda</h1>
+
+<p>Link: <a href="https://leetcode.com/problems/all-possible-full-binary-trees/">All Possible Full Binary Trees</a></p>
+
+<h2 id="problem-description-3">Problem description</h2>
+
+<p>A <em>full binary tree</em> is a binary tree where each node has exactly 0 or 2 children.</p>
+
+<p>Return a list of all possible full binary trees with <code>N</code> nodes.  Each element of the answer is the root node of one possible tree.</p>
+
+<p>Each <code>node</code> of each tree in the answer <strong>must</strong> have <code>node.val = 0</code>.</p>
+
+<p>You may return the final list of trees in any order.</p>
+
+<p><strong>Example 1:</strong></p>
+
+<pre><code>Input: 7
+Output: [[0,0,0,null,null,0,0,null,null,0,0],[0,0,0,null,null,0,0,0,0],[0,0,0,0,0,0,0],[0,0,0,0,0,null,null,null,null,0,0],[0,0,0,0,0,null,null,0,0]]
+Explanation:
+</code></pre>
+
+<p><strong>Note:</strong></p>
+
+<ul>
+<li><code>1 &lt;= N &lt;= 20</code></li>
+</ul>
+
+<h2 id="method-3">Method</h2>
+
+<p>Generate all subtrees with fixed size by recursively calling this function itself.</p>
+
+<p>Since all possible sub tree is required, therefore each situation (from 1 to N) should be considered.</p>
+
+<p>Note that if N is even, then the FBT can not be generated. Because since the full binary tree has <code>2^level - 1</code> nodes and only has one root. FBT requires all nodes has either 0 or 2 sub nodes, therefore, if N is even, then there must be one node becomes the only child node of its parents.</p>
+
+<h2 id="code-3">Code</h2>
+
+<pre><code class="language-java">/**
+ * Generate all subtrees with fixed size by recursively calling this function itself.
+ *
+ * @param N number of nodes in tree
+ * @return list of all possible full binary trees with N nodes
+ */
+public List&lt;TreeNode&gt; allPossibleFBT(int N) {
+
+    List&lt;TreeNode&gt; out = new LinkedList&lt;&gt;();
+
+    /* Corner case */
+    if (N % 2 == 0) {
+        return out;     // if N is even, there will always be one more node that violate FBT
+    }
+    if (N == 1) {
+        out.add(new TreeNode(0));
+        return out;
+    }
+
+    N--;
+
+    for (int i = 1; i &lt; N; i += 2) {        // construct all possible size of sub tree
+        List&lt;TreeNode&gt; left = allPossibleFBT(N - i);
+        List&lt;TreeNode&gt; right = allPossibleFBT(i);
+
+        for (TreeNode l : left) {
+            for (TreeNode r : right) {
+                TreeNode current = new TreeNode(0);
+                current.left = l;
+                current.right = r;
+                out.add(current);
+            }
+        }
+    }
+    return out;
+}
+</code></pre>
               
             </div>
           </div>
@@ -570,7 +651,7 @@ public List&lt;TreeNode&gt; allPossibleFBT(int n) {
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--disabled">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/10/lc-199-binary-tree-right-side-view/" data-tooltip="LC 199 - Binary Tree Right Side View">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -628,7 +709,7 @@ public List&lt;TreeNode&gt; allPossibleFBT(int n) {
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--disabled">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/10/lc-199-binary-tree-right-side-view/" data-tooltip="LC 199 - Binary Tree Right Side View">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
