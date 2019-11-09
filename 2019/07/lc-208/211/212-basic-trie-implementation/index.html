@@ -346,10 +346,10 @@ trie.search(&quot;app&quot;);     // returns true
     private TrieNode root;
 
     /**
-     * Initialize your data structure here.
+     * Initialize of Trie.
      */
     public Trie() {
-        root = new TrieNode();
+        root = new TrieNode(' ');
     }
 
     /**
@@ -358,132 +358,66 @@ trie.search(&quot;app&quot;);     // returns true
      * @param word word to be inserted to trie
      */
     public void insert(String word) {
-        TrieNode temp = root;
+        TrieNode tmp = root;
         for (int i = 0; i &lt; word.length(); i++) {
-            if (!temp.containsChild(word.charAt(i))) {
-                temp.addChild(word.charAt(i));
+            if (tmp.child.get(word.charAt(i)) == null) {
+                TrieNode n = new TrieNode(word.charAt(i));
+                tmp.child.put(word.charAt(i), n);
             }
-            temp = temp.getChild(word.charAt(i));
+            tmp = tmp.child.get(word.charAt(i));
         }
-        temp.setEnd(true);
+        tmp.isEnd = true;
     }
 
     /**
-     * Returns if the word is in the trie.
+     * Returns true if the word is in the trie.
      *
      * @param word given word
      * @return if word is in trie
      */
     public boolean search(String word) {
-        TrieNode temp = root;
-        for (int i = 0; i &lt; word.length(); i++) {
-            if (temp.containsChild(word.charAt(i))) {
-                temp = temp.getChild(word.charAt(i));
-            } else {
-                return false;
-            }
-        }
-        return temp.isEnd();
+        TrieNode tmp = findEnd(word);
+        return tmp != null &amp;&amp; tmp.isEnd;
     }
 
     /**
-     * Returns if there is any word in the trie that starts with the given prefix.
+     * Returns true if there exist a word in the trie that starts with the given prefix.
      *
      * @param prefix given prefix
      * @return if prefix is in trie
      */
     public boolean startsWith(String prefix) {
-        TrieNode temp = root;
-        for (int i = 0; i &lt; prefix.length(); i++) {
-            if (temp.containsChild(prefix.charAt(i))) {
-                temp = temp.getChild(prefix.charAt(i));
-            } else {
-                return false;
+        return findEnd(prefix) != null;
+    }
+
+    /**
+     * Find longest reachable TrieNode in trie.
+     *
+     * @param w given string
+     * @return longest reachable TrieNode, or null if given string contains char that is not exist in trie.
+     */
+    private TrieNode findEnd(String w) {
+        TrieNode tmp = root;
+
+        for (int i = 0; i &lt; w.length(); i++) {
+            if (tmp.child.get(w.charAt(i)) == null) {
+                return null;
             }
+            tmp = tmp.child.get(w.charAt(i));
         }
-        return true;
+
+        return tmp;
     }
 
 
     /**
      * Nodes in trie.
      */
-    class TrieNode {
-        char val;       // value of current node
-        HashMap&lt;Character, TrieNode&gt; m = new HashMap&lt;&gt;();       // save children of current trie
-        boolean end = false;
+    static class TrieNode {
+        public HashMap&lt;Character, TrieNode&gt; child = new HashMap&lt;&gt;();
+        boolean isEnd = false;
 
-        /**
-         * Initialize.
-         */
-        TrieNode() {
-        }
-
-
-        /**
-         * Set current node's value.
-         *
-         * @param val value to be set
-         */
-        void setVal(char val) {
-            this.val = val;
-        }
-
-        /**
-         * Add child to current node.
-         *
-         * @param val children value
-         */
-        void addChild(char val) {
-            this.m.put(val, new TrieNode());
-            this.m.get(val).setVal(val);
-        }
-
-        /**
-         * Mark current node as end of word.
-         *
-         * @param b boolean to be set
-         */
-        void setEnd(boolean b) {
-            this.end = b;
-        }
-
-        /**
-         * Check if current node is an end of a word.
-         *
-         * @return true if current node is an end of a word, false otherwise
-         */
-        boolean isEnd() {
-            return this.end;
-        }
-
-        /**
-         * Return the child based on given value.
-         *
-         * @param val value of child
-         * @return child node
-         */
-        TrieNode getChild(char val) {
-            return m.get(val);
-        }
-
-        /**
-         * Get value of current node.
-         *
-         * @return value in current node
-         */
-        char getVal() {
-            return this.val;
-        }
-
-        /**
-         * Check if given char is contained in current node's child.
-         *
-         * @param val given value
-         * @return true if given char is in child
-         */
-        boolean containsChild(char val) {
-            return m.containsKey(val);
+        TrieNode(char val) {
         }
     }
 
