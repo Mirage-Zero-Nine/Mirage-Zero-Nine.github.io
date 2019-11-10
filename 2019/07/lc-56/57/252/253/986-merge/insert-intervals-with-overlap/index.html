@@ -413,10 +413,13 @@ Explanation: Because the new interval [4,8] overlaps with [3,5],[6,7],[8,10].
 
 <h2 id="method-1">Method</h2>
 
-<p>Starts from new interval. New interval is the temporary value.
-- If given internal&rsquo;s right bound is smaller than left bound of new interval, insert given interval into list.
-- If new interval is smaller than given internal, insert new interval into list, replace temp value by given interval.
--  These two situations are both non-overlapping. If found a overlapping, find larger bound of each value and continue.</p>
+<p>Starts from new interval. New interval is the temporary value.</p>
+
+<ul>
+<li>If given internal&rsquo;s right bound is smaller than left bound of new interval, insert given interval into list.</li>
+<li>If new interval is smaller than given internal, insert new interval into list, replace temp value by given interval.</li>
+<li>These two situations are both non-overlapping. If found a overlapping, find larger bound of each value and continue.</li>
+</ul>
 
 <p>Finally, after the iteration, add final temp value into list.</p>
 
@@ -461,7 +464,7 @@ public int[][] insert(int[][] intervals, int[] newInterval) {
 
 <h2 id="problem-description-2">Problem description</h2>
 
-<p>Given an array of meeting time intervals consisting of start and end times <code>[[s1,e1],[s2,e2],...]</code> (si &lt; ei), determine if a person could attend all meetings.</p>
+<p>Given an array of meeting time intervals consisting of start and end times <code>[[s1,e1],[s2,e2],...], (si &lt; ei)</code>, determine if a person could attend all meetings.</p>
 
 <p><strong>Example 1:</strong></p>
 
@@ -511,7 +514,7 @@ public boolean canAttendMeetings(int[][] intervals) {
 
 <h2 id="problem-description-3">Problem description</h2>
 
-<p>Given an array of meeting time intervals consisting of start and end times <code>[[s1,e1],[s2,e2],...]</code> (si &lt; ei), find the minimum number of conference rooms required.</p>
+<p>Given an array of meeting time intervals consisting of start and end times <code>[[s1,e1],[s2,e2],...], (si &lt; ei)</code>, find the minimum number of conference rooms required.</p>
 
 <p><strong>Example 1:</strong></p>
 
@@ -539,11 +542,11 @@ Output: 1
 <li>Interval ends with a time smaller than top of heap.</li>
 </ol>
 
-<p>For situation 1,2,3, add current interval end to heap and one more room is required.</p>
-
-<p>For situation 4, their is no conflict, hence add the end time to heap.</p>
-
-<p>For situation 5, assume it is not required to add a room, do nothing but continue.</p>
+<ul>
+<li>For situation 1,2,3, add current interval end to heap and one more room is required.</li>
+<li>For situation 4, their is no conflict, hence add the end time to heap.</li>
+<li>For situation 5, assume no extra room is required, continue, do nothing.</li>
+</ul>
 
 <h2 id="code-3">Code</h2>
 
@@ -557,7 +560,7 @@ Output: 1
  * 5. interval ends with a time smaller than top of heap
  * For situation 1,2,3, add current interval end to heap and one more room is required.
  * For situation 4, their is no conflict, hence add the end time to heap.
- * For situation 5, assume it is not required to add a room, do nothing but continue.
+ * For situation 5, assume no extra room is required, continue, do nothing.
  *
  * @param intervals given time interval
  * @return minimum non-overlapped number
@@ -584,6 +587,38 @@ public int minMeetingRooms(int[][] intervals) {
     }
     return count;
 }
+
+/**
+ * Sort start time and end time separately.
+ * Then one pointer point at start time, one point at end time.
+ * If start time &lt; end time, then one more room is required.
+ * Otherwise, there is no conflict, move end time pointer forward.
+ *
+ * @param intervals given time interval
+ * @return minimum non-overlapped number
+ */
+public int twoPointers(int[][] intervals) {
+    int[] starts = new int[intervals.length];
+    int[] ends = new int[intervals.length];
+
+    for (int i = 0; i &lt; intervals.length; i++) {
+        starts[i] = intervals[i][0];
+        ends[i] = intervals[i][1];
+    }
+
+    Arrays.sort(starts);
+    Arrays.sort(ends);
+    int rooms = 0, end = 0;
+
+    for (int start : starts) {
+        if (start &lt; ends[end]) {
+            rooms++;
+        } else {
+            end++;
+        }
+    }
+    return rooms;
+}
 </code></pre>
 
 <h1 id="interval-list-intersections">Interval List Intersections</h1>
@@ -596,7 +631,7 @@ public int minMeetingRooms(int[][] intervals) {
 
 <p>Return the intersection of these two interval lists.</p>
 
-<p><em>(Formally, a closed interval <a href="with a &lt;= b">a, b</a> denotes the set of real numbers x with a &lt;= x &lt;= b.  The intersection of two closed intervals is a set of real numbers that is either empty, or can be represented as a closed interval.  For example, the intersection of [1, 3] and [2, 4] is [2, 3].)</em></p>
+<p><em>(Formally, a closed interval <code>[a, b]</code> (with a &lt;= b) denotes the set of real numbers x with a &lt;= x &lt;= b.  The intersection of two closed intervals is a set of real numbers that is either empty, or can be represented as a closed interval.  For example, the intersection of [1, 3] and [2, 4] is [2, 3].)</em></p>
 
 <p><strong>Example 1:</strong></p>
 
