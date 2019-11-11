@@ -15,18 +15,18 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="LC 121/122/123/188 - Best Time to Buy and Sell Stock">
 <meta name="twitter:title" content="LC 121/122/123/188 - Best Time to Buy and Sell Stock">
-<meta property="og:url" content="https://yyzhou95.github.io/2019/06/lc-121/122/123/188-best-time-to-buy-and-sell-stock/">
-<meta property="twitter:url" content="https://yyzhou95.github.io/2019/06/lc-121/122/123/188-best-time-to-buy-and-sell-stock/">
+<meta property="og:url" content="https://yyzhou95.github.io/2019/11/lc-121/122/123/188-best-time-to-buy-and-sell-stock/">
+<meta property="twitter:url" content="https://yyzhou95.github.io/2019/11/lc-121/122/123/188-best-time-to-buy-and-sell-stock/">
 <meta property="og:site_name" content="Bingo!">
 <meta property="og:description" content="">
 <meta name="twitter:description" content="">
 <meta property="og:locale" content="en-us">
 
   
-    <meta property="article:published_time" content="2019-06-09T00:00:00">
+    <meta property="article:published_time" content="2019-11-10T00:00:00">
   
   
-    <meta property="article:modified_time" content="2019-06-09T00:00:00">
+    <meta property="article:modified_time" content="2019-11-10T00:00:00">
   
   
   
@@ -68,7 +68,7 @@
 
     
 
-    <link rel="canonical" href="https://yyzhou95.github.io/2019/06/lc-121/122/123/188-best-time-to-buy-and-sell-stock/">
+    <link rel="canonical" href="https://yyzhou95.github.io/2019/11/lc-121/122/123/188-best-time-to-buy-and-sell-stock/">
 
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
@@ -258,9 +258,9 @@
   
   <div class="postShorten-meta post-meta">
     
-      <time itemprop="datePublished" datetime="2019-06-09T00:00:00Z">
+      <time itemprop="datePublished" datetime="2019-11-10T00:00:00Z">
         
-  June 9, 2019
+  November 10, 2019
 
       </time>
     
@@ -458,7 +458,7 @@ Explanation: In this case, no transaction is done, i.e. max profit = 0.
 
 <h2 id="method-2">Method</h2>
 
-<p>Use a state machine to describes the problem statement.</p>
+<p>The dynamic programming solution is same as Best Time to Buy and Sell Stock IV, check the method in next problem. There is another understanding of this problem: state machine.</p>
 
 <p><img src="../../../static/img/state-machine.png" alt="state-machine" /></p>
 
@@ -474,6 +474,42 @@ Explanation: In this case, no transaction is done, i.e. max profit = 0.
 <h2 id="code-2">Code</h2>
 
 <pre><code class="language-java">/**
+ * Dynamic programming.
+ * The general state transition to solve this kind of problem is as following:
+ * dp[i, j] = max(dp[i, j - 1], prices[j] - prices[j'] + dp[i - 1, j'])
+ * i: ith transaction (in this case, i &lt;= 2)
+ * j: prices[j], index in int array price
+ * j': in range of [0, j-1]
+ * =&gt; [i, j] = max([i, j - 1], prices[j] + max([i - 1, j'] - prices[j']))  (efficient for looping)
+ * Base case:
+ * dp[0, j] = 0
+ * dp[i, 0] = 0
+ *
+ * @param prices given price array
+ * @return maximum profit based on two transactions
+ */
+public int maxProfit(int[] prices) {
+
+    /* Corner case */
+    if (prices.length &lt; 2) {
+        return 0;
+    }
+
+    int n = prices.length;
+    int[][] dp = new int[3][n];
+
+    for (int k = 1; k &lt; 3; k++) {
+        int min = prices[0];
+        for (int i = 1; i &lt; n; i++) {
+            min = Math.min(min, prices[i] - dp[k - 1][i - 1]);
+            dp[k][i] = Math.max(dp[k][i - 1], prices[i] - min);
+        }
+    }
+
+    return dp[2][n - 1];
+}
+
+/**
  * Use a state machine to describes the problem statement.
  * State 0: do nothing or buy stock
  * State 1: sell stock or hold purchased stock
@@ -485,7 +521,7 @@ Explanation: In this case, no transaction is done, i.e. max profit = 0.
  * @param prices price int array
  * @return max profit
  */
-public int maxProfit(int[] prices) {
+public int stateMachine(int[] prices) {
 
     /* Corner case */
     if (prices.length == 0) {
@@ -499,7 +535,7 @@ public int maxProfit(int[] prices) {
         s2 = Integer.max(s2, s1 - prices[i]);       // second buy -&gt; turn to state 2 or do nothing
         s3 = Integer.max(s3, s2 + prices[i]);       // final state, sell or do nothing
     }
-    return Integer.max(s3, 0);      // if the stock price is monotonically decreasing, return 0
+    return Math.max(s3, 0);      // if the stock price is monotonically decreasing, return 0
 }
 </code></pre>
 
@@ -509,7 +545,7 @@ public int maxProfit(int[] prices) {
 
 <h2 id="problem-description-3">Problem description</h2>
 
-<p>Say you have an array for which the *i*th element is the price of a given stock on day <em>i</em>.</p>
+<p>Say you have an array for which the <em>i</em> th element is the price of a given stock on day <em>i</em>.</p>
 
 <p>Design an algorithm to find the maximum profit. You may complete at most <strong>k</strong> transactions.</p>
 
@@ -535,20 +571,47 @@ Explanation: Buy on day 2 (price = 2) and sell on day 3 (price = 6), profit = 6-
 
 <p>There are two approaches to solve this problem (actually they are same): Dynamic programming and State machine. The choice is up to which one is understandable.</p>
 
-<p>However, to avoid MLE (happens when k and array are extreme large), some corner cases should be fixed first. If <code>k &gt; prices.length * 2</code>, then the problem can be converted to Best Time to Buy and Sell Stock II. The reason is that in given array, it can at most complete <code>2 * k</code> operations since only one action can be done at one time.</p>
+<p>However, to avoid MLE (happens when k and array are extremely large), some corner cases should be fixed first. If <code>k &gt; prices.length * 2</code>, then the problem can be converted to Best Time to Buy and Sell Stock II. The reason is that in given array, it can at most complete <code>2 * k</code> operations since only one action can be done at one time.</p>
 
 <p><strong>Dynamic programming</strong></p>
 
 <p>State transition:</p>
 
-<pre><code>[i, j] = max([i, j - 1], prices[j] - prices[j'] + [i - 1, j'])
-i: ith transaction
-j: prices[j], index in int array price
-j': in range of [0, j-1]
-=&gt; [i, j] = max([i, j - 1], prices[j] + max([i - 1, j'] - prices[j']))  (efficient for looping)
-dp[0, j] = 0
+<pre><code>dp[i, j] = max(dp[i, j - 1], prices[j] - prices[j'] + [i - 1, j'])
+</code></pre>
+
+<ul>
+<li><code>i</code>: <code>i</code> th transaction</li>
+<li><code>j</code>: <code>prices[j]</code>, index in int array price</li>
+<li><code>j'</code>: in range of <code>[0, j-1]</code></li>
+</ul>
+
+<p>Therefore, it will be:</p>
+
+<pre><code>dp[i, j] = max(dp[i, j - 1], prices[j] + max(dp[i - 1, j'] - prices[j']))  (efficient for looping)
+</code></pre>
+
+<p>Base cases:</p>
+
+<pre><code>dp[0, j] = 0
 dp[i, 0] = 0
 </code></pre>
+
+<p>The naive solution of dp is as following:</p>
+
+<pre><code>for (int i = 1; i &lt;= k; i++) {
+    for (int j = 1; j &lt; n; j++) {
+
+        int max = -prices[0];
+        for (int m = 0; m &lt; j; m++) {
+            max = Math.max(prices[j] - prices[m] + dp[i - 1][m], max);
+        }
+        dp[i][j] = Math.max(max, dp[i][j - 1]);
+    }
+}
+</code></pre>
+
+<p>The optimized code is in the code part.</p>
 
 <p>The idea is to find out max profit from previous transaction and compare to current operation (buy/sell, or do nothing). This is actually same as state machine.</p>
 
@@ -558,15 +621,14 @@ dp[i, 0] = 0
 
 <h2 id="code-3">Code</h2>
 
-<p><strong>Dynamic programming</strong></p>
-
 <pre><code class="language-java">/**
- * Dynamic programming with table.
- * [i, j] = max([i, j - 1], prices[j] - prices[j'] + [i - 1, j'])
+ * Dynamic programming with 2D table.
+ * dp[i, j] = max(dp[i, j - 1], prices[j] - prices[m] + dp[i - 1, m])
  * i: ith transaction
  * j: prices[j], index in int array price
- * j': in range of [0, j-1]
- * =&gt; [i, j] = max([i, j - 1], prices[j] + max([i - 1, j'] - prices[j']))  (efficient for looping)
+ * m: in range of [0, j-1]
+ * =&gt; [i, j] = max([i, j - 1], prices[j] + max([i - 1, m] - prices[m]))  (efficient for looping)
+ * Base case:
  * dp[0, j] = 0
  * dp[i, 0] = 0
  *
@@ -574,14 +636,52 @@ dp[i, 0] = 0
  * @param prices int array
  * @return max profit
  */
-public int dp(int k, int[] prices) {
+public int maxProfit(int k, int[] prices) {
+    int n = prices.length;
+
+    /* Corner case */
+    if (n &lt; 2) {
+        return 0;
+    }
+
+    if (k &gt;= n / 2) {       // k is sufficient for comparing each adjacent value in array
+        int max = 0;
+        for (int i = 1; i &lt; n; i++) {
+            if (prices[i] - prices[i - 1] &gt; 0) {
+                max += prices[i] - prices[i - 1];
+            }
+        }
+        return max;
+    }
+
+    int[][] dp = new int[k + 1][n];
+
+    for (int i = 1; i &lt;= k; i++) {        // buy and sell
+        int max = -prices[0];
+        for (int j = 1; j &lt; n; j++) {     // stock prices
+
+            dp[i][j] = Math.max(prices[j] + max, dp[i][j - 1]);     // sell with highest price
+            max = Math.max(dp[i - 1][j] - prices[j], max);          // buy with lowest price
+        }
+    }
+
+    return dp[k][n - 1];
+}
+
+/**
+ * DP solution with space optimized.
+ *
+ * @param k      k times transaction limit
+ * @param prices prices array
+ * @return max profit from the array
+ */
+public int dpOptimized(int k, int[] prices) {
 
     /* Corner case */
     if (prices.length &lt; 2) {
         return 0;
     }
 
-    /* Corner case: compare between current and previous value in array */
     if (k &gt;= prices.length / 2) {       // k is sufficient for comparing each adjacent value in array
         int max = 0;
         for (int i = 1; i &lt; prices.length; i++) {
@@ -595,27 +695,24 @@ public int dp(int k, int[] prices) {
     int[] r1 = new int[prices.length];
     int[] r2 = new int[prices.length];
 
-    for (int i = 0; i &lt; k + 1; i++) {
+    for (int i = 1; i &lt; k + 1; i++) {
         int base = -prices[0];
-        for (int j = 0; j &lt; r1.length; j++) {
-            r2[j] = Integer.max(r2[j - 1], prices[j] + base);
-            base = Integer.max(base, r1[j] - prices[j]);
+
+        for (int j = 1; j &lt; r1.length; j++) {
+            r2[j] = Math.max(r2[j - 1], prices[j] + base);
+            base = Math.max(base, r1[j] - prices[j]);
         }
 
-        /* Reduce memory usage */
-        for (int j = 0; j &lt; prices.length; j++) {
+        for (int j = 0; j &lt; prices.length; j++) {       // mem compress
             r1[j] = r2[j];
             r2[j] = 0;
         }
     }
 
-    return r2[prices.length - 1];
+    return r1[prices.length - 1];
 }
-</code></pre>
 
-<p><strong>State machine</strong></p>
-
-<pre><code class="language-java">/**
+/**
  * Use a state machine to save state.
  * The length of state is 2 * k, since each k representing a buy and sell state.
  *
@@ -658,7 +755,7 @@ public int stateMachine(int k, int[] prices) {
         }
     }
 
-    return Integer.max(0, state[state.length - 1]);
+    return Math.max(0, state[state.length - 1]);
 }
 </code></pre>
               
@@ -687,7 +784,7 @@ public int stateMachine(int k, int[] prices) {
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/06/lc-120-triangle/" data-tooltip="LC 120 - Triangle">
+                <a class="post-action-btn btn btn--disabled">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -695,7 +792,7 @@ public int stateMachine(int k, int[] prices) {
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/06/lc-32-longest-valid-parentheses/" data-tooltip="LC 32 - Longest Valid Parentheses">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/11/lc-279-perfect-squares/" data-tooltip="LC 279 - Perfect Squares">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
@@ -745,7 +842,7 @@ public int stateMachine(int k, int[] prices) {
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/06/lc-120-triangle/" data-tooltip="LC 120 - Triangle">
+                <a class="post-action-btn btn btn--disabled">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -753,7 +850,7 @@ public int stateMachine(int k, int[] prices) {
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/06/lc-32-longest-valid-parentheses/" data-tooltip="LC 32 - Longest Valid Parentheses">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yyzhou95.github.io/2019/11/lc-279-perfect-squares/" data-tooltip="LC 279 - Perfect Squares">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
