@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.59.1 with theme Tranquilpeak 0.4.7-BETA">
+<meta name="generator" content="Hugo 0.60.1 with theme Tranquilpeak 0.4.7-BETA">
 <meta name="author" content="Steve Zhou">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -275,101 +275,69 @@
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
-<ul>
-<li><a href="#get-equal-substrings-within-budget">Get Equal Substrings Within Budget</a>
-<ul>
-<li><a href="#problem-description">Problem description</a></li>
-<li><a href="#method">Method</a></li>
-<li><a href="#code">Code</a></li>
-</ul></li>
-</ul>
-</nav>
-
+              <!-- raw HTML omitted -->
 <h1 id="get-equal-substrings-within-budget">Get Equal Substrings Within Budget</h1>
-
 <p>Link: <a href="https://leetcode.com/problems/get-equal-substrings-within-budget/">Get Equal Substrings Within Budget</a></p>
-
 <h2 id="problem-description">Problem description</h2>
-
 <p>You are given two strings <code>s</code>and <code>t</code>of the same length. You want to change <code>s</code>to <code>t</code>. Changing the <code>i</code>-th character of <code>s</code>to <code>i</code>-th character of <code>t</code>costs <code>|s[i] - t[i]|</code>that is, the absolute difference between the ASCII values of the characters.</p>
-
 <p>You are also given an integer <code>maxCost</code>.</p>
-
 <p>Return the maximum length of a substring of <code>s</code>that can be changed to be the same as the corresponding substring of <code>t</code>with a cost less than or equal to <code>maxCost</code>.</p>
-
 <p>If there is no substring from <code>s</code>that can be changed to its corresponding substring from <code>t</code>, return <code>0</code>.</p>
-
 <p><strong>Example 1:</strong></p>
-
 <pre><code>Input: s = &quot;abcd&quot;, t = &quot;bcdf&quot;, maxCost = 3
 Output: 3
 Explanation: &quot;abc&quot; of s can change to &quot;bcd&quot;. That costs 3, so the maximum length is 3.
-</code></pre>
-
-<p><strong>Example 2:</strong></p>
-
+</code></pre><p><strong>Example 2:</strong></p>
 <pre><code>Input: s = &quot;abcd&quot;, t = &quot;cdef&quot;, maxCost = 3
 Output: 1
 Explanation: Each character in s costs 2 to change to charactor in t, so the maximum length is 1.
-</code></pre>
-
-<p><strong>Example 3:</strong></p>
-
+</code></pre><p><strong>Example 3:</strong></p>
 <pre><code>Input: s = &quot;abcd&quot;, t = &quot;acde&quot;, maxCost = 0
 Output: 1
 Explanation: You can't make any change, so the maximum length is 1.
-</code></pre>
-
-<p><strong>Constraints:</strong></p>
-
+</code></pre><p><strong>Constraints:</strong></p>
 <ul>
 <li><code>1 &lt;= s.length, t.length &lt;= 10^5</code></li>
 <li><code>0 &lt;= maxCost &lt;= 10^6</code></li>
 <li><code>s</code>and <code>t</code>only contain lower case English letters.</li>
 </ul>
-
 <h2 id="method">Method</h2>
-
 <p>Sliding window. Move window forward if there has the cost to be spend. Otherwise, shrink window size until the total cost in window is smaller than max cost.</p>
-
 <p>If total cost is less than 0, reset to 0.</p>
-
 <h2 id="code">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Sliding window.
+</span><span style="color:#75715e"> * Move window forward if there has the cost to be spend.
+</span><span style="color:#75715e"> * Otherwise, shrink window size until the total cost in window is smaller than max cost.
+</span><span style="color:#75715e"> * If total cost is less than 0, reset to 0.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param s       given string
+</span><span style="color:#75715e"> * @param t       given string
+</span><span style="color:#75715e"> * @param maxCost max cost of string
+</span><span style="color:#75715e"> * @return maximum length of a substring of s that can be changed to t with a cost less than or equal to maxCost
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">equalSubstring</span><span style="color:#f92672">(</span>String s<span style="color:#f92672">,</span> String t<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> maxCost<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-<pre><code class="language-java">/**
- * Sliding window.
- * Move window forward if there has the cost to be spend.
- * Otherwise, shrink window size until the total cost in window is smaller than max cost.
- * If total cost is less than 0, reset to 0.
- *
- * @param s       given string
- * @param t       given string
- * @param maxCost max cost of string
- * @return maximum length of a substring of s that can be changed to t with a cost less than or equal to maxCost
- */
-public int equalSubstring(String s, String t, int maxCost) {
+    <span style="color:#66d9ef">int</span> max <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> left <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> current <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
 
-    int max = 0, left = 0, current = 0;
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        current <span style="color:#f92672">+</span><span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">abs</span><span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span> <span style="color:#f92672">-</span> t<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-    for (int i = 0; i &lt; s.length(); i++) {
-        current += Math.abs(s.charAt(i) - t.charAt(i));
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>current <span style="color:#f92672">&lt;</span><span style="color:#f92672">=</span> maxCost<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            max <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>i <span style="color:#f92672">-</span> left <span style="color:#f92672">+</span> 1<span style="color:#f92672">,</span> max<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>current <span style="color:#f92672">&gt;</span> maxCost<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                current <span style="color:#f92672">-</span><span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">abs</span><span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>left<span style="color:#f92672">)</span> <span style="color:#f92672">-</span> t<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>left<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            <span style="color:#f92672">}</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>current <span style="color:#f92672">&lt;</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                current <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
 
-        if (current &lt;= maxCost) {
-            max = Math.max(i - left + 1, max);
-        } else {
-            while (current &gt; maxCost) {
-                current -= Math.abs(s.charAt(left) - t.charAt(left++));
-            }
-            if (current &lt; 0) {
-                current = 0;
-            }
-        }
-    }
-
-    return max;
-}
-</code></pre>
+    <span style="color:#66d9ef">return</span> max<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div>
               
             </div>
           </div>
@@ -423,7 +391,7 @@ public int equalSubstring(String s, String t, int maxCost) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>
@@ -481,7 +449,7 @@ public int equalSubstring(String s, String t, int maxCost) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>

@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.59.1 with theme Tranquilpeak 0.4.7-BETA">
+<meta name="generator" content="Hugo 0.60.1 with theme Tranquilpeak 0.4.7-BETA">
 <meta name="author" content="Steve Zhou">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -283,195 +283,139 @@
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
-<ul>
-<li><a href="#add-two-numbers">Add Two Numbers</a>
-<ul>
-<li><a href="#problem-description">Problem description</a></li>
-<li><a href="#method">Method</a></li>
-<li><a href="#code">Code</a></li>
-</ul></li>
-<li><a href="#merge-two-sorted-lists">Merge Two Sorted Lists</a>
-<ul>
-<li><a href="#problem-description-1">Problem description</a></li>
-<li><a href="#method-1">Method</a></li>
-<li><a href="#code-1">Code</a></li>
-</ul></li>
-<li><a href="#merge-k-sorted-lists">Merge k Sorted Lists</a>
-<ul>
-<li><a href="#problem-description-2">Problem description</a></li>
-<li><a href="#method-2">Method</a></li>
-<li><a href="#code-2">Code</a></li>
-</ul></li>
-</ul>
-</nav>
-
+              <!-- raw HTML omitted -->
 <h1 id="add-two-numbers">Add Two Numbers</h1>
-
 <p>Links: <a href="https://leetcode.com/problems/add-two-numbers/">Add Two Numbers</a></p>
-
 <h2 id="problem-description">Problem description</h2>
-
 <p>You are given two <strong>non-empty</strong> linked lists representing two non-negative integers. The digits are stored in <strong>reverse order</strong> and each of their nodes contain a single digit. Add the two numbers and return it as a linked list.</p>
-
 <p>You may assume the two numbers do not contain any leading zero, except the number 0 itself.</p>
-
 <p><strong>Example:</strong></p>
-
 <pre><code>Input: (2 -&gt; 4 -&gt; 3) + (5 -&gt; 6 -&gt; 4)
 Output: 7 -&gt; 0 -&gt; 8
 Explanation: 342 + 465 = 807.
-</code></pre>
-
-<h2 id="method">Method</h2>
-
+</code></pre><h2 id="method">Method</h2>
 <p>Both integer is given in <code>ListNode</code>, yet it is actually a <code>LinkedList</code>.</p>
-
 <p>This problem can be solved by recursion, but it is suggested that using iteration instead, as iteration can save extra stack cost compare to recursion (which would add extra O(logN) memory consumption).</p>
-
 <p>The iterative version idea is almost same as recursion:</p>
-
 <ul>
 <li>Add two nodes in list each time, and if current node is <code>null</code> then set current node value as 0.</li>
 <li>Add node value and create a new list node to store it.</li>
 <li>Check carry.</li>
 <li>Move to next node. If current node is <code>null</code> then keep it as null to avoid <code>NullPointerException</code>.</li>
 </ul>
-
 <p>Finally, check if carry is not 0, be sure the last carry is added into final result.</p>
-
 <h2 id="code">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Sum two nodes and return the sum node until list is empty.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param l1 first int contains in ListNode
+</span><span style="color:#75715e"> * @param l2 second int contains in ListNode
+</span><span style="color:#75715e"> * @return result in ListNode
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> ListNode <span style="color:#a6e22e">addTwoNumbers</span><span style="color:#f92672">(</span>ListNode l1<span style="color:#f92672">,</span> ListNode l2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-<pre><code class="language-java">/**
- * Sum two nodes and return the sum node until list is empty.
- *
- * @param l1 first int contains in ListNode
- * @param l2 second int contains in ListNode
- * @return result in ListNode
- */
-public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+    <span style="color:#66d9ef">int</span> carry <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+    ListNode dummy <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ListNode<span style="color:#f92672">(</span>0<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    ListNode current <span style="color:#f92672">=</span> dummy<span style="color:#f92672">;</span>
 
-    int carry = 0;
-    ListNode dummy = new ListNode(0);
-    ListNode current = dummy;
+    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>l1 <span style="color:#f92672">!</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">|</span><span style="color:#f92672">|</span> l2 <span style="color:#f92672">!</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">int</span> v1 <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>l1 <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">?</span> 0 <span style="color:#f92672">:</span> l1<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">int</span> v2 <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>l2 <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">?</span> 0 <span style="color:#f92672">:</span> l2<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span><span style="color:#f92672">;</span>
 
-    while (l1 != null || l2 != null) {
-        int v1 = (l1 == null) ? 0 : l1.val;
-        int v2 = (l2 == null) ? 0 : l2.val;
+        carry <span style="color:#f92672">=</span> carry <span style="color:#f92672">+</span> v1 <span style="color:#f92672">+</span> v2<span style="color:#f92672">;</span>
 
-        carry = carry + v1 + v2;
+        current<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ListNode<span style="color:#f92672">(</span>carry <span style="color:#f92672">%</span> 10<span style="color:#f92672">)</span><span style="color:#f92672">;</span>        <span style="color:#75715e">// link node to (sum/10)
+</span><span style="color:#75715e"></span>        current <span style="color:#f92672">=</span> current<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">;</span>                             <span style="color:#75715e">// move result to its next
+</span><span style="color:#75715e"></span>
+        carry <span style="color:#f92672">=</span> carry <span style="color:#f92672">/</span> 10<span style="color:#f92672">;</span>
+        l1 <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>l1 <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">?</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">:</span> l1<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">;</span>
+        l2 <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>l2 <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">?</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">:</span> l2<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-        current.next = new ListNode(carry % 10);        // link node to (sum/10)
-        current = current.next;                             // move result to its next
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>carry <span style="color:#f92672">!</span><span style="color:#f92672">=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        current<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ListNode<span style="color:#f92672">(</span>carry<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-        carry = carry / 10;
-        l1 = (l1 == null) ? null : l1.next;
-        l2 = (l2 == null) ? null : l2.next;
-    }
+    <span style="color:#66d9ef">return</span> dummy<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
 
-    if (carry != 0) {
-        current.next = new ListNode(carry);
-    }
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Sum two nodes and return the sum node until list is empty.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param l1 first int contains in ListNode
+</span><span style="color:#75715e"> * @param l2 second int contains in ListNode
+</span><span style="color:#75715e"> * @return result in ListNode
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> ListNode <span style="color:#a6e22e">recursion</span><span style="color:#f92672">(</span>ListNode l1<span style="color:#f92672">,</span> ListNode l2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">return</span> helper<span style="color:#f92672">(</span>l1<span style="color:#f92672">,</span> l2<span style="color:#f92672">,</span> 0<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
 
-    return dummy.next;
-}
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Add non-empty nodes recursively until all nodes in two lists are reached.
+</span><span style="color:#75715e"> * Use a int to save carry for next calculation.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param n1    first node
+</span><span style="color:#75715e"> * @param n2    second node
+</span><span style="color:#75715e"> * @param carry carry from previous sum
+</span><span style="color:#75715e"> * @return sum of two nodes
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> ListNode <span style="color:#a6e22e">helper</span><span style="color:#f92672">(</span>ListNode n1<span style="color:#f92672">,</span> ListNode n2<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> carry<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-/**
- * Sum two nodes and return the sum node until list is empty.
- *
- * @param l1 first int contains in ListNode
- * @param l2 second int contains in ListNode
- * @return result in ListNode
- */
-public ListNode recursion(ListNode l1, ListNode l2) {
-    return helper(l1, l2, 0);
-}
+    <span style="color:#75715e">/* Corner case and end point */</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>n1 <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> n2 <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> carry <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-/**
- * Add non-empty nodes recursively until all nodes in two lists are reached.
- * Use a int to save carry for next calculation.
- *
- * @param n1    first node
- * @param n2    second node
- * @param carry carry from previous sum
- * @return sum of two nodes
- */
-public ListNode helper(ListNode n1, ListNode n2, int carry) {
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>n1 <span style="color:#f92672">!</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        carry <span style="color:#f92672">+</span><span style="color:#f92672">=</span> n1<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>n2 <span style="color:#f92672">!</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        carry <span style="color:#f92672">+</span><span style="color:#f92672">=</span> n2<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-    /* Corner case and end point */
-    if (n1 == null &amp;&amp; n2 == null &amp;&amp; carry == 0) {
-        return null;
-    }
-
-    if (n1 != null) {
-        carry += n1.val;
-    }
-    if (n2 != null) {
-        carry += n2.val;
-    }
-
-    ListNode current = new ListNode(carry % 10);        // create a node to store this digit
-    current.next = helper(n1 == null ? null : n1.next, n2 == null ? null : n2.next, carry / 10);
-    return current;
-}
-</code></pre>
-
-<h1 id="merge-two-sorted-lists">Merge Two Sorted Lists</h1>
-
+    ListNode current <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ListNode<span style="color:#f92672">(</span>carry <span style="color:#f92672">%</span> 10<span style="color:#f92672">)</span><span style="color:#f92672">;</span>        <span style="color:#75715e">// create a node to store this digit
+</span><span style="color:#75715e"></span>    current<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span> <span style="color:#f92672">=</span> helper<span style="color:#f92672">(</span>n1 <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">?</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">:</span> n1<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">,</span> n2 <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">?</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">:</span> n2<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">,</span> carry <span style="color:#f92672">/</span> 10<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">return</span> current<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h1 id="merge-two-sorted-lists">Merge Two Sorted Lists</h1>
 <p>Links: <a href="https://leetcode.com/problems/merge-two-sorted-lists/">Merge Two Sorted Lists</a></p>
-
-<h2 id="problem-description-1">Problem description</h2>
-
+<h2 id="problem-description1">Problem description</h2>
 <p>Merge two sorted linked lists and return it as a new list. The new list should be made by splicing together the nodes of the first two lists.</p>
-
 <p><strong>Example:</strong></p>
-
 <pre><code>Input: 1-&gt;2-&gt;4, 1-&gt;3-&gt;4
 Output: 1-&gt;1-&gt;2-&gt;3-&gt;4-&gt;4
-</code></pre>
-
-<h2 id="method-1">Method</h2>
-
+</code></pre><h2 id="method1">Method</h2>
 <p>Simply compare value in two ListNode. Point smaller one as next node.</p>
+<h2 id="code1">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Simply compare value in two ListNode. Point smaller one as next node.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param l1 first node
+</span><span style="color:#75715e"> * @param l2 second node
+</span><span style="color:#75715e"> * @return next smaller node
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> ListNode <span style="color:#a6e22e">mergeTwoLists</span><span style="color:#f92672">(</span>ListNode l1<span style="color:#f92672">,</span> ListNode l2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    ListNode dummy <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ListNode<span style="color:#f92672">(</span>0<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    ListNode current <span style="color:#f92672">=</span> dummy<span style="color:#f92672">;</span>
 
-<h2 id="code-1">Code</h2>
-
-<pre><code class="language-java">/**
- * Simply compare value in two ListNode. Point smaller one as next node.
- *
- * @param l1 first node
- * @param l2 second node
- * @return next smaller node
- */
-public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
-    ListNode dummy = new ListNode(0);
-    ListNode current = dummy;
-
-    while (l1 != null || l2 != null) {
-        if (l1 == null || (l2 != null &amp;&amp; l1.val &gt;= l2.val)) {
-            current.next = l2;
-            current = l2;
-            l2 = l2.next;
-        } else {
-            current.next = l1;
-            current = l1;
-            l1 = l1.next;
-        }
-    }
-    return dummy.next;
-}
-</code></pre>
-
-<h1 id="merge-k-sorted-lists">Merge k Sorted Lists</h1>
-
+    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>l1 <span style="color:#f92672">!</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">|</span><span style="color:#f92672">|</span> l2 <span style="color:#f92672">!</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>l1 <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">|</span><span style="color:#f92672">|</span> <span style="color:#f92672">(</span>l2 <span style="color:#f92672">!</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> l1<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span> <span style="color:#f92672">&gt;</span><span style="color:#f92672">=</span> l2<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            current<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span> <span style="color:#f92672">=</span> l2<span style="color:#f92672">;</span>
+            current <span style="color:#f92672">=</span> l2<span style="color:#f92672">;</span>
+            l2 <span style="color:#f92672">=</span> l2<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+            current<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span> <span style="color:#f92672">=</span> l1<span style="color:#f92672">;</span>
+            current <span style="color:#f92672">=</span> l1<span style="color:#f92672">;</span>
+            l1 <span style="color:#f92672">=</span> l1<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">return</span> dummy<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h1 id="merge-k-sorted-lists">Merge k Sorted Lists</h1>
 <p>Links: <a href="https://leetcode.com/problems/merge-k-sorted-lists/">Merge k Sorted Lists</a></p>
-
-<h2 id="problem-description-2">Problem description</h2>
-
+<h2 id="problem-description2">Problem description</h2>
 <p>Merge <em>k</em> sorted linked lists and return it as one sorted list. Analyze and describe its complexity.</p>
-
 <p><strong>Example:</strong></p>
-
 <pre><code>Input:
 [
   1-&gt;4-&gt;5,
@@ -479,124 +423,118 @@ public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
   2-&gt;6
 ]
 Output: 1-&gt;1-&gt;2-&gt;3-&gt;4-&gt;4-&gt;5-&gt;6
-</code></pre>
-
-<h2 id="method-2">Method</h2>
-
+</code></pre><h2 id="method2">Method</h2>
 <p>Two approaches.</p>
-
 <ol>
 <li>Divide and conquer. Divide <code>k</code> lists to <code>k/2</code> list pairs. Then sort each two lists respectively. Finally, the k lists will be sorted.</li>
 <li>Use heap to store the head of list. Heap will sort the list in <code>nlogk</code> and finally it can sort <code>k</code> lists.</li>
 </ol>
+<h2 id="code2">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Use divide and conquer to merge each two lists and recursively complete this process until only one list left.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param lists input LitNode Array
+</span><span style="color:#75715e"> * @return next ListNode
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> ListNode <span style="color:#a6e22e">mergeKLists</span><span style="color:#f92672">(</span>ListNode<span style="color:#f92672">[</span><span style="color:#f92672">]</span> lists<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-<h2 id="code-2">Code</h2>
+    <span style="color:#75715e">/* Corner case */</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>lists<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>lists<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> lists<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-<pre><code class="language-java">/**
- * Use divide and conquer to merge each two lists and recursively complete this process until only one list left.
- *
- * @param lists input LitNode Array
- * @return next ListNode
- */
-public ListNode mergeKLists(ListNode[] lists) {
-
-    /* Corner case */
-    if (lists.length == 0) {
-        return null;
-    }
-    if (lists.length == 1) {
-        return lists[0];
-    }
-
-    return divide(lists, 0, lists.length - 1);
-}
+    <span style="color:#66d9ef">return</span> divide<span style="color:#f92672">(</span>lists<span style="color:#f92672">,</span> 0<span style="color:#f92672">,</span> lists<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
 
 
-/**
- * Divide input lists from mid and put into two subpart recursively, until each subpart only has one element.
- * Then merge these two lists using mergeTwoLists method.
- * Finally, the whole ListNode list will be merged and this merged list will be returned.
- *
- * @param list  input list
- * @param start strat index
- * @param end   end index
- * @return merged result
- */
-public ListNode divide(ListNode[] list, int start, int end) {
-    if (start == end) {
-        return list[start];
-    }
-    if (start &lt; end) {
-        int mid = (end + start) / 2;
-        ListNode l1 = divide(list, start, mid);
-        ListNode l2 = divide(list, mid + 1, end);
-        return mergeTwoLists(l1, l2);
-    } else {
-        return null;
-    }
-}
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Divide input lists from mid and put into two subpart recursively, until each subpart only has one element.
+</span><span style="color:#75715e"> * Then merge these two lists using mergeTwoLists method.
+</span><span style="color:#75715e"> * Finally, the whole ListNode list will be merged and this merged list will be returned.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param list  input list
+</span><span style="color:#75715e"> * @param start strat index
+</span><span style="color:#75715e"> * @param end   end index
+</span><span style="color:#75715e"> * @return merged result
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> ListNode <span style="color:#a6e22e">divide</span><span style="color:#f92672">(</span>ListNode<span style="color:#f92672">[</span><span style="color:#f92672">]</span> list<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> start<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> end<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>start <span style="color:#f92672">=</span><span style="color:#f92672">=</span> end<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> list<span style="color:#f92672">[</span>start<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>start <span style="color:#f92672">&lt;</span> end<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">int</span> mid <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>end <span style="color:#f92672">+</span> start<span style="color:#f92672">)</span> <span style="color:#f92672">/</span> 2<span style="color:#f92672">;</span>
+        ListNode l1 <span style="color:#f92672">=</span> divide<span style="color:#f92672">(</span>list<span style="color:#f92672">,</span> start<span style="color:#f92672">,</span> mid<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        ListNode l2 <span style="color:#f92672">=</span> divide<span style="color:#f92672">(</span>list<span style="color:#f92672">,</span> mid <span style="color:#f92672">+</span> 1<span style="color:#f92672">,</span> end<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">return</span> mergeTwoLists<span style="color:#f92672">(</span>l1<span style="color:#f92672">,</span> l2<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
 
-/**
- * Merge two sorted linked lists and return it as a new list.
- *
- * @param l1 first node
- * @param l2 second node
- * @return next smaller node
- */
-public ListNode mergeTwoLists(ListNode l1, ListNode l2) {
-    if (l1 == null) {
-        return l2;
-    }
-    if (l2 == null) {
-        return l1;
-    }
-    if (l1.val &lt; l2.val) {
-        l1.next = mergeTwoLists(l1.next, l2);
-        return l1;
-    } else {
-        l2.next = mergeTwoLists(l1, l2.next);
-        return l2;
-    }
-}
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Merge two sorted linked lists and return it as a new list.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param l1 first node
+</span><span style="color:#75715e"> * @param l2 second node
+</span><span style="color:#75715e"> * @return next smaller node
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> ListNode <span style="color:#a6e22e">mergeTwoLists</span><span style="color:#f92672">(</span>ListNode l1<span style="color:#f92672">,</span> ListNode l2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>l1 <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> l2<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>l2 <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> l1<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>l1<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span> <span style="color:#f92672">&lt;</span> l2<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        l1<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span> <span style="color:#f92672">=</span> mergeTwoLists<span style="color:#f92672">(</span>l1<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">,</span> l2<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">return</span> l1<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+        l2<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span> <span style="color:#f92672">=</span> mergeTwoLists<span style="color:#f92672">(</span>l1<span style="color:#f92672">,</span> l2<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">return</span> l2<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
 
-/**
- * Use heap to store the head node of each list and sort head node.
- *
- * @param lists given K lists
- * @return sorted list
- */
-public ListNode heap(ListNode[] lists) {
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Use heap to store the head node of each list and sort head node.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param lists given K lists
+</span><span style="color:#75715e"> * @return sorted list
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> ListNode <span style="color:#a6e22e">heap</span><span style="color:#f92672">(</span>ListNode<span style="color:#f92672">[</span><span style="color:#f92672">]</span> lists<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-    /* Corner case */
-    if (lists.length == 0) {
-        return null;
-    }
-    if (lists.length == 1) {
-        return lists[0];
-    }
+    <span style="color:#75715e">/* Corner case */</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>lists<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>lists<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> lists<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-    PriorityQueue&lt;ListNode&gt; q = new PriorityQueue&lt;&gt;(Comparator.comparingInt(o -&gt; o.val));
+    PriorityQueue<span style="color:#f92672">&lt;</span>ListNode<span style="color:#f92672">&gt;</span> q <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> PriorityQueue<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span>Comparator<span style="color:#f92672">.</span><span style="color:#a6e22e">comparingInt</span><span style="color:#f92672">(</span>o <span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span> o<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-    ListNode dummy = new ListNode(0);
-    ListNode tail = dummy;
+    ListNode dummy <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ListNode<span style="color:#f92672">(</span>0<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    ListNode tail <span style="color:#f92672">=</span> dummy<span style="color:#f92672">;</span>
 
 
-    for (ListNode node : lists) {
-        if (node != null) {
-            q.add(node);
-        }
-    }
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>ListNode node <span style="color:#f92672">:</span> lists<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>node <span style="color:#f92672">!</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            q<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>node<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
 
-    while (!q.isEmpty()) {
-        tail.next = q.poll();
-        tail = tail.next;
-        if (tail.next != null) {
-            q.add(tail.next);
-        }
-    }
-    return dummy.next;
-}
-</code></pre>
+    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span><span style="color:#f92672">!</span>q<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        tail<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span> <span style="color:#f92672">=</span> q<span style="color:#f92672">.</span><span style="color:#a6e22e">poll</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        tail <span style="color:#f92672">=</span> tail<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>tail<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span> <span style="color:#f92672">!</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            q<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>tail<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">return</span> dummy<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div>
               
             </div>
           </div>
@@ -650,7 +588,7 @@ public ListNode heap(ListNode[] lists) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>
@@ -708,7 +646,7 @@ public ListNode heap(ListNode[] lists) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>

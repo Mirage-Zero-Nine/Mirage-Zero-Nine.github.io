@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.59.1 with theme Tranquilpeak 0.4.7-BETA">
+<meta name="generator" content="Hugo 0.60.1 with theme Tranquilpeak 0.4.7-BETA">
 <meta name="author" content="Steve Zhou">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -279,124 +279,90 @@
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
-<ul>
-<li><a href="#encode-and-decode-strings">Encode and Decode Strings</a>
-<ul>
-<li><a href="#problem-description">Problem description</a></li>
-<li><a href="#method">Method</a></li>
-<li><a href="#code">Code</a></li>
-</ul></li>
-</ul>
-</nav>
-
+              <!-- raw HTML omitted -->
 <h1 id="encode-and-decode-strings">Encode and Decode Strings</h1>
-
 <p>Link: <a href="https://leetcode.com/problems/encode-and-decode-strings/">Encode and Decode Strings</a></p>
-
 <h2 id="problem-description">Problem description</h2>
-
 <p>Design an algorithm to encode <strong>a list of strings</strong> to <strong>a string</strong>. The encoded string is then sent over the network and is decoded back to the original list of strings.</p>
-
 <p>Machine 1 (sender) has the function:</p>
-
 <pre><code>string encode(vector&lt;string&gt; strs) {
   // ... your code
   return encoded_string;
 }
-</code></pre>
-
-<p>Machine 2 (receiver) has the function:</p>
-
+</code></pre><p>Machine 2 (receiver) has the function:</p>
 <pre><code>vector&lt;string&gt; decode(string s) {
   //... your code
   return strs;
 }
-</code></pre>
-
-<p>So Machine 1 does:</p>
-
+</code></pre><p>So Machine 1 does:</p>
 <pre><code>string encoded_string = encode(strs);
-</code></pre>
-
-<p>and Machine 2 does:</p>
-
+</code></pre><p>and Machine 2 does:</p>
 <pre><code>vector&lt;string&gt; strs2 = decode(encoded_string);
-</code></pre>
-
-<p><code>strs2</code> in Machine 2 should be the same as <code>strs</code> in Machine 1.</p>
-
+</code></pre><p><code>strs2</code> in Machine 2 should be the same as <code>strs</code> in Machine 1.</p>
 <p>Implement the <code>encode</code> and <code>decode</code> methods.</p>
-
 <p><strong>Note:</strong></p>
-
 <ul>
 <li>The string may contain any possible characters out of 256 valid ascii characters. Your algorithm should be generalized enough to work on any possible characters.</li>
 <li>Do not use class member/global/static variables to store states. Your encode and decode algorithms should be stateless.</li>
 <li>Do not rely on any library method such as <code>eval</code> or serialize methods. You should implement your own encode/decode algorithm.</li>
 </ul>
-
 <h2 id="method">Method</h2>
-
 <p>The method to encoding is by add a <code>/LENGTH_OF_STRING/</code> as divider. First slash is the start mark of length, and second slash is the end of string length, encoded to <code>/LENGTH/STRING</code>.</p>
-
 <p>Decodes a single string to a list of strings. Find slash and length (represent length of upcoming string) in encoded string and cut corresponding substring.</p>
-
 <h2 id="code">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Codec</span> <span style="color:#f92672">{</span>
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * Encodes a list of strings to a single string.
+</span><span style="color:#75715e">     * The method to encoding is by add a &#34;/LENGTH_OF_STRING/&#34;.
+</span><span style="color:#75715e">     * First slash is the start mark of length, and second slash is the end of string length.
+</span><span style="color:#75715e">     *
+</span><span style="color:#75715e">     * @param strs given string
+</span><span style="color:#75715e">     * @return encoded string
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">public</span> String <span style="color:#a6e22e">encode</span><span style="color:#f92672">(</span>List<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> strs<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        StringBuilder encoded <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> StringBuilder<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>String str <span style="color:#f92672">:</span> strs<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            encoded<span style="color:#f92672">.</span><span style="color:#a6e22e">append</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;/&#34;</span><span style="color:#f92672">)</span><span style="color:#f92672">.</span><span style="color:#a6e22e">append</span><span style="color:#f92672">(</span>str<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">.</span><span style="color:#a6e22e">append</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;/&#34;</span><span style="color:#f92672">)</span><span style="color:#f92672">.</span><span style="color:#a6e22e">append</span><span style="color:#f92672">(</span>str<span style="color:#f92672">)</span><span style="color:#f92672">;</span>       <span style="color:#75715e">// encoded to &#34;/LENGTH/STRING&#34;
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">return</span> encoded<span style="color:#f92672">.</span><span style="color:#a6e22e">toString</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-<pre><code class="language-java">public class Codec {
-    /**
-     * Encodes a list of strings to a single string.
-     * The method to encoding is by add a &quot;/LENGTH_OF_STRING/&quot;.
-     * First slash is the start mark of length, and second slash is the end of string length.
-     *
-     * @param strs given string
-     * @return encoded string
-     */
-    public String encode(List&lt;String&gt; strs) {
-        StringBuilder encoded = new StringBuilder();
-        for (String str : strs) {
-            encoded.append(&quot;/&quot;).append(str.length()).append(&quot;/&quot;).append(str);       // encoded to &quot;/LENGTH/STRING&quot;
-        }
-        return encoded.toString();
-    }
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * Decodes a single string to a list of strings.
+</span><span style="color:#75715e">     * Find slash and length (represent length of upcoming string) in encoded string and cut corresponding substring.
+</span><span style="color:#75715e">     *
+</span><span style="color:#75715e">     * @param s encoded string
+</span><span style="color:#75715e">     * @return decoded list
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">public</span> List<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">decode</span><span style="color:#f92672">(</span>String s<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+        List<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> out <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-    /**
-     * Decodes a single string to a list of strings.
-     * Find slash and length (represent length of upcoming string) in encoded string and cut corresponding substring.
-     *
-     * @param s encoded string
-     * @return decoded list
-     */
-    public List&lt;String&gt; decode(String s) {
-        int i = 0;
-        List&lt;String&gt; out = new ArrayList&lt;&gt;();
+        <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>i<span style="color:#f92672">+</span><span style="color:#f92672">+</span> <span style="color:#f92672">&lt;</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">int</span> length <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
 
-        while (i++ &lt; s.length()) {
-            int length = 0;
+            <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">&lt;</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> Character<span style="color:#f92672">.</span><span style="color:#a6e22e">isDigit</span><span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>      <span style="color:#75715e">// avoid out of bound
+</span><span style="color:#75715e"></span>                length <span style="color:#f92672">=</span> length <span style="color:#f92672">*</span> 10 <span style="color:#f92672">+</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">-</span> <span style="color:#e6db74">&#39;0&#39;</span><span style="color:#f92672">;</span>     <span style="color:#75715e">// count length of next substring
+</span><span style="color:#75715e"></span>            <span style="color:#f92672">}</span>
 
-            while (i &lt; s.length() &amp;&amp; Character.isDigit(s.charAt(i))) {      // avoid out of bound
-                length = length * 10 + s.charAt(i++) - '0';     // count length of next substring
-            }
+            out<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">substring</span><span style="color:#f92672">(</span>i <span style="color:#f92672">+</span> 1<span style="color:#f92672">,</span> i <span style="color:#f92672">+</span> length <span style="color:#f92672">+</span> 1<span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>        <span style="color:#75715e">// cut substring
+</span><span style="color:#75715e"></span>            i <span style="color:#f92672">+</span><span style="color:#f92672">=</span> length <span style="color:#f92672">+</span> 1<span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">return</span> out<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-            out.add(s.substring(i + 1, i + length + 1));        // cut substring
-            i += length + 1;
-        }
-        return out;
-    }
-
-    public static void main(String[] args) {
-        List&lt;String&gt; list = new ArrayList&lt;&gt;();
-        list.add(&quot;1&quot;);
-        list.add(&quot;0&quot;);
-        list.add(&quot;electricity&quot;);
-        list.add(&quot;hello&quot;);
-        list.add(&quot;word&quot;);
-        Codec_271 test = new Codec();
-        System.out.println(test.decode(test.encode(list)));
-    }
-}
-</code></pre>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[</span><span style="color:#f92672">]</span> args<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        List<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> list <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        list<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;1&#34;</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        list<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;0&#34;</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        list<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;electricity&#34;</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        list<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;hello&#34;</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        list<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;word&#34;</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        Codec_271 test <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Codec<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>test<span style="color:#f92672">.</span><span style="color:#a6e22e">decode</span><span style="color:#f92672">(</span>test<span style="color:#f92672">.</span><span style="color:#a6e22e">encode</span><span style="color:#f92672">(</span>list<span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div>
               
             </div>
           </div>
@@ -450,7 +416,7 @@
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>
@@ -508,7 +474,7 @@
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>

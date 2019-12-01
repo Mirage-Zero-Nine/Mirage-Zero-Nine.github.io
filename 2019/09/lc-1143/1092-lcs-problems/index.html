@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.59.1 with theme Tranquilpeak 0.4.7-BETA">
+<meta name="generator" content="Hugo 0.60.1 with theme Tranquilpeak 0.4.7-BETA">
 <meta name="author" content="Steve Zhou">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -275,201 +275,147 @@
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
-<ul>
-<li><a href="#longest-common-subsequence">Longest Common Subsequence</a>
-<ul>
-<li><a href="#problem-description">Problem description</a></li>
-<li><a href="#method">Method</a></li>
-<li><a href="#code">Code</a></li>
-</ul></li>
-<li><a href="#shortest-common-supersequence">Shortest Common Supersequence</a>
-<ul>
-<li><a href="#problem-description-1">Problem description</a></li>
-<li><a href="#method-1">Method</a></li>
-<li><a href="#code-1">Code</a></li>
-</ul></li>
-</ul>
-</nav>
-
+              <!-- raw HTML omitted -->
 <h1 id="longest-common-subsequence">Longest Common Subsequence</h1>
-
 <p>Link: <a href="https://leetcode.com/problems/longest-common-subsequence/">Longest Common Subsequence</a></p>
-
 <h2 id="problem-description">Problem description</h2>
-
 <p>Given two strings <code>text1</code>and <code>text2</code>, return the length of their longest common subsequence.</p>
-
-<p>A *subsequence*of a string is a new string generated from the original string with some characters(can be none) deleted without changing the relative order of the remaining characters. (eg, &ldquo;ace&rdquo; is a subsequence of &ldquo;abcde&rdquo; while &ldquo;aec&rdquo; is not). A <em>common subsequence</em> of two strings is a subsequence that is common to both strings.</p>
-
+<p>A <em>subsequence</em>of a string is a new string generated from the original string with some characters(can be none) deleted without changing the relative order of the remaining characters. (eg, &ldquo;ace&rdquo; is a subsequence of &ldquo;abcde&rdquo; while &ldquo;aec&rdquo; is not). A <em>common subsequence</em> of two strings is a subsequence that is common to both strings.</p>
 <p>If there is no common subsequence, return 0.</p>
-
 <p><strong>Example 1:</strong></p>
-
 <pre><code>Input: text1 = &quot;abcde&quot;, text2 = &quot;ace&quot; 
 Output: 3  
 Explanation: The longest common subsequence is &quot;ace&quot; and its length is 3.
-</code></pre>
-
-<p><strong>Example 2:</strong></p>
-
+</code></pre><p><strong>Example 2:</strong></p>
 <pre><code>Input: text1 = &quot;abc&quot;, text2 = &quot;abc&quot;
 Output: 3
 Explanation: The longest common subsequence is &quot;abc&quot; and its length is 3.
-</code></pre>
-
-<p><strong>Example 3:</strong></p>
-
+</code></pre><p><strong>Example 3:</strong></p>
 <pre><code>Input: text1 = &quot;abc&quot;, text2 = &quot;def&quot;
 Output: 0
 Explanation: There is no such common subsequence, so the result is 0.
-</code></pre>
-
-<p><strong>Constraints:</strong></p>
-
+</code></pre><p><strong>Constraints:</strong></p>
 <ul>
 <li><code>1 &lt;= text1.length &lt;= 1000</code></li>
 <li><code>1 &lt;= text2.length &lt;= 1000</code></li>
 <li>The input strings consist of lowercase English characters only.</li>
 </ul>
-
 <h2 id="method">Method</h2>
-
 <p>Basic dynamic programming with 2D table.</p>
-
 <p>If <code>t1(i) == t2(j)</code>, then <code>dp[i][j] = dp[i - 1][j - 1]</code>.</p>
-
 <p>Otherwise <code>dp[i][j] = max(dp[i][j - 1],dp[i - 1][j])</code>.</p>
-
 <h2 id="code">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Basic dynamic programming with 2D table.
+</span><span style="color:#75715e"> * If t1(i)==t2(j), then dp[i][j] = dp[i-1][j-1].
+</span><span style="color:#75715e"> * Otherwise dp[i][j] = max(dp[i][j-1],dp[i-1][j]).
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param text1 first string
+</span><span style="color:#75715e"> * @param text2 second string
+</span><span style="color:#75715e"> * @return the length of their longest common subsequence
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">longestCommonSubsequence</span><span style="color:#f92672">(</span>String text1<span style="color:#f92672">,</span> String text2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-<pre><code class="language-java">/**
- * Basic dynamic programming with 2D table.
- * If t1(i)==t2(j), then dp[i][j] = dp[i-1][j-1].
- * Otherwise dp[i][j] = max(dp[i][j-1],dp[i-1][j]).
- *
- * @param text1 first string
- * @param text2 second string
- * @return the length of their longest common subsequence
- */
-public int longestCommonSubsequence(String text1, String text2) {
+    <span style="color:#75715e">/* Corner case */</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>text1<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 0 <span style="color:#f92672">|</span><span style="color:#f92672">|</span> text2<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> 0<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-    /* Corner case */
-    if (text1.length() == 0 || text2.length() == 0) {
-        return 0;
-    }
+    <span style="color:#66d9ef">int</span> l1 <span style="color:#f92672">=</span> text1<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">,</span> l2 <span style="color:#f92672">=</span> text2<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> dp <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>l1 <span style="color:#f92672">+</span> 1<span style="color:#f92672">]</span><span style="color:#f92672">[</span>l2 <span style="color:#f92672">+</span> 1<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
 
-    int l1 = text1.length(), l2 = text2.length();
-    int[][] dp = new int[l1 + 1][l2 + 1];
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span><span style="color:#f92672">=</span> l1<span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> j <span style="color:#f92672">&lt;</span><span style="color:#f92672">=</span> l2<span style="color:#f92672">;</span> j<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            dp<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">[</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>text1<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> text2<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>j <span style="color:#f92672">-</span> 1<span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">?</span> 1 <span style="color:#f92672">+</span> dp<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span><span style="color:#f92672">[</span>j <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span> <span style="color:#f92672">:</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>dp<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span><span style="color:#f92672">[</span>j<span style="color:#f92672">]</span><span style="color:#f92672">,</span> dp<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">[</span>j <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
 
-    for (int i = 1; i &lt;= l1; i++) {
-        for (int j = 1; j &lt;= l2; j++) {
-            dp[i][j] = (text1.charAt(i - 1) == text2.charAt(j - 1)) ? 1 + dp[i - 1][j - 1] : Math.max(dp[i - 1][j], dp[i][j - 1]);
-        }
-    }
-
-    return dp[l1][l2];
-}
-</code></pre>
-
-<h1 id="shortest-common-supersequence">Shortest Common Supersequence</h1>
-
+    <span style="color:#66d9ef">return</span> dp<span style="color:#f92672">[</span>l1<span style="color:#f92672">]</span><span style="color:#f92672">[</span>l2<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h1 id="shortest-common-supersequence">Shortest Common Supersequence</h1>
 <p>Link: <a href="https://leetcode.com/problems/shortest-common-supersequence/">Shortest Common Supersequence</a></p>
-
-<h2 id="problem-description-1">Problem description</h2>
-
+<h2 id="problem-description1">Problem description</h2>
 <p>Given two strings <code>str1</code>and <code>str2</code>, return the shortest string that has both <code>str1</code> and <code>str2</code> as subsequences.  If multiple answers exist, you may return any of them.</p>
-
 <p><em>(A string S is a subsequence of string T if deleting some number of characters from T (possibly 0, and the characters are chosen anywherefrom T) results in the string S.)</em></p>
-
 <p><strong>Example 1:</strong></p>
-
 <pre><code>Input: str1 = &quot;abac&quot;, str2 = &quot;cab&quot;
 Output: &quot;cabac&quot;
 Explanation: 
 str1 = &quot;abac&quot; is a subsequence of &quot;cabac&quot; because we can delete the first &quot;c&quot;.
 str2 = &quot;cab&quot; is a subsequence of &quot;cabac&quot; because we can delete the last &quot;ac&quot;.
 The answer provided is the shortest such string that satisfies these properties.
-</code></pre>
-
-<p><strong>Note:</strong></p>
-
+</code></pre><p><strong>Note:</strong></p>
 <ol>
 <li><code>1 &lt;= str1.length, str2.length &lt;= 1000</code></li>
 <li><code>str1</code>and <code>str2</code>consist of lowercase English letters.</li>
 </ol>
-
-<h2 id="method-1">Method</h2>
-
+<h2 id="method1">Method</h2>
 <p>Dynamic programming.</p>
+<p>Find the LCS of two strings, then find all chars not in the LCS by string's order. Append each char not in LCS to final result.</p>
+<h2 id="code1">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Dynamic programming.
+</span><span style="color:#75715e"> * Find the LCS of two strings, then find all chars not in the LCS by string&#39;s order.
+</span><span style="color:#75715e"> * Append each char not in LCS to final result.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param str1 first string
+</span><span style="color:#75715e"> * @param str2 second string
+</span><span style="color:#75715e"> * @return shortest string that has both str1 and str2 as subsequences
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> String <span style="color:#a6e22e">shortestCommonSupersequence</span><span style="color:#f92672">(</span>String str1<span style="color:#f92672">,</span> String str2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    String l <span style="color:#f92672">=</span> lcs<span style="color:#f92672">(</span>str1<span style="color:#f92672">,</span> str2<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>l<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">int</span> p1 <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> p2 <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+    StringBuilder out <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> StringBuilder<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> l<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">char</span> c <span style="color:#f92672">=</span> l<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>str1<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>p1<span style="color:#f92672">)</span> <span style="color:#f92672">!</span><span style="color:#f92672">=</span> c<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            out<span style="color:#f92672">.</span><span style="color:#a6e22e">append</span><span style="color:#f92672">(</span>str1<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>p1<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>str2<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>p2<span style="color:#f92672">)</span> <span style="color:#f92672">!</span><span style="color:#f92672">=</span> c<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            out<span style="color:#f92672">.</span><span style="color:#a6e22e">append</span><span style="color:#f92672">(</span>str2<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>p2<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
 
-<p>Find the LCS of two strings, then find all chars not in the LCS by string&rsquo;s order. Append each char not in LCS to final result.</p>
+        out<span style="color:#f92672">.</span><span style="color:#a6e22e">append</span><span style="color:#f92672">(</span>c<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        p1<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">;</span>
+        p2<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-<h2 id="code-1">Code</h2>
+    <span style="color:#66d9ef">return</span> out <span style="color:#f92672">+</span> str1<span style="color:#f92672">.</span><span style="color:#a6e22e">substring</span><span style="color:#f92672">(</span>p1<span style="color:#f92672">)</span> <span style="color:#f92672">+</span> str2<span style="color:#f92672">.</span><span style="color:#a6e22e">substring</span><span style="color:#f92672">(</span>p2<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
 
-<pre><code class="language-java">/**
- * Dynamic programming.
- * Find the LCS of two strings, then find all chars not in the LCS by string's order.
- * Append each char not in LCS to final result.
- *
- * @param str1 first string
- * @param str2 second string
- * @return shortest string that has both str1 and str2 as subsequences
- */
-public String shortestCommonSupersequence(String str1, String str2) {
-    String l = lcs(str1, str2);
-    System.out.println(l);
-    int p1 = 0, p2 = 0;
-    StringBuilder out = new StringBuilder();
-    for (int i = 0; i &lt; l.length(); i++) {
-        char c = l.charAt(i);
-        while (str1.charAt(p1) != c) {
-            out.append(str1.charAt(p1++));
-        }
-        while (str2.charAt(p2) != c) {
-            out.append(str2.charAt(p2++));
-        }
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Find LCS of two strings by dynamic programming.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param a first string
+</span><span style="color:#75715e"> * @param b second string
+</span><span style="color:#75715e"> * @return LCS of two strings
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">private</span> String <span style="color:#a6e22e">lcs</span><span style="color:#f92672">(</span>String a<span style="color:#f92672">,</span> String b<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">int</span> n1 <span style="color:#f92672">=</span> a<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">,</span> n2 <span style="color:#f92672">=</span> b<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    String<span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> dp <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> String<span style="color:#f92672">[</span>n1 <span style="color:#f92672">+</span> 1<span style="color:#f92672">]</span><span style="color:#f92672">[</span>n2 <span style="color:#f92672">+</span> 1<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
 
-        out.append(c);
-        p1++;
-        p2++;
-    }
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span><span style="color:#f92672">=</span> n1<span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        dp<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">[</span>0<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;&#34;</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-    return out + str1.substring(p1) + str2.substring(p2);
-}
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span><span style="color:#f92672">=</span> n2<span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        dp<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span><span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;&#34;</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-/**
- * Find LCS of two strings by dynamic programming.
- *
- * @param a first string
- * @param b second string
- * @return LCS of two strings
- */
-private String lcs(String a, String b) {
-    int n1 = a.length(), n2 = b.length();
-    String[][] dp = new String[n1 + 1][n2 + 1];
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span><span style="color:#f92672">=</span> n1<span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> j <span style="color:#f92672">&lt;</span><span style="color:#f92672">=</span> n2<span style="color:#f92672">;</span> j<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>a<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> b<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>j <span style="color:#f92672">-</span> 1<span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                dp<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">[</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> dp<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span><span style="color:#f92672">[</span>j <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> a<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+                dp<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">[</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>dp<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span><span style="color:#f92672">[</span>j<span style="color:#f92672">]</span><span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">&gt;</span> dp<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">[</span>j <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span><span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">?</span> dp<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span><span style="color:#f92672">[</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">:</span> dp<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">[</span>j <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
 
-    for (int i = 0; i &lt;= n1; i++) {
-        dp[i][0] = &quot;&quot;;
-    }
-
-    for (int i = 0; i &lt;= n2; i++) {
-        dp[0][i] = &quot;&quot;;
-    }
-
-    for (int i = 1; i &lt;= n1; i++) {
-        for (int j = 1; j &lt;= n2; j++) {
-            if (a.charAt(i - 1) == b.charAt(j - 1)) {
-                dp[i][j] = dp[i - 1][j - 1] + a.charAt(i - 1);
-            } else {
-                dp[i][j] = (dp[i - 1][j].length() &gt; dp[i][j - 1].length()) ? dp[i - 1][j] : dp[i][j - 1];
-            }
-        }
-    }
-
-    return dp[n1][n2];
-}
-</code></pre>
+    <span style="color:#66d9ef">return</span> dp<span style="color:#f92672">[</span>n1<span style="color:#f92672">]</span><span style="color:#f92672">[</span>n2<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div>
               
             </div>
           </div>
@@ -523,7 +469,7 @@ private String lcs(String a, String b) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>
@@ -581,7 +527,7 @@ private String lcs(String a, String b) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>

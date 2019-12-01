@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.59.1 with theme Tranquilpeak 0.4.7-BETA">
+<meta name="generator" content="Hugo 0.60.1 with theme Tranquilpeak 0.4.7-BETA">
 <meta name="author" content="Steve Zhou">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -275,31 +275,14 @@
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
-<ul>
-<li><a href="#accounts-merge">Accounts Merge</a>
-<ul>
-<li><a href="#problem-description">Problem description</a></li>
-<li><a href="#method">Method</a></li>
-<li><a href="#code">Code</a></li>
-</ul></li>
-</ul>
-</nav>
-
+              <!-- raw HTML omitted -->
 <h1 id="accounts-merge">Accounts Merge</h1>
-
 <p>Link: <a href="https://leetcode.com/problems/accounts-merge">Accounts Merge</a></p>
-
 <h2 id="problem-description">Problem description</h2>
-
 <p>Given a list <code>accounts</code>, each element <code>accounts[i]</code> is a list of strings, where the first element <code>accounts[i][0]</code> is a <em>name</em>, and the rest of the elements are <em>emails</em> representing emails of the account.</p>
-
 <p>Now, we would like to merge these accounts. Two accounts definitely belong to the same person if there is some email that is common to both accounts. Note that even if two accounts have the same name, they may belong to different people as people could have the same name. A person can have any number of accounts initially, but all of their accounts definitely have the same name.</p>
-
 <p>After merging the accounts, return the accounts in the following format: the first element of each account is the name, and the rest of the elements are emails <strong>in sorted order</strong>. The accounts themselves can be returned in any order.</p>
-
 <p><strong>Example 1:</strong></p>
-
 <pre><code>Input: 
 accounts = 
 [[&quot;John&quot;, &quot;johnsmith@mail.com&quot;, &quot;john00@mail.com&quot;], 
@@ -315,139 +298,129 @@ The first and third John's are the same person as they have the common email &qu
 The second John and Mary are different people as none of their email addresses are used by other accounts.
 We could return these lists in any order, for example the answer [['Mary', 'mary@mail.com'], ['John', 'johnnybravo@mail.com'], 
 ['John', 'john00@mail.com', 'john_newyork@mail.com', 'johnsmith@mail.com']] would still be accepted.
-</code></pre>
-
-<p><strong>Note:</strong></p>
-
+</code></pre><p><strong>Note:</strong></p>
 <p>The length of <code>accounts</code> will be in the range <code>[1, 1000]</code>.</p>
-
 <p>The length of <code>accounts[i]</code> will be in the range <code>[1, 10]</code>.</p>
-
 <p>The length of <code>accounts[i][j]</code> will be in the range <code>[1, 30]</code>.</p>
-
 <h2 id="method">Method</h2>
-
 <p>Union find.</p>
-
 <ol>
 <li>Traverse all emails except names, if email can not be found in map, put it with its index into map. Otherwise, union the email to its parent index.</li>
 <li>Traverse every email list. Find the parent of current list index and put all emails into the set list that belongs to key of its parent index.</li>
 <li>Traverse key set of disjoint set group. Retrieve all emails from each parent index, and SORT them. Then adding the name at beginning of every sublist.</li>
 </ol>
-
 <h2 id="code">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Union find.
+</span><span style="color:#75715e"> * First, traverse all email addresses, if email can not be found in map, put it with its index into map.
+</span><span style="color:#75715e"> * Otherwise, union the email to its parent index.
+</span><span style="color:#75715e"> * Then traverse every email list.
+</span><span style="color:#75715e"> * Find the parent of current list index and put all emails into the set list that belongs to key of its parent index.
+</span><span style="color:#75715e"> * Finally, traverse key set of disjoint set group.
+</span><span style="color:#75715e"> * Retrieve all emails from each parent index, and SORT them. Then adding the name at beginning of every sublist.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param accounts given user with emails, first element in each list is user and later is email
+</span><span style="color:#75715e"> * @return merged accounts
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> List<span style="color:#f92672">&lt;</span>List<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">accountsMerge</span><span style="color:#f92672">(</span>List<span style="color:#f92672">&lt;</span>List<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span> accounts<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-<pre><code class="language-java">/**
- * Union find.
- * First, traverse all email addresses, if email can not be found in map, put it with its index into map.
- * Otherwise, union the email to its parent index.
- * Then traverse every email list.
- * Find the parent of current list index and put all emails into the set list that belongs to key of its parent index.
- * Finally, traverse key set of disjoint set group.
- * Retrieve all emails from each parent index, and SORT them. Then adding the name at beginning of every sublist.
- *
- * @param accounts given user with emails, first element in each list is user and later is email
- * @return merged accounts
- */
-public List&lt;List&lt;String&gt;&gt; accountsMerge(List&lt;List&lt;String&gt;&gt; accounts) {
+    <span style="color:#75715e">/* Corner case */</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>accounts<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-    /* Corner case */
-    if (accounts.size() == 0) {
-        return new ArrayList&lt;&gt;();
-    }
+    <span style="color:#66d9ef">int</span> n <span style="color:#f92672">=</span> accounts<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    UnionFind uf <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> UnionFind<span style="color:#f92672">(</span>n<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-    int n = accounts.size();
-    UnionFind uf = new UnionFind(n);
+    HashMap<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">,</span> Integer<span style="color:#f92672">&gt;</span> email <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashMap<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> n<span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> j <span style="color:#f92672">&lt;</span> accounts<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span><span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span> j<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>      <span style="color:#75715e">// traverse all email addresses
+</span><span style="color:#75715e"></span>
+            String address <span style="color:#f92672">=</span> accounts<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span><span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>j<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-    HashMap&lt;String, Integer&gt; email = new HashMap&lt;&gt;();
-    for (int i = 0; i &lt; n; i++) {
-        for (int j = 1; j &lt; accounts.get(i).size(); j++) {      // traverse all email addresses
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>email<span style="color:#f92672">.</span><span style="color:#a6e22e">containsKey</span><span style="color:#f92672">(</span>address<span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                uf<span style="color:#f92672">.</span><span style="color:#a6e22e">union</span><span style="color:#f92672">(</span>email<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>address<span style="color:#f92672">)</span><span style="color:#f92672">,</span> i<span style="color:#f92672">)</span><span style="color:#f92672">;</span>      <span style="color:#75715e">// if address exist in map, union two address&#39;s parents
+</span><span style="color:#75715e"></span>            <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+                email<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>address<span style="color:#f92672">,</span> i<span style="color:#f92672">)</span><span style="color:#f92672">;</span>        <span style="color:#75715e">// otherwise, simply put address with its index (disjoint)
+</span><span style="color:#75715e"></span>            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
 
-            String address = accounts.get(i).get(j);
+    HashMap<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">,</span> TreeSet<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span> disjointSet <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashMap<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-            if (email.containsKey(address)) {
-                uf.union(email.get(address), i);      // if address exist in map, union two address's parents
-            } else {
-                email.put(address, i);        // otherwise, simply put address with its index (disjoint)
-            }
-        }
-    }
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> n<span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>       <span style="color:#75715e">// traverse every list in accounts
+</span><span style="color:#75715e"></span>
+        <span style="color:#66d9ef">int</span> parent <span style="color:#f92672">=</span> uf<span style="color:#f92672">.</span><span style="color:#a6e22e">find</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span><span style="color:#f92672">;</span>       <span style="color:#75715e">// find root of each address list&#39;s owner for combination
+</span><span style="color:#75715e"></span>        disjointSet<span style="color:#f92672">.</span><span style="color:#a6e22e">putIfAbsent</span><span style="color:#f92672">(</span>parent<span style="color:#f92672">,</span> <span style="color:#66d9ef">new</span> TreeSet<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>      <span style="color:#75715e">// use TreeSet to pre-sort addresses
+</span><span style="color:#75715e"></span>
+        TreeSet<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> currentSet <span style="color:#f92672">=</span> disjointSet<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>parent<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-    HashMap&lt;Integer, TreeSet&lt;String&gt;&gt; disjointSet = new HashMap&lt;&gt;();
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> j <span style="color:#f92672">&lt;</span> accounts<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span><span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span> j<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            currentSet<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>accounts<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span><span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>j<span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>     <span style="color:#75715e">// add all non-duplicated addresses into set
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
 
-    for (int i = 0; i &lt; n; i++) {       // traverse every list in accounts
+        disjointSet<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>parent<span style="color:#f92672">,</span> currentSet<span style="color:#f92672">)</span><span style="color:#f92672">;</span>        <span style="color:#75715e">// put set back to its root owner
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
 
-        int parent = uf.find(i);       // find root of each address list's owner for combination
-        disjointSet.putIfAbsent(parent, new TreeSet&lt;&gt;());      // use TreeSet to pre-sort addresses
+    List<span style="color:#f92672">&lt;</span>List<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span> result <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-        TreeSet&lt;String&gt; currentSet = disjointSet.get(parent);
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> index <span style="color:#f92672">:</span> disjointSet<span style="color:#f92672">.</span><span style="color:#a6e22e">keySet</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        List<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> temp <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        temp<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>accounts<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>index<span style="color:#f92672">)</span><span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>0<span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>       <span style="color:#75715e">// add name to head of list
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>disjointSet<span style="color:#f92672">.</span><span style="color:#a6e22e">containsKey</span><span style="color:#f92672">(</span>index<span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>       <span style="color:#75715e">// add address
+</span><span style="color:#75715e"></span>            temp<span style="color:#f92672">.</span><span style="color:#a6e22e">addAll</span><span style="color:#f92672">(</span>disjointSet<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>index<span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+        result<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>temp<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-        for (int j = 1; j &lt; accounts.get(i).size(); j++) {
-            currentSet.add(accounts.get(i).get(j));     // add all non-duplicated addresses into set
-        }
+    <span style="color:#66d9ef">return</span> result<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
 
-        disjointSet.put(parent, currentSet);        // put set back to its root owner
-    }
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Union find.
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">UnionFind</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">int</span> count<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> parent<span style="color:#f92672">;</span>       <span style="color:#75715e">// save each node&#39;s parent
+</span><span style="color:#75715e"></span>
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * Initialization of class.
+</span><span style="color:#75715e">     *
+</span><span style="color:#75715e">     * @param size count of nodes
+</span><span style="color:#75715e">     */</span>
+    UnionFind<span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> size<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">count</span> <span style="color:#f92672">=</span> size<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">parent</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>size<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
 
-    List&lt;List&lt;String&gt;&gt; result = new ArrayList&lt;&gt;();
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> size<span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            parent<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> i<span style="color:#f92672">;</span>      <span style="color:#75715e">// initially, each node is disjoint
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
 
-    for (int index : disjointSet.keySet()) {
-        List&lt;String&gt; temp = new ArrayList&lt;&gt;();
-        temp.add(accounts.get(index).get(0));       // add name to head of list
-        if (disjointSet.containsKey(index)) {       // add address
-            temp.addAll(disjointSet.get(index));
-        }
-        result.add(temp);
-    }
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * Union two nodes.
+</span><span style="color:#75715e">     *
+</span><span style="color:#75715e">     * @param a first node
+</span><span style="color:#75715e">     * @param b second node
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">union</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> a<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> b<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        parent<span style="color:#f92672">[</span>find<span style="color:#f92672">(</span>a<span style="color:#f92672">)</span><span style="color:#f92672">]</span> <span style="color:#f92672">=</span> parent<span style="color:#f92672">[</span>find<span style="color:#f92672">(</span>b<span style="color:#f92672">)</span><span style="color:#f92672">]</span><span style="color:#f92672">;</span>      <span style="color:#75715e">// mark second node&#39;s parent id with first one&#39;s parent id
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
 
-    return result;
-}
-
-/**
- * Union find.
- */
-class UnionFind {
-    int count;
-    int[] parent;       // save each node's parent
-
-    /**
-     * Initialization of class.
-     *
-     * @param size count of nodes
-     */
-    UnionFind(int size) {
-        this.count = size;
-        this.parent = new int[size];
-
-        for (int i = 0; i &lt; size; i++) {
-            parent[i] = i;      // initially, each node is disjoint
-        }
-    }
-
-    /**
-     * Union two nodes.
-     *
-     * @param a first node
-     * @param b second node
-     */
-    void union(int a, int b) {
-        parent[find(a)] = parent[find(b)];      // mark second node's parent id with first one's parent id
-    }
-
-    /**
-     * Find root of given node.
-     *
-     * @param x given node
-     * @return root of node
-     */
-    public int find(int x) {
-        if (x != parent[x]) {
-            parent[x] = find(parent[x]);        // root is the node that id is matched to its parent node id
-        }
-        return parent[x];
-    }
-}
-</code></pre>
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * Find root of given node.
+</span><span style="color:#75715e">     *
+</span><span style="color:#75715e">     * @param x given node
+</span><span style="color:#75715e">     * @return root of node
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">find</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> x<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>x <span style="color:#f92672">!</span><span style="color:#f92672">=</span> parent<span style="color:#f92672">[</span>x<span style="color:#f92672">]</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            parent<span style="color:#f92672">[</span>x<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> find<span style="color:#f92672">(</span>parent<span style="color:#f92672">[</span>x<span style="color:#f92672">]</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>        <span style="color:#75715e">// root is the node that id is matched to its parent node id
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">return</span> parent<span style="color:#f92672">[</span>x<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div>
               
             </div>
           </div>
@@ -501,7 +474,7 @@ class UnionFind {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>
@@ -559,7 +532,7 @@ class UnionFind {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>

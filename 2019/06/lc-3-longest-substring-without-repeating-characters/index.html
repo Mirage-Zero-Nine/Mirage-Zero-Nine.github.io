@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.59.1 with theme Tranquilpeak 0.4.7-BETA">
+<meta name="generator" content="Hugo 0.60.1 with theme Tranquilpeak 0.4.7-BETA">
 <meta name="author" content="Steve Zhou">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -277,92 +277,63 @@
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
-<ul>
-<li><a href="#longest-substring-without-repeating-characters">Longest Substring Without Repeating Characters</a>
-<ul>
-<li><a href="#problem-description">Problem description</a></li>
-<li><a href="#method">Method</a></li>
-<li><a href="#code">Code</a></li>
-</ul></li>
-</ul>
-</nav>
-
+              <!-- raw HTML omitted -->
 <h1 id="longest-substring-without-repeating-characters">Longest Substring Without Repeating Characters</h1>
-
 <p>Link: <a href="https://leetcode.com/problems/longest-substring-without-repeating-characters">Longest Substring Without Repeating Characters</a></p>
-
 <h2 id="problem-description">Problem description</h2>
-
 <p>Given a string, find the length of the <strong>longest substring</strong> without repeating characters.</p>
-
 <p><strong>Example 1:</strong></p>
-
 <pre><code>Input: &quot;abcabcbb&quot;
 Output: 3 
 Explanation: The answer is &quot;abc&quot;, with the length of 3. 
-</code></pre>
-
-<p><strong>Example 2:</strong></p>
-
+</code></pre><p><strong>Example 2:</strong></p>
 <pre><code>Input: &quot;bbbbb&quot;
 Output: 1
 Explanation: The answer is &quot;b&quot;, with the length of 1.
-</code></pre>
-
-<p><strong>Example 3:</strong></p>
-
+</code></pre><p><strong>Example 3:</strong></p>
 <pre><code>Input: &quot;pwwkew&quot;
 Output: 3
 Explanation: The answer is &quot;wke&quot;, with the length of 3. 
              Note that the answer must be a substring, &quot;pwke&quot; is a subsequence and not a substring.
-</code></pre>
-
-<h2 id="method">Method</h2>
-
+</code></pre><h2 id="method">Method</h2>
 <p>Sliding window problem.</p>
-
-<p>Use a pointer to point at the start position, and a hash map to save each char&rsquo;s position.</p>
-
+<p>Use a pointer to point at the start position, and a hash map to save each char's position.</p>
 <ul>
 <li>If current char does not exist in map, then store this char and its next position.</li>
-<li>If current char exists in map, reset the position to current char&rsquo;s next. (No duplication)</li>
+<li>If current char exists in map, reset the position to current char's next. (No duplication)</li>
 </ul>
-
 <p>Compare current non-repeating substring length to max length and find longer one.</p>
-
 <h2 id="code">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Sliding window problem.
+</span><span style="color:#75715e"> * Use a pointer to point at the start position, and a hash map to save each char&#39;s position.
+</span><span style="color:#75715e"> * If current char does not exist in map, then store this char and its next position.
+</span><span style="color:#75715e"> * If current char exists in map, reset the position to current char&#39;s next. (No duplication)
+</span><span style="color:#75715e"> * Compare current non-repeating substring length to max length and find longer one.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param s input string
+</span><span style="color:#75715e"> * @return max sub-string length
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">lengthOfLongestSubstring</span><span style="color:#f92672">(</span>String s<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-<pre><code class="language-java">/**
- * Sliding window problem.
- * Use a pointer to point at the start position, and a hash map to save each char's position.
- * If current char does not exist in map, then store this char and its next position.
- * If current char exists in map, reset the position to current char's next. (No duplication)
- * Compare current non-repeating substring length to max length and find longer one.
- *
- * @param s input string
- * @return max sub-string length
- */
-public int lengthOfLongestSubstring(String s) {
+    <span style="color:#75715e">/* Corner case */</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">&lt;</span> 2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-    /* Corner case */
-    if (s.length() &lt; 2) {
-        return s.length();
-    }
+    <span style="color:#66d9ef">int</span> max <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+    HashMap<span style="color:#f92672">&lt;</span>Character<span style="color:#f92672">,</span> Integer<span style="color:#f92672">&gt;</span> m <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashMap<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-    int max = 0;
-    HashMap&lt;Character, Integer&gt; m = new HashMap&lt;&gt;();
-
-    for (int i = 0, start = 0; i &lt; s.length(); i++) {      // i is the end of window, start point at window start
-        if (m.containsKey(s.charAt(i))) {
-            start = Math.max(start, m.get(s.charAt(i)));        // update start to largest to avoid duplicate
-        }
-        m.put(s.charAt(i), i + 1);
-        max = Math.max(i - start + 1, max);
-    }
-    return max;
-}
-</code></pre>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> start <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>      <span style="color:#75715e">// i is the end of window, start point at window start
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>m<span style="color:#f92672">.</span><span style="color:#a6e22e">containsKey</span><span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            start <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>start<span style="color:#f92672">,</span> m<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>        <span style="color:#75715e">// update start to largest to avoid duplicate
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
+        m<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span><span style="color:#f92672">,</span> i <span style="color:#f92672">+</span> 1<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        max <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>i <span style="color:#f92672">-</span> start <span style="color:#f92672">+</span> 1<span style="color:#f92672">,</span> max<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">return</span> max<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div>
               
             </div>
           </div>
@@ -418,7 +389,7 @@ public int lengthOfLongestSubstring(String s) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>
@@ -476,7 +447,7 @@ public int lengthOfLongestSubstring(String s) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>

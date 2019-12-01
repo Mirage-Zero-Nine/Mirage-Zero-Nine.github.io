@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.59.1 with theme Tranquilpeak 0.4.7-BETA">
+<meta name="generator" content="Hugo 0.60.1 with theme Tranquilpeak 0.4.7-BETA">
 <meta name="author" content="Steve Zhou">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -283,229 +283,167 @@
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
-<ul>
-<li><a href="#contains-duplicate-ii">Contains Duplicate II</a>
-<ul>
-<li><a href="#problem-description">Problem description</a></li>
-<li><a href="#method">Method</a></li>
-<li><a href="#code">Code</a></li>
-</ul></li>
-<li><a href="#contains-duplicate-iii">Contains Duplicate III</a>
-<ul>
-<li><a href="#problem-description-1">Problem description</a></li>
-<li><a href="#method-1">Method</a></li>
-<li><a href="#code-1">Code</a></li>
-</ul></li>
-</ul>
-</nav>
-
+              <!-- raw HTML omitted -->
 <h1 id="contains-duplicate-ii">Contains Duplicate II</h1>
-
 <p>Link: <a href="https://leetcode.com/problems/contains-duplicate-ii/">Contains Duplicate II</a></p>
-
 <h2 id="problem-description">Problem description</h2>
-
 <p>Given an array of integers and an integer <em>k</em>, find out whether there are two distinct indices <em>i</em> and <em>j</em> in the array such that <strong>nums[i] = nums[j]</strong> and the <strong>absolute</strong> difference between <em>i</em> and <em>j</em> is at most <em>k</em>.</p>
-
 <p><strong>Example 1:</strong></p>
-
 <pre><code>Input: nums = [1,2,3,1], k = 3
 Output: true
-</code></pre>
-
-<p><strong>Example 2:</strong></p>
-
+</code></pre><p><strong>Example 2:</strong></p>
 <pre><code>Input: nums = [1,0,1,1], k = 1
 Output: true
-</code></pre>
-
-<p><strong>Example 3:</strong></p>
-
+</code></pre><p><strong>Example 3:</strong></p>
 <pre><code>Input: nums = [1,2,3,1,2,3], k = 2
 Output: false
-</code></pre>
-
-<h2 id="method">Method</h2>
-
+</code></pre><h2 id="method">Method</h2>
 <p>Use <code>TreeSet</code> to save values in <code>nums</code>.</p>
-
 <p>Traverse the array. The <code>TreeSet</code> can return the greatest element in this set that is less or equals to the given element by <code>Set.floor()</code>, or the least element in this set that is larger or equals to the given element by <code>Set.ceiling()</code>.</p>
-
 <p>The difference between Contains Duplicate II and Contains Duplicate III is the condition, where Contains Duplicate III requires to compare the differences between two elements in set that is less than <code>t</code>.</p>
-
 <h2 id="code">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Use TreeSet to save and sort value in array.
+</span><span style="color:#75715e"> * If found same one in TreeSet, then return true.
+</span><span style="color:#75715e"> * The reason of using a TreeSet is that it can directly return the closest number to given number.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param nums given array
+</span><span style="color:#75715e"> * @param k    max absolute difference between i and j
+</span><span style="color:#75715e"> * @return whether there are two distinct indices i and j in array
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">containsNearbyDuplicate</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> nums<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> k<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-<pre><code class="language-java">/**
- * Use TreeSet to save and sort value in array.
- * If found same one in TreeSet, then return true.
- * The reason of using a TreeSet is that it can directly return the closest number to given number.
- *
- * @param nums given array
- * @param k    max absolute difference between i and j
- * @return whether there are two distinct indices i and j in array
- */
-public boolean containsNearbyDuplicate(int[] nums, int k) {
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>k <span style="color:#f92672">&lt;</span> 1 <span style="color:#f92672">|</span><span style="color:#f92672">|</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">&lt;</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-    if (k &lt; 1 || nums.length &lt; 1) {
-        return false;
-    }
+    TreeSet<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> m <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> TreeSet<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-    TreeSet&lt;Integer&gt; m = new TreeSet&lt;&gt;();
-
-    for (int i = 0; i &lt; nums.length; i++) {
-        Integer floor = m.floor(nums[i]);
-        if (floor != null &amp;&amp; floor == nums[i]) {
-            return true;
-        }
-        m.add(nums[i]);
-        if (i &gt;= k) {
-            m.remove(nums[i - k]);
-        }
-    }
-    return false;
-}
-</code></pre>
-
-<h1 id="contains-duplicate-iii">Contains Duplicate III</h1>
-
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        Integer floor <span style="color:#f92672">=</span> m<span style="color:#f92672">.</span><span style="color:#a6e22e">floor</span><span style="color:#f92672">(</span>nums<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>floor <span style="color:#f92672">!</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> floor <span style="color:#f92672">=</span><span style="color:#f92672">=</span> nums<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+        m<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>nums<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">&gt;</span><span style="color:#f92672">=</span> k<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            m<span style="color:#f92672">.</span><span style="color:#a6e22e">remove</span><span style="color:#f92672">(</span>nums<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> k<span style="color:#f92672">]</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h1 id="contains-duplicate-iii">Contains Duplicate III</h1>
 <p>Link: <a href="https://leetcode.com/problems/contains-duplicate-iii">Contains Duplicate III</a></p>
-
-<h2 id="problem-description-1">Problem description</h2>
-
+<h2 id="problem-description1">Problem description</h2>
 <p>Given an array of integers, find out whether there are two distinct indices <em>i</em> and <em>j</em> in the array such that the <strong>absolute</strong>difference between <strong>nums[i]</strong> and <strong>nums[j]</strong> is at most <em>t</em> and the <strong>absolute</strong> difference between <em>i</em> and <em>j</em> is at most <em>k</em>.</p>
-
 <p><strong>Example 1:</strong></p>
-
 <pre><code>Input: nums = [1,2,3,1], k = 3, t = 0
 Output: true
-</code></pre>
-
-<p><strong>Example 2:</strong></p>
-
+</code></pre><p><strong>Example 2:</strong></p>
 <pre><code>Input: nums = [1,0,1,1], k = 1, t = 2
 Output: true
-</code></pre>
-
-<p><strong>Example 3:</strong></p>
-
+</code></pre><p><strong>Example 3:</strong></p>
 <pre><code>Input: nums = [1,5,9,1,5,9], k = 2, t = 3
 Output: false
-</code></pre>
-
-<h2 id="method-1">Method</h2>
-
+</code></pre><h2 id="method1">Method</h2>
 <p>Two approaches: TreeSet and bucket sort.</p>
-
 <p><strong>TreeSet</strong></p>
-
 <p>Same as previous problem. Use <code>TreeSet</code> to save values in <code>nums</code>.</p>
-
 <p>Traverse the array. The <code>TreeSet</code> can return the greatest element in this set that is less or equals to the given element by <code>Set.floor()</code>, or the least element in this set that is larger or equals to the given element by <code>Set.ceiling()</code>.</p>
-
 <p>The difference between these two problem is the condition, where Contains Duplicate III requires to compare the differences between two elements in set that is less than <code>t</code>.</p>
-
 <p>Note that in this problem (Contains Duplicate III), to avoid the integer overflow, use long to store the value in set.</p>
-
 <p><strong>Bucket Sort</strong></p>
-
 <p>Keep a hash map with size of <code>k</code>.</p>
-
 <p>Each time, convert number into long (avoid negative number) and put into bucket. Bucket size is <code>t + 1</code>, to avoid <code>t == 0</code>.</p>
-
 <p>If converted number put into a bucket with other elements, return true. The max difference between two elements in same bucket is <code>t</code>.</p>
-
 <p>Otherwise, check if two adjacent buckets has element that <code>abs(nums[i] - nums[j])</code> is smaller than <code>t</code>.</p>
-
-<h2 id="code-1">Code</h2>
-
-<pre><code class="language-java">/**
- * Tree set to save the value and keep size of tree set equals to k.
- * Find closest numbers in set and check if it is in the range of t.
- *
- * @param nums given array
- * @param k    largest absolute difference between i and j
- * @param t    largest absolute difference between nums[i] and nums[j]
- * @return whether there are two distinct indices i and j in the array satisfy the condition ofn k and t
- */
-public boolean containsNearbyAlmostDuplicate(int[] nums, int k, int t) {
+<h2 id="code1">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Tree set to save the value and keep size of tree set equals to k.
+</span><span style="color:#75715e"> * Find closest numbers in set and check if it is in the range of t.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param nums given array
+</span><span style="color:#75715e"> * @param k    largest absolute difference between i and j
+</span><span style="color:#75715e"> * @param t    largest absolute difference between nums[i] and nums[j]
+</span><span style="color:#75715e"> * @return whether there are two distinct indices i and j in the array satisfy the condition ofn k and t
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">containsNearbyAlmostDuplicate</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> nums<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> k<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> t<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
     
-    /* Corner case */
-    if (k &lt; 1 || t &lt; 0) {
-        return false;
-    }
+    <span style="color:#75715e">/* Corner case */</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>k <span style="color:#f92672">&lt;</span> 1 <span style="color:#f92672">|</span><span style="color:#f92672">|</span> t <span style="color:#f92672">&lt;</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-    HashMap&lt;Long, Long&gt; map = new HashMap&lt;&gt;();
-    long bucketSize = ((long) t + 1);        // avoid 0
+    HashMap<span style="color:#f92672">&lt;</span>Long<span style="color:#f92672">,</span> Long<span style="color:#f92672">&gt;</span> map <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashMap<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">long</span> bucketSize <span style="color:#f92672">=</span> <span style="color:#f92672">(</span><span style="color:#f92672">(</span><span style="color:#66d9ef">long</span><span style="color:#f92672">)</span> t <span style="color:#f92672">+</span> 1<span style="color:#f92672">)</span><span style="color:#f92672">;</span>        <span style="color:#75715e">// avoid 0
+</span><span style="color:#75715e"></span>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">long</span> num <span style="color:#f92672">=</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">long</span><span style="color:#f92672">)</span> nums<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">-</span> Integer<span style="color:#f92672">.</span><span style="color:#a6e22e">MIN_VALUE</span><span style="color:#f92672">;</span>      <span style="color:#75715e">// convert to long number to avoid negative number
+</span><span style="color:#75715e"></span>
+        <span style="color:#66d9ef">long</span> bucket <span style="color:#f92672">=</span> num <span style="color:#f92672">/</span> bucketSize<span style="color:#f92672">;</span>
 
-    for (int i = 0; i &lt; nums.length; i++) {
-        long num = (long) nums[i] - Integer.MIN_VALUE;      // convert to long number to avoid negative number
+        <span style="color:#75715e">/*
+</span><span style="color:#75715e">         * Bucket size is t + 1 (avoid 0).
+</span><span style="color:#75715e">         * If bucket already contains element, return true. The max difference between them is t.
+</span><span style="color:#75715e">         * Then check two adjacent bucket, if there exist element that difference is at most t, return true. */</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>map<span style="color:#f92672">.</span><span style="color:#a6e22e">containsKey</span><span style="color:#f92672">(</span>bucket<span style="color:#f92672">)</span> <span style="color:#f92672">|</span><span style="color:#f92672">|</span> <span style="color:#f92672">(</span>map<span style="color:#f92672">.</span><span style="color:#a6e22e">containsKey</span><span style="color:#f92672">(</span>bucket <span style="color:#f92672">-</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> num <span style="color:#f92672">-</span> map<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>bucket <span style="color:#f92672">-</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">&lt;</span><span style="color:#f92672">=</span> t<span style="color:#f92672">)</span> <span style="color:#f92672">|</span><span style="color:#f92672">|</span> <span style="color:#f92672">(</span>map<span style="color:#f92672">.</span><span style="color:#a6e22e">containsKey</span><span style="color:#f92672">(</span>bucket <span style="color:#f92672">+</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> map<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>bucket <span style="color:#f92672">+</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">-</span> num <span style="color:#f92672">&lt;</span><span style="color:#f92672">=</span> t<span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
 
-        long bucket = num / bucketSize;
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">&gt;</span><span style="color:#f92672">=</span> k<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">long</span> firstNum <span style="color:#f92672">=</span> <span style="color:#f92672">(</span><span style="color:#f92672">(</span><span style="color:#66d9ef">long</span><span style="color:#f92672">)</span> nums<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> k<span style="color:#f92672">]</span> <span style="color:#f92672">-</span> Integer<span style="color:#f92672">.</span><span style="color:#a6e22e">MIN_VALUE</span><span style="color:#f92672">)</span> <span style="color:#f92672">/</span> bucketSize<span style="color:#f92672">;</span>
+            map<span style="color:#f92672">.</span><span style="color:#a6e22e">remove</span><span style="color:#f92672">(</span>firstNum<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+        map<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>bucket<span style="color:#f92672">,</span> num<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-        /*
-         * Bucket size is t + 1 (avoid 0).
-         * If bucket already contains element, return true. The max difference between them is t.
-         * Then check two adjacent bucket, if there exist element that difference is at most t, return true. */
-        if (map.containsKey(bucket) || (map.containsKey(bucket - 1) &amp;&amp; num - map.get(bucket - 1) &lt;= t) || (map.containsKey(bucket + 1) &amp;&amp; map.get(bucket + 1) - num &lt;= t)) {
-            return true;
-        }
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
 
-        if (i &gt;= k) {
-            long firstNum = ((long) nums[i - k] - Integer.MIN_VALUE) / bucketSize;
-            map.remove(firstNum);
-        }
-        map.put(bucket, num);
-    }
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Bucket sort.
+</span><span style="color:#75715e"> * Keep a hash map with size of k.
+</span><span style="color:#75715e"> * Each time, convert number into long (avoid negative number) and put into bucket.
+</span><span style="color:#75715e"> * Bucket size is t + 1, to avoid t == 0.
+</span><span style="color:#75715e"> * If converted number put into a bucket with other elements, return true.
+</span><span style="color:#75715e"> * The max difference between two elements in same bucket is t.
+</span><span style="color:#75715e"> * Otherwise, check if two adjacent buckets has element that abs(nums[i] - nums[j]) is smaller than t.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param nums given array
+</span><span style="color:#75715e"> * @param k    largest absolute difference between i and j
+</span><span style="color:#75715e"> * @param t    largest absolute difference between nums[i] and nums[j]
+</span><span style="color:#75715e"> * @return whether there are two distinct indices i and j in the array satisfy the condition ofn k and t
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">treeSet</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> nums<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> k<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> t<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-    return false;
-}
+    <span style="color:#75715e">/* Corner case */</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>k <span style="color:#f92672">&lt;</span> 1 <span style="color:#f92672">|</span><span style="color:#f92672">|</span> t <span style="color:#f92672">&lt;</span> 0 <span style="color:#f92672">|</span><span style="color:#f92672">|</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">&lt;</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-/**
- * Bucket sort.
- * Keep a hash map with size of k.
- * Each time, convert number into long (avoid negative number) and put into bucket.
- * Bucket size is t + 1, to avoid t == 0.
- * If converted number put into a bucket with other elements, return true.
- * The max difference between two elements in same bucket is t.
- * Otherwise, check if two adjacent buckets has element that abs(nums[i] - nums[j]) is smaller than t.
- *
- * @param nums given array
- * @param k    largest absolute difference between i and j
- * @param t    largest absolute difference between nums[i] and nums[j]
- * @return whether there are two distinct indices i and j in the array satisfy the condition ofn k and t
- */
-public boolean treeSet(int[] nums, int k, int t) {
+    TreeSet<span style="color:#f92672">&lt;</span>Long<span style="color:#f92672">&gt;</span> set <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> TreeSet<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>        <span style="color:#75715e">// use long to avoid overflow
+</span><span style="color:#75715e"></span>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-    /* Corner case */
-    if (k &lt; 1 || t &lt; 0 || nums.length &lt; 1) {
-        return false;
-    }
+        <span style="color:#75715e">/*
+</span><span style="color:#75715e">         * Find closest value in set.
+</span><span style="color:#75715e">         * Use Long to avoid NullPointerException. */</span>
+        Long floor <span style="color:#f92672">=</span> set<span style="color:#f92672">.</span><span style="color:#a6e22e">floor</span><span style="color:#f92672">(</span><span style="color:#f92672">(</span><span style="color:#66d9ef">long</span><span style="color:#f92672">)</span> nums<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>       <span style="color:#75715e">// greatest element in this set &lt;= to the given element
+</span><span style="color:#75715e"></span>        Long ceil <span style="color:#f92672">=</span> set<span style="color:#f92672">.</span><span style="color:#a6e22e">ceiling</span><span style="color:#f92672">(</span><span style="color:#f92672">(</span><span style="color:#66d9ef">long</span><span style="color:#f92672">)</span> nums<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>       <span style="color:#75715e">// least element in this set &gt;= to the given element
+</span><span style="color:#75715e"></span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#f92672">(</span>floor <span style="color:#f92672">!</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> nums<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">-</span> floor <span style="color:#f92672">&lt;</span><span style="color:#f92672">=</span> t<span style="color:#f92672">)</span> <span style="color:#f92672">|</span><span style="color:#f92672">|</span> <span style="color:#f92672">(</span>ceil <span style="color:#f92672">!</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> ceil <span style="color:#f92672">-</span> nums<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">&lt;</span><span style="color:#f92672">=</span> t<span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
 
-    TreeSet&lt;Long&gt; set = new TreeSet&lt;&gt;();        // use long to avoid overflow
+        set<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#f92672">(</span><span style="color:#66d9ef">long</span><span style="color:#f92672">)</span> nums<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-    for (int i = 0; i &lt; nums.length; i++) {
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">&gt;</span><span style="color:#f92672">=</span> k<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            set<span style="color:#f92672">.</span><span style="color:#a6e22e">remove</span><span style="color:#f92672">(</span><span style="color:#f92672">(</span><span style="color:#66d9ef">long</span><span style="color:#f92672">)</span> nums<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> k<span style="color:#f92672">]</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>     <span style="color:#75715e">// keep size of set
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
 
-        /*
-         * Find closest value in set.
-         * Use Long to avoid NullPointerException. */
-        Long floor = set.floor((long) nums[i]);       // greatest element in this set &lt;= to the given element
-        Long ceil = set.ceiling((long) nums[i]);       // least element in this set &gt;= to the given element
-
-        if ((floor != null &amp;&amp; nums[i] - floor &lt;= t) || (ceil != null &amp;&amp; ceil - nums[i] &lt;= t)) {
-            return true;
-        }
-
-        set.add((long) nums[i]);
-
-        if (i &gt;= k) {
-            set.remove((long) nums[i - k]);     // keep size of set
-        }
-    }
-
-    return false;
-}
-</code></pre>
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div>
               
             </div>
           </div>
@@ -563,7 +501,7 @@ public boolean treeSet(int[] nums, int k, int t) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>
@@ -621,7 +559,7 @@ public boolean treeSet(int[] nums, int k, int t) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>

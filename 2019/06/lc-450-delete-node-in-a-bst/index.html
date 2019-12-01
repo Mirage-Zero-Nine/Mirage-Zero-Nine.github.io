@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.59.1 with theme Tranquilpeak 0.4.7-BETA">
+<meta name="generator" content="Hugo 0.60.1 with theme Tranquilpeak 0.4.7-BETA">
 <meta name="author" content="Steve Zhou">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -279,36 +279,18 @@
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
-<ul>
-<li><a href="#delete-node-in-a-bst">Delete Node in a BST</a>
-<ul>
-<li><a href="#problem-description">Problem description</a></li>
-<li><a href="#method">Method</a></li>
-<li><a href="#code">Code</a></li>
-</ul></li>
-</ul>
-</nav>
-
+              <!-- raw HTML omitted -->
 <h1 id="delete-node-in-a-bst">Delete Node in a BST</h1>
-
 <p>Link: <a href="https://leetcode.com/problems/delete-node-in-a-bst/">Delete Node in a BST</a></p>
-
 <h2 id="problem-description">Problem description</h2>
-
 <p>Given a root node reference of a BST and a key, delete the node with the given key in the BST. Return the root node reference (possibly updated) of the BST.</p>
-
 <p>Basically, the deletion can be divided into two stages:</p>
-
 <ol>
 <li>Search for a node to remove.</li>
 <li>If the node is found, delete the node.</li>
 </ol>
-
 <p><strong>Note:</strong> Time complexity should be O(height of tree).</p>
-
 <p><strong>Example:</strong></p>
-
 <pre><code>root = [5,3,6,2,4,null,7]
 key = 3
 
@@ -335,105 +317,96 @@ Another valid answer is [5,2,6,null,4,null,7].
   2   6
    \   \
     4   7
-</code></pre>
-
-<h2 id="method">Method</h2>
-
+</code></pre><h2 id="method">Method</h2>
 <p>The key is to handle the situation after find the node in BST.</p>
-
 <p>First, recursively find the node that has the same value as the key, while setting the left/right nodes equal to the returned subtree. Once the node is found, the target node may have left or right or both subtree, or having no subtree.</p>
-
 <ul>
-<li>Node doesn&rsquo;t have left or right -&gt; return null</li>
+<li>Node doesn't have left or right -&gt; return null</li>
 <li>Node only has left subtree -&gt; return the left subtree, as they follow BST rule.</li>
 <li>Node only has right subtree -&gt; return the right subtree, same as left subtree only</li>
 </ul>
-
 <p>If node has two subtrees, the situation is complicated:</p>
-
 <ul>
 <li>Right subtree’s root has no left tree -&gt; all elements in right subtree is larger than left, replace current node with root of right subtree.</li>
 <li>Right subtree’s root has left tree -&gt; the left subtree of node that is to be removed will be the left subtree of smallest element in right subtree, which is the leftmost element in right subtree. The reason is that all elements in left subtree is smaller than right subtree in BST, and right subtree is larger than root. Therefore, to follow this rule, the parent of left subtree should be the smallest node in right subtree. And the right subtree of this new root, is the original right subtree, except with this smallest node.</li>
 </ul>
-
 <h2 id="code">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * The key is to handle the situation after find the node in BST.
+</span><span style="color:#75715e"> * First, recursively find the node that has the same value as the key.
+</span><span style="color:#75715e"> * Once the node is found, 4 cases should be considered:
+</span><span style="color:#75715e"> * node doesn&#39;t have left or right subtree -&gt; return null
+</span><span style="color:#75715e"> * left subtree only -&gt; return the left subtree, as they follow BST rule.
+</span><span style="color:#75715e"> * right subtree only -&gt; return the right subtree, same as left subtree only
+</span><span style="color:#75715e"> * If node has two subtrees, the situation is complicated:
+</span><span style="color:#75715e"> * 1. right has no left tree -&gt; left is smaller than right, replace node with root of right subtree.
+</span><span style="color:#75715e"> * 2. right has left subtree -&gt; the left subtree will be the left subtree of smallest element in right subtree.
+</span><span style="color:#75715e"> * The reason is that all elements in left is smaller than right in BST, and right subtree is larger than root.
+</span><span style="color:#75715e"> * Therefore, to follow this rule, the parent of left subtree should be the smallest node in right subtree.
+</span><span style="color:#75715e"> * And the right subtree of this new root, is the original right subtree, except with this smallest node.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param root root node in tree
+</span><span style="color:#75715e"> * @param key  node to be delete
+</span><span style="color:#75715e"> * @return BST after delete operation
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> TreeNode <span style="color:#a6e22e">deleteNode</span><span style="color:#f92672">(</span>TreeNode root<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> key<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-<pre><code class="language-java">/**
- * The key is to handle the situation after find the node in BST.
- * First, recursively find the node that has the same value as the key.
- * Once the node is found, 4 cases should be considered:
- * node doesn't have left or right subtree -&gt; return null
- * left subtree only -&gt; return the left subtree, as they follow BST rule.
- * right subtree only -&gt; return the right subtree, same as left subtree only
- * If node has two subtrees, the situation is complicated:
- * 1. right has no left tree -&gt; left is smaller than right, replace node with root of right subtree.
- * 2. right has left subtree -&gt; the left subtree will be the left subtree of smallest element in right subtree.
- * The reason is that all elements in left is smaller than right in BST, and right subtree is larger than root.
- * Therefore, to follow this rule, the parent of left subtree should be the smallest node in right subtree.
- * And the right subtree of this new root, is the original right subtree, except with this smallest node.
- *
- * @param root root node in tree
- * @param key  node to be delete
- * @return BST after delete operation
- */
-public TreeNode deleteNode(TreeNode root, int key) {
+    <span style="color:#75715e">/* Corner case */</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>root <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-    /* Corner case */
-    if (root == null) {
-        return null;
-    }
+    <span style="color:#75715e">/* Searching in tree */</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>root<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span> <span style="color:#f92672">&lt;</span> key<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        root<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span> <span style="color:#f92672">=</span> deleteNode<span style="color:#f92672">(</span>root<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span><span style="color:#f92672">,</span> key<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">return</span> root<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>root<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span> <span style="color:#f92672">&gt;</span> key<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        root<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span> <span style="color:#f92672">=</span> deleteNode<span style="color:#f92672">(</span>root<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">,</span> key<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">return</span> root<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-    /* Searching in tree */
-    if (root.val &lt; key) {
-        root.right = deleteNode(root.right, key);
-        return root;
-    } else if (root.val &gt; key) {
-        root.left = deleteNode(root.left, key);
-        return root;
-    }
+    <span style="color:#75715e">/* Find the target node and do the delete operation */</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>root<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> root<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>        <span style="color:#75715e">// no subtree on current node
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>root<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> root<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span><span style="color:#f92672">;</span>      <span style="color:#75715e">// no left subtree
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>root<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> root<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">;</span>       <span style="color:#75715e">// no right subtree
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
 
-    /* Find the target node and do the delete operation */
-    if (root.left == null &amp;&amp; root.right == null) {
-        return null;        // no subtree on current node
-    } else if (root.left == null) {
-        return root.right;      // no left subtree
-    } else if (root.right == null) {
-        return root.left;       // no right subtree
-    }
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>root<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span><span style="color:#f92672">.</span><span style="color:#a6e22e">left</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>      <span style="color:#75715e">// all elements in right subtree is larger than current node
+</span><span style="color:#75715e"></span>        root<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span><span style="color:#f92672">.</span><span style="color:#a6e22e">left</span> <span style="color:#f92672">=</span> root<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">;</span>        <span style="color:#75715e">// all elements in left subtree is smaller than right child
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">return</span> root<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span><span style="color:#f92672">;</span>      <span style="color:#75715e">// right child replace current node as root
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
 
-    if (root.right.left == null) {      // all elements in right subtree is larger than current node
-        root.right.left = root.left;        // all elements in left subtree is smaller than right child
-        return root.right;      // right child replace current node as root
-    } else {
+        TreeNode smallest <span style="color:#f92672">=</span> finSubtreeRoot<span style="color:#f92672">(</span>root<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>     <span style="color:#75715e">// find leftmost node
+</span><span style="color:#75715e"></span>
+        <span style="color:#75715e">/* Smallest node in right tree will replace current root node */</span>
+        smallest<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span> <span style="color:#f92672">=</span> root<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">;</span>
+        smallest<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span> <span style="color:#f92672">=</span> root<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">return</span> smallest<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
 
-        TreeNode smallest = finSubtreeRoot(root.right);     // find leftmost node
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Find left most node in tree. In BST, leftmost node is smallest node in tree.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param root root node
+</span><span style="color:#75715e"> * @return leftmost node with its sub tree
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">private</span> TreeNode <span style="color:#a6e22e">finSubtreeRoot</span><span style="color:#f92672">(</span>TreeNode root<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    TreeNode cur <span style="color:#f92672">=</span> root<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">;</span>
+    TreeNode pre <span style="color:#f92672">=</span> root<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>cur<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span> <span style="color:#f92672">!</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        pre <span style="color:#f92672">=</span> cur<span style="color:#f92672">;</span>
+        cur <span style="color:#f92672">=</span> cur<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-        /* Smallest node in right tree will replace current root node */
-        smallest.left = root.left;
-        smallest.right = root.right;
-        return smallest;
-    }
-}
-
-/**
- * Find left most node in tree. In BST, leftmost node is smallest node in tree.
- *
- * @param root root node
- * @return leftmost node with its sub tree
- */
-private TreeNode finSubtreeRoot(TreeNode root) {
-    TreeNode cur = root.left;
-    TreeNode pre = root;
-    while (cur.left != null) {
-        pre = cur;
-        cur = cur.left;
-    }
-
-    pre.left = cur.right;       // replace leftmost node with its right subtree (or null)
-
-    return cur;
-}
-</code></pre>
+    pre<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span> <span style="color:#f92672">=</span> cur<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span><span style="color:#f92672">;</span>       <span style="color:#75715e">// replace leftmost node with its right subtree (or null)
+</span><span style="color:#75715e"></span>
+    <span style="color:#66d9ef">return</span> cur<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div>
               
             </div>
           </div>
@@ -491,7 +464,7 @@ private TreeNode finSubtreeRoot(TreeNode root) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>
@@ -549,7 +522,7 @@ private TreeNode finSubtreeRoot(TreeNode root) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>

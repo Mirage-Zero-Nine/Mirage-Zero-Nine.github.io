@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.59.1 with theme Tranquilpeak 0.4.7-BETA">
+<meta name="generator" content="Hugo 0.60.1 with theme Tranquilpeak 0.4.7-BETA">
 <meta name="author" content="Steve Zhou">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -281,123 +281,93 @@
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
-<ul>
-<li><a href="#remove-invalid-parentheses">Remove Invalid Parentheses</a>
-<ul>
-<li><a href="#problem-description">Problem description</a></li>
-<li><a href="#method">Method</a></li>
-<li><a href="#code">Code</a></li>
-</ul></li>
-</ul>
-</nav>
-
+              <!-- raw HTML omitted -->
 <h1 id="remove-invalid-parentheses">Remove Invalid Parentheses</h1>
-
 <p>Link: <a href="https://leetcode.com/problems/remove-invalid-parentheses/">Remove Invalid Parentheses</a></p>
-
 <h2 id="problem-description">Problem description</h2>
-
 <p>Remove the minimum number of invalid parentheses in order to make the input string valid. Return all possible results.</p>
-
 <p><strong>Note:</strong> The input string may contain letters other than the parentheses <code>(</code> and <code>)</code>.</p>
-
 <p><strong>Example 1:</strong></p>
-
 <pre><code>Input: &quot;()())()&quot;
 Output: [&quot;()()()&quot;, &quot;(())()&quot;]
-</code></pre>
-
-<p><strong>Example 2:</strong></p>
-
+</code></pre><p><strong>Example 2:</strong></p>
 <pre><code>Input: &quot;(a)())()&quot;
 Output: [&quot;(a)()()&quot;, &quot;(a())()&quot;]
-</code></pre>
-
-<p><strong>Example 3:</strong></p>
-
+</code></pre><p><strong>Example 3:</strong></p>
 <pre><code>Input: &quot;)(&quot;
 Output: [&quot;&quot;]
-</code></pre>
-
-<h2 id="method">Method</h2>
-
+</code></pre><h2 id="method">Method</h2>
 <p>Iterate all chars in given string. If find any invalid pair in string, backtrack to find all possible valid parentheses.</p>
-
 <p>During the backtracking process, remove only one invalid parenthesis and pass this string without this invalid right pair into backtracking. Hence, avoid duplicated close parenthesis before passing ot to backtracking.</p>
-
 <p>From <code>s(0, i)</code>, right part is more than left part by 1. Try to remove one right part each time to make <code>s(0, i)</code> valid. The next iteration starts at valid part, since it is not necessary to check valid part of string. If later there exist invalid pair, remove one invalid char. Removing starts from previous backtrack removing position.</p>
-
 <p>Finally, reverse string and do it again.</p>
-
 <h2 id="code">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Iterate all chars in given string.
+</span><span style="color:#75715e"> * If find any invalid pair in string, backtrack to find all possible valid parentheses.
+</span><span style="color:#75715e"> * Finally, reverse string and do it again.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param s given parentheses pairs
+</span><span style="color:#75715e"> * @return all possible results.
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> List<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">removeInvalidParentheses</span><span style="color:#f92672">(</span>String s<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    List<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> out <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    checkInvalid<span style="color:#f92672">(</span>out<span style="color:#f92672">,</span> s<span style="color:#f92672">,</span> 0<span style="color:#f92672">,</span> 0<span style="color:#f92672">,</span> <span style="color:#e6db74">&#39;(&#39;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#39;)&#39;</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">return</span> out<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
 
-<pre><code class="language-java">/**
- * Iterate all chars in given string.
- * If find any invalid pair in string, backtrack to find all possible valid parentheses.
- * Finally, reverse string and do it again.
- *
- * @param s given parentheses pairs
- * @return all possible results.
- */
-public List&lt;String&gt; removeInvalidParentheses(String s) {
-    List&lt;String&gt; out = new ArrayList&lt;&gt;();
-    checkInvalid(out, s, 0, 0, '(', ')');
-    return out;
-}
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * If found invalid parenthesis, then use backtracking to find all possible substrings.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param output  output list
+</span><span style="color:#75715e"> * @param s       parentheses string
+</span><span style="color:#75715e"> * @param valid   start of valid parentheses string, initially starts at 0
+</span><span style="color:#75715e"> * @param invalid start of invalid parenthesis right part, initially starts at 0
+</span><span style="color:#75715e"> * @param open    left part of parenthesis
+</span><span style="color:#75715e"> * @param close   right part of parenthesis
+</span><span style="color:#75715e"> *                when traverse from end to beginning, open and close will be swapped
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">checkInvalid</span><span style="color:#f92672">(</span>List<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> output<span style="color:#f92672">,</span> String s<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> valid<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> invalid<span style="color:#f92672">,</span> <span style="color:#66d9ef">char</span> open<span style="color:#f92672">,</span> <span style="color:#66d9ef">char</span> close<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-/**
- * If found invalid parenthesis, then use backtracking to find all possible substrings.
- *
- * @param output  output list
- * @param s       parentheses string
- * @param valid   start of valid parentheses string, initially starts at 0
- * @param invalid start of invalid parenthesis right part, initially starts at 0
- * @param open    left part of parenthesis
- * @param close   right part of parenthesis
- *                when traverse from end to beginning, open and close will be swapped
- */
-private void checkInvalid(List&lt;String&gt; output, String s, int valid, int invalid, char open, char close) {
+    <span style="color:#66d9ef">int</span> left <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> right <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
 
-    int left = 0, right = 0;
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> valid<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>      <span style="color:#75715e">// start at valid position
+</span><span style="color:#75715e"></span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> open<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            left<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> close<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            right<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
 
-    for (int i = valid; i &lt; s.length(); i++) {      // start at valid position
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>right <span style="color:#f92672">&gt;</span> left<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>     <span style="color:#75715e">// if right is more than left, then current parenthesis is invalid pair
+</span><span style="color:#75715e"></span>
+            <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> invalid<span style="color:#f92672">;</span> j <span style="color:#f92672">&lt;</span><span style="color:#f92672">=</span> i<span style="color:#f92672">;</span> j<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>      <span style="color:#75715e">// find all possible position to remove one invalid pair
+</span><span style="color:#75715e"></span>
+                <span style="color:#75715e">/*
+</span><span style="color:#75715e">                 * Each time, remove only one invalid parenthesis and pass it without this char into backtracking.
+</span><span style="color:#75715e">                 * Hence, avoid duplicated close parenthesis.
+</span><span style="color:#75715e">                 * This problem requires all valid output, therefore, use backtracking to find all.
+</span><span style="color:#75715e">                 * From s(0, i), right part is more than left part by 1.
+</span><span style="color:#75715e">                 * Try to remove one right part each time to make s(0, i) valid.
+</span><span style="color:#75715e">                 * The next iteration starts at valid part, since it is not necessary to check valid part of string.
+</span><span style="color:#75715e">                 * If later there exist invalid pair, repeat this process starts at previous removing position. */</span>
+                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>j<span style="color:#f92672">)</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> close <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> <span style="color:#f92672">(</span>j <span style="color:#f92672">=</span><span style="color:#f92672">=</span> invalid <span style="color:#f92672">|</span><span style="color:#f92672">|</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>j <span style="color:#f92672">-</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">!</span><span style="color:#f92672">=</span> close<span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>     <span style="color:#75715e">// avoid duplication
+</span><span style="color:#75715e"></span>                    checkInvalid<span style="color:#f92672">(</span>output<span style="color:#f92672">,</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">substring</span><span style="color:#f92672">(</span>0<span style="color:#f92672">,</span> j<span style="color:#f92672">)</span> <span style="color:#f92672">+</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">substring</span><span style="color:#f92672">(</span>j <span style="color:#f92672">+</span> 1<span style="color:#f92672">)</span><span style="color:#f92672">,</span> i<span style="color:#f92672">,</span> j<span style="color:#f92672">,</span> open<span style="color:#f92672">,</span> close<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+                <span style="color:#f92672">}</span>
+            <span style="color:#f92672">}</span>
+            <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>     <span style="color:#75715e">// if current string is invalid, it should not be added to result
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
 
-        if (s.charAt(i) == open) {
-            left++;
-        } else if (s.charAt(i) == close) {
-            right++;
-        }
-
-        if (right &gt; left) {     // if right is more than left, then current parenthesis is invalid pair
-
-            for (int j = invalid; j &lt;= i; j++) {      // find all possible position to remove one invalid pair
-
-                /*
-                 * Each time, remove only one invalid parenthesis and pass it without this char into backtracking.
-                 * Hence, avoid duplicated close parenthesis.
-                 * This problem requires all valid output, therefore, use backtracking to find all.
-                 * From s(0, i), right part is more than left part by 1.
-                 * Try to remove one right part each time to make s(0, i) valid.
-                 * The next iteration starts at valid part, since it is not necessary to check valid part of string.
-                 * If later there exist invalid pair, repeat this process starts at previous removing position. */
-                if (s.charAt(j) == close &amp;&amp; (j == invalid || s.charAt(j - 1) != close)) {     // avoid duplication
-                    checkInvalid(output, s.substring(0, j) + s.substring(j + 1), i, j, open, close);
-                }
-            }
-            return;     // if current string is invalid, it should not be added to result
-        }
-    }
-
-    /* Check reversed string in each iteration to find if left parenthesis is more than right parenthesis */
-    String reversed = new StringBuilder(s).reverse().toString();
-    if (open == '(') {
-        checkInvalid(output, reversed, 0, 0, ')', '(');
-    } else {
-        output.add(reversed);       // if s is valid pairs both directions, then add it to final output
-    }
-}
-</code></pre>
+    <span style="color:#75715e">/* Check reversed string in each iteration to find if left parenthesis is more than right parenthesis */</span>
+    String reversed <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> StringBuilder<span style="color:#f92672">(</span>s<span style="color:#f92672">)</span><span style="color:#f92672">.</span><span style="color:#a6e22e">reverse</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">.</span><span style="color:#a6e22e">toString</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>open <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;(&#39;</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        checkInvalid<span style="color:#f92672">(</span>output<span style="color:#f92672">,</span> reversed<span style="color:#f92672">,</span> 0<span style="color:#f92672">,</span> 0<span style="color:#f92672">,</span> <span style="color:#e6db74">&#39;)&#39;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#39;(&#39;</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+        output<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>reversed<span style="color:#f92672">)</span><span style="color:#f92672">;</span>       <span style="color:#75715e">// if s is valid pairs both directions, then add it to final output
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div>
               
             </div>
           </div>
@@ -453,7 +423,7 @@ private void checkInvalid(List&lt;String&gt; output, String s, int valid, int in
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>
@@ -511,7 +481,7 @@ private void checkInvalid(List&lt;String&gt; output, String s, int valid, int in
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>

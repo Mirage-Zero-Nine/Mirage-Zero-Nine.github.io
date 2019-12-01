@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.59.1 with theme Tranquilpeak 0.4.7-BETA">
+<meta name="generator" content="Hugo 0.60.1 with theme Tranquilpeak 0.4.7-BETA">
 <meta name="author" content="Steve Zhou">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -277,223 +277,154 @@
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
-<ul>
-<li><a href="#guess-number-higher-or-lower-ii">Guess Number Higher or Lower II</a>
-<ul>
-<li><a href="#problem-description">Problem description</a></li>
-<li><a href="#method">Method</a></li>
-<li><a href="#code">Code</a></li>
-</ul></li>
-<li><a href="#predict-the-winner">Predict the Winner</a>
-<ul>
-<li><a href="#problem-description-1">Problem description</a></li>
-<li><a href="#method-1">Method</a></li>
-<li><a href="#code-1">Code</a></li>
-</ul></li>
-<li><a href="#stone-game">Stone Game</a>
-<ul>
-<li><a href="#problem-description-2">Problem description</a></li>
-<li><a href="#method-2">Method</a></li>
-<li><a href="#code-2">Code</a></li>
-</ul></li>
-</ul>
-</nav>
-
+              <!-- raw HTML omitted -->
 <h1 id="guess-number-higher-or-lower-ii">Guess Number Higher or Lower II</h1>
-
 <p>Link: <a href="https://leetcode.com/problems/guess-number-higher-or-lower-ii/">Guess Number Higher or Lower II</a></p>
-
 <h2 id="problem-description">Problem description</h2>
-
 <p>We are playing the Guess Game. The game is as follows:</p>
-
 <p>I pick a number from <strong>1</strong>to <strong>n</strong>. You have to guess which number I picked.</p>
-
-<p>Every time you guess wrong, I&rsquo;ll tell you whether the number I picked is higher or lower.</p>
-
+<p>Every time you guess wrong, I'll tell you whether the number I picked is higher or lower.</p>
 <p>However, when you guess a particular number x, and you guess wrong, you pay <strong>$x</strong>. You win the game when you guess the number I picked.</p>
-
 <p><strong>Example:</strong></p>
-
 <pre><code>n  = 10
 No matter what number is picked, the min money one player should have to assure win (by best strategy) is 16.
-</code></pre>
-
-<p>Given a particular <strong>n ≥ 1</strong>, find out how much money you need to have to guarantee a <strong>win</strong>.</p>
-
+</code></pre><p>Given a particular <strong>n ≥ 1</strong>, find out how much money you need to have to guarantee a <strong>win</strong>.</p>
 <h2 id="method">Method</h2>
-
 <p>First of all, the problem description is not accurate, especially the above example. The goal of this problem is find the money that guarantees a win, which means, for n  = 10, no matter what # is picked, the min money one player should have to assure win (by best strategy) is 16.</p>
-
 <p>This is a typical min-max problem. And it should be solved by dynamic programming.</p>
-
 <p><code>dp[i][j]</code>: from <code>i</code> to <code>j</code>, the min money required to guarantee a win.</p>
-
 <p><code>dp[i][j] = max(dp[start][i - 1], dp[i + 1][end])</code>, where <code>start &lt;= i &lt;= end</code>, <code>1 &lt;= start &lt;= end</code>.</p>
-
 <h2 id="code">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Dynamic programming.
+</span><span style="color:#75715e"> * dp[i][j]: from i to j, the min money required to guarantee a win
+</span><span style="color:#75715e"> * dp[i][j] = max(dp[start][i - 1], dp[i + 1][end]), where start &lt;= i &lt;= end, 1 &lt;= start &lt;= end.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param n number from 1 to n
+</span><span style="color:#75715e"> * @return how much money you need to have to guarantee a win
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">getMoneyAmount</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> n<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-<pre><code class="language-java">/**
- * Dynamic programming.
- * dp[i][j]: from i to j, the min money required to guarantee a win
- * dp[i][j] = max(dp[start][i - 1], dp[i + 1][end]), where start &lt;= i &lt;= end, 1 &lt;= start &lt;= end.
- *
- * @param n number from 1 to n
- * @return how much money you need to have to guarantee a win
- */
-public int getMoneyAmount(int n) {
+    <span style="color:#75715e">/* Corner case */</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>n <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> 0<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-    /* Corner case */
-    if (n == 1) {
-        return 0;
-    }
+    <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> dp <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>n <span style="color:#f92672">+</span> 1<span style="color:#f92672">]</span><span style="color:#f92672">[</span>n <span style="color:#f92672">+</span> 1<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+    helper<span style="color:#f92672">(</span>dp<span style="color:#f92672">,</span> 1<span style="color:#f92672">,</span> n<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">return</span> dp<span style="color:#f92672">[</span>1<span style="color:#f92672">]</span><span style="color:#f92672">[</span>n<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
 
-    int[][] dp = new int[n + 1][n + 1];
-    helper(dp, 1, n);
-    return dp[1][n];
-}
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Dynamic programming with recursion.
+</span><span style="color:#75715e"> * dp[i][j] = max(dp[start][i - 1], dp[i + 1][end]), where start &lt;= i &lt;= end, 1 &lt;= start &lt;= end.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param dp    dynamic programming array
+</span><span style="color:#75715e"> * @param start start index
+</span><span style="color:#75715e"> * @param end   end index
+</span><span style="color:#75715e"> * @return min money required to guarantee a win
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">helper</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> dp<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> start<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> end<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-/**
- * Dynamic programming with recursion.
- * dp[i][j] = max(dp[start][i - 1], dp[i + 1][end]), where start &lt;= i &lt;= end, 1 &lt;= start &lt;= end.
- *
- * @param dp    dynamic programming array
- * @param start start index
- * @param end   end index
- * @return min money required to guarantee a win
- */
-private int helper(int[][] dp, int start, int end) {
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>start <span style="color:#f92672">&gt;</span><span style="color:#f92672">=</span> end<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>     <span style="color:#75715e">// correct guessing requires no money
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">return</span> 0<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-    if (start &gt;= end) {     // correct guessing requires no money
-        return 0;
-    }
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>dp<span style="color:#f92672">[</span>start<span style="color:#f92672">]</span><span style="color:#f92672">[</span>end<span style="color:#f92672">]</span> <span style="color:#f92672">!</span><span style="color:#f92672">=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> dp<span style="color:#f92672">[</span>start<span style="color:#f92672">]</span><span style="color:#f92672">[</span>end<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-    if (dp[start][end] != 0) {
-        return dp[start][end];
-    }
+    <span style="color:#66d9ef">int</span> max <span style="color:#f92672">=</span> Integer<span style="color:#f92672">.</span><span style="color:#a6e22e">MAX_VALUE</span><span style="color:#f92672">;</span>
 
-    int max = Integer.MAX_VALUE;
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> start<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span><span style="color:#f92672">=</span> end<span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">int</span> tmp <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>helper<span style="color:#f92672">(</span>dp<span style="color:#f92672">,</span> start<span style="color:#f92672">,</span> i <span style="color:#f92672">-</span> 1<span style="color:#f92672">)</span><span style="color:#f92672">,</span> helper<span style="color:#f92672">(</span>dp<span style="color:#f92672">,</span> i <span style="color:#f92672">+</span> 1<span style="color:#f92672">,</span> end<span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        max <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">min</span><span style="color:#f92672">(</span>max<span style="color:#f92672">,</span> tmp<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-    for (int i = start; i &lt;= end; i++) {
-        int tmp = Math.max(helper(dp, start, i - 1), helper(dp, i + 1, end));
-        max = Math.min(max, tmp);
-    }
-
-    return max;
-}
-</code></pre>
-
-<h1 id="predict-the-winner">Predict the Winner</h1>
-
+    <span style="color:#66d9ef">return</span> max<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h1 id="predict-the-winner">Predict the Winner</h1>
 <p>Link: <a href="https://leetcode.com/problems/predict-the-winner/">Predict the Winner</a></p>
-
-<h2 id="problem-description-1">Problem description</h2>
-
+<h2 id="problem-description1">Problem description</h2>
 <p>Given an array of scores that are non-negative integers. Player 1 picks one of the numbers from either end of the array followed by the player 2 and then player 1 and so on. Each time a player picks a number, that number will not be available for the next player. This continues until all the scores have been chosen. The player with the maximum score wins.</p>
-
 <p>Given an array of scores, predict whether player 1 is the winner. You can assume each player plays to maximize his score.</p>
-
 <p><strong>Example 1:</strong></p>
-
 <pre><code>Input: [1, 5, 2]
 Output: False
 Explanation: Initially, player 1 can choose between 1 and 2. 
 If he chooses 2 (or 1), then player 2 can choose from 1 (or 2) and 5. If player 2 chooses 5, then player 1 will be left with 1 (or 2). 
 So, final score of player 1 is 1 + 2 = 3, and player 2 is 5. 
 Hence, player 1 will never be the winner and you need to return False.
-</code></pre>
-
-<p><strong>Example 2:</strong></p>
-
+</code></pre><p><strong>Example 2:</strong></p>
 <pre><code>Input: [1, 5, 233, 7]
 Output: True
 Explanation: Player 1 first chooses 1. Then player 2 have to choose between 5 and 7. No matter which number player 2 choose, player 1 can choose 233.
 Finally, player 1 has more score (234) than player 2 (12), so you need to return True representing player1 can win.
-</code></pre>
-
-<p><strong>Note:</strong></p>
-
+</code></pre><p><strong>Note:</strong></p>
 <ol>
 <li>1 &lt;= length of the array &lt;= 20.</li>
 <li>Any scores in the given array are non-negative integers and will not exceed 10,000,000.</li>
 <li>If the scores of both players are equal, then player 1 is still the winner.</li>
 </ol>
-
-<h2 id="method-1">Method</h2>
-
+<h2 id="method1">Method</h2>
 <p>Min-max problem can be solved by dynamic programming. The key of this problem is to correctly define <code>dp[i][j]</code>.</p>
-
-<p>State transition:
-- <code>dp[i][j]</code>: how much more scores that the first-in-action player will get from <code>i</code> to <code>j</code> than the second player.
-- <code>dp[i][j] = max(nums[i] - dp[i + 1][j], nums[j] - dp[i][j - 1]</code>, where <code>0 &lt;= i &lt; j &lt; n</code> and <code>i + j &lt; n</code>.</p>
-
+<p>State transition:</p>
+<ul>
+<li><code>dp[i][j]</code>: how much more scores that the first-in-action player will get from <code>i</code> to <code>j</code> than the second player.</li>
+<li><code>dp[i][j] = max(nums[i] - dp[i + 1][j], nums[j] - dp[i][j - 1]</code>, where <code>0 &lt;= i &lt; j &lt; n</code> and <code>i + j &lt; n</code>.</li>
+</ul>
 <p>Base case:</p>
-
 <ul>
 <li><code>dp[i][i] = i</code></li>
 </ul>
-
 <p>At each <code>dp[i][j]</code>, the max <code>dp[i][j]</code> is actually to find the max result that last player can get. The reason is that under the rule of game, each player will try the strategy that max its score. Therefore, to find if player 1 can win, check the max points player 2 can reach and decide if player 1 can win.</p>
+<h2 id="code1">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Min-max problem can be solved by dynamic programming.
+</span><span style="color:#75715e"> * The key of this problem is to correctly define dp[i][j].
+</span><span style="color:#75715e"> * State transition:
+</span><span style="color:#75715e"> * dp[i][j]: how much more scores that the first-in-action player will get from i to j than the second player.
+</span><span style="color:#75715e"> * dp[i][j] = max(nums[i] - dp[i + 1][j], nums[j] - dp[i][j - 1], where 0 &lt;= i &lt; j &lt; n and i + j &lt; n.
+</span><span style="color:#75715e"> * Base case:
+</span><span style="color:#75715e"> * dp[i][i] = i
+</span><span style="color:#75715e"> * At each dp[i][j], the max dp[i][j] is actually to find the max result that last player can get.
+</span><span style="color:#75715e"> * The reason is that under the rule of game, each player will try the strategy that max its score.
+</span><span style="color:#75715e"> * Therefore, to find if player 1 can win, check the max points player 2 can reach and decide if player 1 can win.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param nums given int array
+</span><span style="color:#75715e"> * @return predict whether player 1 is the winner
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">predictTheWinner</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> nums<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-<h2 id="code-1">Code</h2>
+    <span style="color:#75715e">/* Corner case */</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">%</span> 2 <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 0 <span style="color:#f92672">|</span><span style="color:#f92672">|</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">&lt;</span> 2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-<pre><code class="language-java">/**
- * Min-max problem can be solved by dynamic programming.
- * The key of this problem is to correctly define dp[i][j].
- * State transition:
- * dp[i][j]: how much more scores that the first-in-action player will get from i to j than the second player.
- * dp[i][j] = max(nums[i] - dp[i + 1][j], nums[j] - dp[i][j - 1], where 0 &lt;= i &lt; j &lt; n and i + j &lt; n.
- * Base case:
- * dp[i][i] = i
- * At each dp[i][j], the max dp[i][j] is actually to find the max result that last player can get.
- * The reason is that under the rule of game, each player will try the strategy that max its score.
- * Therefore, to find if player 1 can win, check the max points player 2 can reach and decide if player 1 can win.
- *
- * @param nums given int array
- * @return predict whether player 1 is the winner
- */
-public boolean predictTheWinner(int[] nums) {
+    <span style="color:#66d9ef">int</span> n <span style="color:#f92672">=</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> dp <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>n<span style="color:#f92672">]</span><span style="color:#f92672">[</span>n<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
 
-    /* Corner case */
-    if (nums.length % 2 == 0 || nums.length &lt; 2) {
-        return true;
-    }
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> n<span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        dp<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> nums<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-    int n = nums.length;
-    int[][] dp = new int[n][n];
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> length <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> length <span style="color:#f92672">&lt;</span><span style="color:#f92672">=</span> n<span style="color:#f92672">;</span> length<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>           <span style="color:#75715e">// iterate each length
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> n <span style="color:#f92672">-</span> length<span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>              <span style="color:#75715e">// iterate each start index with fixed length
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> i <span style="color:#f92672">+</span> length<span style="color:#f92672">;</span>
+            dp<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">[</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>nums<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">-</span> dp<span style="color:#f92672">[</span>i <span style="color:#f92672">+</span> 1<span style="color:#f92672">]</span><span style="color:#f92672">[</span>j<span style="color:#f92672">]</span><span style="color:#f92672">,</span> nums<span style="color:#f92672">[</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">-</span> dp<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">[</span>j <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
 
-    for (int i = 0; i &lt; n; i++) {
-        dp[i][i] = nums[i];
-    }
-
-    for (int length = 1; length &lt;= n; length++) {           // iterate each length
-        for (int i = 0; i &lt; n - length; i++) {              // iterate each start index with fixed length
-            int j = i + length;
-            dp[i][j] = Math.max(nums[i] - dp[i + 1][j], nums[j] - dp[i][j - 1]);
-        }
-    }
-
-    return dp[0][n - 1] &gt;= 0;
-}
-</code></pre>
-
-<h1 id="stone-game">Stone Game</h1>
-
+    <span style="color:#66d9ef">return</span> dp<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span><span style="color:#f92672">[</span>n <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span> <span style="color:#f92672">&gt;</span><span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h1 id="stone-game">Stone Game</h1>
 <p>Link: <a href="https://leetcode.com/problems/stone-game/">Stone Game</a></p>
-
-<h2 id="problem-description-2">Problem description</h2>
-
+<h2 id="problem-description2">Problem description</h2>
 <p>Alex and Lee play a game with piles of stones.  There are an even number of piles <strong>arranged in a row</strong>, and each pile has a positive integer number of stones <code>piles[i]</code>.</p>
-
 <p>The objective of the game is to end with the most stones.  The total number of stones is odd, so there are no ties.</p>
-
 <p>Alex and Lee take turns, with Alex starting first.  Each turn, a player takes the entire pile of stones from either the beginning or the end of the row.  This continues until there are no more piles left, at which point the person with the most stones wins.</p>
-
 <p>Assuming Alex and Lee play optimally, return <code>True</code> if and only if Alex wins the game.</p>
-
 <p><strong>Example 1:</strong></p>
-
 <pre><code>Input: [5,3,4,5]
 Output: true
 Explanation: 
@@ -502,68 +433,60 @@ Say he takes the first 5, so that the row becomes [3, 4, 5].
 If Lee takes 3, then the board is [4, 5], and Alex takes 5 to win with 10 points.
 If Lee takes the last 5, then the board is [3, 4], and Alex takes 4 to win with 9 points.
 This demonstrated that taking the first 5 was a winning move for Alex, so we return true.
-</code></pre>
-
-<p><strong>Note:</strong></p>
-
+</code></pre><p><strong>Note:</strong></p>
 <ol>
 <li><code>2 &lt;= piles.length &lt;= 500</code></li>
 <li><code>piles.length</code>is even.</li>
 <li><code>1 &lt;= piles[i] &lt;= 500</code></li>
 <li><code>sum(piles)</code>is odd.</li>
 </ol>
-
-<h2 id="method-2">Method</h2>
-
+<h2 id="method2">Method</h2>
 <p>Idea is almost same as <a href="https://leetcode.com/problems/predict-the-winner/">Predict the Winner</a>.</p>
-
 <p>However, this problem is actually meaningless. Since <code>piles.length</code> is even, the first player can always choose all odd or all even elements in array. <code>sum(piles)</code> is odd, then sum of odd elements and sum of even elements will not be equal. Therefore, first player can be guaranteed to win by selecting all odd elements or even elements, judge by sum of all odd or even elements.</p>
+<h2 id="code2">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Min-max problem can be solved by dynamic programming.
+</span><span style="color:#75715e"> * The key of this problem is to correctly define dp[i][j].
+</span><span style="color:#75715e"> * State transition:
+</span><span style="color:#75715e"> * dp[i][j]: how much more scores that the first-in-action player will get from i to j than the second player.
+</span><span style="color:#75715e"> * dp[i][j] = max(nums[i] - dp[i + 1][j], nums[j] - dp[i][j - 1], where 0 &lt;= i &lt; j &lt; n and i + j &lt; n.
+</span><span style="color:#75715e"> * Base case:
+</span><span style="color:#75715e"> * dp[i][i] = i
+</span><span style="color:#75715e"> * At each dp[i][j], the max dp[i][j] is actually to find the max result that last player can get.
+</span><span style="color:#75715e"> * The reason is that under the rule of game, each player will try the strategy that max its score.
+</span><span style="color:#75715e"> * Therefore, to find if player 1 can win, check the max points player 2 can reach and decide if player 1 can win.
+</span><span style="color:#75715e"> * However, this problem is actually meaningless.
+</span><span style="color:#75715e"> * Since piles.length is even, the first player can always choose all odd or all even elements in array.
+</span><span style="color:#75715e"> * sum(piles) is odd, then sum of odd elements and sum of even elements will not be equal.
+</span><span style="color:#75715e"> * Therefore, player 1 will always win by selecting all odd/even elements, judge by sum of all odd/even elements.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param piles given int array
+</span><span style="color:#75715e"> * @return rue if and only if Alex wins the game
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">stoneGame</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> piles<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-<h2 id="code-2">Code</h2>
+    <span style="color:#75715e">/* Corner case */</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>piles<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">&lt;</span><span style="color:#f92672">=</span> 2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-<pre><code class="language-java">/**
- * Min-max problem can be solved by dynamic programming.
- * The key of this problem is to correctly define dp[i][j].
- * State transition:
- * dp[i][j]: how much more scores that the first-in-action player will get from i to j than the second player.
- * dp[i][j] = max(nums[i] - dp[i + 1][j], nums[j] - dp[i][j - 1], where 0 &lt;= i &lt; j &lt; n and i + j &lt; n.
- * Base case:
- * dp[i][i] = i
- * At each dp[i][j], the max dp[i][j] is actually to find the max result that last player can get.
- * The reason is that under the rule of game, each player will try the strategy that max its score.
- * Therefore, to find if player 1 can win, check the max points player 2 can reach and decide if player 1 can win.
- * However, this problem is actually meaningless.
- * Since piles.length is even, the first player can always choose all odd or all even elements in array.
- * sum(piles) is odd, then sum of odd elements and sum of even elements will not be equal.
- * Therefore, player 1 will always win by selecting all odd/even elements, judge by sum of all odd/even elements.
- *
- * @param piles given int array
- * @return rue if and only if Alex wins the game
- */
-public boolean stoneGame(int[] piles) {
+    <span style="color:#66d9ef">int</span> n <span style="color:#f92672">=</span> piles<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> dp <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>n<span style="color:#f92672">]</span><span style="color:#f92672">[</span>n<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
 
-    /* Corner case */
-    if (piles.length &lt;= 2) {
-        return true;
-    }
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> n<span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        dp<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> piles<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-    int n = piles.length;
-    int[][] dp = new int[n][n];
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> length <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> length <span style="color:#f92672">&lt;</span> n<span style="color:#f92672">;</span> length<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> n <span style="color:#f92672">-</span> length<span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> i <span style="color:#f92672">+</span> length<span style="color:#f92672">;</span>
+            dp<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">[</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>piles<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">-</span> dp<span style="color:#f92672">[</span>i <span style="color:#f92672">+</span> 1<span style="color:#f92672">]</span><span style="color:#f92672">[</span>j<span style="color:#f92672">]</span><span style="color:#f92672">,</span> piles<span style="color:#f92672">[</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">-</span> dp<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">[</span>j <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
 
-    for (int i = 0; i &lt; n; i++) {
-        dp[i][i] = piles[i];
-    }
-
-    for (int length = 1; length &lt; n; length++) {
-        for (int i = 0; i &lt; n - length; i++) {
-            int j = i + length;
-            dp[i][j] = Math.max(piles[i] - dp[i + 1][j], piles[j] - dp[i][j - 1]);
-        }
-    }
-
-    return dp[0][n - 1] &gt; 0;
-}
-</code></pre>
+    <span style="color:#66d9ef">return</span> dp<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span><span style="color:#f92672">[</span>n <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span> <span style="color:#f92672">&gt;</span> 0<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div>
               
             </div>
           </div>
@@ -619,7 +542,7 @@ public boolean stoneGame(int[] piles) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>
@@ -677,7 +600,7 @@ public boolean stoneGame(int[] piles) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>

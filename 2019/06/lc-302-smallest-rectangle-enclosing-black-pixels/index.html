@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.59.1 with theme Tranquilpeak 0.4.7-BETA">
+<meta name="generator" content="Hugo 0.60.1 with theme Tranquilpeak 0.4.7-BETA">
 <meta name="author" content="Steve Zhou">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -275,38 +275,13 @@
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
-<ul>
-<li><a href="#smallest-rectangle-enclosing-black-pixels">Smallest Rectangle Enclosing Black Pixels</a>
-<ul>
-<li><a href="#problem-description">Problem description</a></li>
-<li><a href="#method">Method</a></li>
-<li><a href="#code">Code</a></li>
-</ul></li>
-</ul>
-</nav>
-
-<h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
-<ul>
-<li><a href="#smallest-rectangle-enclosing-black-pixels">Smallest Rectangle Enclosing Black Pixels</a>
-<ul>
-<li><a href="#problem-description">Problem description</a></li>
-<li><a href="#method">Method</a></li>
-<li><a href="#code">Code</a></li>
-</ul></li>
-</ul>
-</nav>
-
+              <!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
 <h1 id="smallest-rectangle-enclosing-black-pixels">Smallest Rectangle Enclosing Black Pixels</h1>
-
 <p>Link: <a href="https://leetcode.com/problems/smallest-rectangle-enclosing-black-pixels">Smallest Rectangle Enclosing Black Pixels</a></p>
-
 <h2 id="problem-description">Problem description</h2>
-
 <p>An image is represented by a binary matrix with <code>0</code> as a white pixel and <code>1</code> as a black pixel. The black pixels are connected, i.e., there is only one black region. Pixels are connected horizontally and vertically. Given the location <code>(x, y)</code> of one of the black pixels, return the area of the smallest (axis-aligned) rectangle that encloses all black pixels.</p>
-
 <p><strong>Example:</strong></p>
-
 <pre><code>Input:
 [
   &quot;0010&quot;,
@@ -316,74 +291,69 @@
 and x = 0, y = 2
 
 Output: 6
-</code></pre>
-
-<h2 id="method">Method</h2>
-
+</code></pre><h2 id="method">Method</h2>
 <p>Binary search to find the bottom, top, left right bound of rectangle based on given coord.</p>
-
 <h2 id="code">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Binary search to find the bottom, top, left right bound of rectangle based on given coord.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param image given 2D matrix
+</span><span style="color:#75715e"> * @param x     row of one of the black pixels
+</span><span style="color:#75715e"> * @param y     column of one of the black pixels
+</span><span style="color:#75715e"> * @return area of the smallest (axis-aligned) rectangle that encloses all black pixels
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">minArea</span><span style="color:#f92672">(</span><span style="color:#66d9ef">char</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> image<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> x<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> y<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">int</span> left <span style="color:#f92672">=</span> searchBoundary<span style="color:#f92672">(</span>y<span style="color:#f92672">,</span> image<span style="color:#f92672">,</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">,</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">int</span> right <span style="color:#f92672">=</span> searchBoundary<span style="color:#f92672">(</span>y<span style="color:#f92672">,</span> image<span style="color:#f92672">,</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">,</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">int</span> top <span style="color:#f92672">=</span> searchBoundary<span style="color:#f92672">(</span>x<span style="color:#f92672">,</span> image<span style="color:#f92672">,</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">,</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">int</span> bottom <span style="color:#f92672">=</span> searchBoundary<span style="color:#f92672">(</span>x<span style="color:#f92672">,</span> image<span style="color:#f92672">,</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">,</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">return</span> <span style="color:#f92672">(</span>right <span style="color:#f92672">-</span> left <span style="color:#f92672">+</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">*</span> <span style="color:#f92672">(</span>bottom <span style="color:#f92672">-</span> top <span style="color:#f92672">+</span> 1<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
 
-<pre><code class="language-java">/**
- * Binary search to find the bottom, top, left right bound of rectangle based on given coord.
- *
- * @param image given 2D matrix
- * @param x     row of one of the black pixels
- * @param y     column of one of the black pixels
- * @return area of the smallest (axis-aligned) rectangle that encloses all black pixels
- */
-public int minArea(char[][] image, int x, int y) {
-    int left = searchBoundary(y, image, true, true);
-    int right = searchBoundary(y, image, false, true);
-    int top = searchBoundary(x, image, true, false);
-    int bottom = searchBoundary(x, image, false, false);
-    return (right - left + 1) * (bottom - top + 1);
-}
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Search boundary.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param j          given row or column
+</span><span style="color:#75715e"> * @param g          given 2D matrix
+</span><span style="color:#75715e"> * @param direction  true -&gt; search small boundary (search 0), false -&gt; search big boundary (search 1)
+</span><span style="color:#75715e"> * @param horizontal true -&gt; search horizontal boundary, false -&gt; search vertical boundary
+</span><span style="color:#75715e"> * @return boundary of given input
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">searchBoundary</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> j<span style="color:#f92672">,</span> <span style="color:#66d9ef">char</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> g<span style="color:#f92672">,</span> <span style="color:#66d9ef">boolean</span> direction<span style="color:#f92672">,</span> <span style="color:#66d9ef">boolean</span> horizontal<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">int</span> n <span style="color:#f92672">=</span> horizontal <span style="color:#f92672">?</span> g<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span><span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">:</span> g<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span>       <span style="color:#75715e">// length limit of given coord
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> left <span style="color:#f92672">=</span> direction <span style="color:#f92672">?</span> 0 <span style="color:#f92672">:</span> j<span style="color:#f92672">,</span> right <span style="color:#f92672">=</span> direction <span style="color:#f92672">?</span> j <span style="color:#f92672">:</span> n <span style="color:#f92672">-</span> 1<span style="color:#f92672">;</span>        <span style="color:#75715e">// binary search start boundary
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> a <span style="color:#f92672">=</span> direction <span style="color:#f92672">?</span> 0 <span style="color:#f92672">:</span> 1<span style="color:#f92672">,</span> b <span style="color:#f92672">=</span> 1 <span style="color:#f92672">-</span> a<span style="color:#f92672">;</span>     <span style="color:#75715e">// find 0 or find 1
+</span><span style="color:#75715e"></span>
+    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>left <span style="color:#f92672">&lt;</span> right<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-/**
- * Search boundary.
- *
- * @param j          given row or column
- * @param g          given 2D matrix
- * @param direction  true -&gt; search small boundary (search 0), false -&gt; search big boundary (search 1)
- * @param horizontal true -&gt; search horizontal boundary, false -&gt; search vertical boundary
- * @return boundary of given input
- */
-private int searchBoundary(int j, char[][] g, boolean direction, boolean horizontal) {
-    int n = horizontal ? g[0].length : g.length;       // length limit of given coord
-    int left = direction ? 0 : j, right = direction ? j : n - 1;        // binary search start boundary
-    int a = direction ? 0 : 1, b = 1 - a;     // find 0 or find 1
+        <span style="color:#66d9ef">int</span> mid <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>left <span style="color:#f92672">+</span> right <span style="color:#f92672">+</span> a<span style="color:#f92672">)</span> <span style="color:#f92672">/</span> 2<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>checkLine<span style="color:#f92672">(</span>mid<span style="color:#f92672">,</span> horizontal<span style="color:#f92672">,</span> g<span style="color:#f92672">)</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> direction<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            right <span style="color:#f92672">=</span> mid <span style="color:#f92672">-</span> a<span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+            left <span style="color:#f92672">=</span> mid <span style="color:#f92672">+</span> b<span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">return</span> right<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
 
-    while (left &lt; right) {
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Check each row or column to find 0 or 1, depend on given condition.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param j           given coord
+</span><span style="color:#75715e"> * @param checkColumn true -&gt; checking column, false -&gt; checking row
+</span><span style="color:#75715e"> * @param g           given 2D matrix
+</span><span style="color:#75715e"> * @return return true if found &#39;1&#39;
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">checkLine</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> j<span style="color:#f92672">,</span> <span style="color:#66d9ef">boolean</span> checkColumn<span style="color:#f92672">,</span> <span style="color:#66d9ef">char</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> g<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-        int mid = (left + right + a) / 2;
-        if (checkLine(mid, horizontal, g) == direction) {
-            right = mid - a;
-        } else {
-            left = mid + b;
-        }
-    }
-    return right;
-}
-
-/**
- * Check each row or column to find 0 or 1, depend on given condition.
- *
- * @param j           given coord
- * @param checkColumn true -&gt; checking column, false -&gt; checking row
- * @param g           given 2D matrix
- * @return return true if found '1'
- */
-private boolean checkLine(int j, boolean checkColumn, char[][] g) {
-
-    for (int n = checkColumn ? g.length : g[0].length, i = 0; i &lt; n; i++) {
-        if (checkColumn &amp;&amp; g[i][j] == '1' || !checkColumn &amp;&amp; g[j][i] == '1') {
-            return true;
-        }
-    }
-    return false;
-}
-</code></pre>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> n <span style="color:#f92672">=</span> checkColumn <span style="color:#f92672">?</span> g<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">:</span> g<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span><span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">,</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> n<span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>checkColumn <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> g<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">[</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;1&#39;</span> <span style="color:#f92672">|</span><span style="color:#f92672">|</span> <span style="color:#f92672">!</span>checkColumn <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> g<span style="color:#f92672">[</span>j<span style="color:#f92672">]</span><span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;1&#39;</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div>
               
             </div>
           </div>
@@ -437,7 +407,7 @@ private boolean checkLine(int j, boolean checkColumn, char[][] g) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>
@@ -495,7 +465,7 @@ private boolean checkLine(int j, boolean checkColumn, char[][] g) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>

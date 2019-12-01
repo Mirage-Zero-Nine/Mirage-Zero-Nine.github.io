@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.59.1 with theme Tranquilpeak 0.4.7-BETA">
+<meta name="generator" content="Hugo 0.60.1 with theme Tranquilpeak 0.4.7-BETA">
 <meta name="author" content="Steve Zhou">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -277,46 +277,24 @@
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
-<ul>
-<li><a href="#shortest-distance-to-target-color">Shortest Distance to Target Color</a>
-<ul>
-<li><a href="#problem-description">Problem description</a></li>
-<li><a href="#method">Method</a></li>
-<li><a href="#code"><strong>Code</strong></a></li>
-</ul></li>
-</ul>
-</nav>
-
+              <!-- raw HTML omitted -->
 <h1 id="shortest-distance-to-target-color">Shortest Distance to Target Color</h1>
-
 <p>Link: <a href="https://leetcode.com/problems/shortest-distance-to-target-color/">Shortest Distance to Target Color</a></p>
-
 <h2 id="problem-description">Problem description</h2>
-
 <p>You are given an array <code>colors</code>, in which there are three colors: <code>1</code>, <code>2</code> and <code>3</code>.</p>
-
 <p>You are also given some queries. Each query consists of two integers <code>i</code> and <code>c</code>, return the shortest distance between the given index <code>i</code> and the target color <code>c</code>. If there is no solution return <code>-1</code>.</p>
-
 <p><strong>Example 1:</strong></p>
-
 <pre><code>Input: colors = [1,1,2,1,3,2,2,3,3], queries = [[1,3],[2,2],[6,1]]
 Output: [3,0,3]
 Explanation: 
 The nearest 3 from index 1 is at index 4 (3 steps away).
 The nearest 2 from index 2 is at index 2 itself (0 steps away).
 The nearest 1 from index 6 is at index 3 (3 steps away).
-</code></pre>
-
-<p><strong>Example 2:</strong></p>
-
+</code></pre><p><strong>Example 2:</strong></p>
 <pre><code>Input: colors = [1,2], queries = [[0,3]]
 Output: [-1]
 Explanation: There is no 3 in the array.
-</code></pre>
-
-<p><strong>Constraints:</strong></p>
-
+</code></pre><p><strong>Constraints:</strong></p>
 <ul>
 <li><code>1 &lt;= colors.length &lt;= 5*10^4</code></li>
 <li><code>1 &lt;= colors[i] &lt;= 3</code></li>
@@ -325,53 +303,49 @@ Explanation: There is no 3 in the array.
 <li><code>0 &lt;= queries[i][0] &lt; colors.length</code></li>
 <li><code>1 &lt;= queries[i][1] &lt;= 3</code></li>
 </ul>
-
 <h2 id="method">Method</h2>
-
 <p>Use a hash map to store the color position. To find the min distance, ceil and floor the closest index in hash set by color, find the min one between them.</p>
-
 <h2 id="code"><strong>Code</strong></h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Use a hash map to store the color position.
+</span><span style="color:#75715e"> * To find the min distance, ceil and floor the closest index in hash set by color, find the min one between them.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param colors  given colors
+</span><span style="color:#75715e"> * @param queries given queries
+</span><span style="color:#75715e"> * @return shortest distance between the given index i and the target color c
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">shortestDistanceColor</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> colors<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> queries<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> out <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    HashMap<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">,</span> TreeSet<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span> m <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashMap<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>     <span style="color:#75715e">// key: colors value: position of color
+</span><span style="color:#75715e"></span>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> colors<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#f92672">!</span>m<span style="color:#f92672">.</span><span style="color:#a6e22e">containsKey</span><span style="color:#f92672">(</span>colors<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            m<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>colors<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">,</span> <span style="color:#66d9ef">new</span> TreeSet<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+        m<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>colors<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">)</span><span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-<pre><code class="language-java">/**
- * Use a hash map to store the color position.
- * To find the min distance, ceil and floor the closest index in hash set by color, find the min one between them.
- *
- * @param colors  given colors
- * @param queries given queries
- * @return shortest distance between the given index i and the target color c
- */
-public List&lt;Integer&gt; shortestDistanceColor(int[] colors, int[][] queries) {
-    List&lt;Integer&gt; out = new LinkedList&lt;&gt;();
-    HashMap&lt;Integer, TreeSet&lt;Integer&gt;&gt; m = new HashMap&lt;&gt;();     // key: colors value: position of color
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> q <span style="color:#f92672">:</span> queries<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> q<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span><span style="color:#f92672">,</span> c <span style="color:#f92672">=</span> q<span style="color:#f92672">[</span>1<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+        TreeSet<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> s <span style="color:#f92672">=</span> m<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>c<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-    for (int i = 0; i &lt; colors.length; i++) {
-        if (!m.containsKey(colors[i])) {
-            m.put(colors[i], new TreeSet&lt;&gt;());
-        }
-        m.get(colors[i]).add(i);
-    }
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#f92672">!</span>m<span style="color:#f92672">.</span><span style="color:#a6e22e">containsKey</span><span style="color:#f92672">(</span>c<span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            out<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#f92672">-</span>1<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+            Integer a <span style="color:#f92672">=</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">floor</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span><span style="color:#f92672">,</span> b <span style="color:#f92672">=</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">ceiling</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>a <span style="color:#f92672">!</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> b <span style="color:#f92672">!</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                out<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>Math<span style="color:#f92672">.</span><span style="color:#a6e22e">min</span><span style="color:#f92672">(</span>Math<span style="color:#f92672">.</span><span style="color:#a6e22e">abs</span><span style="color:#f92672">(</span>i <span style="color:#f92672">-</span> a<span style="color:#f92672">)</span><span style="color:#f92672">,</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">abs</span><span style="color:#f92672">(</span>i <span style="color:#f92672">-</span> b<span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>a <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                out<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>Math<span style="color:#f92672">.</span><span style="color:#a6e22e">abs</span><span style="color:#f92672">(</span>i <span style="color:#f92672">-</span> b<span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+                out<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>Math<span style="color:#f92672">.</span><span style="color:#a6e22e">abs</span><span style="color:#f92672">(</span>i <span style="color:#f92672">-</span> a<span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
 
-    for (int[] q : queries) {
-        int i = q[0], c = q[1];
-        TreeSet&lt;Integer&gt; s = m.get(c);
-
-        if (!m.containsKey(c)) {
-            out.add(-1);
-        } else {
-            Integer a = s.floor(i), b = s.ceiling(i);
-            if (a != null &amp;&amp; b != null) {
-                out.add(Math.min(Math.abs(i - a), Math.abs(i - b)));
-            } else if (a == null) {
-                out.add(Math.abs(i - b));
-            } else {
-                out.add(Math.abs(i - a));
-            }
-        }
-    }
-
-    return out;
-}
-</code></pre>
+    <span style="color:#66d9ef">return</span> out<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div>
               
             </div>
           </div>
@@ -427,7 +401,7 @@ public List&lt;Integer&gt; shortestDistanceColor(int[] colors, int[][] queries) 
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>
@@ -485,7 +459,7 @@ public List&lt;Integer&gt; shortestDistanceColor(int[] colors, int[][] queries) 
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>

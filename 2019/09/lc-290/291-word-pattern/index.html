@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.59.1 with theme Tranquilpeak 0.4.7-BETA">
+<meta name="generator" content="Hugo 0.60.1 with theme Tranquilpeak 0.4.7-BETA">
 <meta name="author" content="Steve Zhou">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -277,222 +277,163 @@
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
-<ul>
-<li><a href="#word-pattern">Word Pattern</a>
-<ul>
-<li><a href="#problem-description">Problem description</a></li>
-<li><a href="#method">Method</a></li>
-<li><a href="#code">Code</a></li>
-</ul></li>
-<li><a href="#word-pattern-ii">Word Pattern II</a>
-<ul>
-<li><a href="#problem-description-1">Problem description</a></li>
-<li><a href="#method-1">Method</a></li>
-<li><a href="#code-1">Code</a></li>
-</ul></li>
-</ul>
-</nav>
-
+              <!-- raw HTML omitted -->
 <h1 id="word-pattern">Word Pattern</h1>
-
 <p>Link: <a href="https://leetcode.com/problems/word-pattern/">Word Pattern</a></p>
-
 <h2 id="problem-description">Problem description</h2>
-
 <p>Given a <code>pattern</code> and a string <code>str</code>, find if <code>str</code> follows the same pattern.</p>
-
 <p>Here <strong>follow</strong> means a full match, such that there is a bijection between a letter in <code>pattern</code> and a <strong>non-empty</strong> word in <code>str</code>.</p>
-
 <p><strong>Example 1:</strong></p>
-
 <pre><code>Input: pattern = &quot;abba&quot;, str = &quot;dog cat cat dog&quot;
 Output: true
-</code></pre>
-
-<p><strong>Example 2:</strong></p>
-
+</code></pre><p><strong>Example 2:</strong></p>
 <pre><code>Input:pattern = &quot;abba&quot;, str = &quot;dog cat cat fish&quot;
 Output: false
-</code></pre>
-
-<p><strong>Example 3:</strong></p>
-
+</code></pre><p><strong>Example 3:</strong></p>
 <pre><code>Input: pattern = &quot;aaaa&quot;, str = &quot;dog cat cat dog&quot;
 Output: false
-</code></pre>
-
-<p><strong>Example 4:</strong></p>
-
+</code></pre><p><strong>Example 4:</strong></p>
 <pre><code>Input: pattern = &quot;abba&quot;, str = &quot;dog dog dog dog&quot;
 Output: false
-</code></pre>
-
-<p><strong>Notes:</strong>
+</code></pre><p><strong>Notes:</strong>
 You may assume <code>pattern</code> contains only lowercase letters, and <code>str</code> contains lowercase letters that may be separated by a single space.</p>
-
 <h2 id="method">Method</h2>
-
 <p>Use a hash map to store pattern - string map.</p>
-
 <p>First corner case is that # of string is not matched to length of pattern.</p>
-
 <p>During the traverse process, if the map does not contain patter of current string and the string is in map, return false. This is to avoid string like <code>bbb</code> and has a pattern of <code>abb</code>, which is obvious incorrect.</p>
-
 <h2 id="code">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Use a hash map to store pattern - string map.
+</span><span style="color:#75715e"> * During the traverse process, if the map does not contain patter of current string and the string is in map, return false.
+</span><span style="color:#75715e"> * This is to avoid string like &#34;bbb&#34; and has a pattern of &#34;abb&#34;, which is obvious incorrect.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param pattern pattern string
+</span><span style="color:#75715e"> * @param str     given string to find if pattern is matched
+</span><span style="color:#75715e"> * @return if string follows the same pattern
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">wordPattern</span><span style="color:#f92672">(</span>String pattern<span style="color:#f92672">,</span> String str<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-<pre><code class="language-java">/**
- * Use a hash map to store pattern - string map.
- * During the traverse process, if the map does not contain patter of current string and the string is in map, return false.
- * This is to avoid string like &quot;bbb&quot; and has a pattern of &quot;abb&quot;, which is obvious incorrect.
- *
- * @param pattern pattern string
- * @param str     given string to find if pattern is matched
- * @return if string follows the same pattern
- */
-public boolean wordPattern(String pattern, String str) {
+    <span style="color:#75715e">/* Corner case */</span>
+    String<span style="color:#f92672">[</span><span style="color:#f92672">]</span> list <span style="color:#f92672">=</span> str<span style="color:#f92672">.</span><span style="color:#a6e22e">split</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34; &#34;</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>pattern<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">!</span><span style="color:#f92672">=</span> list<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-    /* Corner case */
-    String[] list = str.split(&quot; &quot;);
-    if (pattern.length() != list.length) {
-        return false;
-    }
+    HashMap<span style="color:#f92672">&lt;</span>Character<span style="color:#f92672">,</span> String<span style="color:#f92672">&gt;</span> m <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashMap<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-    HashMap&lt;Character, String&gt; m = new HashMap&lt;&gt;();
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> pattern<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-    for (int i = 0; i &lt; pattern.length(); i++) {
-
-        if (m.containsKey(pattern.charAt(i))) {     // if found a previous pattern
-            if (!m.get(pattern.charAt(i)).equals(list[i])) {
-                return false;
-            }
-        } else {
-            if (m.containsValue(list[i])) {
-                return false;
-            }
-            m.put(pattern.charAt(i), list[i]);
-        }
-    }
-    return true;
-}
-</code></pre>
-
-<h1 id="word-pattern-ii">Word Pattern II</h1>
-
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>m<span style="color:#f92672">.</span><span style="color:#a6e22e">containsKey</span><span style="color:#f92672">(</span>pattern<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>     <span style="color:#75715e">// if found a previous pattern
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#f92672">!</span>m<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>pattern<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">.</span><span style="color:#a6e22e">equals</span><span style="color:#f92672">(</span>list<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>m<span style="color:#f92672">.</span><span style="color:#a6e22e">containsValue</span><span style="color:#f92672">(</span>list<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+            <span style="color:#f92672">}</span>
+            m<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>pattern<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span><span style="color:#f92672">,</span> list<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h1 id="word-pattern-ii">Word Pattern II</h1>
 <p>Link: <a href="https://leetcode.com/problems/word-pattern-ii">Word Pattern II</a></p>
-
-<h2 id="problem-description-1">Problem description</h2>
-
+<h2 id="problem-description1">Problem description</h2>
 <p>Given a <code>pattern</code>and a string <code>str</code>, find if <code>str</code>follows the same pattern.</p>
-
 <p>Here <strong>follow</strong>means a full match, such that there is a bijection between a letter in <code>pattern</code>and a <strong>non-empty</strong>substring in <code>str</code>.</p>
-
 <p><strong>Example 1:</strong></p>
-
 <pre><code>Input: pattern = &quot;abab&quot;, str = &quot;redblueredblue&quot;
 Output: true
-</code></pre>
-
-<p><strong>Example 2:</strong></p>
-
+</code></pre><p><strong>Example 2:</strong></p>
 <pre><code>Input: pattern = pattern = &quot;aaaa&quot;, str = &quot;asdasdasdasd&quot;
 Output: true
-</code></pre>
-
-<p><strong>Example 3:</strong></p>
-
+</code></pre><p><strong>Example 3:</strong></p>
 <pre><code>Input: pattern = &quot;aabb&quot;, str = &quot;xyzabcxzyabc&quot;
 Output: false
-</code></pre>
-
-<p><strong>Notes:</strong>
+</code></pre><p><strong>Notes:</strong>
 You may assume both <code>pattern</code>and <code>str</code>contains only lowercase letters.</p>
-
-<h2 id="method-1">Method</h2>
-
+<h2 id="method1">Method</h2>
 <p>Backtracking with hash map and hash set as pruning.</p>
+<h2 id="code1">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Backtracking with hash map and hash set as pruning.
+</span><span style="color:#75715e"> * Each char in pattern should be mapping to one or more consecutive substring in string.
+</span><span style="color:#75715e"> * Therefore, each char in pattern can be mapped into a substring, if if str follows the same pattern.
+</span><span style="color:#75715e"> * The length is not fixed, therefore, use backtracking to try every substring and check if they can match.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param pattern given pattern string
+</span><span style="color:#75715e"> * @param str     given string
+</span><span style="color:#75715e"> * @return if str follows the same pattern
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">wordPatternMatch</span><span style="color:#f92672">(</span>String pattern<span style="color:#f92672">,</span> String str<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    HashMap<span style="color:#f92672">&lt;</span>Character<span style="color:#f92672">,</span> String<span style="color:#f92672">&gt;</span> m <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashMap<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>     <span style="color:#75715e">// pattern char -&gt; matched substring
+</span><span style="color:#75715e"></span>    HashSet<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> s <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashSet<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>                <span style="color:#75715e">// previous matched pattern
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">return</span> backtracking<span style="color:#f92672">(</span>str<span style="color:#f92672">,</span> pattern<span style="color:#f92672">,</span> m<span style="color:#f92672">,</span> s<span style="color:#f92672">,</span> 0<span style="color:#f92672">,</span> 0<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
 
-<h2 id="code-1">Code</h2>
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Basically, each char in pattern should be mapping to one or more consecutive substring in string.
+</span><span style="color:#75715e"> * Therefore, backtracking all possible substring and check if they can be matched into pattern.
+</span><span style="color:#75715e"> * Each time in backtracking, check if current pattern char can be found in hash map.
+</span><span style="color:#75715e"> * If current char in pattern has been mapped, check if current string starts with this pattern.
+</span><span style="color:#75715e"> * Otherwise, enlarge one char in string each time and mapping it to pattern char.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param s   given string
+</span><span style="color:#75715e"> * @param p   given pattern string
+</span><span style="color:#75715e"> * @param m   hash map stores pattern char and corresponding string
+</span><span style="color:#75715e"> * @param set hash set stores each char in pattern&#39;s corresponding string
+</span><span style="color:#75715e"> * @param i   start index of string
+</span><span style="color:#75715e"> * @param j   start index of pattern
+</span><span style="color:#75715e"> * @return if str follows the same pattern
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">backtracking</span><span style="color:#f92672">(</span>String s<span style="color:#f92672">,</span> String p<span style="color:#f92672">,</span> HashMap<span style="color:#f92672">&lt;</span>Character<span style="color:#f92672">,</span> String<span style="color:#f92672">&gt;</span> m<span style="color:#f92672">,</span> HashSet<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> set<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> i<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> j<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-<pre><code class="language-java">/**
- * Backtracking with hash map and hash set as pruning.
- * Each char in pattern should be mapping to one or more consecutive substring in string.
- * Therefore, each char in pattern can be mapped into a substring, if if str follows the same pattern.
- * The length is not fixed, therefore, use backtracking to try every substring and check if they can match.
- *
- * @param pattern given pattern string
- * @param str     given string
- * @return if str follows the same pattern
- */
-public boolean wordPatternMatch(String pattern, String str) {
-    HashMap&lt;Character, String&gt; m = new HashMap&lt;&gt;();     // pattern char -&gt; matched substring
-    HashSet&lt;String&gt; s = new HashSet&lt;&gt;();                // previous matched pattern
-    return backtracking(str, pattern, m, s, 0, 0);
-}
+    <span style="color:#75715e">/*
+</span><span style="color:#75715e">     * Exit point.
+</span><span style="color:#75715e">     * If reaches the end of string or pattern, check if both string and pattern reaches the end.
+</span><span style="color:#75715e">     * If so, then the string and pattern is matched.
+</span><span style="color:#75715e">     * If only string or only pattern reaches the end, then this is a mismatch. */</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">=</span><span style="color:#f92672">=</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">|</span><span style="color:#f92672">|</span> j <span style="color:#f92672">=</span><span style="color:#f92672">=</span> p<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">=</span><span style="color:#f92672">=</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> j <span style="color:#f92672">=</span><span style="color:#f92672">=</span> p<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-/**
- * Basically, each char in pattern should be mapping to one or more consecutive substring in string.
- * Therefore, backtracking all possible substring and check if they can be matched into pattern.
- * Each time in backtracking, check if current pattern char can be found in hash map.
- * If current char in pattern has been mapped, check if current string starts with this pattern.
- * Otherwise, enlarge one char in string each time and mapping it to pattern char.
- *
- * @param s   given string
- * @param p   given pattern string
- * @param m   hash map stores pattern char and corresponding string
- * @param set hash set stores each char in pattern's corresponding string
- * @param i   start index of string
- * @param j   start index of pattern
- * @return if str follows the same pattern
- */
-private boolean backtracking(String s, String p, HashMap&lt;Character, String&gt; m, HashSet&lt;String&gt; set, int i, int j) {
+    <span style="color:#66d9ef">char</span> c <span style="color:#f92672">=</span> p<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>j<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-    /*
-     * Exit point.
-     * If reaches the end of string or pattern, check if both string and pattern reaches the end.
-     * If so, then the string and pattern is matched.
-     * If only string or only pattern reaches the end, then this is a mismatch. */
-    if (i == s.length() || j == p.length()) {
-        return (i == s.length() &amp;&amp; j == p.length());
-    }
+    <span style="color:#75715e">/*
+</span><span style="color:#75715e">     * Check if map contains current pattern char.
+</span><span style="color:#75715e">     * If map contains the current pattern, then it was previously mapped to a certain substring. */</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>m<span style="color:#f92672">.</span><span style="color:#a6e22e">containsKey</span><span style="color:#f92672">(</span>c<span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-    char c = p.charAt(j);
+        <span style="color:#75715e">/*
+</span><span style="color:#75715e">         * Map stores pattern char and its corresponding substring.
+</span><span style="color:#75715e">         * Note that each char in pattern should be mapped to same substring, if string follows the same pattern.
+</span><span style="color:#75715e">         * If pattern char is found in map, then check if current string starts with previous mapped substring.
+</span><span style="color:#75715e">         * If so, continue backtracking and return final result (matched? Not matched?).
+</span><span style="color:#75715e">         * Otherwise, current pattern is not matched. Directly return false. */</span>
+        String previousPattern <span style="color:#f92672">=</span> m<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>c<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">startsWith</span><span style="color:#f92672">(</span>previousPattern<span style="color:#f92672">,</span> i<span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> backtracking<span style="color:#f92672">(</span>s<span style="color:#f92672">,</span> p<span style="color:#f92672">,</span> m<span style="color:#f92672">,</span> set<span style="color:#f92672">,</span> i <span style="color:#f92672">+</span> previousPattern<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">,</span> j <span style="color:#f92672">+</span> 1<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-    /*
-     * Check if map contains current pattern char.
-     * If map contains the current pattern, then it was previously mapped to a certain substring. */
-    if (m.containsKey(c)) {
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> k <span style="color:#f92672">=</span> i<span style="color:#f92672">;</span> k <span style="color:#f92672">&lt;</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span> k<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>      <span style="color:#75715e">// backtracking
+</span><span style="color:#75715e"></span>
+        String matched <span style="color:#f92672">=</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">substring</span><span style="color:#f92672">(</span>i<span style="color:#f92672">,</span> k <span style="color:#f92672">+</span> 1<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>set<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>matched<span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>     <span style="color:#75715e">// if matched string is found in set, then it should be in map and handled
+</span><span style="color:#75715e"></span>            m<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>c<span style="color:#f92672">,</span> matched<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-        /*
-         * Map stores pattern char and its corresponding substring.
-         * Note that each char in pattern should be mapped to same substring, if string follows the same pattern.
-         * If pattern char is found in map, then check if current string starts with previous mapped substring.
-         * If so, continue backtracking and return final result (matched? Not matched?).
-         * Otherwise, current pattern is not matched. Directly return false. */
-        String previousPattern = m.get(c);
-        return (s.startsWith(previousPattern, i)) &amp;&amp; backtracking(s, p, m, set, i + previousPattern.length(), j + 1);
-    }
+            <span style="color:#75715e">/*
+</span><span style="color:#75715e">             * The string start position in backtracking should be string without current pattern.
+</span><span style="color:#75715e">             * The pattern start position in backtracking should be next char in pattern. */</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>backtracking<span style="color:#f92672">(</span>s<span style="color:#f92672">,</span> p<span style="color:#f92672">,</span> m<span style="color:#f92672">,</span> set<span style="color:#f92672">,</span> k <span style="color:#f92672">+</span> 1<span style="color:#f92672">,</span> j <span style="color:#f92672">+</span> 1<span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+            <span style="color:#f92672">}</span>
+            set<span style="color:#f92672">.</span><span style="color:#a6e22e">remove</span><span style="color:#f92672">(</span>matched<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            m<span style="color:#f92672">.</span><span style="color:#a6e22e">remove</span><span style="color:#f92672">(</span>c<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
 
-    for (int k = i; k &lt; s.length(); k++) {      // backtracking
-
-        String matched = s.substring(i, k + 1);
-        if (set.add(matched)) {     // if matched string is found in set, then it should be in map and handled
-            m.put(c, matched);
-
-            /*
-             * The string start position in backtracking should be string without current pattern.
-             * The pattern start position in backtracking should be next char in pattern. */
-            if (backtracking(s, p, m, set, k + 1, j + 1)) {
-                return true;
-            }
-            set.remove(matched);
-            m.remove(c);
-        }
-    }
-
-    return false;
-}
-</code></pre>
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div>
               
             </div>
           </div>
@@ -548,7 +489,7 @@ private boolean backtracking(String s, String p, HashMap&lt;Character, String&gt
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>
@@ -606,7 +547,7 @@ private boolean backtracking(String s, String p, HashMap&lt;Character, String&gt
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>

@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.59.1 with theme Tranquilpeak 0.4.7-BETA">
+<meta name="generator" content="Hugo 0.60.1 with theme Tranquilpeak 0.4.7-BETA">
 <meta name="author" content="Steve Zhou">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -281,31 +281,14 @@
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
-<ul>
-<li><a href="#video-stitching">Video Stitching</a>
-<ul>
-<li><a href="#problem-description">Problem description</a></li>
-<li><a href="#method">Method</a></li>
-<li><a href="#code">Code</a></li>
-</ul></li>
-</ul>
-</nav>
-
+              <!-- raw HTML omitted -->
 <h1 id="video-stitching">Video Stitching</h1>
-
 <p>Link: <a href="https://leetcode.com/problems/video-stitching/">Video Stitching</a></p>
-
 <h2 id="problem-description">Problem description</h2>
-
 <p>You are given a series of video clips from a sporting event that lasted <code>T</code>seconds.  These video clips can be overlapping with each other and have varied lengths.</p>
-
 <p>Each video clip <code>clips[i]</code> is an interval: it starts at time <code>clips[i][0]</code>and ends at time <code>clips[i][1]</code>.  We can cut these clips into segments freely: for example, a clip <code>[0, 7]</code>can be cut into segments <code>[0, 1] + [1, 3] + [3, 7]</code>.</p>
-
 <p>Return the minimum number of clips needed so that we can cut the clips into segments that cover the entire sporting event (<code>[0, T]</code>).  If the task is impossible, return <code>-1</code>.</p>
-
 <p><strong>Example 1:</strong></p>
-
 <pre><code>Input: clips = [[0,2],[4,6],[8,10],[1,9],[1,5],[5,9]], T = 10
 Output: 3
 Explanation: 
@@ -313,163 +296,140 @@ We take the clips [0,2], [8,10], [1,9]; a total of 3 clips.
 Then, we can reconstruct the sporting event as follows:
 We cut [1,9] into segments [1,2] + [2,8] + [8,9].
 Now we have segments [0,2] + [2,8] + [8,10] which cover the sporting event [0, 10].
-</code></pre>
-
-<p><strong>Example 2:</strong></p>
-
+</code></pre><p><strong>Example 2:</strong></p>
 <pre><code>Input: clips = [[0,1],[1,2]], T = 5
 Output: -1
 Explanation: 
 We can't cover [0,5] with only [0,1] and [0,2].
-</code></pre>
-
-<p><strong>Example 3:</strong></p>
-
+</code></pre><p><strong>Example 3:</strong></p>
 <pre><code>Input: clips = [[0,1],[6,8],[0,2],[5,6],[0,4],[0,3],[6,7],[1,3],[4,7],[1,4],[2,5],[2,6],[3,4],[4,5],[5,7],[6,9]], T = 9
 Output: 3
 Explanation: 
 We can take clips [0,4], [4,7], and [6,9].
-</code></pre>
-
-<p><strong>Example 4:</strong></p>
-
+</code></pre><p><strong>Example 4:</strong></p>
 <pre><code>Input: clips = [[0,4],[2,8]], T = 5
 Output: 2
 Explanation: 
 Notice you can have extra video after the event ends.
-</code></pre>
-
-<p><strong>Note:</strong></p>
-
+</code></pre><p><strong>Note:</strong></p>
 <ol>
 <li><code>1 &lt;= clips.length &lt;= 100</code></li>
 <li><code>0 &lt;= clips[i][0], clips[i][1] &lt;= 100</code></li>
 <li><code>0 &lt;= T &lt;= 100</code></li>
 </ol>
-
 <h2 id="method">Method</h2>
-
 <p>Greedy or backtracking with pruning.</p>
-
 <p><strong>Greedy</strong>:</p>
-
 <p>Sort the clips by starting time first. Then track current stitching position.</p>
-
 <p>For each iteration, check all overlapping clips. Pick the one that advances stitching position the furthest (find longest one).</p>
-
 <p>Time: <code>O(nlogn)</code>, where n is the number of clips. Sort all clips, then processing each clip only once.</p>
-
 <p><strong>Backtracking with pruning</strong>: <strong>(Not recommended)</strong></p>
-
 <p>Use backtracking to find all possible path from 0 to T. Then find a shortest path.</p>
-
 <p>During the process, use a tree map to find the range of current clip.</p>
-
 <h2 id="code">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Greedy.
+</span><span style="color:#75715e"> * Sort the clips by starting time first.
+</span><span style="color:#75715e"> * Then track current stitching position.
+</span><span style="color:#75715e"> * For each iteration, check all overlapping clips.
+</span><span style="color:#75715e"> * Pick the one that advances stitching position the furthest (find longest one).
+</span><span style="color:#75715e"> * Time: O(nlogn), where n is the number of clips. Sort all clips, then processing each clip only once.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param clips given clips array
+</span><span style="color:#75715e"> * @param T     time range
+</span><span style="color:#75715e"> * @return minimum number of clips needed
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">videoStitching</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> clips<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> T<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-<pre><code class="language-java">/**
- * Greedy.
- * Sort the clips by starting time first.
- * Then track current stitching position.
- * For each iteration, check all overlapping clips.
- * Pick the one that advances stitching position the furthest (find longest one).
- * Time: O(nlogn), where n is the number of clips. Sort all clips, then processing each clip only once.
- *
- * @param clips given clips array
- * @param T     time range
- * @return minimum number of clips needed
- */
-public int videoStitching(int[][] clips, int T) {
+    Arrays<span style="color:#f92672">.</span><span style="color:#a6e22e">sort</span><span style="color:#f92672">(</span>clips<span style="color:#f92672">,</span> <span style="color:#66d9ef">new</span> Comparator<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>        <span style="color:#75715e">// sort array based on start time
+</span><span style="color:#75715e"></span>        <span style="color:#a6e22e">@Override</span>
+        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">compare</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> a<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> b<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>a<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> b<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                <span style="color:#66d9ef">return</span> b<span style="color:#f92672">[</span>1<span style="color:#f92672">]</span> <span style="color:#f92672">-</span> a<span style="color:#f92672">[</span>1<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+            <span style="color:#f92672">}</span>
+            <span style="color:#66d9ef">return</span> a<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span> <span style="color:#f92672">-</span> b<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-    Arrays.sort(clips, new Comparator&lt;int[]&gt;() {        // sort array based on start time
-        @Override
-        public int compare(int[] a, int[] b) {
-            if (a[0] == b[0]) {
-                return b[1] - a[1];
-            }
-            return a[0] - b[0];
-        }
-    });
+    <span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> start <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> end <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> min <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>start <span style="color:#f92672">&lt;</span> T<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-    int i = 0, start = 0, end = 0, min = 0;
-    while (start &lt; T) {
+        min<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">;</span>      <span style="color:#75715e">// select one more clip
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">&lt;</span> clips<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> clips<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">[</span>0<span style="color:#f92672">]</span> <span style="color:#f92672">&lt;</span><span style="color:#f92672">=</span> start<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            end <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>end<span style="color:#f92672">,</span> clips<span style="color:#f92672">[</span>i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">]</span><span style="color:#f92672">[</span>1<span style="color:#f92672">]</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>     <span style="color:#75715e">// select furthest end time
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
 
-        min++;      // select one more clip
-        while (i &lt; clips.length &amp;&amp; clips[i][0] &lt;= start) {
-            end = Math.max(end, clips[i++][1]);     // select furthest end time
-        }
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>start <span style="color:#f92672">=</span><span style="color:#f92672">=</span> end<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">;</span>      <span style="color:#75715e">// if end time can not be moving forward, then T is not reachable
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
 
-        if (start == end) {
-            return -1;      // if end time can not be moving forward, then T is not reachable
-        }
+        start <span style="color:#f92672">=</span> end<span style="color:#f92672">;</span>        <span style="color:#75715e">// mark selected end time as start
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
 
-        start = end;        // mark selected end time as start
-    }
+    <span style="color:#66d9ef">return</span> min<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
 
-    return min;
-}
+<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> min <span style="color:#f92672">=</span> Integer<span style="color:#f92672">.</span><span style="color:#a6e22e">MAX_VALUE</span><span style="color:#f92672">;</span>
 
-private int min = Integer.MAX_VALUE;
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Use backtracking to find all possible path from 0 to T. Then find a min one.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param clips given clips array
+</span><span style="color:#75715e"> * @param T     time range
+</span><span style="color:#75715e"> * @return minimum number of clips needed
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">backtracking</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> clips<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> T<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-/**
- * Use backtracking to find all possible path from 0 to T. Then find a min one.
- *
- * @param clips given clips array
- * @param T     time range
- * @return minimum number of clips needed
- */
-public int backtracking(int[][] clips, int T) {
+    <span style="color:#66d9ef">int</span> n <span style="color:#f92672">=</span> clips<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span>
+    TreeMap<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">,</span> Integer<span style="color:#f92672">&gt;</span> m <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> TreeMap<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    Arrays<span style="color:#f92672">.</span><span style="color:#a6e22e">sort</span><span style="color:#f92672">(</span>clips<span style="color:#f92672">,</span> <span style="color:#66d9ef">new</span> Comparator<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#a6e22e">@Override</span>
+        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">compare</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> a<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> b<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>a<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> b<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                <span style="color:#66d9ef">return</span> b<span style="color:#f92672">[</span>1<span style="color:#f92672">]</span> <span style="color:#f92672">-</span> a<span style="color:#f92672">[</span>1<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+            <span style="color:#f92672">}</span>
+            <span style="color:#66d9ef">return</span> a<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span> <span style="color:#f92672">-</span> b<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-    int n = clips.length;
-    TreeMap&lt;Integer, Integer&gt; m = new TreeMap&lt;&gt;();
-    Arrays.sort(clips, new Comparator&lt;int[]&gt;() {
-        @Override
-        public int compare(int[] a, int[] b) {
-            if (a[0] == b[0]) {
-                return b[1] - a[1];
-            }
-            return a[0] - b[0];
-        }
-    });
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> n<span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        m<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>clips<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">[</span>0<span style="color:#f92672">]</span><span style="color:#f92672">,</span> i<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-    for (int i = 0; i &lt; n; i++) {
-        m.put(clips[i][0], i);
-    }
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> n <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> clips<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">[</span>0<span style="color:#f92672">]</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        dfs<span style="color:#f92672">(</span>m<span style="color:#f92672">,</span> clips<span style="color:#f92672">,</span> i<span style="color:#f92672">,</span> T<span style="color:#f92672">,</span> 1<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-    for (int i = 0; i &lt; n &amp;&amp; clips[i][0] == 0; i++) {
-        dfs(m, clips, i, T, 1);
-    }
+    <span style="color:#66d9ef">return</span> <span style="color:#f92672">(</span>min <span style="color:#f92672">=</span><span style="color:#f92672">=</span> Integer<span style="color:#f92672">.</span><span style="color:#a6e22e">MAX_VALUE</span><span style="color:#f92672">)</span> <span style="color:#f92672">?</span> <span style="color:#f92672">-</span>1 <span style="color:#f92672">:</span> min<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
 
-    return (min == Integer.MAX_VALUE) ? -1 : min;
-}
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Backtracking to find all possible paths.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param m     tree map stores all start time with index
+</span><span style="color:#75715e"> * @param clips given clips array
+</span><span style="color:#75715e"> * @param index start location
+</span><span style="color:#75715e"> * @param t     given total time
+</span><span style="color:#75715e"> * @param l     number of clips taken
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">dfs</span><span style="color:#f92672">(</span>TreeMap<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">,</span> Integer<span style="color:#f92672">&gt;</span> m<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> clips<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> index<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> t<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> l<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-/**
- * Backtracking to find all possible paths.
- *
- * @param m     tree map stores all start time with index
- * @param clips given clips array
- * @param index start location
- * @param t     given total time
- * @param l     number of clips taken
- */
-private void dfs(TreeMap&lt;Integer, Integer&gt; m, int[][] clips, int index, int t, int l) {
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>l <span style="color:#f92672">&lt;</span> min <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> clips<span style="color:#f92672">[</span>index<span style="color:#f92672">]</span><span style="color:#f92672">[</span>1<span style="color:#f92672">]</span> <span style="color:#f92672">&gt;</span><span style="color:#f92672">=</span> t<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        min <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">min</span><span style="color:#f92672">(</span>min<span style="color:#f92672">,</span> l<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>l <span style="color:#f92672">&gt;</span> min<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-    if (l &lt; min &amp;&amp; clips[index][1] &gt;= t) {
-        min = Math.min(min, l);
-        return;
-    }
-    if (l &gt; min) {
-        return;
-    }
-
-    Integer next = m.floorKey(clips[index][1]);
-    if (next != null &amp;&amp; next &lt;= clips[index][1]) {
-        for (int i = m.get(next); i &gt; index; i--) {
-            dfs(m, clips, i, t, l + 1);
-        }
-    }
-}
-</code></pre>
+    Integer next <span style="color:#f92672">=</span> m<span style="color:#f92672">.</span><span style="color:#a6e22e">floorKey</span><span style="color:#f92672">(</span>clips<span style="color:#f92672">[</span>index<span style="color:#f92672">]</span><span style="color:#f92672">[</span>1<span style="color:#f92672">]</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>next <span style="color:#f92672">!</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> next <span style="color:#f92672">&lt;</span><span style="color:#f92672">=</span> clips<span style="color:#f92672">[</span>index<span style="color:#f92672">]</span><span style="color:#f92672">[</span>1<span style="color:#f92672">]</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> m<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>next<span style="color:#f92672">)</span><span style="color:#f92672">;</span> i <span style="color:#f92672">&gt;</span> index<span style="color:#f92672">;</span> i<span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            dfs<span style="color:#f92672">(</span>m<span style="color:#f92672">,</span> clips<span style="color:#f92672">,</span> i<span style="color:#f92672">,</span> t<span style="color:#f92672">,</span> l <span style="color:#f92672">+</span> 1<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div>
               
             </div>
           </div>
@@ -529,7 +489,7 @@ private void dfs(TreeMap&lt;Integer, Integer&gt; m, int[][] clips, int index, in
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>
@@ -587,7 +547,7 @@ private void dfs(TreeMap&lt;Integer, Integer&gt; m, int[][] clips, int index, in
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>

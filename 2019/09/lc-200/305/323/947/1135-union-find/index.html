@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.59.1 with theme Tranquilpeak 0.4.7-BETA">
+<meta name="generator" content="Hugo 0.60.1 with theme Tranquilpeak 0.4.7-BETA">
 <meta name="author" content="Steve Zhou">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -283,51 +283,12 @@
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
-<ul>
-<li><a href="#number-of-islands">Number of Islands</a>
-<ul>
-<li><a href="#problem-description">Problem description</a></li>
-<li><a href="#method">Method</a></li>
-<li><a href="#code">Code</a></li>
-</ul></li>
-<li><a href="#number-of-islands-ii">Number of Islands II</a>
-<ul>
-<li><a href="#problem-description-1">Problem description</a></li>
-<li><a href="#method-1">Method</a></li>
-<li><a href="#code-1">Code</a></li>
-</ul></li>
-<li><a href="#number-of-connected-components-in-an-undirected-graph">Number of Connected Components in an Undirected Graph</a>
-<ul>
-<li><a href="#problem-description-2">Problem description</a></li>
-<li><a href="#method-2">Method</a></li>
-<li><a href="#code-2">Code</a></li>
-</ul></li>
-<li><a href="#most-stones-removed-with-same-row-or-column">Most Stones Removed with Same Row or Column</a>
-<ul>
-<li><a href="#problem-description-3">Problem description</a></li>
-<li><a href="#method-3">Method</a></li>
-<li><a href="#code-3">Code</a></li>
-</ul></li>
-<li><a href="#connecting-cities-with-minimum-cost">Connecting Cities With Minimum Cost</a>
-<ul>
-<li><a href="#problem-description-4">Problem description</a></li>
-<li><a href="#method-4">Method</a></li>
-<li><a href="#code-4">Code</a></li>
-</ul></li>
-</ul>
-</nav>
-
+              <!-- raw HTML omitted -->
 <h1 id="number-of-islands">Number of Islands</h1>
-
 <p>Link: <a href="https://leetcode.com/problems/number-of-islands">Number of Islands</a></p>
-
 <h2 id="problem-description">Problem description</h2>
-
 <p>Given a 2d grid map of <code>'1'</code>s (land) and <code>'0'</code>s (water), count the number of islands. An island is surrounded by water and is formed by connecting adjacent lands horizontally or vertically. You may assume all four edges of the grid are all surrounded by water.</p>
-
 <p><strong>Example 1:</strong></p>
-
 <pre><code>Input:
 11110
 11010
@@ -335,10 +296,7 @@
 00000
 
 Output: 1
-</code></pre>
-
-<p><strong>Example 2:</strong></p>
-
+</code></pre><p><strong>Example 2:</strong></p>
 <pre><code>Input:
 11000
 11000
@@ -346,306 +304,258 @@ Output: 1
 00011
 
 Output: 3
-</code></pre>
-
-<h2 id="method">Method</h2>
-
+</code></pre><h2 id="method">Method</h2>
 <p>Two approaches: DFS and Union Find.</p>
-
 <p><strong>DFS</strong></p>
-
 <p>Start at each cell with ‘1’, then DFS find all nodes that are connected with current node. Flip  node’s ‘1’ to ‘0’ each time to reduce runtime.</p>
-
 <p><strong>Union Find</strong></p>
-
 <p>First find all nodes and mark them all as individual node. The traverse the whole grid, when two nodes are both ‘1’, union them and find root of them. If they have same root, then the number of islands should be reduced by 1.</p>
-
 <h2 id="code">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * DFS.
+</span><span style="color:#75715e"> * When reaches a &#39;1&#39; then do DFS start at this point and mark all accessible point as visited.
+</span><span style="color:#75715e"> * Iterate all cells in grid.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param grid given grid
+</span><span style="color:#75715e"> * @return number of connected &#39;1&#39;
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">numIslands</span><span style="color:#f92672">(</span><span style="color:#66d9ef">char</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> grid<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">int</span> count <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
 
-<pre><code class="language-java">/**
- * DFS.
- * When reaches a '1' then do DFS start at this point and mark all accessible point as visited.
- * Iterate all cells in grid.
- *
- * @param grid given grid
- * @return number of connected '1'
- */
-public int numIslands(char[][] grid) {
-    int count = 0;
+    <span style="color:#75715e">/* Corner case */</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>grid<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">&lt;</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> count<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-    /* Corner case */
-    if (grid.length &lt; 1) {
-        return count;
-    }
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> grid<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> j <span style="color:#f92672">&lt;</span> grid<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span><span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> j<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-    for (int i = 0; i &lt; grid.length; i++) {
-        for (int j = 0; j &lt; grid[0].length; j++) {
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>grid<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">[</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;1&#39;</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                count <span style="color:#f92672">+</span><span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span>
+                grid<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">[</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;0&#39;</span><span style="color:#f92672">;</span>
+                dfs<span style="color:#f92672">(</span>grid<span style="color:#f92672">,</span> i<span style="color:#f92672">,</span> j<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">return</span> count<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
 
-            if (grid[i][j] == '1') {
-                count += 1;
-                grid[i][j] = '0';
-                dfs(grid, i, j);
-            }
-        }
-    }
-    return count;
-}
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * DFS to access all accessible points based on current point.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param grid given grid
+</span><span style="color:#75715e"> * @param i    coord x
+</span><span style="color:#75715e"> * @param j    coord y
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">dfs</span><span style="color:#f92672">(</span><span style="color:#66d9ef">char</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> grid<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> i<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> j<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> direction <span style="color:#f92672">=</span> <span style="color:#f92672">{</span>1<span style="color:#f92672">,</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">,</span> 0<span style="color:#f92672">,</span> 0<span style="color:#f92672">,</span> 0<span style="color:#f92672">,</span> 0<span style="color:#f92672">,</span> 1<span style="color:#f92672">,</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">}</span><span style="color:#f92672">;</span>
+    grid<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">[</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;0&#39;</span><span style="color:#f92672">;</span>
 
-/**
- * DFS to access all accessible points based on current point.
- *
- * @param grid given grid
- * @param i    coord x
- * @param j    coord y
- */
-private void dfs(char[][] grid, int i, int j) {
-    int[] direction = {1, -1, 0, 0, 0, 0, 1, -1};
-    grid[i][j] = '0';
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> k <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> k <span style="color:#f92672">&lt;</span> 4<span style="color:#f92672">;</span> k<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-    for (int k = 0; k &lt; 4; k++) {
+        <span style="color:#66d9ef">int</span> nextX <span style="color:#f92672">=</span> i <span style="color:#f92672">+</span> direction<span style="color:#f92672">[</span>k<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">int</span> nextY <span style="color:#f92672">=</span> j <span style="color:#f92672">+</span> direction<span style="color:#f92672">[</span>k <span style="color:#f92672">+</span> 4<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
 
-        int nextX = i + direction[k];
-        int nextY = j + direction[k + 4];
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>nextX <span style="color:#f92672">&gt;</span> <span style="color:#f92672">-</span>1 <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> nextX <span style="color:#f92672">&lt;</span> grid<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> nextY <span style="color:#f92672">&gt;</span> <span style="color:#f92672">-</span>1 <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> nextY <span style="color:#f92672">&lt;</span> grid<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span><span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> grid<span style="color:#f92672">[</span>nextX<span style="color:#f92672">]</span><span style="color:#f92672">[</span>nextY<span style="color:#f92672">]</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;1&#39;</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            dfs<span style="color:#f92672">(</span>grid<span style="color:#f92672">,</span> nextX<span style="color:#f92672">,</span> nextY<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
 
-        if (nextX &gt; -1 &amp;&amp; nextX &lt; grid.length &amp;&amp; nextY &gt; -1 &amp;&amp; nextY &lt; grid[0].length &amp;&amp; grid[nextX][nextY] == '1') {
-            dfs(grid, nextX, nextY);
-        }
-    }
-}
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Use union find to connect all nodes that are connected and count all islands.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param grid given grid
+</span><span style="color:#75715e"> * @return number of islands
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">unionFind</span><span style="color:#f92672">(</span><span style="color:#66d9ef">char</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> grid<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-/**
- * Use union find to connect all nodes that are connected and count all islands.
- *
- * @param grid given grid
- * @return number of islands
- */
-public int unionFind(char[][] grid) {
+    <span style="color:#75715e">/* Corner case */</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>grid <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">|</span><span style="color:#f92672">|</span> grid<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 0 <span style="color:#f92672">|</span><span style="color:#f92672">|</span> grid<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span><span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> 0<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-    /* Corner case */
-    if (grid == null || grid.length == 0 || grid[0].length == 0) {
-        return 0;
-    }
+    <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> distance <span style="color:#f92672">=</span> <span style="color:#f92672">{</span><span style="color:#f92672">{</span>1<span style="color:#f92672">,</span> 0<span style="color:#f92672">}</span><span style="color:#f92672">,</span> <span style="color:#f92672">{</span><span style="color:#f92672">-</span>1<span style="color:#f92672">,</span> 0<span style="color:#f92672">}</span><span style="color:#f92672">,</span> <span style="color:#f92672">{</span>0<span style="color:#f92672">,</span> 1<span style="color:#f92672">}</span><span style="color:#f92672">,</span> <span style="color:#f92672">{</span>0<span style="color:#f92672">,</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">}</span><span style="color:#f92672">}</span><span style="color:#f92672">;</span>
 
-    int[][] distance = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+    UnionFind uf <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> UnionFind<span style="color:#f92672">(</span>grid<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">int</span> rows <span style="color:#f92672">=</span> grid<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">int</span> cols <span style="color:#f92672">=</span> grid<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span><span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> rows<span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> j <span style="color:#f92672">&lt;</span> cols<span style="color:#f92672">;</span> j<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>grid<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">[</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;1&#39;</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> d <span style="color:#f92672">:</span> distance<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                    <span style="color:#66d9ef">int</span> x <span style="color:#f92672">=</span> i <span style="color:#f92672">+</span> d<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+                    <span style="color:#66d9ef">int</span> y <span style="color:#f92672">=</span> j <span style="color:#f92672">+</span> d<span style="color:#f92672">[</span>1<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+                    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>x <span style="color:#f92672">&gt;</span><span style="color:#f92672">=</span> 0 <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> x <span style="color:#f92672">&lt;</span> rows <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> y <span style="color:#f92672">&gt;</span><span style="color:#f92672">=</span> 0 <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> y <span style="color:#f92672">&lt;</span> cols <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> grid<span style="color:#f92672">[</span>x<span style="color:#f92672">]</span><span style="color:#f92672">[</span>y<span style="color:#f92672">]</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;1&#39;</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                        <span style="color:#66d9ef">int</span> id1 <span style="color:#f92672">=</span> i <span style="color:#f92672">*</span> cols <span style="color:#f92672">+</span> j<span style="color:#f92672">;</span>
+                        <span style="color:#66d9ef">int</span> id2 <span style="color:#f92672">=</span> x <span style="color:#f92672">*</span> cols <span style="color:#f92672">+</span> y<span style="color:#f92672">;</span>
+                        uf<span style="color:#f92672">.</span><span style="color:#a6e22e">union</span><span style="color:#f92672">(</span>id1<span style="color:#f92672">,</span> id2<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+                    <span style="color:#f92672">}</span>
+                <span style="color:#f92672">}</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">return</span> uf<span style="color:#f92672">.</span><span style="color:#a6e22e">count</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
 
-    UnionFind uf = new UnionFind(grid);
-    int rows = grid.length;
-    int cols = grid[0].length;
-    for (int i = 0; i &lt; rows; i++) {
-        for (int j = 0; j &lt; cols; j++) {
-            if (grid[i][j] == '1') {
-                for (int[] d : distance) {
-                    int x = i + d[0];
-                    int y = j + d[1];
-                    if (x &gt;= 0 &amp;&amp; x &lt; rows &amp;&amp; y &gt;= 0 &amp;&amp; y &lt; cols &amp;&amp; grid[x][y] == '1') {
-                        int id1 = i * cols + j;
-                        int id2 = x * cols + y;
-                        uf.union(id1, id2);
-                    }
-                }
-            }
-        }
-    }
-    return uf.count;
-}
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Union find class specially implemented for this problem.
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">UnionFind</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> father<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">int</span> count <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
 
-/**
- * Union find class specially implemented for this problem.
- */
-class UnionFind {
-    int[] father;
-    int count = 0;
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * Count father of each node. Initially, father of each node is itself.
+</span><span style="color:#75715e">     *
+</span><span style="color:#75715e">     * @param grid given grid
+</span><span style="color:#75715e">     */</span>
+    UnionFind<span style="color:#f92672">(</span><span style="color:#66d9ef">char</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> grid<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        father <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>grid<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">*</span> grid<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span><span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">]</span><span style="color:#f92672">;</span>     <span style="color:#75715e">// contains all nodes in 2D array
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> grid<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> j <span style="color:#f92672">&lt;</span> grid<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span><span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> j<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>grid<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">[</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;1&#39;</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                    <span style="color:#66d9ef">int</span> id <span style="color:#f92672">=</span> i <span style="color:#f92672">*</span> grid<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span><span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">+</span> j<span style="color:#f92672">;</span>
+                    father<span style="color:#f92672">[</span>id<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> id<span style="color:#f92672">;</span>
+                    count<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">;</span>
+                <span style="color:#f92672">}</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
 
-    /**
-     * Count father of each node. Initially, father of each node is itself.
-     *
-     * @param grid given grid
-     */
-    UnionFind(char[][] grid) {
-        father = new int[grid.length * grid[0].length];     // contains all nodes in 2D array
-        for (int i = 0; i &lt; grid.length; i++) {
-            for (int j = 0; j &lt; grid[0].length; j++) {
-                if (grid[i][j] == '1') {
-                    int id = i * grid[0].length + j;
-                    father[id] = id;
-                    count++;
-                }
-            }
-        }
-    }
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * Union two nodes that are both &#39;1&#39;.
+</span><span style="color:#75715e">     * If two nodes are connected, then the # of islands reduced by 1.
+</span><span style="color:#75715e">     *
+</span><span style="color:#75715e">     * @param node1 first node
+</span><span style="color:#75715e">     * @param node2 second node
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">union</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> node1<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> node2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">int</span> find1 <span style="color:#f92672">=</span> find<span style="color:#f92672">(</span>node1<span style="color:#f92672">)</span><span style="color:#f92672">,</span> find2 <span style="color:#f92672">=</span> find<span style="color:#f92672">(</span>node2<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>find1 <span style="color:#f92672">!</span><span style="color:#f92672">=</span> find2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            father<span style="color:#f92672">[</span>find1<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> find2<span style="color:#f92672">;</span>
+            count<span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
 
-    /**
-     * Union two nodes that are both '1'.
-     * If two nodes are connected, then the # of islands reduced by 1.
-     *
-     * @param node1 first node
-     * @param node2 second node
-     */
-    void union(int node1, int node2) {
-        int find1 = find(node1), find2 = find(node2);
-        if (find1 != find2) {
-            father[find1] = find2;
-            count--;
-        }
-    }
-
-    /**
-     * Find root of given node.
-     *
-     * @param node given node
-     * @return root of given node
-     */
-    int find(int node) {
-        if (father[node] == node) {
-            return node;
-        }
-        father[node] = find(father[node]);      // recursively find father
-        return father[node];
-    }
-}
-</code></pre>
-
-<h1 id="number-of-islands-ii">Number of Islands II</h1>
-
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * Find root of given node.
+</span><span style="color:#75715e">     *
+</span><span style="color:#75715e">     * @param node given node
+</span><span style="color:#75715e">     * @return root of given node
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">find</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> node<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>father<span style="color:#f92672">[</span>node<span style="color:#f92672">]</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> node<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">return</span> node<span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+        father<span style="color:#f92672">[</span>node<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> find<span style="color:#f92672">(</span>father<span style="color:#f92672">[</span>node<span style="color:#f92672">]</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>      <span style="color:#75715e">// recursively find father
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">return</span> father<span style="color:#f92672">[</span>node<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h1 id="number-of-islands-ii">Number of Islands II</h1>
 <p>Link: <a href="https://leetcode.com/problems/number-of-islands-ii/">Number of Islands II</a></p>
-
-<h2 id="problem-description-1">Problem description</h2>
-
-<p>A 2d grid map of <code>m</code>rows and <code>n</code>columns is initially filled with water. We may perform an *addLand*operation which turns the water at position (row, col) into a land. Given a list of positions to operate, <strong>count the number of islands after each addLandoperation</strong>. An island is surrounded by water and is formed by connecting adjacent lands horizontally or vertically. You may assume all four edges of the grid are all surrounded by water.</p>
-
+<h2 id="problem-description1">Problem description</h2>
+<p>A 2d grid map of <code>m</code>rows and <code>n</code>columns is initially filled with water. We may perform an <em>addLand</em>operation which turns the water at position (row, col) into a land. Given a list of positions to operate, <strong>count the number of islands after each addLandoperation</strong>. An island is surrounded by water and is formed by connecting adjacent lands horizontally or vertically. You may assume all four edges of the grid are all surrounded by water.</p>
 <p><strong>Example:</strong></p>
-
 <pre><code>Input: m = 3, n = 3, positions = [[0,0], [0,1], [1,2], [2,1]]
 Output: [1,1,2,3]
-</code></pre>
-
-<p><strong>Explanation:</strong></p>
-
+</code></pre><p><strong>Explanation:</strong></p>
 <p>Initially, the 2d grid <code>grid</code>is filled with water. (Assume 0 represents water and 1 represents land).</p>
-
 <pre><code>0 0 0
 0 0 0
 0 0 0
-</code></pre>
-
-<p>Operation #1: addLand(0, 0) turns the water at grid[0][0] into a land.</p>
-
+</code></pre><p>Operation #1: addLand(0, 0) turns the water at grid[0][0] into a land.</p>
 <pre><code>1 0 0
 0 0 0   Number of islands = 1
 0 0 0
-</code></pre>
-
-<p>Operation #2: addLand(0, 1) turns the water at grid[0][1] into a land.</p>
-
+</code></pre><p>Operation #2: addLand(0, 1) turns the water at grid[0][1] into a land.</p>
 <pre><code>1 1 0
 0 0 0   Number of islands = 1
 0 0 0
-</code></pre>
-
-<p>Operation #3: addLand(1, 2) turns the water at grid[1][2] into a land.</p>
-
+</code></pre><p>Operation #3: addLand(1, 2) turns the water at grid[1][2] into a land.</p>
 <pre><code>1 1 0
 0 0 1   Number of islands = 2
 0 0 0
-</code></pre>
-
-<p>Operation #4: addLand(2, 1) turns the water at grid[2][1] into a land.</p>
-
+</code></pre><p>Operation #4: addLand(2, 1) turns the water at grid[2][1] into a land.</p>
 <pre><code>1 1 0
 0 0 1   Number of islands = 3
 0 1 0
-</code></pre>
-
-<p><strong>Follow up:</strong></p>
-
+</code></pre><p><strong>Follow up:</strong></p>
 <p>Can you do it in time complexity O(k log mn), where k is the length of the <code>positions</code>?</p>
-
-<h2 id="method-1">Method</h2>
-
+<h2 id="method1">Method</h2>
 <p>Union find.</p>
-
 <p>Each time, when convert a new water cell to land, check its neighbor. If this neighbor is not connected to current island, union it and reduce island number by 1.</p>
-
 <p>Note that avoid the duplication that a cell is repeatedly converted to land.</p>
+<h2 id="code1">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Union find.
+</span><span style="color:#75715e"> * Each time, when convert a new water cell to land, check its neighbor.
+</span><span style="color:#75715e"> * If this neighbor is not connected to current island, union it and reduce island number by 1.
+</span><span style="color:#75715e"> * Note that avoid the duplication that a cell is repeatedly converted to land.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param m         m rows
+</span><span style="color:#75715e"> * @param n         n columns
+</span><span style="color:#75715e"> * @param positions list of positions to operate
+</span><span style="color:#75715e"> * @return count the number of islands after each addLand operation
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">numIslands2</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> m<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> n<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> positions<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> out <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-<h2 id="code-1">Code</h2>
+    <span style="color:#75715e">/* Corner case */</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>m <span style="color:#f92672">&lt;</span><span style="color:#f92672">=</span> 0 <span style="color:#f92672">|</span><span style="color:#f92672">|</span> n <span style="color:#f92672">&lt;</span><span style="color:#f92672">=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> out<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-<pre><code class="language-java">/**
- * Union find.
- * Each time, when convert a new water cell to land, check its neighbor.
- * If this neighbor is not connected to current island, union it and reduce island number by 1.
- * Note that avoid the duplication that a cell is repeatedly converted to land.
- *
- * @param m         m rows
- * @param n         n columns
- * @param positions list of positions to operate
- * @return count the number of islands after each addLand operation
- */
-public List&lt;Integer&gt; numIslands2(int m, int n, int[][] positions) {
-    List&lt;Integer&gt; out = new ArrayList&lt;&gt;();
+    <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> d <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">{</span>1<span style="color:#f92672">,</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">,</span> 0<span style="color:#f92672">,</span> 0<span style="color:#f92672">,</span> 0<span style="color:#f92672">,</span> 0<span style="color:#f92672">,</span> 1<span style="color:#f92672">,</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">}</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> root <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>m <span style="color:#f92672">*</span> n<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+    Arrays<span style="color:#f92672">.</span><span style="color:#a6e22e">fill</span><span style="color:#f92672">(</span>root<span style="color:#f92672">,</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">int</span> count <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
 
-    /* Corner case */
-    if (m &lt;= 0 || n &lt;= 0) {
-        return out;
-    }
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> p <span style="color:#f92672">:</span> positions<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">int</span> r <span style="color:#f92672">=</span> n <span style="color:#f92672">*</span> p<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> p<span style="color:#f92672">[</span>1<span style="color:#f92672">]</span><span style="color:#f92672">;</span>        <span style="color:#75715e">// new land
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>root<span style="color:#f92672">[</span>r<span style="color:#f92672">]</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>        <span style="color:#75715e">// avoid duplication
+</span><span style="color:#75715e"></span>            root<span style="color:#f92672">[</span>r<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> r<span style="color:#f92672">;</span>
+            count<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">;</span>
 
-    int[] d = new int[]{1, -1, 0, 0, 0, 0, 1, -1};
-    int[] root = new int[m * n];
-    Arrays.fill(root, -1);
-    int count = 0;
+            <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> 4<span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                <span style="color:#66d9ef">int</span> xx <span style="color:#f92672">=</span> d<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> p<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span><span style="color:#f92672">,</span> yy <span style="color:#f92672">=</span> d<span style="color:#f92672">[</span>i <span style="color:#f92672">+</span> 4<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> p<span style="color:#f92672">[</span>1<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+                <span style="color:#66d9ef">int</span> id <span style="color:#f92672">=</span> n <span style="color:#f92672">*</span> xx <span style="color:#f92672">+</span> yy<span style="color:#f92672">;</span>
+                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>xx <span style="color:#f92672">&gt;</span><span style="color:#f92672">=</span> 0 <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> xx <span style="color:#f92672">&lt;</span> m <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> yy <span style="color:#f92672">&gt;</span><span style="color:#f92672">=</span> 0 <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> yy <span style="color:#f92672">&lt;</span> n <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> root<span style="color:#f92672">[</span>id<span style="color:#f92672">]</span> <span style="color:#f92672">!</span><span style="color:#f92672">=</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                    <span style="color:#66d9ef">int</span> f <span style="color:#f92672">=</span> find<span style="color:#f92672">(</span>root<span style="color:#f92672">,</span> id<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+                    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>r <span style="color:#f92672">!</span><span style="color:#f92672">=</span> f<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>       <span style="color:#75715e">// find island next to current island
+</span><span style="color:#75715e"></span>                        root<span style="color:#f92672">[</span>r<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> f<span style="color:#f92672">;</span>
+                        r <span style="color:#f92672">=</span> f<span style="color:#f92672">;</span>          <span style="color:#75715e">// reset root for next neighbor
+</span><span style="color:#75715e"></span>                        count<span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">;</span>
+                    <span style="color:#f92672">}</span>
+                <span style="color:#f92672">}</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
 
-    for (int[] p : positions) {
-        int r = n * p[0] + p[1];        // new land
-        if (root[r] == -1) {        // avoid duplication
-            root[r] = r;
-            count++;
+        out<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>count<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-            for (int i = 0; i &lt; 4; i++) {
-                int xx = d[i] + p[0], yy = d[i + 4] + p[1];
-                int id = n * xx + yy;
-                if (xx &gt;= 0 &amp;&amp; xx &lt; m &amp;&amp; yy &gt;= 0 &amp;&amp; yy &lt; n &amp;&amp; root[id] != -1) {
-                    int f = find(root, id);
-                    if (r != f) {       // find island next to current island
-                        root[r] = f;
-                        r = f;          // reset root for next neighbor
-                        count--;
-                    }
-                }
-            }
-        }
+    <span style="color:#66d9ef">return</span> out<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
 
-        out.add(count);
-    }
-
-    return out;
-}
-
-/**
- * Find root of given id.
- *
- * @param root array stores root of each node
- * @param id   find id
- * @return root of current node
- */
-public int find(int[] root, int id) {
-    while (id != root[id]) {
-        root[id] = root[root[id]];
-        id = root[id];
-    }
-    return id;
-}
-</code></pre>
-
-<h1 id="number-of-connected-components-in-an-undirected-graph">Number of Connected Components in an Undirected Graph</h1>
-
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Find root of given id.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param root array stores root of each node
+</span><span style="color:#75715e"> * @param id   find id
+</span><span style="color:#75715e"> * @return root of current node
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">find</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> root<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> id<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>id <span style="color:#f92672">!</span><span style="color:#f92672">=</span> root<span style="color:#f92672">[</span>id<span style="color:#f92672">]</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        root<span style="color:#f92672">[</span>id<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> root<span style="color:#f92672">[</span>root<span style="color:#f92672">[</span>id<span style="color:#f92672">]</span><span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+        id <span style="color:#f92672">=</span> root<span style="color:#f92672">[</span>id<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">return</span> id<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h1 id="number-of-connected-components-in-an-undirected-graph">Number of Connected Components in an Undirected Graph</h1>
 <p>Link: <a href="https://leetcode.com/problems/number-of-connected-components-in-an-undirected-graph/">Number of Connected Components in an Undirected Graph</a></p>
-
-<h2 id="problem-description-2">Problem description</h2>
-
+<h2 id="problem-description2">Problem description</h2>
 <p>Given <code>n</code> nodes labeled from <code>0</code> to <code>n - 1</code> and a list of undirected edges (each edge is a pair of nodes), write a function to find the number of connected components in an undirected graph.</p>
-
 <p><strong>Example 1:</strong></p>
-
 <pre><code>Input: n = 5 and edges = [[0, 1], [1, 2], [3, 4]]
 
      0          3
@@ -653,10 +563,7 @@ public int find(int[] root, int id) {
      1 --- 2    4 
 
 Output: 2
-</code></pre>
-
-<p><strong>Example 2:</strong></p>
-
+</code></pre><p><strong>Example 2:</strong></p>
 <pre><code>Input: n = 5 and edges = [[0, 1], [1, 2], [2, 3], [3, 4]]
 
      0           4
@@ -664,15 +571,10 @@ Output: 2
      1 --- 2 --- 3
 
 Output:  1
-</code></pre>
-
-<p><strong>Note:</strong>
+</code></pre><p><strong>Note:</strong>
 You can assume that no duplicate edges will appear in <code>edges</code>. Since all edges are undirected, <code>[0, 1]</code> is the same as <code>[1, 0]</code> and thus will not appear together in <code>edges</code>.</p>
-
 <p>Given a 2d grid map of <code>'1'</code>s (land) and <code>'0'</code>s (water), count the number of islands. An island is surrounded by water and is formed by connecting adjacent lands horizontally or vertically. You may assume all four edges of the grid are all surrounded by water.</p>
-
 <p><strong>Example 1:</strong></p>
-
 <pre><code>Input:
 11110
 11010
@@ -680,10 +582,7 @@ You can assume that no duplicate edges will appear in <code>edges</code>. Since 
 00000
 
 Output: 1
-</code></pre>
-
-<p><strong>Example 2:</strong></p>
-
+</code></pre><p><strong>Example 2:</strong></p>
 <pre><code>Input:
 11000
 11000
@@ -691,192 +590,146 @@ Output: 1
 00011
 
 Output: 3
-</code></pre>
-
-<h2 id="method-2">Method</h2>
-
+</code></pre><h2 id="method2">Method</h2>
 <p>Classic 1D union find problem. The way to solve it is to find the root of each node.</p>
-
 <p>Assume all nodes are unconnected and the # of unconnected nodes equal to n. If root of node is different, then reduce one on # of unconnected nodes. Finally, the # of unconnected nodes is the # of connected components.</p>
+<h2 id="code2">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Union find.
+</span><span style="color:#75715e"> * Initially, consider all nodes as individual nodes.
+</span><span style="color:#75715e"> * Then traverse all given edges. Union two vertices that connected by edge.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param n     # of nodes
+</span><span style="color:#75715e"> * @param edges edges connect nodes
+</span><span style="color:#75715e"> * @return # of connected components in an undirected graph
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">countComponents</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> n<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> edges<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> union <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>n<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
 
-<h2 id="code-2">Code</h2>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> union<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        union<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> i<span style="color:#f92672">;</span>       <span style="color:#75715e">// count each node as individual node
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> e <span style="color:#f92672">:</span> edges<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">int</span> r1 <span style="color:#f92672">=</span> find<span style="color:#f92672">(</span>e<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span><span style="color:#f92672">,</span> union<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">int</span> r2 <span style="color:#f92672">=</span> find<span style="color:#f92672">(</span>e<span style="color:#f92672">[</span>1<span style="color:#f92672">]</span><span style="color:#f92672">,</span> union<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>r1 <span style="color:#f92672">!</span><span style="color:#f92672">=</span> r2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            union<span style="color:#f92672">[</span>r1<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> union<span style="color:#f92672">[</span>r2<span style="color:#f92672">]</span><span style="color:#f92672">;</span>      <span style="color:#75715e">// union two nodes as connected
+</span><span style="color:#75715e"></span>            n<span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">return</span> n<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
 
-<pre><code class="language-java">/**
- * Union find.
- * Initially, consider all nodes as individual nodes.
- * Then traverse all given edges. Union two vertices that connected by edge.
- *
- * @param n     # of nodes
- * @param edges edges connect nodes
- * @return # of connected components in an undirected graph
- */
-public int countComponents(int n, int[][] edges) {
-    int[] union = new int[n];
-
-    for (int i = 0; i &lt; union.length; i++) {
-        union[i] = i;       // count each node as individual node
-    }
-    for (int[] e : edges) {
-        int r1 = find(e[0], union);
-        int r2 = find(e[1], union);
-        if (r1 != r2) {
-            union[r1] = union[r2];      // union two nodes as connected
-            n--;
-        }
-    }
-    return n;
-}
-
-/**
- * Find operation.
- *
- * @param i   given node
- * @param arr array of union situation
- * @return root of current node
- */
-private int find(int i, int[] arr) {
-    while (i != arr[i]) {
-        arr[i] = arr[arr[i]];       // update root if current node is not root
-        i = arr[i];
-    }
-    return i;
-}
-</code></pre>
-
-<h1 id="most-stones-removed-with-same-row-or-column">Most Stones Removed with Same Row or Column</h1>
-
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Find operation.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param i   given node
+</span><span style="color:#75715e"> * @param arr array of union situation
+</span><span style="color:#75715e"> * @return root of current node
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">find</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> arr<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">!</span><span style="color:#f92672">=</span> arr<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        arr<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> arr<span style="color:#f92672">[</span>arr<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">]</span><span style="color:#f92672">;</span>       <span style="color:#75715e">// update root if current node is not root
+</span><span style="color:#75715e"></span>        i <span style="color:#f92672">=</span> arr<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">return</span> i<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h1 id="most-stones-removed-with-same-row-or-column">Most Stones Removed with Same Row or Column</h1>
 <p>Link: <a href="https://leetcode.com/problems/most-stones-removed-with-same-row-or-column/">Most Stones Removed with Same Row or Column</a></p>
-
-<h2 id="problem-description-3">Problem description</h2>
-
+<h2 id="problem-description3">Problem description</h2>
 <p>On a 2D plane, we place stones at some integer coordinate points.  Each coordinate point may have at most one stone.</p>
-
 <p>Now, a <em>move</em> consists of removing a stone that shares a column or row with another stone on the grid.</p>
-
 <p>What is the largest possible number of moves we can make?</p>
-
 <p><strong>Example 1:</strong></p>
-
 <pre><code>Input: stones = [[0,0],[0,1],[1,0],[1,2],[2,1],[2,2]]
 Output: 5
-</code></pre>
-
-<p><strong>Example 2:</strong></p>
-
+</code></pre><p><strong>Example 2:</strong></p>
 <pre><code>Input: stones = [[0,0],[0,2],[1,1],[2,0],[2,2]]
 Output: 3
-</code></pre>
-
-<p><strong>Example 3:</strong></p>
-
+</code></pre><p><strong>Example 3:</strong></p>
 <pre><code>Input: stones = [[0,0]]
 Output: 0
-</code></pre>
-
-<p><strong>Note:</strong></p>
-
+</code></pre><p><strong>Note:</strong></p>
 <ol>
 <li><code>1 &lt;= stones.length &lt;= 1000</code></li>
 <li><code>0 &lt;= stones[i][j] &lt; 10000</code></li>
 </ol>
-
-<h2 id="method-3">Method</h2>
-
+<h2 id="method3">Method</h2>
 <p>Union find. Note that in this problem, it is not union find on stone, it is based on coord, i.e., x and y.</p>
-
 <p>Count total connected island in whole map, the max move is the total # of 1 reduce # of islands.</p>
+<h2 id="code3">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">private</span> HashMap<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">,</span> Integer<span style="color:#f92672">&gt;</span> m <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashMap<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> count <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
 
-<h2 id="code-3">Code</h2>
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Union find.
+</span><span style="color:#75715e"> * Count total connected island in whole map, the max move is the total # of 1 reduce # of islands.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param stones given array stores stone coord
+</span><span style="color:#75715e"> * @return largest possible number of moves
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">removeStones</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> stones<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-<pre><code class="language-java">private HashMap&lt;Integer, Integer&gt; m = new HashMap&lt;&gt;();
-private int count = 0;
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> stone <span style="color:#f92672">:</span> stones<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        union<span style="color:#f92672">(</span>stone<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span><span style="color:#f92672">,</span> stone<span style="color:#f92672">[</span>1<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> 10000<span style="color:#f92672">)</span><span style="color:#f92672">;</span>     <span style="color:#75715e">// reverse to avoid duplicated coord x and y
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
 
-/**
- * Union find.
- * Count total connected island in whole map, the max move is the total # of 1 reduce # of islands.
- *
- * @param stones given array stores stone coord
- * @return largest possible number of moves
- */
-public int removeStones(int[][] stones) {
+    <span style="color:#66d9ef">return</span> stones<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">-</span> count<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
 
-    for (int[] stone : stones) {
-        union(stone[0], stone[1] + 10000);     // reverse to avoid duplicated coord x and y
-    }
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Find father based on given x.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param x find father of this node
+</span><span style="color:#75715e"> * @return father of x
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">find</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> x<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-    return stones.length - count;
-}
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>m<span style="color:#f92672">.</span><span style="color:#a6e22e">putIfAbsent</span><span style="color:#f92672">(</span>x<span style="color:#f92672">,</span> x<span style="color:#f92672">)</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>      <span style="color:#75715e">// if current node is not root
+</span><span style="color:#75715e"></span>        count<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">;</span>                            <span style="color:#75715e">// one less island can be found
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
 
-/**
- * Find father based on given x.
- *
- * @param x find father of this node
- * @return father of x
- */
-private int find(int x) {
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>x <span style="color:#f92672">!</span><span style="color:#f92672">=</span> m<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>x<span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        m<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>x<span style="color:#f92672">,</span> find<span style="color:#f92672">(</span>m<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>x<span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>           <span style="color:#75715e">// recursively find father, reset father to avoid counting duplication
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
 
-    if (m.putIfAbsent(x, x) == null) {      // if current node is not root
-        count++;                            // one less island can be found
-    }
+    <span style="color:#66d9ef">return</span> m<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>x<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
 
-    if (x != m.get(x)) {
-        m.put(x, find(m.get(x)));           // recursively find father, reset father to avoid counting duplication
-    }
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Union two nodes.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param id1 first node
+</span><span style="color:#75715e"> * @param id2 second node
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">union</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> id1<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> id2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">int</span> f1 <span style="color:#f92672">=</span> find<span style="color:#f92672">(</span>id1<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">int</span> f2 <span style="color:#f92672">=</span> find<span style="color:#f92672">(</span>id2<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-    return m.get(x);
-}
-
-/**
- * Union two nodes.
- *
- * @param id1 first node
- * @param id2 second node
- */
-private void union(int id1, int id2) {
-    int f1 = find(id1);
-    int f2 = find(id2);
-
-    if (f1 != f2) {
-        count--;
-        m.put(f1, f2);
-    }
-}
-</code></pre>
-
-<h1 id="connecting-cities-with-minimum-cost">Connecting Cities With Minimum Cost</h1>
-
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>f1 <span style="color:#f92672">!</span><span style="color:#f92672">=</span> f2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        count<span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">;</span>
+        m<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>f1<span style="color:#f92672">,</span> f2<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h1 id="connecting-cities-with-minimum-cost">Connecting Cities With Minimum Cost</h1>
 <p>Link: [Connecting Cities With Minimum Cost(<a href="https://leetcode.com/problems/connecting-cities-with-minimum-cost/">https://leetcode.com/problems/connecting-cities-with-minimum-cost/</a>)</p>
-
-<h2 id="problem-description-4">Problem description</h2>
-
+<h2 id="problem-description4">Problem description</h2>
 <p>There are <code>N</code> cities numbered from 1 to <code>N</code>.</p>
-
 <p>You are given <code>connections</code>, where each <code>connections[i] = [city1, city2, cost]</code> represents the cost to connect <code>city1</code> and <code>city2</code>together.  (A <em>connection</em> is bidirectional: connecting <code>city1</code> and <code>city2</code> is the same as connecting <code>city2</code> and <code>city1</code>.)</p>
-
 <p>Return the minimum cost so that for every pair of cities, there exists a path of connections (possibly of length 1) that connects those two cities together.  The cost is the sum of the connection costs used. If the task is impossible, return -1.</p>
-
 <p><strong>Example 1:</strong></p>
-
-<p><img src="../../../static/img/1314_ex2-6865767.png" alt="img" /></p>
-
+<p><img src="../../../static/img/1314_ex2-6865767.png" alt="img"></p>
 <pre><code>Input: N = 3, connections = [[1,2,5],[1,3,6],[2,3,1]]
 Output: 6
 Explanation: 
 Choosing any 2 edges will connect all cities so we choose the minimum 2.
-</code></pre>
-
-<p><strong>Example 2:</strong></p>
-
-<p><img src="../../../static/img/1314_ex1-6865767.png" alt="img" /></p>
-
+</code></pre><p><strong>Example 2:</strong></p>
+<p><img src="../../../static/img/1314_ex1-6865767.png" alt="img"></p>
 <pre><code>Input: N = 4, connections = [[1,2,3],[3,4,4]]
 Output: -1
 Explanation: 
 There is no way to connect all cities even if all edges are used.
-</code></pre>
-
-<p><strong>Note:</strong></p>
-
+</code></pre><p><strong>Note:</strong></p>
 <ol>
 <li><code>1 &lt;= N &lt;= 10000</code></li>
 <li><code>1 &lt;= connections.length &lt;= 10000</code></li>
@@ -884,97 +737,92 @@ There is no way to connect all cities even if all edges are used.
 <li><code>0 &lt;= connections[i][2] &lt;= 10^5</code></li>
 <li><code>connections[i][0] != connections[i][1]</code></li>
 </ol>
-
-<h2 id="method-4">Method</h2>
-
+<h2 id="method4">Method</h2>
 <p>Sort connections by distance first, then union each node with sorted distance.</p>
-
 <p>If there is a node that not connected into graph, return -1. Otherwise, return the min distance.</p>
+<h2 id="code4">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Union find.
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">static</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">UnionFind</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> father<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">int</span> count<span style="color:#f92672">;</span>
 
-<h2 id="code-4">Code</h2>
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * Init of class.
+</span><span style="color:#75715e">     *
+</span><span style="color:#75715e">     * @param n # of cities
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">UnionFind</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> n<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        father <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>n<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> father<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            father<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> i<span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+        count <span style="color:#f92672">=</span> n<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-<pre><code class="language-java">/**
- * Union find.
- */
-static class UnionFind {
-    int[] father;
-    int count;
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * Union two nodes in map.
+</span><span style="color:#75715e">     *
+</span><span style="color:#75715e">     * @param a first node
+</span><span style="color:#75715e">     * @param b second node
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">union</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> a<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> b<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">int</span> find1 <span style="color:#f92672">=</span> find<span style="color:#f92672">(</span>a<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">int</span> find2 <span style="color:#f92672">=</span> find<span style="color:#f92672">(</span>b<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-    /**
-     * Init of class.
-     *
-     * @param n # of cities
-     */
-    public UnionFind(int n) {
-        father = new int[n];
-        for (int i = 0; i &lt; father.length; i++) {
-            father[i] = i;
-        }
-        count = n;
-    }
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>find1 <span style="color:#f92672">!</span><span style="color:#f92672">=</span> find2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            father<span style="color:#f92672">[</span>find1<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> find2<span style="color:#f92672">;</span>
+            count<span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
 
-    /**
-     * Union two nodes in map.
-     *
-     * @param a first node
-     * @param b second node
-     */
-    public void union(int a, int b) {
-        int find1 = find(a);
-        int find2 = find(b);
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * Find parent of given node.
+</span><span style="color:#75715e">     *
+</span><span style="color:#75715e">     * @param x given node
+</span><span style="color:#75715e">     * @return parent of given node
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">find</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> x<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>father<span style="color:#f92672">[</span>x<span style="color:#f92672">]</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> x<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">return</span> x<span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+        father<span style="color:#f92672">[</span>x<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> find<span style="color:#f92672">(</span>father<span style="color:#f92672">[</span>x<span style="color:#f92672">]</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>        <span style="color:#75715e">// path compression
+</span><span style="color:#75715e"></span>
+        <span style="color:#66d9ef">return</span> father<span style="color:#f92672">[</span>x<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
 
-        if (find1 != find2) {
-            father[find1] = find2;
-            count--;
-        }
-    }
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Sort connections by distance first, then union each node with sorted distance.
+</span><span style="color:#75715e"> * If there is a node that not connected into graph, return -1.
+</span><span style="color:#75715e"> * Otherwise, return the min distance.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param N           given # of cities
+</span><span style="color:#75715e"> * @param connections connections between cities with cost
+</span><span style="color:#75715e"> * @return minimum cost for every pair of cities, there exists a path of connections connects two cities together
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">minimumCost</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> N<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> connections<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    Arrays<span style="color:#f92672">.</span><span style="color:#a6e22e">sort</span><span style="color:#f92672">(</span>connections<span style="color:#f92672">,</span> <span style="color:#66d9ef">new</span> Comparator<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#a6e22e">@Override</span>
+        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">compare</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> o1<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> o2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">return</span> o1<span style="color:#f92672">[</span>2<span style="color:#f92672">]</span> <span style="color:#f92672">-</span> o2<span style="color:#f92672">[</span>2<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>     <span style="color:#75715e">// sort connections between each city with min cost
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> min <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+    UnionFind uf <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> UnionFind<span style="color:#f92672">(</span>N<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-    /**
-     * Find parent of given node.
-     *
-     * @param x given node
-     * @return parent of given node
-     */
-    public int find(int x) {
-        if (father[x] == x) {
-            return x;
-        }
-        father[x] = find(father[x]);        // path compression
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> c <span style="color:#f92672">:</span> connections<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">int</span> a <span style="color:#f92672">=</span> c<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span><span style="color:#f92672">,</span> b <span style="color:#f92672">=</span> c<span style="color:#f92672">[</span>1<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>uf<span style="color:#f92672">.</span><span style="color:#a6e22e">find</span><span style="color:#f92672">(</span>a<span style="color:#f92672">)</span> <span style="color:#f92672">!</span><span style="color:#f92672">=</span> uf<span style="color:#f92672">.</span><span style="color:#a6e22e">find</span><span style="color:#f92672">(</span>b<span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            uf<span style="color:#f92672">.</span><span style="color:#a6e22e">union</span><span style="color:#f92672">(</span>a<span style="color:#f92672">,</span> b<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            min <span style="color:#f92672">+</span><span style="color:#f92672">=</span> c<span style="color:#f92672">[</span>2<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
 
-        return father[x];
-    }
-}
-
-/**
- * Sort connections by distance first, then union each node with sorted distance.
- * If there is a node that not connected into graph, return -1.
- * Otherwise, return the min distance.
- *
- * @param N           given # of cities
- * @param connections connections between cities with cost
- * @return minimum cost for every pair of cities, there exists a path of connections connects two cities together
- */
-public int minimumCost(int N, int[][] connections) {
-    Arrays.sort(connections, new Comparator&lt;int[]&gt;() {
-        @Override
-        public int compare(int[] o1, int[] o2) {
-            return o1[2] - o2[2];
-        }
-    });     // sort connections between each city with min cost
-    int min = 0;
-    UnionFind uf = new UnionFind(N);
-
-    for (int[] c : connections) {
-        int a = c[0], b = c[1];
-        if (uf.find(a) != uf.find(b)) {
-            uf.union(a, b);
-            min += c[2];
-        }
-    }
-
-    return (uf.count == 1) ? -1 : min;
-}
-</code></pre>
+    <span style="color:#66d9ef">return</span> <span style="color:#f92672">(</span>uf<span style="color:#f92672">.</span><span style="color:#a6e22e">count</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">?</span> <span style="color:#f92672">-</span>1 <span style="color:#f92672">:</span> min<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div>
               
             </div>
           </div>
@@ -1032,7 +880,7 @@ public int minimumCost(int N, int[][] connections) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>
@@ -1090,7 +938,7 @@ public int minimumCost(int N, int[][] connections) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>

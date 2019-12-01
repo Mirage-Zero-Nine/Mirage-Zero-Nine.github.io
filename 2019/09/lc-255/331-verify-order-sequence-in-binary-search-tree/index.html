@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.59.1 with theme Tranquilpeak 0.4.7-BETA">
+<meta name="generator" content="Hugo 0.60.1 with theme Tranquilpeak 0.4.7-BETA">
 <meta name="author" content="Steve Zhou">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -287,137 +287,91 @@
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
-<ul>
-<li><a href="#verify-preorder-sequence-in-binary-search-tree">Verify Preorder Sequence in Binary Search Tree</a>
-<ul>
-<li><a href="#problem-description">Problem description</a></li>
-<li><a href="#method">Method</a></li>
-<li><a href="#code">Code</a></li>
-</ul></li>
-<li><a href="#verify-preorder-serialization-of-a-binary-tree">Verify Preorder Serialization of a Binary Tree</a>
-<ul>
-<li><a href="#problem-description-1">Problem description</a></li>
-<li><a href="#method-1">Method</a>
-<ul>
-<li><a href="#pre-order-traversal">Pre-order traversal</a></li>
-<li><a href="#stack">Stack</a></li>
-<li><a href="#degree">Degree</a></li>
-</ul></li>
-<li><a href="#code-1">Code</a></li>
-</ul></li>
-</ul>
-</nav>
-
+              <!-- raw HTML omitted -->
 <h1 id="verify-preorder-sequence-in-binary-search-tree">Verify Preorder Sequence in Binary Search Tree</h1>
-
 <p>Link: <a href="https://leetcode.com/problems/verify-preorder-sequence-in-binary-search-tree">Verify Preorder Sequence in Binary Search Tree</a></p>
-
 <h2 id="problem-description">Problem description</h2>
-
 <p>Given an array of numbers, verify whether it is the correct preorder traversal sequence of a binary search tree.</p>
-
 <p>You may assume each number in the sequence is unique.</p>
-
 <p>Consider the following binary search tree:</p>
-
 <pre><code>     5
     / \
    2   6
   / \
  1   3
-</code></pre>
-
-<p><strong>Example 1:</strong></p>
-
+</code></pre><p><strong>Example 1:</strong></p>
 <pre><code>Input: [5,2,6,1,3]
 Output: false
-</code></pre>
-
-<p><strong>Example 2:</strong></p>
-
+</code></pre><p><strong>Example 2:</strong></p>
 <pre><code>Input: [5,2,1,3,6]
 Output: true
-</code></pre>
-
-<p><strong>Follow up:</strong>
+</code></pre><p><strong>Follow up:</strong>
 Could you do it using only constant space complexity?</p>
-
 <h2 id="method">Method</h2>
-
 <p>If current element is smaller than top of stack, it is left subtree of all stack nodes, push the it into stack.</p>
-
-<p>Update min value to current subtree&rsquo;s root when traverse to right subtree.</p>
-
+<p>Update min value to current subtree's root when traverse to right subtree.</p>
 <h2 id="code">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Follow the pre-order traversal rule.
+</span><span style="color:#75715e"> * If current element is smaller than top of stack, current node is still in left sub tree.
+</span><span style="color:#75715e"> * Otherwise, current node is previous node&#39;s right child.
+</span><span style="color:#75715e"> * Update min value to current subtree&#39;s root when traverse to right subtree.
+</span><span style="color:#75715e"> * Each time, check if current node is smaller than current tree&#39;s root node.
+</span><span style="color:#75715e"> * Since the traversal process is to find left child in BST, if current node is smaller than root, return false.
+</span><span style="color:#75715e"> * In BST, left children is always smaller than root node.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param preorder given array
+</span><span style="color:#75715e"> * @return whether it is the correct preorder traversal sequence of a binary search tree
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">verifyPreorder</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> preorder<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">int</span> min <span style="color:#f92672">=</span> Integer<span style="color:#f92672">.</span><span style="color:#a6e22e">MIN_VALUE</span><span style="color:#f92672">;</span>
+    Stack<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> s <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Stack<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-<pre><code class="language-java">/**
- * Follow the pre-order traversal rule.
- * If current element is smaller than top of stack, current node is still in left sub tree.
- * Otherwise, current node is previous node's right child.
- * Update min value to current subtree's root when traverse to right subtree.
- * Each time, check if current node is smaller than current tree's root node.
- * Since the traversal process is to find left child in BST, if current node is smaller than root, return false.
- * In BST, left children is always smaller than root node.
- *
- * @param preorder given array
- * @return whether it is the correct preorder traversal sequence of a binary search tree
- */
-public boolean verifyPreorder(int[] preorder) {
-    int min = Integer.MIN_VALUE;
-    Stack&lt;Integer&gt; s = new Stack&lt;&gt;();
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">:</span> preorder<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">&lt;</span> min<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>      <span style="color:#75715e">// if left subtree is smaller than root value, then it is invalid BST
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span><span style="color:#f92672">!</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">empty</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> i <span style="color:#f92672">&gt;</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">peek</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>        <span style="color:#75715e">// if i &gt; s.peek(), then i is in right subtree
+</span><span style="color:#75715e"></span>            min <span style="color:#f92672">=</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">pop</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>      <span style="color:#75715e">// update min value to current subtree&#39;s root when traverse to right subtree
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
+        s<span style="color:#f92672">.</span><span style="color:#a6e22e">push</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
 
-    for (int i : preorder) {
-        if (i &lt; min) {      // if left subtree is smaller than root value, then it is invalid BST
-            return false;
-        }
-        while (!s.empty() &amp;&amp; i &gt; s.peek()) {        // if i &gt; s.peek(), then i is in right subtree
-            min = s.pop();      // update min value to current subtree's root when traverse to right subtree
-        }
-        s.push(i);
-    }
-    return true;
-}
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Use array instead of stack to find root of subtree.
+</span><span style="color:#75715e"> * Use a pointer to point at current root of tree.
+</span><span style="color:#75715e"> * The predecessor in array can be used as stack to store current root.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param preorder given array
+</span><span style="color:#75715e"> * @return whether it is the correct preorder traversal sequence of a binary search tree
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">constantSpace</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> preorder<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-/**
- * Use array instead of stack to find root of subtree.
- * Use a pointer to point at current root of tree.
- * The predecessor in array can be used as stack to store current root.
- *
- * @param preorder given array
- * @return whether it is the correct preorder traversal sequence of a binary search tree
- */
-private boolean constantSpace(int[] preorder) {
+    <span style="color:#75715e">/* Corner case */</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>preorder<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">&lt;</span> 2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-    /* Corner case */
-    if (preorder.length &lt; 2) {
-        return true;
-    }
+    <span style="color:#66d9ef">int</span> min <span style="color:#f92672">=</span> Integer<span style="color:#f92672">.</span><span style="color:#a6e22e">MIN_VALUE</span><span style="color:#f92672">,</span> p <span style="color:#f92672">=</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">;</span>
 
-    int min = Integer.MIN_VALUE, p = -1;
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">:</span> preorder<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">&lt;</span> min<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>p <span style="color:#f92672">&gt;</span><span style="color:#f92672">=</span> 0 <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> i <span style="color:#f92672">&gt;</span> preorder<span style="color:#f92672">[</span>p<span style="color:#f92672">]</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            min <span style="color:#f92672">=</span> preorder<span style="color:#f92672">[</span>p<span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">]</span><span style="color:#f92672">;</span>        <span style="color:#75715e">// in-place find root node of current right subtree
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
+        preorder<span style="color:#f92672">[</span><span style="color:#f92672">+</span><span style="color:#f92672">+</span>p<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> i<span style="color:#f92672">;</span>              <span style="color:#75715e">// in-place fill new root of current tree
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
 
-    for (int i : preorder) {
-        if (i &lt; min) {
-            return false;
-        }
-        while (p &gt;= 0 &amp;&amp; i &gt; preorder[p]) {
-            min = preorder[p--];        // in-place find root node of current right subtree
-        }
-        preorder[++p] = i;              // in-place fill new root of current tree
-    }
-
-    return true;
-}
-</code></pre>
-
-<h1 id="verify-preorder-serialization-of-a-binary-tree">Verify Preorder Serialization of a Binary Tree</h1>
-
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h1 id="verify-preorder-serialization-of-a-binary-tree">Verify Preorder Serialization of a Binary Tree</h1>
 <p>Link: <a href="https://leetcode.com/problems/verify-preorder-serialization-of-a-binary-tree">Verify Preorder Serialization of a Binary Tree</a></p>
-
-<h2 id="problem-description-1">Problem description</h2>
-
-<p>One way to serialize a binary tree is to use pre-order traversal. When we encounter a non-null node, we record the node&rsquo;s value. If it is a null node, we record using a sentinel value such as <code>#</code>.</p>
-
+<h2 id="problem-description1">Problem description</h2>
+<p>One way to serialize a binary tree is to use pre-order traversal. When we encounter a non-null node, we record the node's value. If it is a null node, we record using a sentinel value such as <code>#</code>.</p>
 <pre><code>     _9_
     /   \
    3     2
@@ -425,187 +379,154 @@ private boolean constantSpace(int[] preorder) {
  4   1  #  6
 / \ / \   / \
 # # # #   # #
-</code></pre>
-
-<p>For example, the above binary tree can be serialized to the string <code>&quot;9,3,4,#,#,1,#,#,2,#,6,#,#&quot;</code>, where <code>#</code> represents a null node.</p>
-
+</code></pre><p>For example, the above binary tree can be serialized to the string <code>&quot;9,3,4,#,#,1,#,#,2,#,6,#,#&quot;</code>, where <code>#</code> represents a null node.</p>
 <p>Given a string of comma separated values, verify whether it is a correct preorder traversal serialization of a binary tree. Find an algorithm without reconstructing the tree.</p>
-
 <p>Each comma separated value in the string must be either an integer or a character <code>'#'</code> representing <code>null</code> pointer.</p>
-
 <p>You may assume that the input format is always valid, for example it could never contain two consecutive commas such as <code>&quot;1,,3&quot;</code>.</p>
-
 <p><strong>Example 1:</strong></p>
-
 <pre><code>Input: &quot;9,3,4,#,#,1,#,#,2,#,6,#,#&quot;
 Output: true
-</code></pre>
-
-<p><strong>Example 2:</strong></p>
-
+</code></pre><p><strong>Example 2:</strong></p>
 <pre><code>Input: &quot;1,#&quot;
 Output: false
-</code></pre>
-
-<p><strong>Example 3:</strong></p>
-
+</code></pre><p><strong>Example 3:</strong></p>
 <pre><code>Input: &quot;9,#,#,1&quot;
 Output: false
-</code></pre>
-
-<h2 id="method-1">Method</h2>
-
+</code></pre><h2 id="method1">Method</h2>
 <p>Three approaches.</p>
-
-<h3 id="pre-order-traversal">Pre-order traversal</h3>
-
-<p>First approach is use a counter to count how many slot left for nodes. It&rsquo;s like to use pre order traversal to &ldquo;build&rdquo; the tree.</p>
-
+<h3 id="preorder-traversal">Pre-order traversal</h3>
+<p>First approach is use a counter to count how many slot left for nodes. It's like to use pre order traversal to &ldquo;build&rdquo; the tree.</p>
 <p>The basic rule is, each non-empty node creates two slots for null node (left, right child). Each non-empty node requires one slot, and null node consume one slot of node. Therefore, use &ldquo;,&rdquo; as one slot is used.</p>
-
 <ul>
 <li>If one non-empty node is found, slot + 2.</li>
 <li>If one null node is found, slot remains unchanged.</li>
-<li>If meet a &ldquo;,&rdquo;, regraded as one node is used, slot - 1.</li>
+<li>If meet a &ldquo;,&quot;, regraded as one node is used, slot - 1.</li>
 </ul>
-
 <p>Finally, check if slot is exactly 0.</p>
-
 <h3 id="stack">Stack</h3>
-
-<p>Using stack to store nodes including &ldquo;#&rdquo;.</p>
-
+<p>Using stack to store nodes including &ldquo;#&quot;.</p>
 <ul>
 <li>Case 1: number -&gt; push it to the stack.</li>
 <li>Case 2: # -&gt; check if the top of stack is also #.</li>
 </ul>
-
 <p>If so, pop until top of stack is not #.</p>
-
 <p>Finally, check if stack size is 1, and stack top is #.</p>
-
 <h3 id="degree">Degree</h3>
-
 <p>All non-null node provides 2 outdegree and 1 indegree (2 children and 1 parent), except root. All null node provides 0 outdegree and 1 indegree (0 child and 1 parent).</p>
-
 <p>Difference between out degree and in degree: <code>outdegree - indegree</code>.</p>
-
 <p>If the node is not null, increase diff by 2, because it provides two out degrees.</p>
-
 <p>If a serialization is correct, <code>outdegree - indegree</code> should never be negative and diff will be zero when finished.</p>
+<h2 id="code1">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Pre order traversal to &#34;build&#34; the tree.
+</span><span style="color:#75715e"> * The basic rule is, each non-empty node creates two slots for null node (left, right child).
+</span><span style="color:#75715e"> * Each non-empty node requires one slot, and null node consume one slot of node.
+</span><span style="color:#75715e"> * Therefore, use &#34;,&#34; as one slot is used.
+</span><span style="color:#75715e"> * If one non-empty node is found, slot + 2.
+</span><span style="color:#75715e"> * If one null node is found, slot remains unchanged.
+</span><span style="color:#75715e"> * If meet a &#34;,&#34;, regraded as one node is used, slot - 1.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param preorder given preorder nodes
+</span><span style="color:#75715e"> * @return whether it is a correct preorder traversal serialization of a binary tree
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">isValidSerialization</span><span style="color:#f92672">(</span>String preorder<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">int</span> count <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">int</span> n <span style="color:#f92672">=</span> preorder<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-<h2 id="code-1">Code</h2>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> n<span style="color:#f92672">;</span> <span style="color:#f92672">+</span><span style="color:#f92672">+</span>i<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-<pre><code class="language-java">/**
- * Pre order traversal to &quot;build&quot; the tree.
- * The basic rule is, each non-empty node creates two slots for null node (left, right child).
- * Each non-empty node requires one slot, and null node consume one slot of node.
- * Therefore, use &quot;,&quot; as one slot is used.
- * If one non-empty node is found, slot + 2.
- * If one null node is found, slot remains unchanged.
- * If meet a &quot;,&quot;, regraded as one node is used, slot - 1.
- *
- * @param preorder given preorder nodes
- * @return whether it is a correct preorder traversal serialization of a binary tree
- */
-public boolean isValidSerialization(String preorder) {
-    int count = 1;
-    int n = preorder.length();
+        <span style="color:#75715e">/*
+</span><span style="color:#75715e">         * &#34;,&#34;: use one node
+</span><span style="color:#75715e">         * number: create two slot for nodes (null &amp; non-empty)
+</span><span style="color:#75715e">         * &#34;#&#34;: null node does not take node, combine with &#34;,&#34; to use one slot. */</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>preorder<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;,&#39;</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-    for (int i = 0; i &lt; n; ++i) {
-
-        /*
-         * &quot;,&quot;: use one node
-         * number: create two slot for nodes (null &amp; non-empty)
-         * &quot;#&quot;: null node does not take node, combine with &quot;,&quot; to use one slot. */
-        if (preorder.charAt(i) == ',') {
-
-            count--;        // one node takes one slot
-
-            if (count &lt; 0) {        // no more slots available
-                return false;
-            }
+            count<span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">;</span>        <span style="color:#75715e">// one node takes one slot
+</span><span style="color:#75715e"></span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>count <span style="color:#f92672">&lt;</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>        <span style="color:#75715e">// no more slots available
+</span><span style="color:#75715e"></span>                <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+            <span style="color:#f92672">}</span>
 
 
-            if (preorder.charAt(i - 1) != '#') {         // non-empty node creates two children slots
-                count += 2;
-            }
-        }
-    }
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>preorder<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">!</span><span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;#&#39;</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>         <span style="color:#75715e">// non-empty node creates two children slots
+</span><span style="color:#75715e"></span>                count <span style="color:#f92672">+</span><span style="color:#f92672">=</span> 2<span style="color:#f92672">;</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
 
-    /*
-     * Check the last node.
-     * Since last node does not have &quot;,&quot;, it requires extra check. */
-    count = (preorder.charAt(n - 1) == '#') ? count - 1 : count + 1;
+    <span style="color:#75715e">/*
+</span><span style="color:#75715e">     * Check the last node.
+</span><span style="color:#75715e">     * Since last node does not have &#34;,&#34;, it requires extra check. */</span>
+    count <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>preorder<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>n <span style="color:#f92672">-</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;#&#39;</span><span style="color:#f92672">)</span> <span style="color:#f92672">?</span> count <span style="color:#f92672">-</span> 1 <span style="color:#f92672">:</span> count <span style="color:#f92672">+</span> 1<span style="color:#f92672">;</span>
 
-    return count == 0;      // all slots should be used up
-}
+    <span style="color:#66d9ef">return</span> count <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>      <span style="color:#75715e">// all slots should be used up
+</span><span style="color:#75715e"></span><span style="color:#f92672">}</span>
 
-/**
- * Using stack to store nodes including &quot;#&quot;.
- * Case 1: number -&gt; push it to the stack.
- * Case 2: # -&gt; check if the top of stack is also #.
- * If so, pop until top of stack is not #.
- * Finally, check if stack size is 1, and stack top is #.
- *
- * @param preorder given preorder nodes
- * @return whether it is a correct preorder traversal serialization of a binary tree
- */
-public boolean stack(String preorder) {
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Using stack to store nodes including &#34;#&#34;.
+</span><span style="color:#75715e"> * Case 1: number -&gt; push it to the stack.
+</span><span style="color:#75715e"> * Case 2: # -&gt; check if the top of stack is also #.
+</span><span style="color:#75715e"> * If so, pop until top of stack is not #.
+</span><span style="color:#75715e"> * Finally, check if stack size is 1, and stack top is #.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param preorder given preorder nodes
+</span><span style="color:#75715e"> * @return whether it is a correct preorder traversal serialization of a binary tree
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">stack</span><span style="color:#f92672">(</span>String preorder<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-    /* Corner case */
-    if (preorder.charAt(0) == '#' &amp;&amp; preorder.length() &gt; 1) {
-        return false;
-    }
+    <span style="color:#75715e">/* Corner case */</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>preorder<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>0<span style="color:#f92672">)</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;#&#39;</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> preorder<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">&gt;</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-    Stack&lt;String&gt; s = new Stack&lt;&gt;();
-    String[] arr = preorder.split(&quot;,&quot;);
+    Stack<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> s <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Stack<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    String<span style="color:#f92672">[</span><span style="color:#f92672">]</span> arr <span style="color:#f92672">=</span> preorder<span style="color:#f92672">.</span><span style="color:#a6e22e">split</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;,&#34;</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-    for (int i = 0; i &lt; arr.length; i++) {
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> arr<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-        while (arr[i].equals(&quot;#&quot;) &amp;&amp; !s.isEmpty() &amp;&amp; s.peek().equals(&quot;#&quot;)) {
-            s.pop();
-            if (s.isEmpty()) {
-                return false;       // pop out root -&gt; invalid tree
-            }
-            s.pop();
-        }
-        s.push(arr[i]);
-    }
-    System.out.println(s);
-    return s.size() == 1 &amp;&amp; s.peek().equals(&quot;#&quot;);
-}
+        <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>arr<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">.</span><span style="color:#a6e22e">equals</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;#&#34;</span><span style="color:#f92672">)</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> <span style="color:#f92672">!</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">peek</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">.</span><span style="color:#a6e22e">equals</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;#&#34;</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            s<span style="color:#f92672">.</span><span style="color:#a6e22e">pop</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>       <span style="color:#75715e">// pop out root -&gt; invalid tree
+</span><span style="color:#75715e"></span>            <span style="color:#f92672">}</span>
+            s<span style="color:#f92672">.</span><span style="color:#a6e22e">pop</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+        s<span style="color:#f92672">.</span><span style="color:#a6e22e">push</span><span style="color:#f92672">(</span>arr<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+    System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>s<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">return</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 1 <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">peek</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">.</span><span style="color:#a6e22e">equals</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;#&#34;</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
 
-/**
- * All non-null node provides 2 outdegree and 1 indegree (2 children and 1 parent), except root.
- * All null node provides 0 outdegree and 1 indegree (0 child and 1 parent).
- * Difference between out degree and in degree: outdegree - indegree
- * If the node is not null, increase diff by 2, because it provides two out degrees.
- * If a serialization is correct, outdegree - indegree should never be negative and diff will be zero when finished.
- *
- * @param preorder given preorder nodes
- * @return whether it is a correct preorder traversal serialization of a binary tree
- */
-public boolean degree(String preorder) {
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * All non-null node provides 2 outdegree and 1 indegree (2 children and 1 parent), except root.
+</span><span style="color:#75715e"> * All null node provides 0 outdegree and 1 indegree (0 child and 1 parent).
+</span><span style="color:#75715e"> * Difference between out degree and in degree: outdegree - indegree
+</span><span style="color:#75715e"> * If the node is not null, increase diff by 2, because it provides two out degrees.
+</span><span style="color:#75715e"> * If a serialization is correct, outdegree - indegree should never be negative and diff will be zero when finished.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param preorder given preorder nodes
+</span><span style="color:#75715e"> * @return whether it is a correct preorder traversal serialization of a binary tree
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">degree</span><span style="color:#f92672">(</span>String preorder<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-    /* Corner case */
-    if (preorder.charAt(0) == '#' &amp;&amp; preorder.length() &gt; 1) {
-        return false;
-    }
+    <span style="color:#75715e">/* Corner case */</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>preorder<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>0<span style="color:#f92672">)</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;#&#39;</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> preorder<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">&gt;</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-    String[] nodes = preorder.split(&quot;,&quot;);
-    int diff = 1;       // root has
-    for (String node : nodes) {
-        if (--diff &lt; 0) {
-            return false;
-        }
-        if (!node.equals(&quot;#&quot;)) {
-            diff += 2;
-        }
-    }
-    return diff == 0;
-}
-</code></pre>
+    String<span style="color:#f92672">[</span><span style="color:#f92672">]</span> nodes <span style="color:#f92672">=</span> preorder<span style="color:#f92672">.</span><span style="color:#a6e22e">split</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;,&#34;</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">int</span> diff <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span>       <span style="color:#75715e">// root has
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>String node <span style="color:#f92672">:</span> nodes<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#f92672">-</span><span style="color:#f92672">-</span>diff <span style="color:#f92672">&lt;</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#f92672">!</span>node<span style="color:#f92672">.</span><span style="color:#a6e22e">equals</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;#&#34;</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            diff <span style="color:#f92672">+</span><span style="color:#f92672">=</span> 2<span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">return</span> diff <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div>
               
             </div>
           </div>
@@ -663,7 +584,7 @@ public boolean degree(String preorder) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>
@@ -721,7 +642,7 @@ public boolean degree(String preorder) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>

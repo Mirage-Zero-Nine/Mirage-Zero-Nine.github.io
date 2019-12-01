@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.59.1 with theme Tranquilpeak 0.4.7-BETA">
+<meta name="generator" content="Hugo 0.60.1 with theme Tranquilpeak 0.4.7-BETA">
 <meta name="author" content="Steve Zhou">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -277,94 +277,57 @@
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
-<ul>
-<li><a href="#decode-ways">Decode Ways</a>
-<ul>
-<li><a href="#problem-description">Problem description</a></li>
-<li><a href="#method">Method</a></li>
-<li><a href="#code">Code</a></li>
-</ul></li>
-</ul>
-</nav>
-
-<h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
-<ul>
-<li><a href="#decode-ways">Decode Ways</a>
-<ul>
-<li><a href="#problem-description">Problem description</a></li>
-<li><a href="#method">Method</a></li>
-<li><a href="#code">Code</a></li>
-</ul></li>
-</ul>
-</nav>
-
+              <!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
 <h1 id="decode-ways">Decode Ways</h1>
-
 <p>Link: <a href="https://leetcode.com/problems/decode-ways/">Decode Ways</a></p>
-
 <h2 id="problem-description">Problem description</h2>
-
 <p>A message containing letters from <code>A-Z</code> is being encoded to numbers using the following mapping:</p>
-
 <pre><code>'A' -&gt; 1
 'B' -&gt; 2
 ...
 'Z' -&gt; 26
-</code></pre>
-
-<p>Given a <strong>non-empty</strong> string containing only digits, determine the total number of ways to decode it.</p>
-
+</code></pre><p>Given a <strong>non-empty</strong> string containing only digits, determine the total number of ways to decode it.</p>
 <p><strong>Example 1:</strong></p>
-
 <pre><code>Input: &quot;12&quot;
 Output: 2
 Explanation: It could be decoded as &quot;AB&quot; (1 2) or &quot;L&quot; (12).
-</code></pre>
-
-<p><strong>Example 2:</strong></p>
-
+</code></pre><p><strong>Example 2:</strong></p>
 <pre><code>Input: &quot;226&quot;
 Output: 3
 Explanation: It could be decoded as &quot;BZ&quot; (2 26), &quot;VF&quot; (22 6), or &quot;BBF&quot; (2 2 6).
-</code></pre>
-
-<h2 id="method">Method</h2>
-
+</code></pre><h2 id="method">Method</h2>
 <p>This is a simple dynamic programming problem. The solution is to traverse from back to beginning to avoid initially 0 at given string.</p>
-
 <p>During traversing, if <code>dp[i] != '0’</code>, then <code>dp[i] = dp[i + 1] + dp[i + 2]</code>, and if <code>dp[i] == '0’</code>, then <code>dp[i] = dp[i + 2]</code>. This is because  0 does not count as a coding representation.</p>
-
 <h2 id="code">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Dynamic programming with 1D table.
+</span><span style="color:#75715e"> * Traverse s from back to front to avoid initial &#39;0&#39;.
+</span><span style="color:#75715e"> * During the traverse, if current char is &#39;0&#39; then continue, otherwise check if i, i + 1 is larger than 26.
+</span><span style="color:#75715e"> * If larger than 26, add dp[i + 2] only, otherwise add dp[i + 1] and dp[i + 2].
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param s given int string
+</span><span style="color:#75715e"> * @return total number of ways to decode it
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">numDecodings</span><span style="color:#f92672">(</span>String s<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-<pre><code class="language-java">/**
- * Dynamic programming with 1D table.
- * Traverse s from back to front to avoid initial '0'.
- * During the traverse, if current char is '0' then continue, otherwise check if i, i + 1 is larger than 26.
- * If larger than 26, add dp[i + 2] only, otherwise add dp[i + 1] and dp[i + 2].
- *
- * @param s given int string
- * @return total number of ways to decode it
- */
-public int numDecodings(String s) {
+    <span style="color:#75715e">/* Corner case */</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 0 <span style="color:#f92672">|</span><span style="color:#f92672">|</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>0<span style="color:#f92672">)</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;0&#39;</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> 0<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-    /* Corner case */
-    if (s.length() == 0 || s.charAt(0) == '0') {
-        return 0;
-    }
-
-    int[] dp = new int[s.length() + 1];
-    dp[s.length()] = 1;
-    dp[s.length() - 1] = (s.charAt(s.length() - 1) == '0' ? 0 : 1);     // in case last digit is 0
-
-    for (int i = dp.length - 2; i &gt; -1; i--) {
-        if (s.charAt(i) != '0') {
-            dp[i] = (Integer.parseInt(s.substring(i, i + 2)) &lt; 27) ? dp[i + 1] + dp[i + 2] : dp[i + 1];
-        }
-    }
-    return dp[0];
-}
-</code></pre>
+    <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> dp <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">+</span> 1<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+    dp<span style="color:#f92672">[</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">]</span> <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span>
+    dp<span style="color:#f92672">[</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;0&#39;</span> <span style="color:#f92672">?</span> 0 <span style="color:#f92672">:</span> 1<span style="color:#f92672">)</span><span style="color:#f92672">;</span>     <span style="color:#75715e">// in case last digit is 0
+</span><span style="color:#75715e"></span>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> dp<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">-</span> 2<span style="color:#f92672">;</span> i <span style="color:#f92672">&gt;</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">;</span> i<span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span> <span style="color:#f92672">!</span><span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;0&#39;</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            dp<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>Integer<span style="color:#f92672">.</span><span style="color:#a6e22e">parseInt</span><span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">substring</span><span style="color:#f92672">(</span>i<span style="color:#f92672">,</span> i <span style="color:#f92672">+</span> 2<span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">&lt;</span> 27<span style="color:#f92672">)</span> <span style="color:#f92672">?</span> dp<span style="color:#f92672">[</span>i <span style="color:#f92672">+</span> 1<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> dp<span style="color:#f92672">[</span>i <span style="color:#f92672">+</span> 2<span style="color:#f92672">]</span> <span style="color:#f92672">:</span> dp<span style="color:#f92672">[</span>i <span style="color:#f92672">+</span> 1<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">return</span> dp<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div>
               
             </div>
           </div>
@@ -420,7 +383,7 @@ public int numDecodings(String s) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>
@@ -478,7 +441,7 @@ public int numDecodings(String s) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>

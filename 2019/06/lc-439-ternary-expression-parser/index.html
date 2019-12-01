@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.59.1 with theme Tranquilpeak 0.4.7-BETA">
+<meta name="generator" content="Hugo 0.60.1 with theme Tranquilpeak 0.4.7-BETA">
 <meta name="author" content="Steve Zhou">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -275,27 +275,12 @@
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
-<ul>
-<li><a href="#ternary-expression-parser">Ternary Expression Parser</a>
-<ul>
-<li><a href="#problem-description">Problem description</a></li>
-<li><a href="#method">Method</a></li>
-<li><a href="#code">Code</a></li>
-</ul></li>
-</ul>
-</nav>
-
+              <!-- raw HTML omitted -->
 <h1 id="ternary-expression-parser">Ternary Expression Parser</h1>
-
 <p>Link: <a href="https://leetcode.com/problems/ternary-expression-parser">Ternary Expression Parser</a></p>
-
 <h2 id="problem-description">Problem description</h2>
-
 <p>Given a string representing arbitrarily nested ternary expressions, calculate the result of the expression. You can always assume that the given expression is valid and only consists of digits <code>0-9</code>, <code>?</code>, <code>:</code>, <code>T</code> and <code>F</code> (<code>T</code> and <code>F</code> represent True and False respectively).</p>
-
 <p><strong>Note:</strong></p>
-
 <ol>
 <li>The length of the given string is ≤ 10000.</li>
 <li>Each number will contain only one digit.</li>
@@ -303,18 +288,13 @@
 <li>The condition will always be either <code>T</code> or <code>F</code>. That is, the condition will never be a digit.</li>
 <li>The result of the expression will always evaluate to either a digit <code>0-9</code>, <code>T</code> or <code>F</code>.</li>
 </ol>
-
 <p><strong>Example 1:</strong></p>
-
 <pre><code>Input: &quot;T?2:3&quot;
 
 Output: &quot;2&quot;
 
 Explanation: If true, then result is 2; otherwise result is 3.
-</code></pre>
-
-<p><strong>Example 2:</strong></p>
-
+</code></pre><p><strong>Example 2:</strong></p>
 <pre><code>Input: &quot;F?1:T?4:5&quot;
 
 Output: &quot;4&quot;
@@ -324,10 +304,7 @@ Explanation: The conditional expressions group right-to-left. Using parenthesis,
              &quot;(F ? 1 : (T ? 4 : 5))&quot;                   &quot;(F ? 1 : (T ? 4 : 5))&quot;
           -&gt; &quot;(F ? 1 : 4)&quot;                 or       -&gt; &quot;(T ? 4 : 5)&quot;
           -&gt; &quot;4&quot;                                    -&gt; &quot;4&quot;
-</code></pre>
-
-<p><strong>Example 3:</strong></p>
-
+</code></pre><p><strong>Example 3:</strong></p>
 <pre><code>Input: &quot;T?T?F:5:3&quot;
 
 Output: &quot;F&quot;
@@ -337,58 +314,51 @@ Explanation: The conditional expressions group right-to-left. Using parenthesis,
              &quot;(T ? (T ? F : 5) : 3)&quot;                   &quot;(T ? (T ? F : 5) : 3)&quot;
           -&gt; &quot;(T ? F : 3)&quot;                 or       -&gt; &quot;(T ? F : 5)&quot;
           -&gt; &quot;F&quot;                                    -&gt; &quot;F&quot;
-</code></pre>
-
-<h2 id="method">Method</h2>
-
+</code></pre><h2 id="method">Method</h2>
 <p>Use a stack to store each char in string. Note that both operator and operand has length of 1, therefore, directly push each character into stack will suffice.</p>
-
 <p>Top of stack will always store values from closest ternary expression. Hence, pop out last four elements in stack when find a <code>T</code> or <code>F</code> result will obtain the current closest result of ternary expression.</p>
-
 <p>If there are multiple ternary expressions combined together, stack will assure the top of it contains operands that is related to closest ternary expression. After result is pushed, next ternary expression’s operands will be pushed on the top of stack. In this way, the <code>?</code> at front of expression will obtain operands that from later ternary expressions calculation.</p>
-
 <h2 id="code">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Use a stack to store each char in string.
+</span><span style="color:#75715e"> * Top of stack will always store values from closest ternary expressions.
+</span><span style="color:#75715e"> * Hence, pop out last four elements in stack and push current ternary expression result will finally return result.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param expression given expression string
+</span><span style="color:#75715e"> * @return result of the expression
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> String <span style="color:#a6e22e">parseTernary</span><span style="color:#f92672">(</span>String expression<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>expression<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">&lt;</span> 6<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;&#34;</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-<pre><code class="language-java">/**
- * Use a stack to store each char in string.
- * Top of stack will always store values from closest ternary expressions.
- * Hence, pop out last four elements in stack and push current ternary expression result will finally return result.
- *
- * @param expression given expression string
- * @return result of the expression
- */
-public String parseTernary(String expression) {
-    if (expression.length() &lt; 6) {
-        return &quot;&quot;;
-    }
+    Stack<span style="color:#f92672">&lt;</span>Character<span style="color:#f92672">&gt;</span> temp <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Stack<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-    Stack&lt;Character&gt; temp = new Stack&lt;&gt;();
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> expression<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">;</span> i <span style="color:#f92672">&gt;</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">;</span> i<span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#f92672">!</span>temp<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> temp<span style="color:#f92672">.</span><span style="color:#a6e22e">peek</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;?&#39;</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-    for (int i = expression.length() - 1; i &gt; -1; i--) {
-        if (!temp.isEmpty() &amp;&amp; temp.peek() == '?') {
+            temp<span style="color:#f92672">.</span><span style="color:#a6e22e">pop</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>     <span style="color:#75715e">// pop out &#39;?&#39;
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">char</span> a <span style="color:#f92672">=</span> temp<span style="color:#f92672">.</span><span style="color:#a6e22e">pop</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            temp<span style="color:#f92672">.</span><span style="color:#a6e22e">pop</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>     <span style="color:#75715e">// pop out &#39;:&#39;
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">char</span> b <span style="color:#f92672">=</span> temp<span style="color:#f92672">.</span><span style="color:#a6e22e">pop</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-            temp.pop();     // pop out '?'
-            char a = temp.pop();
-            temp.pop();     // pop out ':'
-            char b = temp.pop();
-
-            /*
-             * Each time, select current ternary expression's result.
-             * Then push this result back to stack.
-             * Top of stack will always be the closest value for current ternary expressions.
-             * Therefore, if multiple ternary expressions are combined together, stack will always return the closest two. */
-            if (expression.charAt(i) == 'T') {
-                temp.push(a);
-            } else if (expression.charAt(i) == 'F') {
-                temp.push(b);
-            }
-        } else {
-            temp.push(expression.charAt(i));
-        }
-    }
-    return temp.pop().toString();
-}
-</code></pre>
+            <span style="color:#75715e">/*
+</span><span style="color:#75715e">             * Each time, select current ternary expression&#39;s result.
+</span><span style="color:#75715e">             * Then push this result back to stack.
+</span><span style="color:#75715e">             * Top of stack will always be the closest value for current ternary expressions.
+</span><span style="color:#75715e">             * Therefore, if multiple ternary expressions are combined together, stack will always return the closest two. */</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>expression<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;T&#39;</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                temp<span style="color:#f92672">.</span><span style="color:#a6e22e">push</span><span style="color:#f92672">(</span>a<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>expression<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;F&#39;</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                temp<span style="color:#f92672">.</span><span style="color:#a6e22e">push</span><span style="color:#f92672">(</span>b<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+            temp<span style="color:#f92672">.</span><span style="color:#a6e22e">push</span><span style="color:#f92672">(</span>expression<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">return</span> temp<span style="color:#f92672">.</span><span style="color:#a6e22e">pop</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">.</span><span style="color:#a6e22e">toString</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div>
               
             </div>
           </div>
@@ -442,7 +412,7 @@ public String parseTernary(String expression) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>
@@ -500,7 +470,7 @@ public String parseTernary(String expression) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>

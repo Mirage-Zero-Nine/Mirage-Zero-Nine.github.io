@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.59.1 with theme Tranquilpeak 0.4.7-BETA">
+<meta name="generator" content="Hugo 0.60.1 with theme Tranquilpeak 0.4.7-BETA">
 <meta name="author" content="Steve Zhou">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -275,39 +275,20 @@
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
-<ul>
-<li><a href="#frog-jump">Frog Jump</a>
-<ul>
-<li><a href="#problem-description">Problem description</a></li>
-<li><a href="#method">Method</a></li>
-<li><a href="#code">Code</a></li>
-</ul></li>
-</ul>
-</nav>
-
+              <!-- raw HTML omitted -->
 <h1 id="frog-jump">Frog Jump</h1>
-
 <p>Link: <a href="https://leetcode.com/problems/frog-jump/">Frog Jump</a></p>
-
 <h2 id="problem-description">Problem description</h2>
-
 <p>A frog is crossing a river. The river is divided into x units and at each unit there may or may not exist a stone. The frog can jump on a stone, but it must not jump into the water.</p>
-
 <p>Given a list of stones&rsquo; positions (in units) in sorted ascending order, determine if the frog is able to cross the river by landing on the last stone. Initially, the frog is on the first stone and assume the first jump must be 1 unit.</p>
-
-<p>If the frog&rsquo;s last jump was *k*units, then its next jump must be either <em>k</em>- 1, <em>k</em>, or <em>k</em>+ 1 units. Note that the frog can only jump in the forward direction.</p>
-
+<p>If the frog's last jump was <em>k</em>units, then its next jump must be either <em>k</em>- 1, <em>k</em>, or <em>k</em>+ 1 units. Note that the frog can only jump in the forward direction.</p>
 <p><strong>Note:</strong></p>
-
 <ul>
 <li>The number of stones is ≥ 2 and is &lt; 1,100.</li>
-<li>Each stone&rsquo;s position will be a non-negative integer &lt; 231.</li>
-<li>The first stone&rsquo;s position is always 0.</li>
+<li>Each stone's position will be a non-negative integer &lt; 231.</li>
+<li>The first stone's position is always 0.</li>
 </ul>
-
 <p><strong>Example 1:</strong></p>
-
 <pre><code>[0,1,3,5,6,8,12,17]
 
 There are a total of 8 stones.
@@ -319,90 +300,82 @@ Return true. The frog can jump to the last stone by jumping
 1 unit to the 2nd stone, then 2 units to the 3rd stone, then 
 2 units to the 4th stone, then 3 units to the 6th stone, 
 4 units to the 7th stone, and 5 units to the 8th stone.
-</code></pre>
-
-<p><strong>Example 2:</strong></p>
-
+</code></pre><p><strong>Example 2:</strong></p>
 <pre><code>[0,1,2,3,4,8,9,11]
 
 Return false. There is no way to jump to the last stone as 
 the gap between the 5th and 6th stone is too large.
-</code></pre>
-
-<h2 id="method">Method</h2>
-
+</code></pre><h2 id="method">Method</h2>
 <p>DFS search with hash set for pruning to find if end position can be reached from start.</p>
-
 <h2 id="code">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * DFS search to find if end position can be reached from start.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param stones given stones
+</span><span style="color:#75715e"> * @return if current position can reach end point
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">canCross</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> stones<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-<pre><code class="language-java">/**
- * DFS search to find if end position can be reached from start.
- *
- * @param stones given stones
- * @return if current position can reach end point
- */
-public boolean canCross(int[] stones) {
+    <span style="color:#75715e">/* Corner case */</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>stones<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>stones<span style="color:#f92672">[</span>1<span style="color:#f92672">]</span> <span style="color:#f92672">&gt;</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-    /* Corner case */
-    if (stones.length == 0) {
-        return true;
-    }
-    if (stones[1] &gt; 1) {
-        return false;
-    }
+    HashSet<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> s <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashSet<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-    HashSet&lt;Integer&gt; s = new HashSet&lt;&gt;();
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> stones<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">&gt;</span> 3 <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> stones<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">&gt;</span> stones<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span> <span style="color:#f92672">*</span> 2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+        s<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>stones<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-    for (int i = 1; i &lt; stones.length; i++) {
-        if (i &gt; 3 &amp;&amp; stones[i] &gt; stones[i - 1] * 2) {
-            return false;
-        }
-        s.add(stones[i]);
-    }
+    <span style="color:#66d9ef">int</span> target <span style="color:#f92672">=</span> stones<span style="color:#f92672">[</span>stones<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
 
-    int target = stones[stones.length - 1];
+    <span style="color:#75715e">// HashSet&lt;String&gt; isVisited = new HashSet&lt;&gt;();
+</span><span style="color:#75715e"></span>    HashSet<span style="color:#f92672">&lt;</span>Long<span style="color:#f92672">&gt;</span> isVisited <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashSet<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-    // HashSet&lt;String&gt; isVisited = new HashSet&lt;&gt;();
-    HashSet&lt;Long&gt; isVisited = new HashSet&lt;&gt;();
+    <span style="color:#66d9ef">return</span> dfs<span style="color:#f92672">(</span>target<span style="color:#f92672">,</span> stones<span style="color:#f92672">[</span>1<span style="color:#f92672">]</span><span style="color:#f92672">,</span> 1<span style="color:#f92672">,</span> s<span style="color:#f92672">,</span> isVisited<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
 
-    return dfs(target, stones[1], 1, s, isVisited);
-}
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * DFS search.
+</span><span style="color:#75715e"> * Each time try 3 jumps: k - 1, k, k + 1.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param target    target position
+</span><span style="color:#75715e"> * @param start     current start index
+</span><span style="color:#75715e"> * @param step      k steps reach to current position
+</span><span style="color:#75715e"> * @param s         set records all positions with stone
+</span><span style="color:#75715e"> * @param isVisited record all previous visited path by position and step
+</span><span style="color:#75715e"> * @return if current position can reach end point
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">dfs</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> target<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> start<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> step<span style="color:#f92672">,</span> HashSet<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> s<span style="color:#f92672">,</span> HashSet<span style="color:#f92672">&lt;</span>Long<span style="color:#f92672">&gt;</span> isVisited<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">long</span> path <span style="color:#f92672">=</span> <span style="color:#f92672">(</span><span style="color:#f92672">(</span><span style="color:#66d9ef">long</span><span style="color:#f92672">)</span> start<span style="color:#f92672">)</span> <span style="color:#f92672">&lt;</span><span style="color:#f92672">&lt;</span> 32 <span style="color:#f92672">|</span> step<span style="color:#f92672">;</span>
+    <span style="color:#75715e">// String path = start+&#34;,&#34;+step;
+</span><span style="color:#75715e"></span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>isVisited<span style="color:#f92672">.</span><span style="color:#a6e22e">contains</span><span style="color:#f92672">(</span>path<span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>start <span style="color:#f92672">=</span><span style="color:#f92672">=</span> target<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-/**
- * DFS search.
- * Each time try 3 jumps: k - 1, k, k + 1.
- *
- * @param target    target position
- * @param start     current start index
- * @param step      k steps reach to current position
- * @param s         set records all positions with stone
- * @param isVisited record all previous visited path by position and step
- * @return if current position can reach end point
- */
-private boolean dfs(int target, int start, int step, HashSet&lt;Integer&gt; s, HashSet&lt;Long&gt; isVisited) {
-    long path = ((long) start) &lt;&lt; 32 | step;
-    // String path = start+&quot;,&quot;+step;
+    isVisited<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>path<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-    if (isVisited.contains(path)) {
-        return false;
-    }
-    if (start == target) {
-        return true;
-    }
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">contains</span><span style="color:#f92672">(</span>start <span style="color:#f92672">+</span> step <span style="color:#f92672">+</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> dfs<span style="color:#f92672">(</span>target<span style="color:#f92672">,</span> start <span style="color:#f92672">+</span> step <span style="color:#f92672">+</span> 1<span style="color:#f92672">,</span> step <span style="color:#f92672">+</span> 1<span style="color:#f92672">,</span> s<span style="color:#f92672">,</span> isVisited<span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-    isVisited.add(path);
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">contains</span><span style="color:#f92672">(</span>start <span style="color:#f92672">+</span> step<span style="color:#f92672">)</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> dfs<span style="color:#f92672">(</span>target<span style="color:#f92672">,</span> start <span style="color:#f92672">+</span> step<span style="color:#f92672">,</span> step<span style="color:#f92672">,</span> s<span style="color:#f92672">,</span> isVisited<span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-    if (s.contains(start + step + 1) &amp;&amp; dfs(target, start + step + 1, step + 1, s, isVisited)) {
-        return true;
-    }
-
-    if (s.contains(start + step) &amp;&amp; dfs(target, start + step, step, s, isVisited)) {
-        return true;
-    }
-
-    return step &gt; 1 &amp;&amp; s.contains(start + step - 1) &amp;&amp; dfs(target, start + step - 1, step - 1, s, isVisited);
-}
-</code></pre>
+    <span style="color:#66d9ef">return</span> step <span style="color:#f92672">&gt;</span> 1 <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">contains</span><span style="color:#f92672">(</span>start <span style="color:#f92672">+</span> step <span style="color:#f92672">-</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> dfs<span style="color:#f92672">(</span>target<span style="color:#f92672">,</span> start <span style="color:#f92672">+</span> step <span style="color:#f92672">-</span> 1<span style="color:#f92672">,</span> step <span style="color:#f92672">-</span> 1<span style="color:#f92672">,</span> s<span style="color:#f92672">,</span> isVisited<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div>
               
             </div>
           </div>
@@ -456,7 +429,7 @@ private boolean dfs(int target, int start, int step, HashSet&lt;Integer&gt; s, H
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>
@@ -514,7 +487,7 @@ private boolean dfs(int target, int start, int step, HashSet&lt;Integer&gt; s, H
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>

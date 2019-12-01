@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.59.1 with theme Tranquilpeak 0.4.7-BETA">
+<meta name="generator" content="Hugo 0.60.1 with theme Tranquilpeak 0.4.7-BETA">
 <meta name="author" content="Steve Zhou">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -275,96 +275,67 @@
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
-<ul>
-<li><a href="#filling-bookcase-shelves">Filling Bookcase Shelves</a>
-<ul>
-<li><a href="#problem-description">Problem description</a></li>
-<li><a href="#method">Method</a></li>
-<li><a href="#code">Code</a></li>
-</ul></li>
-</ul>
-</nav>
-
+              <!-- raw HTML omitted -->
 <h1 id="filling-bookcase-shelves">Filling Bookcase Shelves</h1>
-
 <p>Link: <a href="https://leetcode.com/problems/filling-bookcase-shelves/">Filling Bookcase Shelves</a></p>
-
 <h2 id="problem-description">Problem description</h2>
-
 <p>We have a sequence of <code>books</code>: the <code>i</code>-th book has thickness <code>books[i][0]</code>and height <code>books[i][1]</code>.</p>
-
 <p>We want to place these books <strong>in order</strong> onto bookcase shelves that have total width <code>shelf_width</code>.</p>
-
 <p>We choose some of the books to place on this shelf (such that the sum of their thickness is <code>&lt;= shelf_width</code>), then build another level of shelf of the bookcase so that the total height of the bookcase has increased by the maximum height of the books we just put down.  We repeat this process until there are no more books to place.</p>
-
 <p>Note again that at each step of the above process, the order of the books we place is the same order as the given sequence of books.  For example, if we have an ordered list of 5 books, we might place the first and second book onto the first shelf, the third book on the second shelf, and the fourth and fifth book on the last shelf.</p>
-
 <p>Return the minimum possible height that the total bookshelf can be after placing shelves in this manner.</p>
-
 <p><strong>Example 1:</strong></p>
-
-<p><img src="../../../static/img/shelves.png" alt="img" /></p>
-
+<p><img src="../../../static/img/shelves.png" alt="img"></p>
 <pre><code>Input: books = [[1,1],[2,3],[2,3],[1,1],[1,1],[1,1],[1,2]], shelf_width = 4
 Output: 6
 Explanation:
 The sum of the heights of the 3 shelves are 1 + 3 + 2 = 6.
 Notice that book number 2 does not have to be on the first shelf.
-</code></pre>
-
-<p><strong>Constraints:</strong></p>
-
+</code></pre><p><strong>Constraints:</strong></p>
 <ul>
 <li><code>1 &lt;= books.length &lt;= 1000</code></li>
 <li><code>1 &lt;= books[i][0] &lt;= shelf_width &lt;= 1000</code></li>
 <li><code>1 &lt;= books[i][1] &lt;= 1000</code></li>
 </ul>
-
 <h2 id="method">Method</h2>
-
 <p>Dynamic programming.</p>
-
 <p>There are two possible conditions of placing books:</p>
-
 <ol>
 <li>Place current book into a new shelf level: <code>dp[i] = dp[i - 1] + books[i][1]</code>.</li>
 <li>Place book with previous books to previous level, or a new level: <code>dp[i] = Math.min(dp[i], dp[j - 1] + height)</code>, where <code>height</code> is the book height from <code>(i - 1)th</code> book to the book that can not be fitted into same level. In other words, <code>sum(book[j][0], book[j + 1][0], ..., book[1][0]) &lt;= shelf_width</code>.</li>
 </ol>
-
 <h2 id="code">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Dynamic programming.
+</span><span style="color:#75715e"> * There are two possible conditions of placing books:
+</span><span style="color:#75715e"> * 1. Place current book into a new shelf level: dp[i] = dp[i - 1] + books[i][1]
+</span><span style="color:#75715e"> * 2. Place book with previous books to previous level, or a new level: dp[i] = Math.min(dp[i], dp[j - 1] + height)
+</span><span style="color:#75715e"> * height is the book height from (i - 1)th book to the book that can not be fitted into same level.
+</span><span style="color:#75715e"> * sum(book[j][0], book[j + 1][0], ..., book[1][0]) &lt;= shelf_width.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param books       given books list
+</span><span style="color:#75715e"> * @param shelf_width limit of level of each shelf
+</span><span style="color:#75715e"> * @return minimum possible height that the total bookshelf can be after placing shelves
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">minHeightShelves</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> books<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> shelf_width<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">int</span> n <span style="color:#f92672">=</span> books<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> dp <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>n <span style="color:#f92672">+</span> 1<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
 
-<pre><code class="language-java">/**
- * Dynamic programming.
- * There are two possible conditions of placing books:
- * 1. Place current book into a new shelf level: dp[i] = dp[i - 1] + books[i][1]
- * 2. Place book with previous books to previous level, or a new level: dp[i] = Math.min(dp[i], dp[j - 1] + height)
- * height is the book height from (i - 1)th book to the book that can not be fitted into same level.
- * sum(book[j][0], book[j + 1][0], ..., book[1][0]) &lt;= shelf_width.
- *
- * @param books       given books list
- * @param shelf_width limit of level of each shelf
- * @return minimum possible height that the total bookshelf can be after placing shelves
- */
-public int minHeightShelves(int[][] books, int shelf_width) {
-    int n = books.length;
-    int[] dp = new int[n + 1];
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span><span style="color:#f92672">=</span> n<span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">int</span> width <span style="color:#f92672">=</span> books<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span><span style="color:#f92672">[</span>0<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">int</span> height <span style="color:#f92672">=</span> books<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span><span style="color:#f92672">[</span>1<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+        dp<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> dp<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> height<span style="color:#f92672">;</span>
 
-    for (int i = 1; i &lt;= n; i++) {
-        int width = books[i - 1][0];
-        int height = books[i - 1][1];
-        dp[i] = dp[i - 1] + height;
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> i <span style="color:#f92672">-</span> 1<span style="color:#f92672">;</span> j <span style="color:#f92672">&gt;</span> 0 <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> width <span style="color:#f92672">+</span> books<span style="color:#f92672">[</span>j <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span><span style="color:#f92672">[</span>0<span style="color:#f92672">]</span> <span style="color:#f92672">&lt;</span><span style="color:#f92672">=</span> shelf_width<span style="color:#f92672">;</span> <span style="color:#f92672">-</span><span style="color:#f92672">-</span>j<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            height <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>height<span style="color:#f92672">,</span> books<span style="color:#f92672">[</span>j <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span><span style="color:#f92672">[</span>1<span style="color:#f92672">]</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            dp<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">min</span><span style="color:#f92672">(</span>dp<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">,</span> dp<span style="color:#f92672">[</span>j <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> height<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            width <span style="color:#f92672">+</span><span style="color:#f92672">=</span> books<span style="color:#f92672">[</span>j <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span><span style="color:#f92672">[</span>0<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
 
-        for (int j = i - 1; j &gt; 0 &amp;&amp; width + books[j - 1][0] &lt;= shelf_width; --j) {
-            height = Math.max(height, books[j - 1][1]);
-            dp[i] = Math.min(dp[i], dp[j - 1] + height);
-            width += books[j - 1][0];
-        }
-    }
-
-    return dp[n];
-}
-</code></pre>
+    <span style="color:#66d9ef">return</span> dp<span style="color:#f92672">[</span>n<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div>
               
             </div>
           </div>
@@ -418,7 +389,7 @@ public int minHeightShelves(int[][] books, int shelf_width) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>
@@ -476,7 +447,7 @@ public int minHeightShelves(int[][] books, int shelf_width) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>

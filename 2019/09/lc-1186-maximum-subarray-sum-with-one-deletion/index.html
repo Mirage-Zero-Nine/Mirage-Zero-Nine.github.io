@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.59.1 with theme Tranquilpeak 0.4.7-BETA">
+<meta name="generator" content="Hugo 0.60.1 with theme Tranquilpeak 0.4.7-BETA">
 <meta name="author" content="Steve Zhou">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -279,105 +279,74 @@
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
-<ul>
-<li><a href="#maximum-subarray-sum-with-one-deletion">Maximum Subarray Sum with One Deletion</a>
-<ul>
-<li><a href="#problem-description">Problem description</a></li>
-<li><a href="#method">Method</a></li>
-<li><a href="#code">Code</a></li>
-</ul></li>
-</ul>
-</nav>
-
+              <!-- raw HTML omitted -->
 <h1 id="maximum-subarray-sum-with-one-deletion">Maximum Subarray Sum with One Deletion</h1>
-
 <p>Link: <a href="https://leetcode.com/problems/maximum-subarray-sum-with-one-deletion/">Maximum Subarray Sum with One Deletion</a></p>
-
 <h2 id="problem-description">Problem description</h2>
-
 <p>Given an array of integers, return the maximum sum for a <strong>non-empty</strong> subarray (contiguous elements) with at most one element deletion. In other words, you want to choose a subarray and optionally delete one element from it so that there is still at least one element left and the sum of the remaining elements is maximum possible.</p>
-
 <p>Note that the subarray needs to be <strong>non-empty</strong> after deleting one element.</p>
-
 <p><strong>Example 1:</strong></p>
-
 <pre><code>Input: arr = [1,-2,0,3]
 Output: 4
 Explanation: Because we can choose [1, -2, 0, 3] and drop -2, thus the subarray [1, 0, 3] becomes the maximum value.
-</code></pre>
-
-<p><strong>Example 2:</strong></p>
-
+</code></pre><p><strong>Example 2:</strong></p>
 <pre><code>Input: arr = [1,-2,-2,3]
 Output: 3
 Explanation: We just choose [3] and it's the maximum sum.
-</code></pre>
-
-<p><strong>Example 3:</strong></p>
-
+</code></pre><p><strong>Example 3:</strong></p>
 <pre><code>Input: arr = [-1,-1,-1,-1]
 Output: -1
 Explanation: The final subarray needs to be non-empty. You can't choose [-1] and delete -1 from it, then get an empty subarray to make the sum equals to 0.
-</code></pre>
-
-<p><strong>Constraints:</strong></p>
-
+</code></pre><p><strong>Constraints:</strong></p>
 <ul>
 <li><code>1 &lt;= arr.length &lt;= 10^5</code></li>
 <li><code>-10^4 &lt;= arr[i] &lt;= 10^4</code></li>
 </ul>
-
 <h2 id="method">Method</h2>
-
 <p>Dynamic programming.</p>
-
 <p>The different part in this problem compare to normal max subarray sum is that, 2 arrays is required.</p>
-
 <ul>
 <li>First array saves max sum from 0 to <code>i</code>, <code>max[i] = Math.max(arr[i], max1[i - 1] + arr[i])</code>.</li>
 <li>During the above traverse, calculate the max subarray sum, <code>max2[i] = Math.max(arr[i], max2[i + 1] + arr[i])</code>.</li>
 <li>Second array saves max sum from <code>arr.length - 1</code> to 0.</li>
 <li>Finally, compare max sum with removing one elements in array.</li>
 </ul>
-
 <h2 id="code">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Dynamic programming.
+</span><span style="color:#75715e"> * The different part in this problem compare to normal max subarray sum is that, 2 arrays is required.
+</span><span style="color:#75715e"> * First array saves max sum from 0 to i, max[i] = Math.max(arr[i], max1[i - 1] + arr[i]).
+</span><span style="color:#75715e"> * During the above traverse, calculate the max subarray sum, max2[i] = Math.max(arr[i], max2[i + 1] + arr[i]).
+</span><span style="color:#75715e"> * Second array saves max sum from arr.length - 1 to 0.
+</span><span style="color:#75715e"> * Finally, compare max sum with removing one elements in array.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param arr given array
+</span><span style="color:#75715e"> * @return the maximum sum for a non-empty subarray with at most one element deletion
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">maximumSum</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> arr<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">int</span> n <span style="color:#f92672">=</span> arr<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span>
 
-<pre><code class="language-java">/**
- * Dynamic programming.
- * The different part in this problem compare to normal max subarray sum is that, 2 arrays is required.
- * First array saves max sum from 0 to i, max[i] = Math.max(arr[i], max1[i - 1] + arr[i]).
- * During the above traverse, calculate the max subarray sum, max2[i] = Math.max(arr[i], max2[i + 1] + arr[i]).
- * Second array saves max sum from arr.length - 1 to 0.
- * Finally, compare max sum with removing one elements in array.
- *
- * @param arr given array
- * @return the maximum sum for a non-empty subarray with at most one element deletion
- */
-public int maximumSum(int[] arr) {
-    int n = arr.length;
+    <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> max1 <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>n<span style="color:#f92672">]</span><span style="color:#f92672">,</span> max2 <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>n<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">int</span> max <span style="color:#f92672">=</span> arr<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+    max1<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> arr<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
 
-    int[] max1 = new int[n], max2 = new int[n];
-    int max = arr[0];
-    max1[0] = arr[0];
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> n<span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>       <span style="color:#75715e">// max sub array sum from left to right
+</span><span style="color:#75715e"></span>        max1<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>arr<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">,</span> max1<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> arr<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        max <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>max<span style="color:#f92672">,</span> max1<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-    for (int i = 1; i &lt; n; i++) {       // max sub array sum from left to right
-        max1[i] = Math.max(arr[i], max1[i - 1] + arr[i]);
-        max = Math.max(max, max1[i]);
-    }
+    max2<span style="color:#f92672">[</span>n <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> arr<span style="color:#f92672">[</span>n <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> n <span style="color:#f92672">-</span> 2<span style="color:#f92672">;</span> i <span style="color:#f92672">&gt;</span><span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i<span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>      <span style="color:#75715e">// max sub array sum from right to left
+</span><span style="color:#75715e"></span>        max2<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>arr<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">,</span> max2<span style="color:#f92672">[</span>i <span style="color:#f92672">+</span> 1<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> arr<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-    max2[n - 1] = arr[n - 1];
-    for (int i = n - 2; i &gt;= 0; i--) {      // max sub array sum from right to left
-        max2[i] = Math.max(arr[i], max2[i + 1] + arr[i]);
-    }
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> n <span style="color:#f92672">-</span> 1<span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        max <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>max<span style="color:#f92672">,</span> max1<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> max2<span style="color:#f92672">[</span>i <span style="color:#f92672">+</span> 1<span style="color:#f92672">]</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>       <span style="color:#75715e">// remove 1 element
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
 
-    for (int i = 1; i &lt; n - 1; i++) {
-        max = Math.max(max, max1[i - 1] + max2[i + 1]);       // remove 1 element
-    }
-
-    return max;
-}
-</code></pre>
+    <span style="color:#66d9ef">return</span> max<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div>
               
             </div>
           </div>
@@ -431,7 +400,7 @@ public int maximumSum(int[] arr) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>
@@ -489,7 +458,7 @@ public int maximumSum(int[] arr) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>

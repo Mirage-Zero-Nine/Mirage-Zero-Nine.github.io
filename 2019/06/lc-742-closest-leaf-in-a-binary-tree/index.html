@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.59.1 with theme Tranquilpeak 0.4.7-BETA">
+<meta name="generator" content="Hugo 0.60.1 with theme Tranquilpeak 0.4.7-BETA">
 <meta name="author" content="Steve Zhou">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -281,31 +281,14 @@
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
-<ul>
-<li><a href="#closest-leaf-in-a-binary-tree">Closest Leaf in a Binary Tree</a>
-<ul>
-<li><a href="#problem-description">Problem description</a></li>
-<li><a href="#method">Method</a></li>
-<li><a href="#code">Code</a></li>
-</ul></li>
-</ul>
-</nav>
-
+              <!-- raw HTML omitted -->
 <h1 id="closest-leaf-in-a-binary-tree">Closest Leaf in a Binary Tree</h1>
-
 <p>Link: <a href="https://leetcode.com/problems/closest-leaf-in-a-binary-tree">Closest Leaf in a Binary Tree</a></p>
-
 <h2 id="problem-description">Problem description</h2>
-
 <p>Given a binary tree <strong>where every node has a unique value</strong>, and a target key <code>k</code>, find the value of the nearest leaf node to target <code>k</code> in the tree.</p>
-
 <p>Here, <em>nearest</em> to a leaf means the least number of edges travelled on the binary tree to reach any leaf of the tree. Also, a node is called a <em>leaf</em> if it has no children.</p>
-
 <p>In the following examples, the input tree is represented in flattened form row by row. The actual <code>root</code> tree given will be a TreeNode object.</p>
-
 <p><strong>Example 1:</strong></p>
-
 <pre><code>Input:
 root = [1, 3, 2], k = 1
 Diagram of binary tree:
@@ -316,19 +299,13 @@ Diagram of binary tree:
 Output: 2 (or 3)
 
 Explanation: Either 2 or 3 is the nearest leaf node to the target of 1.
-</code></pre>
-
-<p><strong>Example 2:</strong></p>
-
+</code></pre><p><strong>Example 2:</strong></p>
 <pre><code>Input:
 root = [1], k = 1
 Output: 1
 
 Explanation: The nearest leaf node is the root node itself.
-</code></pre>
-
-<p><strong>Example 3:</strong></p>
-
+</code></pre><p><strong>Example 3:</strong></p>
 <pre><code>Input:
 root = [1,2,3,4,null,null,null,5,null,6], k = 2
 Diagram of binary tree:
@@ -344,118 +321,109 @@ Diagram of binary tree:
 
 Output: 3
 Explanation: The leaf node with value 3 (and not the leaf node with value 6) is nearest to the node with value 2.
-</code></pre>
-
-<p><strong>Note:</strong></p>
-
+</code></pre><p><strong>Note:</strong></p>
 <ol>
 <li><code>root</code> represents a binary tree with at least <code>1</code> node and at most <code>1000</code> nodes.</li>
 <li>Every node has a unique <code>node.val</code> in range <code>[1, 1000]</code>.</li>
 <li>There exists some node in the given binary tree for which <code>node.val == k</code>.</li>
 </ol>
-
 <h2 id="method">Method</h2>
-
 <p>This is actually not a tree problem, it is a graph problem. The idea is to use DFS first and then use BFS to find nearest leaf node to target k in the tree.</p>
-
 <p>First of all, DFS. Use DFS to traverse tree to find the given node. Also, since this tree does not contains a pointer that point to its parent, use a hash map to save the child-parent pair during the DFS.</p>
-
 <p>Then is the BFS. Use BFS to traverse the tree <strong>start at</strong> the given node. BFS searching is layer by layer, therefore, if BFS found a leaf, then this leaf is the nearest leaf node to target k in the tree.</p>
-
 <h2 id="code">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-Java" data-lang="Java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * This is actually not a tree problem, it is a graph problem.
+</span><span style="color:#75715e"> * First do the DFS from root node to find target node in tree.
+</span><span style="color:#75715e"> * Then do BFS from node k to obtain the nearest leave node.
+</span><span style="color:#75715e"> * The is actually based on undirected graph, where nodes has a double-way connection with other nodes.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param root root node
+</span><span style="color:#75715e"> * @param k    target node
+</span><span style="color:#75715e"> * @return nearest leaf node to target k in the tree
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">findClosestLeaf</span><span style="color:#f92672">(</span>TreeNode root<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> k<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-<pre><code class="language-Java">/**
- * This is actually not a tree problem, it is a graph problem.
- * First do the DFS from root node to find target node in tree.
- * Then do BFS from node k to obtain the nearest leave node.
- * The is actually based on undirected graph, where nodes has a double-way connection with other nodes.
- *
- * @param root root node
- * @param k    target node
- * @return nearest leaf node to target k in the tree
- */
-public int findClosestLeaf(TreeNode root, int k) {
+    <span style="color:#75715e">/* Corner case */</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>root <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>root<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> root<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> root<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-    /* Corner case */
-    if (root == null) {
-        return -1;
-    }
-    if (root.right == null &amp;&amp; root.left == null) {
-        return root.val;
-    }
+    HashMap<span style="color:#f92672">&lt;</span>TreeNode<span style="color:#f92672">,</span> TreeNode<span style="color:#f92672">&gt;</span> m <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashMap<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    HashSet<span style="color:#f92672">&lt;</span>TreeNode<span style="color:#f92672">&gt;</span> s <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashSet<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-    HashMap&lt;TreeNode, TreeNode&gt; m = new HashMap&lt;&gt;();
-    HashSet&lt;TreeNode&gt; s = new HashSet&lt;&gt;();
+    TreeNode tmp <span style="color:#f92672">=</span> dfs<span style="color:#f92672">(</span>root<span style="color:#f92672">,</span> k<span style="color:#f92672">,</span> m<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-    TreeNode tmp = dfs(root, k, m);
+    <span style="color:#66d9ef">return</span> bfs<span style="color:#f92672">(</span>tmp<span style="color:#f92672">,</span> s<span style="color:#f92672">,</span> m<span style="color:#f92672">)</span><span style="color:#f92672">;</span>      <span style="color:#75715e">// k is not found in tree (based on the problem description, it will not happen)
+</span><span style="color:#75715e"></span><span style="color:#f92672">}</span>
 
-    return bfs(tmp, s, m);      // k is not found in tree (based on the problem description, it will not happen)
-}
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * DFS to find k in tree.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param r root
+</span><span style="color:#75715e"> * @param k target
+</span><span style="color:#75715e"> * @param m hash map works as double linked list
+</span><span style="color:#75715e"> * @return node k in tree
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">private</span> TreeNode <span style="color:#a6e22e">dfs</span><span style="color:#f92672">(</span>TreeNode r<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> k<span style="color:#f92672">,</span> HashMap<span style="color:#f92672">&lt;</span>TreeNode<span style="color:#f92672">,</span> TreeNode<span style="color:#f92672">&gt;</span> m<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>r<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> k<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> r<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-/**
- * DFS to find k in tree.
- *
- * @param r root
- * @param k target
- * @param m hash map works as double linked list
- * @return node k in tree
- */
-private TreeNode dfs(TreeNode r, int k, HashMap&lt;TreeNode, TreeNode&gt; m) {
-    if (r.val == k) {
-        return r;
-    }
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>r<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span> <span style="color:#f92672">!</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        m<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>r<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">,</span> r<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        TreeNode left <span style="color:#f92672">=</span> dfs<span style="color:#f92672">(</span>r<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">,</span> k<span style="color:#f92672">,</span> m<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>left <span style="color:#f92672">!</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">return</span> left<span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>r<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span> <span style="color:#f92672">!</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        m<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>r<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span><span style="color:#f92672">,</span> r<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">return</span> dfs<span style="color:#f92672">(</span>r<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span><span style="color:#f92672">,</span> k<span style="color:#f92672">,</span> m<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
 
-    if (r.left != null) {
-        m.put(r.left, r);
-        TreeNode left = dfs(r.left, k, m);
-        if (left != null) {
-            return left;
-        }
-    }
-    if (r.right != null) {
-        m.put(r.right, r);
-        return dfs(r.right, k, m);
-    }
-    return null;
-}
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Use BFS to find closest leaf in tree.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param n target node
+</span><span style="color:#75715e"> * @param s hash set stores previous visited node
+</span><span style="color:#75715e"> * @param m hash map stores child-parent pair
+</span><span style="color:#75715e"> * @return closest leaf
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">bfs</span><span style="color:#f92672">(</span>TreeNode n<span style="color:#f92672">,</span> HashSet<span style="color:#f92672">&lt;</span>TreeNode<span style="color:#f92672">&gt;</span> s<span style="color:#f92672">,</span> HashMap<span style="color:#f92672">&lt;</span>TreeNode<span style="color:#f92672">,</span> TreeNode<span style="color:#f92672">&gt;</span> m<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    Queue<span style="color:#f92672">&lt;</span>TreeNode<span style="color:#f92672">&gt;</span> q <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    q<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>n<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">int</span> size<span style="color:#f92672">;</span>
 
-/**
- * Use BFS to find closest leaf in tree.
- *
- * @param n target node
- * @param s hash set stores previous visited node
- * @param m hash map stores child-parent pair
- * @return closest leaf
- */
-private int bfs(TreeNode n, HashSet&lt;TreeNode&gt; s, HashMap&lt;TreeNode, TreeNode&gt; m) {
-    Queue&lt;TreeNode&gt; q = new LinkedList&lt;&gt;();
-    q.add(n);
-    int size;
+    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span><span style="color:#f92672">!</span>q<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        size <span style="color:#f92672">=</span> q<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-    while (!q.isEmpty()) {
-        size = q.size();
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> size<span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            TreeNode tmp <span style="color:#f92672">=</span> q<span style="color:#f92672">.</span><span style="color:#a6e22e">poll</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>tmp<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> tmp<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                <span style="color:#66d9ef">return</span> tmp<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span><span style="color:#f92672">;</span>
+            <span style="color:#f92672">}</span>
 
-        for (int i = 0; i &lt; size; i++) {
-            TreeNode tmp = q.poll();
-            if (tmp.left == null &amp;&amp; tmp.right == null) {
-                return tmp.val;
-            }
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>tmp<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span> <span style="color:#f92672">!</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>tmp<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                q<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>tmp<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            <span style="color:#f92672">}</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>tmp<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span> <span style="color:#f92672">!</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>tmp<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                q<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>tmp<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            <span style="color:#f92672">}</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>m<span style="color:#f92672">.</span><span style="color:#a6e22e">containsKey</span><span style="color:#f92672">(</span>tmp<span style="color:#f92672">)</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>m<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>tmp<span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                q<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>m<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>tmp<span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
 
-            if (tmp.left != null &amp; s.add(tmp.left)) {
-                q.add(tmp.left);
-            }
-            if (tmp.right != null &amp; s.add(tmp.right)) {
-                q.add(tmp.right);
-            }
-            if (m.containsKey(tmp) &amp;&amp; s.add(m.get(tmp))) {
-                q.add(m.get(tmp));
-            }
-        }
-    }
-
-    return -1;
-}
-</code></pre>
+    <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div>
               
             </div>
           </div>
@@ -511,7 +479,7 @@ private int bfs(TreeNode n, HashSet&lt;TreeNode&gt; s, HashMap&lt;TreeNode, Tree
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>
@@ -569,7 +537,7 @@ private int bfs(TreeNode n, HashSet&lt;TreeNode&gt; s, HashMap&lt;TreeNode, Tree
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>

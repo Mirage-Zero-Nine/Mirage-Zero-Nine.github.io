@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.59.1 with theme Tranquilpeak 0.4.7-BETA">
+<meta name="generator" content="Hugo 0.60.1 with theme Tranquilpeak 0.4.7-BETA">
 <meta name="author" content="Steve Zhou">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -277,119 +277,93 @@
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
-<ul>
-<li><a href="#surrounded-regions">Surrounded Regions</a>
-<ul>
-<li><a href="#problem-description">Problem description</a></li>
-<li><a href="#method">Method</a></li>
-<li><a href="#code">Code</a></li>
-</ul></li>
-</ul>
-</nav>
-
+              <!-- raw HTML omitted -->
 <h1 id="surrounded-regions">Surrounded Regions</h1>
-
 <p>Link: <a href="https://leetcode.com/problems/surrounded-regions/">Surrounded Regions</a></p>
-
 <h2 id="problem-description">Problem description</h2>
-
 <p>Given a 2D board containing <code>'X'</code> and <code>'O'</code> (<strong>the letter O</strong>), capture all regions surrounded by <code>'X'</code>.</p>
-
 <p>A region is captured by flipping all <code>'O'</code>s into <code>'X'</code>s in that surrounded region.</p>
-
 <p><strong>Example:</strong></p>
-
 <pre><code>X X X X
 X O O X
 X X O X
 X O X X
-</code></pre>
-
-<p>After running your function, the board should be:</p>
-
+</code></pre><p>After running your function, the board should be:</p>
 <pre><code>X X X X
 X X X X
 X X X X
 X O X X
-</code></pre>
-
-<p><strong>Explanation:</strong></p>
-
+</code></pre><p><strong>Explanation:</strong></p>
 <p>Surrounded regions shouldn’t be on the border, which means that any <code>'O'</code> on the border of the board are not flipped to <code>'X'</code>. Any <code>'O'</code> that is not on the border and it is not connected to an <code>'O'</code> on the border will be flipped to <code>'X'</code>. Two cells are connected if they are adjacent cells connected horizontally or vertically.</p>
-
 <h2 id="method">Method</h2>
-
 <p>Find all &lsquo;O&rsquo; on boundary of given board and relating &lsquo;O&rsquo;, set them to a third value. Use BFS to searching relating &lsquo;O&rsquo;.</p>
-
 <h2 id="code">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Find all &#39;O&#39; on boundary of given board and relating &#39;O&#39;, set them to a third value.
+</span><span style="color:#75715e"> * Use BFS to searching relating &#39;O&#39;.
+</span><span style="color:#75715e"> * These &#39;O&#39;s will not be flipped.
+</span><span style="color:#75715e"> * After such &#39;O&#39;s are all found, flip the rest &#39;O&#39;s.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param board given board
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">solve</span><span style="color:#f92672">(</span><span style="color:#66d9ef">char</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> board<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-<pre><code class="language-java">/**
- * Find all 'O' on boundary of given board and relating 'O', set them to a third value.
- * Use BFS to searching relating 'O'.
- * These 'O's will not be flipped.
- * After such 'O's are all found, flip the rest 'O's.
- *
- * @param board given board
- */
-public void solve(char[][] board) {
+    <span style="color:#75715e">/* Corner case */</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>board<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-    /* Corner case */
-    if (board.length == 0) {
-        return;
-    }
+    <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> d <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">{</span>1<span style="color:#f92672">,</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">,</span> 0<span style="color:#f92672">,</span> 0<span style="color:#f92672">,</span> 0<span style="color:#f92672">,</span> 0<span style="color:#f92672">,</span> 1<span style="color:#f92672">,</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">}</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">int</span> row <span style="color:#f92672">=</span> board<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">int</span> col <span style="color:#f92672">=</span> board<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span><span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">;</span>
 
-    int[] d = new int[]{1, -1, 0, 0, 0, 0, 1, -1};
-    int row = board.length - 1;
-    int col = board[0].length - 1;
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span><span style="color:#f92672">=</span> row<span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> j <span style="color:#f92672">&lt;</span><span style="color:#f92672">=</span> col<span style="color:#f92672">;</span> j<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#f92672">(</span>i <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 0 <span style="color:#f92672">|</span><span style="color:#f92672">|</span> j <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 0 <span style="color:#f92672">|</span><span style="color:#f92672">|</span> i <span style="color:#f92672">=</span><span style="color:#f92672">=</span> row <span style="color:#f92672">|</span><span style="color:#f92672">|</span> j <span style="color:#f92672">=</span><span style="color:#f92672">=</span> col<span style="color:#f92672">)</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> board<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">[</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;O&#39;</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                bfs<span style="color:#f92672">(</span>board<span style="color:#f92672">,</span> i<span style="color:#f92672">,</span> j<span style="color:#f92672">,</span> d<span style="color:#f92672">)</span><span style="color:#f92672">;</span>        <span style="color:#75715e">// do BFS to find all &#39;O&#39; on board
+</span><span style="color:#75715e"></span>            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
 
-    for (int i = 0; i &lt;= row; i++) {
-        for (int j = 0; j &lt;= col; j++) {
-            if ((i == 0 || j == 0 || i == row || j == col) &amp;&amp; board[i][j] == 'O') {
-                bfs(board, i, j, d);        // do BFS to find all 'O' on board
-            }
-        }
-    }
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span><span style="color:#f92672">=</span> row<span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> j <span style="color:#f92672">&lt;</span><span style="color:#f92672">=</span> col<span style="color:#f92672">;</span> j<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>board<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">[</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;O&#39;</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                board<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">[</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;X&#39;</span><span style="color:#f92672">;</span>
+            <span style="color:#f92672">}</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>board<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">[</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;-&#39;</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                board<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">[</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;O&#39;</span><span style="color:#f92672">;</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
 
-    for (int i = 0; i &lt;= row; i++) {
-        for (int j = 0; j &lt;= col; j++) {
-            if (board[i][j] == 'O') {
-                board[i][j] = 'X';
-            }
-            if (board[i][j] == '-') {
-                board[i][j] = 'O';
-            }
-        }
-    }
-}
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * BFS to find all cells connected to &#39;O&#39; on board.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param board given board
+</span><span style="color:#75715e"> * @param i     &#39;O&#39; index
+</span><span style="color:#75715e"> * @param j     &#39;O&#39; index
+</span><span style="color:#75715e"> * @param d     directions array
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">bfs</span><span style="color:#f92672">(</span><span style="color:#66d9ef">char</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> board<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> i<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> j<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> d<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    Queue<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">&gt;</span> q <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    q<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">{</span>i<span style="color:#f92672">,</span> j<span style="color:#f92672">}</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    board<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">[</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;-&#39;</span><span style="color:#f92672">;</span>      <span style="color:#75715e">// mark first
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span><span style="color:#f92672">!</span>q<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> tmp <span style="color:#f92672">=</span> q<span style="color:#f92672">.</span><span style="color:#a6e22e">poll</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-/**
- * BFS to find all cells connected to 'O' on board.
- *
- * @param board given board
- * @param i     'O' index
- * @param j     'O' index
- * @param d     directions array
- */
-private void bfs(char[][] board, int i, int j, int[] d) {
-    Queue&lt;int[]&gt; q = new LinkedList&lt;&gt;();
-    q.add(new int[]{i, j});
-    board[i][j] = '-';      // mark first
-    while (!q.isEmpty()) {
-        int[] tmp = q.poll();
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> k <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> k <span style="color:#f92672">&lt;</span> 4<span style="color:#f92672">;</span> k<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">int</span> xx <span style="color:#f92672">=</span> tmp<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> d<span style="color:#f92672">[</span>k<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+            <span style="color:#66d9ef">int</span> yy <span style="color:#f92672">=</span> tmp<span style="color:#f92672">[</span>1<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> d<span style="color:#f92672">[</span>k <span style="color:#f92672">+</span> 4<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
 
-        for (int k = 0; k &lt; 4; k++) {
-            int xx = tmp[0] + d[k];
-            int yy = tmp[1] + d[k + 4];
-
-            if (xx &gt;= 0 &amp;&amp; xx &lt; board.length &amp;&amp; yy &gt;= 0 &amp;&amp; yy &lt; board[0].length &amp;&amp; board[xx][yy] == 'O') {
-                board[xx][yy] = '-';
-                q.add(new int[]{xx, yy});
-            }
-        }
-    }
-}
-</code></pre>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>xx <span style="color:#f92672">&gt;</span><span style="color:#f92672">=</span> 0 <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> xx <span style="color:#f92672">&lt;</span> board<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> yy <span style="color:#f92672">&gt;</span><span style="color:#f92672">=</span> 0 <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> yy <span style="color:#f92672">&lt;</span> board<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span><span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> board<span style="color:#f92672">[</span>xx<span style="color:#f92672">]</span><span style="color:#f92672">[</span>yy<span style="color:#f92672">]</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;O&#39;</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                board<span style="color:#f92672">[</span>xx<span style="color:#f92672">]</span><span style="color:#f92672">[</span>yy<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;-&#39;</span><span style="color:#f92672">;</span>
+                q<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">{</span>xx<span style="color:#f92672">,</span> yy<span style="color:#f92672">}</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div>
               
             </div>
           </div>
@@ -445,7 +419,7 @@ private void bfs(char[][] board, int i, int j, int[] d) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>
@@ -503,7 +477,7 @@ private void bfs(char[][] board, int i, int j, int[] d) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>

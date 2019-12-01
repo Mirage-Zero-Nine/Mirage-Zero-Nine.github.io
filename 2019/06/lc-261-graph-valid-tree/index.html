@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.59.1 with theme Tranquilpeak 0.4.7-BETA">
+<meta name="generator" content="Hugo 0.60.1 with theme Tranquilpeak 0.4.7-BETA">
 <meta name="author" content="Steve Zhou">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -281,98 +281,74 @@
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
-<ul>
-<li><a href="#graph-valid-tree">Graph Valid Tree</a>
-<ul>
-<li><a href="#problem-description">Problem description</a></li>
-<li><a href="#method">Method</a></li>
-<li><a href="#code">Code</a></li>
-</ul></li>
-</ul>
-</nav>
-
+              <!-- raw HTML omitted -->
 <h1 id="graph-valid-tree">Graph Valid Tree</h1>
-
 <p>Link: <a href="https://leetcode.com/problems/graph-valid-tree">Graph Valid Tree</a></p>
-
 <h2 id="problem-description">Problem description</h2>
-
 <p>Given <code>n</code> nodes labeled from <code>0</code> to <code>n-1</code> and a list of undirected edges (each edge is a pair of nodes), write a function to check whether these edges make up a valid tree.</p>
-
 <p><strong>Example 1:</strong></p>
-
 <pre><code>Input: n = 5, and edges = [[0,1], [0,2], [0,3], [1,4]]
 Output: true
-</code></pre>
-
-<p><strong>Example 2:</strong></p>
-
+</code></pre><p><strong>Example 2:</strong></p>
 <pre><code>Input: n = 5, and edges = [[0,1], [1,2], [2,3], [1,3], [1,4]]
 Output: false
-</code></pre>
-
-<p><strong>Note</strong>: you can assume that no duplicate edges will appear in <code>edges</code>. Since all edges are undirected, <code>[0,1]</code> is the same as <code>[1,0]</code> and thus will not appear together in <code>edges</code>.</p>
-
+</code></pre><p><strong>Note</strong>: you can assume that no duplicate edges will appear in <code>edges</code>. Since all edges are undirected, <code>[0,1]</code> is the same as <code>[1,0]</code> and thus will not appear together in <code>edges</code>.</p>
 <h2 id="method">Method</h2>
-
 <p>Use union find to see if two nodes that connect to edge has a common newest son. If so, then the tree contains a loop, which is an invalid tree.</p>
-
 <h2 id="code">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Union find.
+</span><span style="color:#75715e"> * Find first, if the vertices have same newest son, then they will create a loop in graph, which is invalid.
+</span><span style="color:#75715e"> * Then, if two nodes have different newest son, union it to newest son.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param n     n nodes
+</span><span style="color:#75715e"> * @param edges edges that connect vertices
+</span><span style="color:#75715e"> * @return whether these edges make up a valid tree
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">validTree</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> n<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> edges<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-<pre><code class="language-java">/**
- * Union find.
- * Find first, if the vertices have same newest son, then they will create a loop in graph, which is invalid.
- * Then, if two nodes have different newest son, union it to newest son.
- *
- * @param n     n nodes
- * @param edges edges that connect vertices
- * @return whether these edges make up a valid tree
- */
-public boolean validTree(int n, int[][] edges) {
+    <span style="color:#75715e">/* Corner case */</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>edges<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">!</span><span style="color:#f92672">=</span> n <span style="color:#f92672">-</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>       <span style="color:#75715e">// if edges are more than nodes - 1, then it will definitely create a loop
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
 
-    /* Corner case */
-    if (edges.length != n - 1) {
-        return false;       // if edges are more than nodes - 1, then it will definitely create a loop
-    }
+    <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> connection <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>n<span style="color:#f92672">]</span><span style="color:#f92672">;</span>        <span style="color:#75715e">// save connections of each node
+</span><span style="color:#75715e"></span>    Arrays<span style="color:#f92672">.</span><span style="color:#a6e22e">fill</span><span style="color:#f92672">(</span>connection<span style="color:#f92672">,</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">)</span><span style="color:#f92672">;</span>      <span style="color:#75715e">// all nodes are independent at beginning
+</span><span style="color:#75715e"></span>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> edge <span style="color:#f92672">:</span> edges<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-    int[] connection = new int[n];        // save connections of each node
-    Arrays.fill(connection, -1);      // all nodes are independent at beginning
+        <span style="color:#66d9ef">int</span> r1 <span style="color:#f92672">=</span> find<span style="color:#f92672">(</span>edge<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span><span style="color:#f92672">,</span> connection<span style="color:#f92672">)</span><span style="color:#f92672">,</span> r2 <span style="color:#f92672">=</span> find<span style="color:#f92672">(</span>edge<span style="color:#f92672">[</span>1<span style="color:#f92672">]</span><span style="color:#f92672">,</span> connection<span style="color:#f92672">)</span><span style="color:#f92672">;</span>     <span style="color:#75715e">// find their newest son
+</span><span style="color:#75715e"></span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>r1 <span style="color:#f92672">=</span><span style="color:#f92672">=</span> r2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>     <span style="color:#75715e">// if two nodes has same newest son, then the union operation will create a loop
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
 
-    for (int[] edge : edges) {
+        connection<span style="color:#f92672">[</span>r1<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> r2<span style="color:#f92672">;</span>        <span style="color:#75715e">// union
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
 
-        int r1 = find(edge[0], connection), r2 = find(edge[1], connection);     // find their newest son
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Find newest son of each node.
+</span><span style="color:#75715e"> * If current node is -1 (init value), then current node is newest son.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param i    current node
+</span><span style="color:#75715e"> * @param root array store root of each node
+</span><span style="color:#75715e"> * @return newest son of node
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">find</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> root<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-        if (r1 == r2) {     // if two nodes has same newest son, then the union operation will create a loop
-            return false;
-        }
+    <span style="color:#66d9ef">return</span> <span style="color:#f92672">(</span>root<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">)</span> <span style="color:#f92672">?</span> i <span style="color:#f92672">:</span> find<span style="color:#f92672">(</span>root<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">,</span> root<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
 
-        connection[r1] = r2;        // union
-    }
-    return true;
-}
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[</span><span style="color:#f92672">]</span> args<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    ValidTree_261 test <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ValidTree_261<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-/**
- * Find newest son of each node.
- * If current node is -1 (init value), then current node is newest son.
- *
- * @param i    current node
- * @param root array store root of each node
- * @return newest son of node
- */
-private int find(int i, int[] root) {
+    System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>test<span style="color:#f92672">.</span><span style="color:#a6e22e">validTree</span><span style="color:#f92672">(</span>5<span style="color:#f92672">,</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">{</span><span style="color:#f92672">{</span>0<span style="color:#f92672">,</span> 1<span style="color:#f92672">}</span><span style="color:#f92672">,</span> <span style="color:#f92672">{</span>0<span style="color:#f92672">,</span> 4<span style="color:#f92672">}</span><span style="color:#f92672">,</span> <span style="color:#f92672">{</span>1<span style="color:#f92672">,</span> 4<span style="color:#f92672">}</span><span style="color:#f92672">,</span> <span style="color:#f92672">{</span>2<span style="color:#f92672">,</span> 3<span style="color:#f92672">}</span><span style="color:#f92672">}</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>test<span style="color:#f92672">.</span><span style="color:#a6e22e">validTree</span><span style="color:#f92672">(</span>5<span style="color:#f92672">,</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">{</span><span style="color:#f92672">{</span>0<span style="color:#f92672">,</span> 1<span style="color:#f92672">}</span><span style="color:#f92672">,</span> <span style="color:#f92672">{</span>1<span style="color:#f92672">,</span> 2<span style="color:#f92672">}</span><span style="color:#f92672">,</span> <span style="color:#f92672">{</span>2<span style="color:#f92672">,</span> 3<span style="color:#f92672">}</span><span style="color:#f92672">,</span> <span style="color:#f92672">{</span>1<span style="color:#f92672">,</span> 3<span style="color:#f92672">}</span><span style="color:#f92672">,</span> <span style="color:#f92672">{</span>1<span style="color:#f92672">,</span> 4<span style="color:#f92672">}</span><span style="color:#f92672">}</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-    return (root[i] == -1) ? i : find(root[i], root);
-}
-
-public static void main(String[] args) {
-    ValidTree_261 test = new ValidTree_261();
-
-    System.out.println(test.validTree(5, new int[][]{{0, 1}, {0, 4}, {1, 4}, {2, 3}}));
-    System.out.println(test.validTree(5, new int[][]{{0, 1}, {1, 2}, {2, 3}, {1, 3}, {1, 4}}));
-
-}
-</code></pre>
+<span style="color:#f92672">}</span>
+</code></pre></div>
               
             </div>
           </div>
@@ -428,7 +404,7 @@ public static void main(String[] args) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>
@@ -486,7 +462,7 @@ public static void main(String[] args) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>

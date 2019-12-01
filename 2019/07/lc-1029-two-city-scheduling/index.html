@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.59.1 with theme Tranquilpeak 0.4.7-BETA">
+<meta name="generator" content="Hugo 0.60.1 with theme Tranquilpeak 0.4.7-BETA">
 <meta name="author" content="Steve Zhou">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -281,29 +281,13 @@
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
-<ul>
-<li><a href="#two-city-scheduling">Two City Scheduling</a>
-<ul>
-<li><a href="#problem-description">Problem description</a></li>
-<li><a href="#method">Method</a></li>
-<li><a href="#code">Code</a></li>
-</ul></li>
-</ul>
-</nav>
-
+              <!-- raw HTML omitted -->
 <h1 id="two-city-scheduling">Two City Scheduling</h1>
-
 <p>Link: <a href="https://leetcode.com/problems/two-city-scheduling/">Two City Scheduling</a></p>
-
 <h2 id="problem-description">Problem description</h2>
-
 <p>There are <code>2N</code> people a company is planning to interview. The cost of flying the <code>i</code>-th person to city <code>A</code> is <code>costs[i][0]</code>, and the cost of flying the <code>i</code>-th person to city <code>B</code> is <code>costs[i][1]</code>.</p>
-
 <p>Return the minimum cost to fly every person to a city such that exactly <code>N</code> people arrive in each city.</p>
-
 <p><strong>Example 1:</strong></p>
-
 <pre><code>Input: [[10,20],[30,200],[400,50],[30,20]]
 Output: 110
 Explanation: 
@@ -313,96 +297,83 @@ The third person goes to city B for a cost of 50.
 The fourth person goes to city B for a cost of 20.
 
 The total minimum cost is 10 + 30 + 50 + 20 = 110 to have half the people interviewing in each city.
-</code></pre>
-
-<p><strong>Note:</strong></p>
-
+</code></pre><p><strong>Note:</strong></p>
 <ol>
 <li><code>1 &lt;= costs.length &lt;= 100</code></li>
 <li>It is guaranteed that <code>costs.length</code> is even.</li>
 <li><code>1 &lt;= costs[i][0], costs[i][1] &lt;= 1000</code></li>
 </ol>
-
 <h2 id="method">Method</h2>
-
 <p>Greedy or dynamic programming.</p>
-
 <p><strong>Greedy</strong></p>
-
 <p>Sort the array by difference for person fly a or fly to b by <code>(a[0] - a[1]) - (b[0] - b[1])</code>.</p>
-
 <p>The higher priority has less total cost send to city A, and less priority has less total cost send to city B.</p>
-
 <p><strong>Dynamic programming</strong></p>
-
 <p>For <code>(i+j)th</code> people, he can be assigned either to A city or B city.
 The min cost if assigned to A city: <code>dp[i-1][j]+costs[i+j-1][0]</code>.
 The min cost if assigned to B city: <code>dp[i][j-1]+costs[i+j-1][1]</code>.
 Hence, <code>dp[i][j] = Math.min(dp[i-1][j]+costs[i+j-1][0] , dp[i][j-1]+costs[i+j-1][1])</code></p>
-
 <p>Another way to represent the equation is: <code>dp[totalPerson][personToA]</code>, <code>toatalPerson</code> is the number of people have been assigned, and <code>personToA</code> of them are assigned to city A, so the the equation:
 <code>dp[totalPerson][personToA]= Math.min(dp[totalPerson-1][personToA]+costs[totalPerson-1][1]</code>.
 <code>dp[totalPerson-1][personToA-1]+costs[totalPerson-1][0])</code>.</p>
-
 <h2 id="code">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Greedy.
+</span><span style="color:#75715e"> * Sort the array by difference for person fly a or fly to b by (a[0] - a[1]) - (b[0] - b[1]).
+</span><span style="color:#75715e"> * The higher priority has less total cost send to city A.
+</span><span style="color:#75715e"> * And less priority has less total cost send to city B.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param costs cost list
+</span><span style="color:#75715e"> * @return minimum cost to fly every person to a city such that exactly N people arrive in each city
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">twoCitySchedCost</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> costs<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    Arrays<span style="color:#f92672">.</span><span style="color:#a6e22e">sort</span><span style="color:#f92672">(</span>costs<span style="color:#f92672">,</span> <span style="color:#66d9ef">new</span> Comparator<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">compare</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> a<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> b<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-<pre><code class="language-java">/**
- * Greedy.
- * Sort the array by difference for person fly a or fly to b by (a[0] - a[1]) - (b[0] - b[1]).
- * The higher priority has less total cost send to city A.
- * And less priority has less total cost send to city B.
- *
- * @param costs cost list
- * @return minimum cost to fly every person to a city such that exactly N people arrive in each city
- */
-public int twoCitySchedCost(int[][] costs) {
-    Arrays.sort(costs, new Comparator&lt;int[]&gt;() {
-        public int compare(int[] a, int[] b) {
+            <span style="color:#75715e">/*
+</span><span style="color:#75715e">             * The higher priority has less total cost send to city A.
+</span><span style="color:#75715e">             * And less priority has less total cost send to city B. */</span>
+            <span style="color:#66d9ef">return</span> <span style="color:#f92672">(</span>a<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span> <span style="color:#f92672">-</span> a<span style="color:#f92672">[</span>1<span style="color:#f92672">]</span><span style="color:#f92672">)</span> <span style="color:#f92672">-</span> <span style="color:#f92672">(</span>b<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span> <span style="color:#f92672">-</span> b<span style="color:#f92672">[</span>1<span style="color:#f92672">]</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-            /*
-             * The higher priority has less total cost send to city A.
-             * And less priority has less total cost send to city B. */
-            return (a[0] - a[1]) - (b[0] - b[1]);
-        }
-    });
+    <span style="color:#66d9ef">int</span> total <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> costs<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">/</span> 2<span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        total <span style="color:#f92672">+</span><span style="color:#f92672">=</span> costs<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">[</span>0<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> costs<span style="color:#f92672">[</span>costs<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">-</span> i <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span><span style="color:#f92672">[</span>1<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-    int total = 0;
-    for (int i = 0; i &lt; costs.length / 2; i++) {
-        total += costs[i][0] + costs[costs.length - i - 1][1];
-    }
+    <span style="color:#66d9ef">return</span> total<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
 
-    return total;
-}
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * For (i+j)th people, it can be assigned either to A city or B city.
+</span><span style="color:#75715e"> * The min cost if assigned to A city: dp[i-1][j]+costs[i+j-1][0]. (Fly to A, so use i-1)
+</span><span style="color:#75715e"> * The min cost if assigned to B city: dp[i][j-1]+costs[i+j-1][1]; (Fly to B, so use j-1)
+</span><span style="color:#75715e"> * dp[i][j] = Math.min(dp[i-1][j]+costs[i+j-1][0] , dp[i][j-1]+costs[i+j-1][1])
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param costs cost list
+</span><span style="color:#75715e"> * @return minimum cost to fly every person to a city such that exactly N people arrive in each city
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">dynamicProgramming</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> costs<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">int</span> N <span style="color:#f92672">=</span> costs<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">/</span> 2<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> dp <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>N <span style="color:#f92672">+</span> 1<span style="color:#f92672">]</span><span style="color:#f92672">[</span>N <span style="color:#f92672">+</span> 1<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span><span style="color:#f92672">=</span> N<span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        dp<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">[</span>0<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> dp<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span><span style="color:#f92672">[</span>0<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> costs<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span><span style="color:#f92672">[</span>0<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-/**
- * For (i+j)th people, it can be assigned either to A city or B city.
- * The min cost if assigned to A city: dp[i-1][j]+costs[i+j-1][0]. (Fly to A, so use i-1)
- * The min cost if assigned to B city: dp[i][j-1]+costs[i+j-1][1]; (Fly to B, so use j-1)
- * dp[i][j] = Math.min(dp[i-1][j]+costs[i+j-1][0] , dp[i][j-1]+costs[i+j-1][1])
- *
- * @param costs cost list
- * @return minimum cost to fly every person to a city such that exactly N people arrive in each city
- */
-public int dynamicProgramming(int[][] costs) {
-    int N = costs.length / 2;
-    int[][] dp = new int[N + 1][N + 1];
-    for (int i = 1; i &lt;= N; i++) {
-        dp[i][0] = dp[i - 1][0] + costs[i - 1][0];
-    }
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> j <span style="color:#f92672">&lt;</span><span style="color:#f92672">=</span> N<span style="color:#f92672">;</span> j<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        dp<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span><span style="color:#f92672">[</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> dp<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span><span style="color:#f92672">[</span>j <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> costs<span style="color:#f92672">[</span>j <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span><span style="color:#f92672">[</span>1<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-    for (int j = 1; j &lt;= N; j++) {
-        dp[0][j] = dp[0][j - 1] + costs[j - 1][1];
-    }
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span><span style="color:#f92672">=</span> N<span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> j <span style="color:#f92672">&lt;</span><span style="color:#f92672">=</span> N<span style="color:#f92672">;</span> j<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            dp<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">[</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">min</span><span style="color:#f92672">(</span>dp<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span><span style="color:#f92672">[</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> costs<span style="color:#f92672">[</span>i <span style="color:#f92672">+</span> j <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span><span style="color:#f92672">[</span>0<span style="color:#f92672">]</span><span style="color:#f92672">,</span> dp<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">[</span>j <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> costs<span style="color:#f92672">[</span>i <span style="color:#f92672">+</span> j <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span><span style="color:#f92672">[</span>1<span style="color:#f92672">]</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
 
-    for (int i = 1; i &lt;= N; i++) {
-        for (int j = 1; j &lt;= N; j++) {
-            dp[i][j] = Math.min(dp[i - 1][j] + costs[i + j - 1][0], dp[i][j - 1] + costs[i + j - 1][1]);
-        }
-    }
-
-    return dp[N][N];
-}
-</code></pre>
+    <span style="color:#66d9ef">return</span> dp<span style="color:#f92672">[</span>N<span style="color:#f92672">]</span><span style="color:#f92672">[</span>N<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div>
               
             </div>
           </div>
@@ -458,7 +429,7 @@ public int dynamicProgramming(int[][] costs) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>
@@ -516,7 +487,7 @@ public int dynamicProgramming(int[][] costs) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>

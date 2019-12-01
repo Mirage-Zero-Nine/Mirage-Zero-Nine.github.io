@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.59.1 with theme Tranquilpeak 0.4.7-BETA">
+<meta name="generator" content="Hugo 0.60.1 with theme Tranquilpeak 0.4.7-BETA">
 <meta name="author" content="Steve Zhou">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -275,123 +275,95 @@
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
-<ul>
-<li><a href="#campus-bikes-ii">Campus Bikes II</a>
-<ul>
-<li><a href="#problem-description">Problem description</a></li>
-<li><a href="#method">Method</a></li>
-<li><a href="#code">Code</a></li>
-</ul></li>
-</ul>
-</nav>
-
+              <!-- raw HTML omitted -->
 <h1 id="campus-bikes-ii">Campus Bikes II</h1>
-
 <p>Link: <a href="https://leetcode.com/problems/campus-bikes-ii/">Campus Bikes II</a></p>
-
 <h2 id="problem-description">Problem description</h2>
-
 <p>On a campus represented as a 2D grid, there are <code>N</code> workers and <code>M</code> bikes, with <code>N &lt;= M</code>. Each worker and bike is a 2D coordinate on this grid.</p>
-
 <p>We assign one unique bike to each worker so that the sum of the Manhattan distances between each worker and their assigned bike is minimized.</p>
-
 <p>The Manhattan distance between two points <code>p1</code> and <code>p2</code> is <code>Manhattan(p1, p2) = |p1.x - p2.x| + |p1.y - p2.y|</code>.</p>
-
 <p>Return the minimum possible sum of Manhattan distances between each worker and their assigned bike.</p>
-
 <p><strong>Example 1:</strong></p>
-
-<p><img src="../../../static/img/1261_example_1_v2-20190717122056033.png" alt="img" /></p>
-
+<p><img src="../../../static/img/1261_example_1_v2-20190717122056033.png" alt="img"></p>
 <pre><code>Input: workers = [[0,0],[2,1]], bikes = [[1,2],[3,3]]
 Output: 6
 Explanation: 
 We assign bike 0 to worker 0, bike 1 to worker 1. The Manhattan distance of both assignments is 3, so the output is 6.
-</code></pre>
-
-<p><strong>Example 2:</strong></p>
-
-<p><img src="../../../static/img/1261_example_2_v2-20190717122056029.png" alt="img" /></p>
-
+</code></pre><p><strong>Example 2:</strong></p>
+<p><img src="../../../static/img/1261_example_2_v2-20190717122056029.png" alt="img"></p>
 <pre><code>Input: workers = [[0,0],[1,1],[2,0]], bikes = [[1,0],[2,2],[2,1]]
 Output: 4
 Explanation: 
 We first assign bike 0 to worker 0, then assign bike 1 to worker 1 or worker 2, bike 2 to worker 2 or worker 1. Both assignments lead to sum of the Manhattan distances as 4.
-</code></pre>
-
-<h2 id="method">Method</h2>
-
-<p>Dijkstra&rsquo;s algorithm with a heap to sort the total distance between bikes and workers.</p>
-
+</code></pre><h2 id="method">Method</h2>
+<p>Dijkstra's algorithm with a heap to sort the total distance between bikes and workers.</p>
 <h2 id="code">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Dijkstra&#39;s algorithm.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param workers given works array
+</span><span style="color:#75715e"> * @param bikes   given bikes array
+</span><span style="color:#75715e"> * @return minimum possible sum of Manhattan distances between each worker and their assigned bike
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">assignBikes</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> workers<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> bikes<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    PriorityQueue<span style="color:#f92672">&lt;</span>Pair<span style="color:#f92672">&gt;</span> pq <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> PriorityQueue<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span>1<span style="color:#f92672">,</span> <span style="color:#f92672">(</span>a<span style="color:#f92672">,</span> b<span style="color:#f92672">)</span> <span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span> <span style="color:#f92672">(</span>a<span style="color:#f92672">.</span><span style="color:#a6e22e">totalDistance</span> <span style="color:#f92672">-</span> b<span style="color:#f92672">.</span><span style="color:#a6e22e">totalDistance</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    Set<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> seen <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashSet<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    pq<span style="color:#f92672">.</span><span style="color:#a6e22e">offer</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> Pair<span style="color:#f92672">(</span>0<span style="color:#f92672">,</span> 0<span style="color:#f92672">,</span> 0<span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span><span style="color:#f92672">!</span>pq<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        Pair curr <span style="color:#f92672">=</span> pq<span style="color:#f92672">.</span><span style="color:#a6e22e">poll</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-<pre><code class="language-java">/**
- * Dijkstra's algorithm.
- *
- * @param workers given works array
- * @param bikes   given bikes array
- * @return minimum possible sum of Manhattan distances between each worker and their assigned bike
- */
-public int assignBikes(int[][] workers, int[][] bikes) {
-    PriorityQueue&lt;Pair&gt; pq = new PriorityQueue&lt;&gt;(1, (a, b) -&gt; (a.totalDistance - b.totalDistance));
-    Set&lt;String&gt; seen = new HashSet&lt;&gt;();
-    pq.offer(new Pair(0, 0, 0));
-    while (!pq.isEmpty()) {
-        Pair curr = pq.poll();
+        String key <span style="color:#f92672">=</span> curr<span style="color:#f92672">.</span><span style="color:#a6e22e">worker</span> <span style="color:#f92672">+</span> <span style="color:#e6db74">&#34; &#34;</span> <span style="color:#f92672">+</span> curr<span style="color:#f92672">.</span><span style="color:#a6e22e">mask</span><span style="color:#f92672">;</span>     <span style="color:#75715e">// mark selected bikes
+</span><span style="color:#75715e"></span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>seen<span style="color:#f92672">.</span><span style="color:#a6e22e">contains</span><span style="color:#f92672">(</span>key<span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">continue</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+        seen<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>key<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-        String key = curr.worker + &quot; &quot; + curr.mask;     // mark selected bikes
-
-        if (seen.contains(key)) {
-            continue;
-        }
-        seen.add(key);
-
-        if (curr.worker == workers.length) {
-            return curr.totalDistance;       // all workers have a bike
-        }
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>curr<span style="color:#f92672">.</span><span style="color:#a6e22e">worker</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> workers<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">return</span> curr<span style="color:#f92672">.</span><span style="color:#a6e22e">totalDistance</span><span style="color:#f92672">;</span>       <span style="color:#75715e">// all workers have a bike
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
 
 
-        for (int j = 0; j &lt; bikes.length; j++) {        // scan all bikes and create new nodes into the PQ for next worker
-            if ((curr.mask &amp; (1 &lt;&lt; j)) == 0) {      // if current bike is not selected
-                pq.offer(new Pair(curr.worker + 1, curr.mask | (1 &lt;&lt; j), curr.totalDistance + distance(bikes[j], workers[curr.worker])));
-            }
-        }
-    }
-    return -1;
-}
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> j <span style="color:#f92672">&lt;</span> bikes<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> j<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>        <span style="color:#75715e">// scan all bikes and create new nodes into the PQ for next worker
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#f92672">(</span>curr<span style="color:#f92672">.</span><span style="color:#a6e22e">mask</span> <span style="color:#f92672">&amp;</span> <span style="color:#f92672">(</span>1 <span style="color:#f92672">&lt;</span><span style="color:#f92672">&lt;</span> j<span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>      <span style="color:#75715e">// if current bike is not selected
+</span><span style="color:#75715e"></span>                pq<span style="color:#f92672">.</span><span style="color:#a6e22e">offer</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> Pair<span style="color:#f92672">(</span>curr<span style="color:#f92672">.</span><span style="color:#a6e22e">worker</span> <span style="color:#f92672">+</span> 1<span style="color:#f92672">,</span> curr<span style="color:#f92672">.</span><span style="color:#a6e22e">mask</span> <span style="color:#f92672">|</span> <span style="color:#f92672">(</span>1 <span style="color:#f92672">&lt;</span><span style="color:#f92672">&lt;</span> j<span style="color:#f92672">)</span><span style="color:#f92672">,</span> curr<span style="color:#f92672">.</span><span style="color:#a6e22e">totalDistance</span> <span style="color:#f92672">+</span> distance<span style="color:#f92672">(</span>bikes<span style="color:#f92672">[</span>j<span style="color:#f92672">]</span><span style="color:#f92672">,</span> workers<span style="color:#f92672">[</span>curr<span style="color:#f92672">.</span><span style="color:#a6e22e">worker</span><span style="color:#f92672">]</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
 
-/**
- * Calculate Manhattan distance for two points.
- *
- * @param b bike coord
- * @param w worker coord
- * @return Manhattan distance between bike and worker
- */
-private int distance(int[] b, int[] w) {
-    return Math.abs(b[0] - w[0]) + Math.abs(b[1] - w[1]);
-}
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Calculate Manhattan distance for two points.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param b bike coord
+</span><span style="color:#75715e"> * @param w worker coord
+</span><span style="color:#75715e"> * @return Manhattan distance between bike and worker
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">distance</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> b<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> w<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">return</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">abs</span><span style="color:#f92672">(</span>b<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span> <span style="color:#f92672">-</span> w<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span><span style="color:#f92672">)</span> <span style="color:#f92672">+</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">abs</span><span style="color:#f92672">(</span>b<span style="color:#f92672">[</span>1<span style="color:#f92672">]</span> <span style="color:#f92672">-</span> w<span style="color:#f92672">[</span>1<span style="color:#f92672">]</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
 
-/**
- * Worker - selected bikes pair
- */
-class Pair {
-    int worker;              // # of worker, from 0 to workers.length
-    int mask;                // bikes have been selected
-    int totalDistance;       // total totalDistance under current worker
-
-    /**
-     * @param w             # of worker
-     * @param m             bikes have been selected
-     * @param totalDistance // total totalDistance under current worker
-     */
-    private Pair(int w, int m, int totalDistance) {
-        this.worker = w;
-        this.mask = m;
-        this.totalDistance = totalDistance;
-    }
-}
-</code></pre>
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Worker - selected bikes pair
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Pair</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">int</span> worker<span style="color:#f92672">;</span>              <span style="color:#75715e">// # of worker, from 0 to workers.length
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> mask<span style="color:#f92672">;</span>                <span style="color:#75715e">// bikes have been selected
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> totalDistance<span style="color:#f92672">;</span>       <span style="color:#75715e">// total totalDistance under current worker
+</span><span style="color:#75715e"></span>
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * @param w             # of worker
+</span><span style="color:#75715e">     * @param m             bikes have been selected
+</span><span style="color:#75715e">     * @param totalDistance // total totalDistance under current worker
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#a6e22e">Pair</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> w<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> m<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> totalDistance<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">worker</span> <span style="color:#f92672">=</span> w<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">mask</span> <span style="color:#f92672">=</span> m<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">totalDistance</span> <span style="color:#f92672">=</span> totalDistance<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div>
               
             </div>
           </div>
@@ -445,7 +417,7 @@ class Pair {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>
@@ -503,7 +475,7 @@ class Pair {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>

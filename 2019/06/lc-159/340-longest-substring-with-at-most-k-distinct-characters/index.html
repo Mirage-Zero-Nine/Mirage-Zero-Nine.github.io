@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.59.1 with theme Tranquilpeak 0.4.7-BETA">
+<meta name="generator" content="Hugo 0.60.1 with theme Tranquilpeak 0.4.7-BETA">
 <meta name="author" content="Steve Zhou">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -275,153 +275,108 @@
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
-<ul>
-<li><a href="#longest-substring-with-at-most-two-distinct-characters">Longest Substring with At Most Two Distinct Characters</a>
-<ul>
-<li><a href="#problem-description">Problem description</a></li>
-<li><a href="#method">Method</a></li>
-<li><a href="#code">Code</a></li>
-</ul></li>
-<li><a href="#longest-substring-with-at-most-k-distinct-characters">Longest Substring with At Most K Distinct Characters</a>
-<ul>
-<li><a href="#problem-description-1">Problem description</a></li>
-<li><a href="#method-1">Method</a></li>
-<li><a href="#code-1">Code</a></li>
-</ul></li>
-</ul>
-</nav>
-
+              <!-- raw HTML omitted -->
 <h1 id="longest-substring-with-at-most-two-distinct-characters">Longest Substring with At Most Two Distinct Characters</h1>
-
 <p>Link: <a href="https://leetcode.com/problems/longest-substring-with-at-most-two-distinct-characters">Longest Substring with At Most Two Distinct Characters</a></p>
-
 <h2 id="problem-description">Problem description</h2>
-
 <p>Given a string <strong>s</strong> , find the length of the longest substring <strong>t</strong>  that contains <strong>at most</strong> 2 distinct characters.</p>
-
 <p><strong>Example 1:</strong></p>
-
 <pre><code>Input: &quot;eceba&quot;
 Output: 3
 Explanation: t is &quot;ece&quot; which its length is 3.
-</code></pre>
-
-<p><strong>Example 2:</strong></p>
-
+</code></pre><p><strong>Example 2:</strong></p>
 <pre><code>Input: &quot;ccaabbb&quot;
 Output: 5
 Explanation: t is &quot;aabbb&quot; which its length is 5.
-</code></pre>
-
-<h2 id="method">Method</h2>
-
+</code></pre><h2 id="method">Method</h2>
 <p>Sliding window (two pointers).</p>
-
 <p>Use two pointers to point at the window start and window end. If distinct char is more than 2, then narrow the window size until all invalid char is excluded.</p>
-
 <h2 id="code">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Sliding window (two pointers).
+</span><span style="color:#75715e"> * Use two pointers to point at the window start and window end.
+</span><span style="color:#75715e"> * If distinct char is more than 2, then narrow the window size until all invalid char is excluded.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param s given string
+</span><span style="color:#75715e"> * @return length of the longest substring t that contains at most 2 distinct characters
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">lengthOfLongestSubstringTwoDistinct</span><span style="color:#f92672">(</span>String s<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-<pre><code class="language-java">/**
- * Sliding window (two pointers).
- * Use two pointers to point at the window start and window end.
- * If distinct char is more than 2, then narrow the window size until all invalid char is excluded.
- *
- * @param s given string
- * @return length of the longest substring t that contains at most 2 distinct characters
- */
-public int lengthOfLongestSubstringTwoDistinct(String s) {
+    <span style="color:#75715e">/* Corner case */</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">&lt;</span> 3<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-    /* Corner case */
-    if (s.length() &lt; 3) {
-        return s.length();
-    }
+    HashMap<span style="color:#f92672">&lt;</span>Character<span style="color:#f92672">,</span> Integer<span style="color:#f92672">&gt;</span> m <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashMap<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">int</span> start <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> count <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> max <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
 
-    HashMap&lt;Character, Integer&gt; m = new HashMap&lt;&gt;();
-    int start = 0, count = 0, max = 0;
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">char</span> c <span style="color:#f92672">=</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        m<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>c<span style="color:#f92672">,</span> m<span style="color:#f92672">.</span><span style="color:#a6e22e">getOrDefault</span><span style="color:#f92672">(</span>c<span style="color:#f92672">,</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">+</span> 1<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        count <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>m<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>c<span style="color:#f92672">)</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">?</span> count <span style="color:#f92672">+</span> 1 <span style="color:#f92672">:</span> count<span style="color:#f92672">;</span>        <span style="color:#75715e">// one more distinct char
+</span><span style="color:#75715e"></span>
+        <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>count <span style="color:#f92672">&gt;</span> 2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>     <span style="color:#75715e">// narrow window size to exclude all invalid char
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">char</span> temp <span style="color:#f92672">=</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>start<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            m<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>temp<span style="color:#f92672">,</span> m<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>temp<span style="color:#f92672">)</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            count <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>m<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>temp<span style="color:#f92672">)</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">?</span> count <span style="color:#f92672">-</span> 1 <span style="color:#f92672">:</span> count<span style="color:#f92672">;</span>     <span style="color:#75715e">// remove a distinct char in window
+</span><span style="color:#75715e"></span>            start<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">;</span>        <span style="color:#75715e">// narrow window size
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
+        max <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>max<span style="color:#f92672">,</span> i <span style="color:#f92672">-</span> start <span style="color:#f92672">+</span> 1<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-    for (int i = 0; i &lt; s.length(); i++) {
-        char c = s.charAt(i);
-        m.put(c, m.getOrDefault(c, 0) + 1);
-        count = (m.get(c) == 1) ? count + 1 : count;        // one more distinct char
-
-        while (count &gt; 2) {     // narrow window size to exclude all invalid char
-            char temp = s.charAt(start);
-            m.put(temp, m.get(temp) - 1);
-            count = (m.get(temp) == 0) ? count - 1 : count;     // remove a distinct char in window
-            start++;        // narrow window size
-        }
-        max = Math.max(max, i - start + 1);
-    }
-
-    return max;
-}
-</code></pre>
-
-<h1 id="longest-substring-with-at-most-k-distinct-characters">Longest Substring with At Most K Distinct Characters</h1>
-
+    <span style="color:#66d9ef">return</span> max<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h1 id="longest-substring-with-at-most-k-distinct-characters">Longest Substring with At Most K Distinct Characters</h1>
 <p>Link: <a href="https://leetcode.com/problems/longest-substring-with-at-most-k-distinct-characters/">Longest Substring with At Most K Distinct Characters</a></p>
-
-<h2 id="problem-description-1">Problem description</h2>
-
+<h2 id="problem-description1">Problem description</h2>
 <p>Given a string, find the length of the longest substring T that contains at most <em>k</em> distinct characters.</p>
-
 <p><strong>Example 1:</strong></p>
-
 <pre><code>Input: s = &quot;eceba&quot;, k = 2
 Output: 3
 Explanation: T is &quot;ece&quot; which its length is 3.
-</code></pre>
-
-<p><strong>Example 2:</strong></p>
-
+</code></pre><p><strong>Example 2:</strong></p>
 <pre><code>Input: s = &quot;aa&quot;, k = 1
 Output: 2
 Explanation: T is &quot;aa&quot; which its length is 2.
-</code></pre>
-
-<h2 id="method-1">Method</h2>
-
+</code></pre><h2 id="method1">Method</h2>
 <p>Same as previous problem, the only difference is the distinct char boundary. In this problem the boundary is now k instead of 2.</p>
+<h2 id="code1">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Sliding window (two pointers).
+</span><span style="color:#75715e"> * Use two pointers to point at the window start and window end.
+</span><span style="color:#75715e"> * If distinct char is more than K, then narrow the window size until all invalid char is excluded.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param s given string
+</span><span style="color:#75715e"> * @param k at most k distinct characters in result
+</span><span style="color:#75715e"> * @return length of the longest substring t that contains at most 2 distinct characters
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">lengthOfLongestSubstringKDistinct</span><span style="color:#f92672">(</span>String s<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> k<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-<h2 id="code-1">Code</h2>
+    <span style="color:#75715e">/* Corner case */</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">&lt;</span> k<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-<pre><code class="language-java">/**
- * Sliding window (two pointers).
- * Use two pointers to point at the window start and window end.
- * If distinct char is more than K, then narrow the window size until all invalid char is excluded.
- *
- * @param s given string
- * @param k at most k distinct characters in result
- * @return length of the longest substring t that contains at most 2 distinct characters
- */
-public int lengthOfLongestSubstringKDistinct(String s, int k) {
+    HashMap<span style="color:#f92672">&lt;</span>Character<span style="color:#f92672">,</span> Integer<span style="color:#f92672">&gt;</span> m <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashMap<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">int</span> start <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> count <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> max <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
 
-    /* Corner case */
-    if (s.length() &lt; k) {
-        return s.length();
-    }
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">char</span> c <span style="color:#f92672">=</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        m<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>c<span style="color:#f92672">,</span> m<span style="color:#f92672">.</span><span style="color:#a6e22e">getOrDefault</span><span style="color:#f92672">(</span>c<span style="color:#f92672">,</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">+</span> 1<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        count <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>m<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>c<span style="color:#f92672">)</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">?</span> count <span style="color:#f92672">+</span> 1 <span style="color:#f92672">:</span> count<span style="color:#f92672">;</span>        <span style="color:#75715e">// one more distinct char
+</span><span style="color:#75715e"></span>
+        <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>count <span style="color:#f92672">&gt;</span> k<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>     <span style="color:#75715e">// narrow window size to exclude all invalid char
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">char</span> temp <span style="color:#f92672">=</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>start<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            m<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>temp<span style="color:#f92672">,</span> m<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>temp<span style="color:#f92672">)</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            count <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>m<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>temp<span style="color:#f92672">)</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">?</span> count <span style="color:#f92672">-</span> 1 <span style="color:#f92672">:</span> count<span style="color:#f92672">;</span>     <span style="color:#75715e">// remove a distinct char in window
+</span><span style="color:#75715e"></span>            start<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">;</span>        <span style="color:#75715e">// narrow window size
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
+        max <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>max<span style="color:#f92672">,</span> i <span style="color:#f92672">-</span> start <span style="color:#f92672">+</span> 1<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-    HashMap&lt;Character, Integer&gt; m = new HashMap&lt;&gt;();
-    int start = 0, count = 0, max = 0;
-
-    for (int i = 0; i &lt; s.length(); i++) {
-        char c = s.charAt(i);
-        m.put(c, m.getOrDefault(c, 0) + 1);
-        count = (m.get(c) == 1) ? count + 1 : count;        // one more distinct char
-
-        while (count &gt; k) {     // narrow window size to exclude all invalid char
-            char temp = s.charAt(start);
-            m.put(temp, m.get(temp) - 1);
-            count = (m.get(temp) == 0) ? count - 1 : count;     // remove a distinct char in window
-            start++;        // narrow window size
-        }
-        max = Math.max(max, i - start + 1);
-    }
-
-    return max;
-}
-</code></pre>
+    <span style="color:#66d9ef">return</span> max<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div>
               
             </div>
           </div>
@@ -475,7 +430,7 @@ public int lengthOfLongestSubstringKDistinct(String s, int k) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>
@@ -533,7 +488,7 @@ public int lengthOfLongestSubstringKDistinct(String s, int k) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>

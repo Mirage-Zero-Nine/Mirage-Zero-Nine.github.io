@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.59.1 with theme Tranquilpeak 0.4.7-BETA">
+<meta name="generator" content="Hugo 0.60.1 with theme Tranquilpeak 0.4.7-BETA">
 <meta name="author" content="Steve Zhou">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -287,102 +287,76 @@
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
-<ul>
-<li><a href="#reconstruct-itinerary">Reconstruct Itinerary</a>
-<ul>
-<li><a href="#problem-description">Problem description</a></li>
-<li><a href="#method">Method</a></li>
-<li><a href="#code">Code</a></li>
-</ul></li>
-</ul>
-</nav>
-
+              <!-- raw HTML omitted -->
 <h1 id="reconstruct-itinerary">Reconstruct Itinerary</h1>
-
 <p>Link: <a href="https://leetcode.com/problems/reconstruct-itinerary">Reconstruct Itinerary</a></p>
-
 <h2 id="problem-description">Problem description</h2>
-
 <p>Given a list of airline tickets represented by pairs of departure and arrival airports <code>[from, to]</code>, reconstruct the itinerary in order. All of the tickets belong to a man who departs from <code>JFK</code>. Thus, the itinerary must begin with <code>JFK</code>.</p>
-
 <p><strong>Note:</strong></p>
-
 <ol>
 <li>If there are multiple valid itineraries, you should return the itinerary that has the smallest lexical order when read as a single string. For example, the itinerary <code>[&quot;JFK&quot;, &quot;LGA&quot;]</code> has a smaller lexical order than <code>[&quot;JFK&quot;, &quot;LGB&quot;]</code>.</li>
 <li>All airports are represented by three capital letters (IATA code).</li>
 <li>You may assume all tickets form at least one valid itinerary.</li>
 </ol>
-
 <p><strong>Example 1:</strong></p>
-
 <pre><code>Input: [[&quot;MUC&quot;, &quot;LHR&quot;], [&quot;JFK&quot;, &quot;MUC&quot;], [&quot;SFO&quot;, &quot;SJC&quot;], [&quot;LHR&quot;, &quot;SFO&quot;]]
 Output: [&quot;JFK&quot;, &quot;MUC&quot;, &quot;LHR&quot;, &quot;SFO&quot;, &quot;SJC&quot;]
-</code></pre>
-
-<p><strong>Example 2:</strong></p>
-
+</code></pre><p><strong>Example 2:</strong></p>
 <pre><code>Input: [[&quot;JFK&quot;,&quot;SFO&quot;],[&quot;JFK&quot;,&quot;ATL&quot;],[&quot;SFO&quot;,&quot;ATL&quot;],[&quot;ATL&quot;,&quot;JFK&quot;],[&quot;ATL&quot;,&quot;SFO&quot;]]
 Output: [&quot;JFK&quot;,&quot;ATL&quot;,&quot;JFK&quot;,&quot;SFO&quot;,&quot;ATL&quot;,&quot;SFO&quot;]
 Explanation: Another possible reconstruction is [&quot;JFK&quot;,&quot;SFO&quot;,&quot;ATL&quot;,&quot;JFK&quot;,&quot;ATL&quot;,&quot;SFO&quot;].
              But it is larger in lexical order.
-</code></pre>
-
-<h2 id="method">Method</h2>
-
+</code></pre><h2 id="method">Method</h2>
 <p>The given list could be a directed cycle graph, therefore, although this problem is much alike a topologic sorting problem, it can not be solved in this way. The method to solve this problem is DFS/BFS, and DFS is better, as itinerary graph are more inclined to be a deep graph rather than a wide graph.</p>
-
 <p>Use a hash map to store departure - destination pair.</p>
-
 <h2 id="code">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * DFS search in graph.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param tickets list contains all departure - destination pair
+</span><span style="color:#75715e"> * @return reconstructed in order itinerary
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> List<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">findItinerary</span><span style="color:#f92672">(</span>List<span style="color:#f92672">&lt;</span>List<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span> tickets<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    List<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> out <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-<pre><code class="language-java">/**
- * DFS search in graph.
- *
- * @param tickets list contains all departure - destination pair
- * @return reconstructed in order itinerary
- */
-public List&lt;String&gt; findItinerary(List&lt;List&lt;String&gt;&gt; tickets) {
-    List&lt;String&gt; out = new ArrayList&lt;&gt;();
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>tickets<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> out<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-    if (tickets.size() == 0) {
-        return out;
-    }
+    HashMap<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">,</span> PriorityQueue<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span> m <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashMap<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-    HashMap&lt;String, PriorityQueue&lt;String&gt;&gt; m = new HashMap&lt;&gt;();
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>List<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> ticket <span style="color:#f92672">:</span> tickets<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>m<span style="color:#f92672">.</span><span style="color:#a6e22e">containsKey</span><span style="color:#f92672">(</span>ticket<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>0<span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            m<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>ticket<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>0<span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>ticket<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>1<span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+            PriorityQueue<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> q <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> PriorityQueue<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            q<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>ticket<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>1<span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            m<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>ticket<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>0<span style="color:#f92672">)</span><span style="color:#f92672">,</span> q<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
 
-    for (List&lt;String&gt; ticket : tickets) {
-        if (m.containsKey(ticket.get(0))) {
-            m.get(ticket.get(0)).add(ticket.get(1));
-        } else {
-            PriorityQueue&lt;String&gt; q = new PriorityQueue&lt;&gt;();
-            q.add(ticket.get(1));
-            m.put(ticket.get(0), q);
-        }
-    }
+    dfs<span style="color:#f92672">(</span>m<span style="color:#f92672">,</span> out<span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;JFK&#34;</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-    dfs(m, out, &quot;JFK&quot;);
+    <span style="color:#66d9ef">return</span> out<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
 
-    return out;
-}
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * DFS searching in graph to obtain the output list.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param m     hash map contains departure - destination
+</span><span style="color:#75715e"> * @param out   output list
+</span><span style="color:#75715e"> * @param start departure
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">dfs</span><span style="color:#f92672">(</span>HashMap<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">,</span> PriorityQueue<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span> m<span style="color:#f92672">,</span> List<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> out<span style="color:#f92672">,</span> String start<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-/**
- * DFS searching in graph to obtain the output list.
- *
- * @param m     hash map contains departure - destination
- * @param out   output list
- * @param start departure
- */
-private void dfs(HashMap&lt;String, PriorityQueue&lt;String&gt;&gt; m, List&lt;String&gt; out, String start) {
+    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>m<span style="color:#f92672">.</span><span style="color:#a6e22e">containsKey</span><span style="color:#f92672">(</span>start<span style="color:#f92672">)</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> <span style="color:#f92672">!</span>m<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>start<span style="color:#f92672">)</span><span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>       <span style="color:#75715e">// DFS to the end of path
+</span><span style="color:#75715e"></span>        String destination <span style="color:#f92672">=</span> m<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>start<span style="color:#f92672">)</span><span style="color:#f92672">.</span><span style="color:#a6e22e">poll</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        dfs<span style="color:#f92672">(</span>m<span style="color:#f92672">,</span> out<span style="color:#f92672">,</span> destination<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-    while (m.containsKey(start) &amp;&amp; !m.get(start).isEmpty()) {       // DFS to the end of path
-        String destination = m.get(start).poll();
-        dfs(m, out, destination);
-    }
-
-    out.add(0, start);
-}
-</code></pre>
+    out<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>0<span style="color:#f92672">,</span> start<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div>
               
             </div>
           </div>
@@ -440,7 +414,7 @@ private void dfs(HashMap&lt;String, PriorityQueue&lt;String&gt;&gt; m, List&lt;S
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>
@@ -498,7 +472,7 @@ private void dfs(HashMap&lt;String, PriorityQueue&lt;String&gt;&gt; m, List&lt;S
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>

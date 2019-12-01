@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.59.1 with theme Tranquilpeak 0.4.7-BETA">
+<meta name="generator" content="Hugo 0.60.1 with theme Tranquilpeak 0.4.7-BETA">
 <meta name="author" content="Steve Zhou">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -277,150 +277,113 @@
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
-<ul>
-<li><a href="#ugly-number-iii">Ugly Number III</a>
-<ul>
-<li><a href="#problem-description">Problem description</a></li>
-<li><a href="#method">Method</a></li>
-<li><a href="#code">Code</a></li>
-</ul></li>
-</ul>
-</nav>
-
+              <!-- raw HTML omitted -->
 <h1 id="ugly-number-iii">Ugly Number III</h1>
-
 <p>Link: <a href="https://leetcode.com/problems/ugly-number-iii/">Ugly Number III</a></p>
-
 <h2 id="problem-description">Problem description</h2>
-
 <p>Write a program to find the <code>n</code>-th ugly number.</p>
-
 <p>Ugly numbers are <strong>positive integers</strong> which are divisible by <code>a</code> <strong>or</strong> <code>b</code> <strong>or</strong><code>c</code>.</p>
-
 <p><strong>Example 1:</strong></p>
-
 <pre><code>Input: n = 3, a = 2, b = 3, c = 5
 Output: 4
 Explanation: The ugly numbers are 2, 3, 4, 5, 6, 8, 9, 10... The 3rd is 4.
-</code></pre>
-
-<p><strong>Example 2:</strong></p>
-
+</code></pre><p><strong>Example 2:</strong></p>
 <pre><code>Input: n = 4, a = 2, b = 3, c = 4
 Output: 6
 Explanation: The ugly numbers are 2, 3, 4, 6, 8, 9, 12... The 4th is 6.
-</code></pre>
-
-<p><strong>Example 3:</strong></p>
-
+</code></pre><p><strong>Example 3:</strong></p>
 <pre><code>Input: n = 5, a = 2, b = 11, c = 13
 Output: 10
 Explanation: The ugly numbers are 2, 4, 6, 8, 10, 11, 12, 13... The 5th is 10.
-</code></pre>
-
-<p><strong>Example 4:</strong></p>
-
+</code></pre><p><strong>Example 4:</strong></p>
 <pre><code>Input: n = 1000000000, a = 2, b = 217983653, c = 336916467
 Output: 1999999984
-</code></pre>
-
-<p><strong>Constraints:</strong></p>
-
+</code></pre><p><strong>Constraints:</strong></p>
 <ul>
 <li><code>1 &lt;= n, a, b, c &lt;= 10^9</code></li>
 <li><code>1 &lt;= a * b * c &lt;= 10^18</code></li>
-<li>It&rsquo;s guaranteed that the result will be in range <code>[1, 2 * 10^9]</code></li>
+<li>It's guaranteed that the result will be in range <code>[1, 2 * 10^9]</code></li>
 </ul>
-
 <h2 id="method">Method</h2>
-
 <p>The definition of ugly number is different than previous problem. The ugly number in previous number is <strong>number that only contains factor of a, b and c</strong>, while in this problem, the ugly number is <strong>number that is divisible for either a or b or c</strong>.</p>
-
 <p>Therefore, this problem is not a dynamic programming problem. Instead, this problem should use binary search to solve it.</p>
-
 <p>Calculate how many numbers from <code>1</code> to <code>NUM</code> are divisible by either a, b or c: <code>(NUM / a) + (NUM / b) + (NUM / c) – (NUM / lcm(a, b)) – (NUM / lcm(b, c)) – (NUM / lcm(a, c)) + (NUM / lcm(a, b, c))</code>.</p>
-
 <p>In this problem, <code>NUM</code> can be <code>2*(10^9)</code> (or <code>Integer.MAX_VALUE</code>).</p>
-
 <p>Then use binary search to find nth ugly number (under this definition).</p>
-
-<p><img src="../../../static/img/Ugly-Number-III.png" alt="Ugly-Number-III" /></p>
-
+<p><img src="../../../static/img/Ugly-Number-III.png" alt="Ugly-Number-III"></p>
 <h2 id="code">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Calculate how many numbers from 1 to NUM are divisible by either a, b or c:
+</span><span style="color:#75715e"> * (NUM / a) + (NUM / b) + (NUM / c) – (NUM / lcm(a, b)) – (NUM / lcm(b, c)) – (NUM / lcm(a, c)) + (NUM / lcm(a, b, c))
+</span><span style="color:#75715e"> * In this problem, NUM can be 2*(10^9) (or Integer.MAX_VALUE).
+</span><span style="color:#75715e"> * Then use binary search to find nth ugly number (under this definition).
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param n nth ugly number
+</span><span style="color:#75715e"> * @param a first prime number
+</span><span style="color:#75715e"> * @param b second prime number
+</span><span style="color:#75715e"> * @param c third prime number
+</span><span style="color:#75715e"> * @return n-th ugly number
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">nthUglyNumber</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> n<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> a<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> b<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> c<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">int</span> low <span style="color:#f92672">=</span> 1<span style="color:#f92672">,</span> high <span style="color:#f92672">=</span> Integer<span style="color:#f92672">.</span><span style="color:#a6e22e">MAX_VALUE</span><span style="color:#f92672">,</span> mid<span style="color:#f92672">;</span>
 
-<pre><code class="language-java">/**
- * Calculate how many numbers from 1 to NUM are divisible by either a, b or c:
- * (NUM / a) + (NUM / b) + (NUM / c) – (NUM / lcm(a, b)) – (NUM / lcm(b, c)) – (NUM / lcm(a, c)) + (NUM / lcm(a, b, c))
- * In this problem, NUM can be 2*(10^9) (or Integer.MAX_VALUE).
- * Then use binary search to find nth ugly number (under this definition).
- *
- * @param n nth ugly number
- * @param a first prime number
- * @param b second prime number
- * @param c third prime number
- * @return n-th ugly number
- */
-public int nthUglyNumber(int n, int a, int b, int c) {
-    int low = 1, high = Integer.MAX_VALUE, mid;
+    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>low <span style="color:#f92672">&lt;</span> high<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        mid <span style="color:#f92672">=</span> low <span style="color:#f92672">+</span> <span style="color:#f92672">(</span>high <span style="color:#f92672">-</span> low<span style="color:#f92672">)</span> <span style="color:#f92672">/</span> 2<span style="color:#f92672">;</span>
 
-    while (low &lt; high) {
-        mid = low + (high - low) / 2;
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>count<span style="color:#f92672">(</span>a<span style="color:#f92672">,</span> b<span style="color:#f92672">,</span> c<span style="color:#f92672">,</span> mid<span style="color:#f92672">)</span> <span style="color:#f92672">&lt;</span> n<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            low <span style="color:#f92672">=</span> mid <span style="color:#f92672">+</span> 1<span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+            high <span style="color:#f92672">=</span> mid<span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
 
-        if (count(a, b, c, mid) &lt; n) {
-            low = mid + 1;
-        } else {
-            high = mid;
-        }
-    }
+    <span style="color:#75715e">/*
+</span><span style="color:#75715e">     * Return the number of previous binary search&#39;s right bound.
+</span><span style="color:#75715e">     * From this range [1, high], there are exactly n ugly numbers and the range can not be shrunk. */</span>
+    <span style="color:#66d9ef">return</span> high<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
 
-    /*
-     * Return the number of previous binary search's right bound.
-     * From this range [1, high], there are exactly n ugly numbers and the range can not be shrunk. */
-    return high;
-}
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Count how many numbers from 1 to NUM are divisible by either a, b or c by this formula:
+</span><span style="color:#75715e"> * (NUM / a) + (NUM / b) + (NUM / c) – (NUM / lcm(a, b)) – (NUM / lcm(b, c)) – (NUM / lcm(a, c)) + (NUM / lcm(a, b, c))
+</span><span style="color:#75715e"> * Also, lcm(a,b,c) = lcm(a,lcm(b,c)).
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param a   number a
+</span><span style="color:#75715e"> * @param b   number b
+</span><span style="color:#75715e"> * @param c   number c
+</span><span style="color:#75715e"> * @param num upper bound of searching range
+</span><span style="color:#75715e"> * @return LCM of a, b and c
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">count</span><span style="color:#f92672">(</span><span style="color:#66d9ef">long</span> a<span style="color:#f92672">,</span> <span style="color:#66d9ef">long</span> b<span style="color:#f92672">,</span> <span style="color:#66d9ef">long</span> c<span style="color:#f92672">,</span> <span style="color:#66d9ef">long</span> num<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">return</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">)</span> <span style="color:#f92672">(</span><span style="color:#f92672">(</span>num <span style="color:#f92672">/</span> a<span style="color:#f92672">)</span> <span style="color:#f92672">+</span> <span style="color:#f92672">(</span>num <span style="color:#f92672">/</span> b<span style="color:#f92672">)</span> <span style="color:#f92672">+</span> <span style="color:#f92672">(</span>num <span style="color:#f92672">/</span> c<span style="color:#f92672">)</span> <span style="color:#f92672">-</span> <span style="color:#f92672">(</span>num <span style="color:#f92672">/</span> lcm<span style="color:#f92672">(</span>a<span style="color:#f92672">,</span> b<span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">-</span> <span style="color:#f92672">(</span>num <span style="color:#f92672">/</span> lcm<span style="color:#f92672">(</span>b<span style="color:#f92672">,</span> c<span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">-</span> <span style="color:#f92672">(</span>num <span style="color:#f92672">/</span> lcm<span style="color:#f92672">(</span>a<span style="color:#f92672">,</span> c<span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">+</span> <span style="color:#f92672">(</span>num <span style="color:#f92672">/</span> lcm<span style="color:#f92672">(</span>a<span style="color:#f92672">,</span> lcm<span style="color:#f92672">(</span>b<span style="color:#f92672">,</span> c<span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
 
-/**
- * Count how many numbers from 1 to NUM are divisible by either a, b or c by this formula:
- * (NUM / a) + (NUM / b) + (NUM / c) – (NUM / lcm(a, b)) – (NUM / lcm(b, c)) – (NUM / lcm(a, c)) + (NUM / lcm(a, b, c))
- * Also, lcm(a,b,c) = lcm(a,lcm(b,c)).
- *
- * @param a   number a
- * @param b   number b
- * @param c   number c
- * @param num upper bound of searching range
- * @return LCM of a, b and c
- */
-private int count(long a, long b, long c, long num) {
-    return (int) ((num / a) + (num / b) + (num / c) - (num / lcm(a, b)) - (num / lcm(b, c)) - (num / lcm(a, c)) + (num / lcm(a, lcm(b, c))));
-}
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Calculate GCD (Greatest Common Divisor) of a and b.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param a first number
+</span><span style="color:#75715e"> * @param b second number
+</span><span style="color:#75715e"> * @return GCD of a and b
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">long</span> <span style="color:#a6e22e">gcd</span><span style="color:#f92672">(</span><span style="color:#66d9ef">long</span> a<span style="color:#f92672">,</span> <span style="color:#66d9ef">long</span> b<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>a <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> b<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-/**
- * Calculate GCD (Greatest Common Divisor) of a and b.
- *
- * @param a first number
- * @param b second number
- * @return GCD of a and b
- */
-private long gcd(long a, long b) {
-    if (a == 0) {
-        return b;
-    }
+    <span style="color:#66d9ef">return</span> gcd<span style="color:#f92672">(</span>b <span style="color:#f92672">%</span> a<span style="color:#f92672">,</span> a<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
 
-    return gcd(b % a, a);
-}
-
-/**
- * Calculate the LCM (Least Common Multiple) of a and b.
- *
- * @param a first number
- * @param b second number
- * @return LCM (Least Common Multiple) of a and b
- */
-private long lcm(long a, long b) {
-    return (a * b) / gcd(a, b);
-}
-</code></pre>
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Calculate the LCM (Least Common Multiple) of a and b.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param a first number
+</span><span style="color:#75715e"> * @param b second number
+</span><span style="color:#75715e"> * @return LCM (Least Common Multiple) of a and b
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">long</span> <span style="color:#a6e22e">lcm</span><span style="color:#f92672">(</span><span style="color:#66d9ef">long</span> a<span style="color:#f92672">,</span> <span style="color:#66d9ef">long</span> b<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">return</span> <span style="color:#f92672">(</span>a <span style="color:#f92672">*</span> b<span style="color:#f92672">)</span> <span style="color:#f92672">/</span> gcd<span style="color:#f92672">(</span>a<span style="color:#f92672">,</span> b<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div>
               
             </div>
           </div>
@@ -476,7 +439,7 @@ private long lcm(long a, long b) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>
@@ -534,7 +497,7 @@ private long lcm(long a, long b) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>

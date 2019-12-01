@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.59.1 with theme Tranquilpeak 0.4.7-BETA">
+<meta name="generator" content="Hugo 0.60.1 with theme Tranquilpeak 0.4.7-BETA">
 <meta name="author" content="Steve Zhou">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -279,121 +279,91 @@
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
-<ul>
-<li><a href="#maximum-gap">Maximum Gap</a>
-<ul>
-<li><a href="#problem-description">Problem description</a></li>
-<li><a href="#method">Method</a></li>
-<li><a href="#code">Code</a></li>
-</ul></li>
-</ul>
-</nav>
-
+              <!-- raw HTML omitted -->
 <h1 id="maximum-gap">Maximum Gap</h1>
-
 <p>Link: <a href="https://leetcode.com/problems/maximum-gap">Maximum Gap</a></p>
-
 <h2 id="problem-description">Problem description</h2>
-
 <p>Given an unsorted array, find the maximum difference between the successive elements in its sorted form.</p>
-
 <p>Return 0 if the array contains less than 2 elements.</p>
-
 <p><strong>Example 1:</strong></p>
-
 <pre><code>Input: [3,6,9,1]
 Output: 3
 Explanation: The sorted form of the array is [1,3,6,9], either
              (3,6) or (6,9) has the maximum difference 3.
-</code></pre>
-
-<p><strong>Example 2:</strong></p>
-
+</code></pre><p><strong>Example 2:</strong></p>
 <pre><code>Input: [10]
 Output: 0
 Explanation: The array contains less than 2 elements, therefore return 0.
-</code></pre>
-
-<p><strong>Note:</strong></p>
-
+</code></pre><p><strong>Note:</strong></p>
 <ul>
 <li>You may assume all elements in the array are non-negative integers and fit in the 32-bit signed integer range.</li>
 <li>Try to solve it in linear time/space.</li>
 </ul>
-
 <h2 id="method">Method</h2>
-
 <p>Buck sort.</p>
-
 <p>Put n - 2 numbers (remove max and min in array) into n - 1 buckets. The bucket size is <code>(int) Math.ceil((double) (max - min) / (nums.length - 1))</code>, which will be larger than max gap. In this way, each bucket will be at most 2 elements.</p>
-
 <p>Max gap can only be found from previous bucket max to current bucket min. If meet empty bucket, pass it until find next non-empty bucket.</p>
-
 <p>Initially, the previous bucket max is the min value in array.</p>
-
 <p>Finally, the next bucket min is the max value in array.</p>
-
 <h2 id="code">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Buck sort.
+</span><span style="color:#75715e"> * Put n - 2 numbers (remove max and min in array) into n - 1 buckets.
+</span><span style="color:#75715e"> * The bucket size is (int) Math.ceil((double) (max - min) / (nums.length - 1)), which will be larger than max gap.
+</span><span style="color:#75715e"> * In this way, each bucket will be at most 2 elements.
+</span><span style="color:#75715e"> * Max gap can only be found from previous bucket max to current bucket min.
+</span><span style="color:#75715e"> * If meet empty bucket, pass it until find next non-empty bucket.
+</span><span style="color:#75715e"> * Initially, the previous bucket max is the min value in array.
+</span><span style="color:#75715e"> * Finally, the next bucket min is the max value in array.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param nums given array
+</span><span style="color:#75715e"> * @return the maximum difference between the successive elements in its sorted form
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">maximumGap</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> nums<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-<pre><code class="language-java">/**
- * Buck sort.
- * Put n - 2 numbers (remove max and min in array) into n - 1 buckets.
- * The bucket size is (int) Math.ceil((double) (max - min) / (nums.length - 1)), which will be larger than max gap.
- * In this way, each bucket will be at most 2 elements.
- * Max gap can only be found from previous bucket max to current bucket min.
- * If meet empty bucket, pass it until find next non-empty bucket.
- * Initially, the previous bucket max is the min value in array.
- * Finally, the next bucket min is the max value in array.
- *
- * @param nums given array
- * @return the maximum difference between the successive elements in its sorted form
- */
-public int maximumGap(int[] nums) {
+    <span style="color:#75715e">/* Corner case */</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">&lt;</span> 2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> 0<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">abs</span><span style="color:#f92672">(</span>nums<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span> <span style="color:#f92672">-</span> nums<span style="color:#f92672">[</span>1<span style="color:#f92672">]</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-    /* Corner case */
-    if (nums.length &lt; 2) {
-        return 0;
-    }
-    if (nums.length == 2) {
-        return Math.abs(nums[0] - nums[1]);
-    }
+    <span style="color:#66d9ef">int</span> min <span style="color:#f92672">=</span> Integer<span style="color:#f92672">.</span><span style="color:#a6e22e">MAX_VALUE</span><span style="color:#f92672">,</span> max <span style="color:#f92672">=</span> Integer<span style="color:#f92672">.</span><span style="color:#a6e22e">MIN_VALUE</span><span style="color:#f92672">;</span>
 
-    int min = Integer.MAX_VALUE, max = Integer.MIN_VALUE;
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">:</span> nums<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        min <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">min</span><span style="color:#f92672">(</span>min<span style="color:#f92672">,</span> i<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        max <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>max<span style="color:#f92672">,</span> i<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-    for (int i : nums) {
-        min = Math.min(min, i);
-        max = Math.max(max, i);
-    }
+    <span style="color:#66d9ef">int</span> bucketLength <span style="color:#f92672">=</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">)</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">ceil</span><span style="color:#f92672">(</span><span style="color:#f92672">(</span><span style="color:#66d9ef">double</span><span style="color:#f92672">)</span> <span style="color:#f92672">(</span>max <span style="color:#f92672">-</span> min<span style="color:#f92672">)</span> <span style="color:#f92672">/</span> <span style="color:#f92672">(</span>nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>     <span style="color:#75715e">// ceiling of the integer division
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> bucketMin <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span><span style="color:#f92672">,</span> bucketMax <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+    Arrays<span style="color:#f92672">.</span><span style="color:#a6e22e">fill</span><span style="color:#f92672">(</span>bucketMax<span style="color:#f92672">,</span> Integer<span style="color:#f92672">.</span><span style="color:#a6e22e">MIN_VALUE</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    Arrays<span style="color:#f92672">.</span><span style="color:#a6e22e">fill</span><span style="color:#f92672">(</span>bucketMin<span style="color:#f92672">,</span> Integer<span style="color:#f92672">.</span><span style="color:#a6e22e">MAX_VALUE</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-    int bucketLength = (int) Math.ceil((double) (max - min) / (nums.length - 1));     // ceiling of the integer division
-    int[] bucketMin = new int[nums.length - 1], bucketMax = new int[nums.length - 1];
-    Arrays.fill(bucketMax, Integer.MIN_VALUE);
-    Arrays.fill(bucketMin, Integer.MAX_VALUE);
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">:</span> nums<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">!</span><span style="color:#f92672">=</span> min <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> i <span style="color:#f92672">!</span><span style="color:#f92672">=</span> max<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">int</span> bucketIndex <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">-</span> min<span style="color:#f92672">)</span> <span style="color:#f92672">/</span> bucketLength<span style="color:#f92672">;</span>       <span style="color:#75715e">// get bucket index
+</span><span style="color:#75715e"></span>
+            bucketMin<span style="color:#f92672">[</span>bucketIndex<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">min</span><span style="color:#f92672">(</span>bucketMin<span style="color:#f92672">[</span>bucketIndex<span style="color:#f92672">]</span><span style="color:#f92672">,</span> i<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            bucketMax<span style="color:#f92672">[</span>bucketIndex<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>bucketMax<span style="color:#f92672">[</span>bucketIndex<span style="color:#f92672">]</span><span style="color:#f92672">,</span> i<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">int</span> pre <span style="color:#f92672">=</span> min<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">int</span> out <span style="color:#f92672">=</span> Integer<span style="color:#f92672">.</span><span style="color:#a6e22e">MIN_VALUE</span><span style="color:#f92672">;</span>
 
-    for (int i : nums) {
-        if (i != min &amp;&amp; i != max) {
-            int bucketIndex = (i - min) / bucketLength;       // get bucket index
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> bucketMax<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>bucketMin<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">!</span><span style="color:#f92672">=</span> Integer<span style="color:#f92672">.</span><span style="color:#a6e22e">MAX_VALUE</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            out <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>out<span style="color:#f92672">,</span> bucketMin<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">-</span> pre<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            pre <span style="color:#f92672">=</span> bucketMax<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
 
-            bucketMin[bucketIndex] = Math.min(bucketMin[bucketIndex], i);
-            bucketMax[bucketIndex] = Math.max(bucketMax[bucketIndex], i);
-        }
-    }
-    int pre = min;
-    int out = Integer.MIN_VALUE;
+    out <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>out<span style="color:#f92672">,</span> max <span style="color:#f92672">-</span> pre<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-    for (int i = 0; i &lt; bucketMax.length; i++) {
-        if (bucketMin[i] != Integer.MAX_VALUE) {
-            out = Math.max(out, bucketMin[i] - pre);
-            pre = bucketMax[i];
-        }
-    }
-
-    out = Math.max(out, max - pre);
-
-    return out;
-}
-</code></pre>
+    <span style="color:#66d9ef">return</span> out<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div>
               
             </div>
           </div>
@@ -447,7 +417,7 @@ public int maximumGap(int[] nums) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>
@@ -505,7 +475,7 @@ public int maximumGap(int[] nums) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>

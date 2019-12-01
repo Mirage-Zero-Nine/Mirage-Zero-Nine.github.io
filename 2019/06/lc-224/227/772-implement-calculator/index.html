@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.59.1 with theme Tranquilpeak 0.4.7-BETA">
+<meta name="generator" content="Hugo 0.60.1 with theme Tranquilpeak 0.4.7-BETA">
 <meta name="author" content="Steve Zhou">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -275,353 +275,271 @@
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
-<ul>
-<li><a href="#basic-calculator">Basic Calculator</a>
-<ul>
-<li><a href="#problem-description">Problem description</a></li>
-<li><a href="#method">Method</a></li>
-<li><a href="#code">Code</a></li>
-</ul></li>
-<li><a href="#basic-calculator-ii">Basic Calculator II</a>
-<ul>
-<li><a href="#problem-description-1">Problem description</a></li>
-<li><a href="#method-1">Method</a></li>
-<li><a href="#code-1">Code</a></li>
-</ul></li>
-<li><a href="#basic-calculator-iii">Basic Calculator III</a>
-<ul>
-<li><a href="#problem-description-2">Problem description</a></li>
-<li><a href="#method-2">Method</a></li>
-<li><a href="#code-2">Code</a></li>
-</ul></li>
-</ul>
-</nav>
-
+              <!-- raw HTML omitted -->
 <h1 id="basic-calculator">Basic Calculator</h1>
-
 <p>Link: <a href="https://leetcode.com/problems/basic-calculator">Basic Calculator</a></p>
-
 <h2 id="problem-description">Problem description</h2>
-
 <p>Implement a basic calculator to evaluate a simple expression string.</p>
-
 <p>The expression string may contain open <code>(</code> and closing parentheses <code>)</code>, the plus <code>+</code> or minus sign <code>-</code>, <strong>non-negative</strong>integers and empty spaces ``.</p>
-
 <p><strong>Example 1:</strong></p>
-
 <pre><code>Input: &quot;1 + 1&quot;
 Output: 2
-</code></pre>
-
-<p><strong>Example 2:</strong></p>
-
+</code></pre><p><strong>Example 2:</strong></p>
 <pre><code>Input: &quot; 2-1 + 2 &quot;
 Output: 3
-</code></pre>
-
-<p><strong>Example 3:</strong></p>
-
+</code></pre><p><strong>Example 3:</strong></p>
 <pre><code>Input: &quot;(1+(4+5+2)-3)+(6+8)&quot;
 Output: 23
-</code></pre>
-
-<p><strong>Note:</strong></p>
-
+</code></pre><p><strong>Note:</strong></p>
 <ul>
 <li>You may assume that the given expression is always valid.</li>
 <li><strong>Do not</strong> use the <code>eval</code> built-in library function.</li>
 </ul>
-
 <h2 id="method">Method</h2>
-
 <p>Use a stack to store calculate result of each operator and Operand. Pop the sum of previous calculation with each operand.</p>
-
 <p>If found a bracket, push a 0 to stack as an initially sum, and keep calculation. After the bracket is end, pop the previous sum in bracket and before bracket to calculate the result.</p>
-
 <h2 id="code">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Use a stack to store calculate result of each operator and Operand.
+</span><span style="color:#75715e"> * Pop the sum of previous calculation with each operand.
+</span><span style="color:#75715e"> * If found a bracket, push a 0 to stack as an initially sum, and keep calculation.
+</span><span style="color:#75715e"> * After the bracket is end, pop the previous sum in bracket and before bracket to calculate the result.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param s given expression string
+</span><span style="color:#75715e"> * @return calculation result of s
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">calculate</span><span style="color:#f92672">(</span>String s<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-<pre><code class="language-java">/**
- * Use a stack to store calculate result of each operator and Operand.
- * Pop the sum of previous calculation with each operand.
- * If found a bracket, push a 0 to stack as an initially sum, and keep calculation.
- * After the bracket is end, pop the previous sum in bracket and before bracket to calculate the result.
- *
- * @param s given expression string
- * @return calculation result of s
- */
-public int calculate(String s) {
+    Stack<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> stack <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Stack<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    stack<span style="color:#f92672">.</span><span style="color:#a6e22e">push</span><span style="color:#f92672">(</span>0<span style="color:#f92672">)</span><span style="color:#f92672">;</span>                          <span style="color:#75715e">// always keep most recent sum at top
+</span><span style="color:#75715e"></span>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> sign <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-    Stack&lt;Integer&gt; stack = new Stack&lt;&gt;();
-    stack.push(0);                          // always keep most recent sum at top
-
-    for (int i = 0, sign = 1; i &lt; s.length(); i++) {
-
-        if (Character.isDigit(s.charAt(i))) {
-            int num = s.charAt(i) - '0';
-            while (i &lt; s.length() - 1 &amp;&amp; Character.isDigit(s.charAt(i + 1))) {      // calculate current numbers
-                num = num * 10 + (s.charAt(++i) - '0');     // ++i is equivalent to i = i + 1
-            }
-            stack.push(stack.pop() + sign * num);       // calculate previous sum and current integer
-        } else if (s.charAt(i) == '+') {
-            sign = 1;
-        } else if (s.charAt(i) == '-') {
-            sign = -1;
-        } else if (s.charAt(i) == '(') {        // calculate the sum in brackets, and push the
-            stack.push(sign);
-            stack.push(0);      // initial sum in brackets are 0
-            sign = 1;       // initial operator in brackets is positive
-        } else if (s.charAt(i) == ')') {    // update last sum = current sum * sign
-            stack.push(stack.pop() * stack.pop() + stack.pop());
-        }
-    }
-    return stack.pop();
-}
-</code></pre>
-
-<h1 id="basic-calculator-ii">Basic Calculator II</h1>
-
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>Character<span style="color:#f92672">.</span><span style="color:#a6e22e">isDigit</span><span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">int</span> num <span style="color:#f92672">=</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span> <span style="color:#f92672">-</span> <span style="color:#e6db74">&#39;0&#39;</span><span style="color:#f92672">;</span>
+            <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">&lt;</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">-</span> 1 <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> Character<span style="color:#f92672">.</span><span style="color:#a6e22e">isDigit</span><span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i <span style="color:#f92672">+</span> 1<span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>      <span style="color:#75715e">// calculate current numbers
+</span><span style="color:#75715e"></span>                num <span style="color:#f92672">=</span> num <span style="color:#f92672">*</span> 10 <span style="color:#f92672">+</span> <span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span><span style="color:#f92672">+</span><span style="color:#f92672">+</span>i<span style="color:#f92672">)</span> <span style="color:#f92672">-</span> <span style="color:#e6db74">&#39;0&#39;</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>     <span style="color:#75715e">// ++i is equivalent to i = i + 1
+</span><span style="color:#75715e"></span>            <span style="color:#f92672">}</span>
+            stack<span style="color:#f92672">.</span><span style="color:#a6e22e">push</span><span style="color:#f92672">(</span>stack<span style="color:#f92672">.</span><span style="color:#a6e22e">pop</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">+</span> sign <span style="color:#f92672">*</span> num<span style="color:#f92672">)</span><span style="color:#f92672">;</span>       <span style="color:#75715e">// calculate previous sum and current integer
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;+&#39;</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            sign <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;-&#39;</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            sign <span style="color:#f92672">=</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;(&#39;</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>        <span style="color:#75715e">// calculate the sum in brackets, and push the
+</span><span style="color:#75715e"></span>            stack<span style="color:#f92672">.</span><span style="color:#a6e22e">push</span><span style="color:#f92672">(</span>sign<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            stack<span style="color:#f92672">.</span><span style="color:#a6e22e">push</span><span style="color:#f92672">(</span>0<span style="color:#f92672">)</span><span style="color:#f92672">;</span>      <span style="color:#75715e">// initial sum in brackets are 0
+</span><span style="color:#75715e"></span>            sign <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span>       <span style="color:#75715e">// initial operator in brackets is positive
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;)&#39;</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>    <span style="color:#75715e">// update last sum = current sum * sign
+</span><span style="color:#75715e"></span>            stack<span style="color:#f92672">.</span><span style="color:#a6e22e">push</span><span style="color:#f92672">(</span>stack<span style="color:#f92672">.</span><span style="color:#a6e22e">pop</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">*</span> stack<span style="color:#f92672">.</span><span style="color:#a6e22e">pop</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">+</span> stack<span style="color:#f92672">.</span><span style="color:#a6e22e">pop</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">return</span> stack<span style="color:#f92672">.</span><span style="color:#a6e22e">pop</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h1 id="basic-calculator-ii">Basic Calculator II</h1>
 <p>Link: <a href="https://leetcode.com/problems/basic-calculator-ii/">Basic Calculator II</a></p>
-
-<h2 id="problem-description-1">Problem description</h2>
-
+<h2 id="problem-description1">Problem description</h2>
 <p>Implement a basic calculator to evaluate a simple expression string.</p>
-
 <p>The expression string contains only <strong>non-negative</strong> integers, <code>+</code>, <code>-</code>, <code>*</code>, <code>/</code> operators and empty spaces ``. The integer division should truncate toward zero.</p>
-
 <p><strong>Example 1:</strong></p>
-
 <pre><code>Input: &quot;3+2*2&quot;
 Output: 7
-</code></pre>
-
-<p><strong>Example 2:</strong></p>
-
+</code></pre><p><strong>Example 2:</strong></p>
 <pre><code>Input: &quot; 3/2 &quot;
 Output: 1
-</code></pre>
-
-<p><strong>Example 3:</strong></p>
-
+</code></pre><p><strong>Example 3:</strong></p>
 <pre><code>Input: &quot; 3+5 / 2 &quot;
 Output: 5
-</code></pre>
-
-<p><strong>Note:</strong></p>
-
+</code></pre><p><strong>Note:</strong></p>
 <ul>
 <li>You may assume that the given expression is always valid.</li>
 <li><strong>Do not</strong> use the <code>eval</code> built-in library function.</li>
 </ul>
-
-<h2 id="method-1">Method</h2>
-
-<p>Use a stack to store each number in string, and assign sign based on previous operator: &lsquo;+&rsquo;, &lsquo;-‘. If found a &lsquo;*&rsquo; or &lsquo;/&rsquo;, pop the last element and do the corresponding calculation, then push the result.</p>
-
+<h2 id="method1">Method</h2>
+<p>Use a stack to store each number in string, and assign sign based on previous operator: &lsquo;+&rsquo;, &lsquo;-‘. If found a &lsquo;*&rsquo; or &lsquo;/', pop the last element and do the corresponding calculation, then push the result.</p>
 <p>Finally, calculate sum of all values in stack.</p>
+<h2 id="code1">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Use a stack to store each number in string, and assign sign based on previous operator: &#39;+&#39;, &#39;-&#39;.
+</span><span style="color:#75715e"> * If found a &#39;*&#39; or &#39;/&#39;, pop the last element and do the corresponding calculation, then push the result.
+</span><span style="color:#75715e"> * Finally, calculate sum of all values in stack.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param s expression string
+</span><span style="color:#75715e"> * @return calculation result of s
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">calculate</span><span style="color:#f92672">(</span>String s<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-<h2 id="code-1">Code</h2>
+    <span style="color:#75715e">/* Corner case */</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">&lt;</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> 0<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+    Stack<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> stack <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Stack<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-<pre><code class="language-java">/**
- * Use a stack to store each number in string, and assign sign based on previous operator: '+', '-'.
- * If found a '*' or '/', pop the last element and do the corresponding calculation, then push the result.
- * Finally, calculate sum of all values in stack.
- *
- * @param s expression string
- * @return calculation result of s
- */
-public int calculate(String s) {
+    <span style="color:#66d9ef">int</span> num <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">char</span> sign <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;+&#39;</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-    /* Corner case */
-    if (s.length() &lt; 1) {
-        return 0;
-    }
-    Stack&lt;Integer&gt; stack = new Stack&lt;&gt;();
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>Character<span style="color:#f92672">.</span><span style="color:#a6e22e">isDigit</span><span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            num <span style="color:#f92672">=</span> num <span style="color:#f92672">*</span> 10 <span style="color:#f92672">+</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span> <span style="color:#f92672">-</span> <span style="color:#e6db74">&#39;0&#39;</span><span style="color:#f92672">;</span>     <span style="color:#75715e">// find operand
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
 
-    int num = 0;
-    char sign = '+';
-    for (int i = 0; i &lt; s.length(); i++) {
-
-        if (Character.isDigit(s.charAt(i))) {
-            num = num * 10 + s.charAt(i) - '0';     // find operand
-        }
-
-        if (s.charAt(i) != ' ' &amp;&amp; !Character.isDigit(s.charAt(i)) || i == s.length() - 1) {     // find operator after operand
-            switch (sign) {
-                case '+':
-                    stack.push(num);
-                    break;
-                case '-':
-                    stack.push(-num);
-                    break;
-                case '*':
-                    stack.push(stack.pop() * num);      // * have higher priority
-                    break;
-                case '/':
-                    stack.push(stack.pop() / num);
-                    break;
-            }
-            sign = s.charAt(i);
-            num = 0;
-        }
-    }
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span> <span style="color:#f92672">!</span><span style="color:#f92672">=</span> <span style="color:#e6db74">&#39; &#39;</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> <span style="color:#f92672">!</span>Character<span style="color:#f92672">.</span><span style="color:#a6e22e">isDigit</span><span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">|</span><span style="color:#f92672">|</span> i <span style="color:#f92672">=</span><span style="color:#f92672">=</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>     <span style="color:#75715e">// find operator after operand
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">switch</span> <span style="color:#f92672">(</span>sign<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                <span style="color:#66d9ef">case</span> <span style="color:#e6db74">&#39;+&#39;</span><span style="color:#f92672">:</span>
+                    stack<span style="color:#f92672">.</span><span style="color:#a6e22e">push</span><span style="color:#f92672">(</span>num<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+                    <span style="color:#66d9ef">break</span><span style="color:#f92672">;</span>
+                <span style="color:#66d9ef">case</span> <span style="color:#e6db74">&#39;-&#39;</span><span style="color:#f92672">:</span>
+                    stack<span style="color:#f92672">.</span><span style="color:#a6e22e">push</span><span style="color:#f92672">(</span><span style="color:#f92672">-</span>num<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+                    <span style="color:#66d9ef">break</span><span style="color:#f92672">;</span>
+                <span style="color:#66d9ef">case</span> <span style="color:#e6db74">&#39;*&#39;</span><span style="color:#f92672">:</span>
+                    stack<span style="color:#f92672">.</span><span style="color:#a6e22e">push</span><span style="color:#f92672">(</span>stack<span style="color:#f92672">.</span><span style="color:#a6e22e">pop</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">*</span> num<span style="color:#f92672">)</span><span style="color:#f92672">;</span>      <span style="color:#75715e">// * have higher priority
+</span><span style="color:#75715e"></span>                    <span style="color:#66d9ef">break</span><span style="color:#f92672">;</span>
+                <span style="color:#66d9ef">case</span> <span style="color:#e6db74">&#39;/&#39;</span><span style="color:#f92672">:</span>
+                    stack<span style="color:#f92672">.</span><span style="color:#a6e22e">push</span><span style="color:#f92672">(</span>stack<span style="color:#f92672">.</span><span style="color:#a6e22e">pop</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">/</span> num<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+                    <span style="color:#66d9ef">break</span><span style="color:#f92672">;</span>
+            <span style="color:#f92672">}</span>
+            sign <span style="color:#f92672">=</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            num <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
     
-    num = 0;
-    for (Integer i : stack) {
-        num += i;
-    }
+    num <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>Integer i <span style="color:#f92672">:</span> stack<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        num <span style="color:#f92672">+</span><span style="color:#f92672">=</span> i<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-    return num;
-}
-</code></pre>
-
-<h1 id="basic-calculator-iii">Basic Calculator III</h1>
-
+    <span style="color:#66d9ef">return</span> num<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h1 id="basic-calculator-iii">Basic Calculator III</h1>
 <p>Link: <a href="https://leetcode.com/problems/basic-calculator-iii">Basic Calculator III</a></p>
-
-<h2 id="problem-description-2">Problem description</h2>
-
+<h2 id="problem-description2">Problem description</h2>
 <p>Implement a basic calculator to evaluate a simple expression string.</p>
-
 <p>The expression string may contain open <code>(</code> and closing parentheses <code>)</code>, the plus <code>+</code> or minus sign <code>-</code>, <strong>non-negative</strong>integers and empty spaces ``.</p>
-
 <p>The expression string contains only non-negative integers, <code>+</code>, <code>-</code>, <code>*</code>, <code>/</code> operators , open <code>(</code> and closing parentheses <code>)</code>and empty spaces ``. The integer division should truncate toward zero.</p>
-
 <p>You may assume that the given expression is always valid. All intermediate results will be in the range of <code>[-2147483648, 2147483647]</code>.</p>
-
 <p>Some examples:</p>
-
 <pre><code>&quot;1 + 1&quot; = 2
 &quot; 6-4 / 2 &quot; = 4
 &quot;2*(5+5*2)/3+(6/2+8)&quot; = 21
 &quot;(2+6* 3+5- (3*14/7+2)*5)+3&quot;=-12
-</code></pre>
-
-<p><strong>Note:</strong> <strong>Do not</strong> use the <code>eval</code> built-in library function.</p>
-
-<h2 id="method-2">Method</h2>
-
+</code></pre><p><strong>Note:</strong> <strong>Do not</strong> use the <code>eval</code> built-in library function.</p>
+<h2 id="method2">Method</h2>
 <p>Follow the pseudo-code here:</p>
-
-<pre><code class="language-java">public int calculate(String s) {
-    int l1 = 0, o1 = 1; // Initialization of level one
-    int l2 = 1, o2 = 1; // Initialization of level two
-    
-    for (int i = 0; i &lt; s.length(); i++) {
-        char c = s.charAt(i);
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">calculate</span><span style="color:#f92672">(</span>String s<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">int</span> l1 <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> o1 <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> <span style="color:#75715e">// Initialization of level one
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> l2 <span style="color:#f92672">=</span> 1<span style="color:#f92672">,</span> o2 <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> <span style="color:#75715e">// Initialization of level two
+</span><span style="color:#75715e"></span>    
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">char</span> c <span style="color:#f92672">=</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
         
-        if (c is a digit) {
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>c is a digit<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-           --&gt; we have an operand of type number, so find its value &quot;num&quot;
-           --&gt; then evaluate at level two: l2 = (o2 == 1 ? l2 * num : l2 / num);
+           <span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span> we have an operand of type number<span style="color:#f92672">,</span> so find its value <span style="color:#e6db74">&#34;num&#34;</span>
+           <span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span> then evaluate at level two<span style="color:#f92672">:</span> l2 <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>o2 <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 1 <span style="color:#f92672">?</span> l2 <span style="color:#f92672">*</span> num <span style="color:#f92672">:</span> l2 <span style="color:#f92672">/</span> num<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
        
-        } else if (c is a lowercase letter) {
+        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>c is a lowercase letter<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-           --&gt; we have an operand of type variable, so find its name &quot;var&quot;
-           --&gt; then look up the variable mapping table to find its value &quot;num&quot;;
-           --&gt; lastly evaluate at level two: l2 = (o2 == 1 ? l2 * num : l2 / num);
+           <span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span> we have an operand of type variable<span style="color:#f92672">,</span> so find its name <span style="color:#e6db74">&#34;var&#34;</span>
+           <span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span> then look up the variable mapping table to find its value <span style="color:#e6db74">&#34;num&#34;</span><span style="color:#f92672">;</span>
+           <span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span> lastly evaluate at level two<span style="color:#f92672">:</span> l2 <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>o2 <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 1 <span style="color:#f92672">?</span> l2 <span style="color:#f92672">*</span> num <span style="color:#f92672">:</span> l2 <span style="color:#f92672">/</span> num<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-        } else if (c is an opening parenthesis) {
+        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>c is an opening parenthesis<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-           --&gt; we have an operand of type subexpression, so find its string representation
-           --&gt; then recursively call the &quot;calculate&quot; function to find its value &quot;num&quot;;
-           --&gt; lastly evaluate at level two: l2 = (o2 == 1 ? l2 * num : l2 / num);
+           <span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span> we have an operand of type subexpression<span style="color:#f92672">,</span> so find its string representation
+           <span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span> then recursively call the <span style="color:#e6db74">&#34;calculate&#34;</span> function to find its value <span style="color:#e6db74">&#34;num&#34;</span><span style="color:#f92672">;</span>
+           <span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span> lastly evaluate at level two<span style="color:#f92672">:</span> l2 <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>o2 <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 1 <span style="color:#f92672">?</span> l2 <span style="color:#f92672">*</span> num <span style="color:#f92672">:</span> l2 <span style="color:#f92672">/</span> num<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
        
-        } else if (c is a level two operator) {
+        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>c is a level two operator<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-            --&gt; o2 needs to be updated: o2 = (c == '*' ? 1 : -1);
+            <span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span> o2 needs to be updated<span style="color:#f92672">:</span> o2 <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>c <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;*&#39;</span> <span style="color:#f92672">?</span> 1 <span style="color:#f92672">:</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-        } else if (c is a level one operator) {
+        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>c is a level one operator<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-            --&gt; demotion happens here: l1 = l1 + o1 * l2;
-            --&gt; o1 needs to be updated: o1 = (c == '+' ? 1 : -1);
-            --&gt; l2, o2 need to be reset: l2 = 1, o2 = 1;
+            <span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span> demotion happens here<span style="color:#f92672">:</span> l1 <span style="color:#f92672">=</span> l1 <span style="color:#f92672">+</span> o1 <span style="color:#f92672">*</span> l2<span style="color:#f92672">;</span>
+            <span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span> o1 needs to be updated<span style="color:#f92672">:</span> o1 <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>c <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;+&#39;</span> <span style="color:#f92672">?</span> 1 <span style="color:#f92672">:</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            <span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">&gt;</span> l2<span style="color:#f92672">,</span> o2 need to be reset<span style="color:#f92672">:</span> l2 <span style="color:#f92672">=</span> 1<span style="color:#f92672">,</span> o2 <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span>
 
-       }
+       <span style="color:#f92672">}</span>
 
-       return (l1 + o1 * l2); // end of expression reached, so demotion happens again
-}
-</code></pre>
+       <span style="color:#66d9ef">return</span> <span style="color:#f92672">(</span>l1 <span style="color:#f92672">+</span> o1 <span style="color:#f92672">*</span> l2<span style="color:#f92672">)</span><span style="color:#f92672">;</span> <span style="color:#75715e">// end of expression reached, so demotion happens again
+</span><span style="color:#75715e"></span><span style="color:#f92672">}</span>
+</code></pre></div><h2 id="code2">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Use a deque to store operands and operators.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param s expression string
+</span><span style="color:#75715e"> * @return calculation result of s
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">calculate</span><span style="color:#f92672">(</span>String s<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">int</span> l1 <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> o1 <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">int</span> l2 <span style="color:#f92672">=</span> 1<span style="color:#f92672">,</span> o2 <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span>
 
-<h2 id="code-2">Code</h2>
+    Deque<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> stack <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayDeque<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>      <span style="color:#75715e">// stack to simulate recursion
+</span><span style="color:#75715e"></span>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">char</span> c <span style="color:#f92672">=</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-<pre><code class="language-java">/**
- * Use a deque to store operands and operators.
- *
- * @param s expression string
- * @return calculation result of s
- */
-public int calculate(String s) {
-    int l1 = 0, o1 = 1;
-    int l2 = 1, o2 = 1;
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>Character<span style="color:#f92672">.</span><span style="color:#a6e22e">isDigit</span><span style="color:#f92672">(</span>c<span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">int</span> num <span style="color:#f92672">=</span> c <span style="color:#f92672">-</span> <span style="color:#e6db74">&#39;0&#39;</span><span style="color:#f92672">;</span>
 
-    Deque&lt;Integer&gt; stack = new ArrayDeque&lt;&gt;();      // stack to simulate recursion
+            <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">+</span> 1 <span style="color:#f92672">&lt;</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> Character<span style="color:#f92672">.</span><span style="color:#a6e22e">isDigit</span><span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i <span style="color:#f92672">+</span> 1<span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                num <span style="color:#f92672">=</span> num <span style="color:#f92672">*</span> 10 <span style="color:#f92672">+</span> <span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span><span style="color:#f92672">+</span><span style="color:#f92672">+</span>i<span style="color:#f92672">)</span> <span style="color:#f92672">-</span> <span style="color:#e6db74">&#39;0&#39;</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            <span style="color:#f92672">}</span>
 
-    for (int i = 0; i &lt; s.length(); i++) {
-        char c = s.charAt(i);
+            l2 <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>o2 <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 1 <span style="color:#f92672">?</span> l2 <span style="color:#f92672">*</span> num <span style="color:#f92672">:</span> l2 <span style="color:#f92672">/</span> num<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-        if (Character.isDigit(c)) {
-            int num = c - '0';
+        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>c <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;(&#39;</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-            while (i + 1 &lt; s.length() &amp;&amp; Character.isDigit(s.charAt(i + 1))) {
-                num = num * 10 + (s.charAt(++i) - '0');
-            }
+            <span style="color:#75715e">/* Preserve current calculation status.
+</span><span style="color:#75715e">             * Then reset them for next calculation.*/</span>
+            stack<span style="color:#f92672">.</span><span style="color:#a6e22e">offerFirst</span><span style="color:#f92672">(</span>l1<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            stack<span style="color:#f92672">.</span><span style="color:#a6e22e">offerFirst</span><span style="color:#f92672">(</span>o1<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            stack<span style="color:#f92672">.</span><span style="color:#a6e22e">offerFirst</span><span style="color:#f92672">(</span>l2<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            stack<span style="color:#f92672">.</span><span style="color:#a6e22e">offerFirst</span><span style="color:#f92672">(</span>o2<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            l1 <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+            o1 <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span>
+            l2 <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span>
+            o2 <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span>
 
-            l2 = (o2 == 1 ? l2 * num : l2 / num);
+        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>c <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;)&#39;</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-        } else if (c == '(') {
+            <span style="color:#75715e">/*
+</span><span style="color:#75715e">             * First preserve the result of current calculation.
+</span><span style="color:#75715e">             * Then restore previous calculation status. */</span>
+            <span style="color:#66d9ef">int</span> num <span style="color:#f92672">=</span> l1 <span style="color:#f92672">+</span> o1 <span style="color:#f92672">*</span> l2<span style="color:#f92672">;</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>stack<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">&gt;</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                o2 <span style="color:#f92672">=</span> stack<span style="color:#f92672">.</span><span style="color:#a6e22e">poll</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            <span style="color:#f92672">}</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>stack<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">&gt;</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                l2 <span style="color:#f92672">=</span> stack<span style="color:#f92672">.</span><span style="color:#a6e22e">poll</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            <span style="color:#f92672">}</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>stack<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">&gt;</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                o1 <span style="color:#f92672">=</span> stack<span style="color:#f92672">.</span><span style="color:#a6e22e">poll</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            <span style="color:#f92672">}</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>stack<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">&gt;</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                l1 <span style="color:#f92672">=</span> stack<span style="color:#f92672">.</span><span style="color:#a6e22e">poll</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            <span style="color:#f92672">}</span>
 
-            /* Preserve current calculation status.
-             * Then reset them for next calculation.*/
-            stack.offerFirst(l1);
-            stack.offerFirst(o1);
-            stack.offerFirst(l2);
-            stack.offerFirst(o2);
-            l1 = 0;
-            o1 = 1;
-            l2 = 1;
-            o2 = 1;
+            l2 <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>o2 <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 1 <span style="color:#f92672">?</span> l2 <span style="color:#f92672">*</span> num <span style="color:#f92672">:</span> l2 <span style="color:#f92672">/</span> num<span style="color:#f92672">)</span><span style="color:#f92672">;</span>       <span style="color:#75715e">// previous calculation status is now in effect
+</span><span style="color:#75715e"></span>
+        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>c <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;*&#39;</span> <span style="color:#f92672">|</span><span style="color:#f92672">|</span> c <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;/&#39;</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            o2 <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>c <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;*&#39;</span> <span style="color:#f92672">?</span> 1 <span style="color:#f92672">:</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-        } else if (c == ')') {
+        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>c <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;+&#39;</span> <span style="color:#f92672">|</span><span style="color:#f92672">|</span> c <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;-&#39;</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>c <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;-&#39;</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 0 <span style="color:#f92672">|</span><span style="color:#f92672">|</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;(&#39;</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                o1 <span style="color:#f92672">=</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">;</span>
+                <span style="color:#66d9ef">continue</span><span style="color:#f92672">;</span>
+            <span style="color:#f92672">}</span>
+            l1 <span style="color:#f92672">=</span> l1 <span style="color:#f92672">+</span> o1 <span style="color:#f92672">*</span> l2<span style="color:#f92672">;</span>
+            o1 <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>c <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;+&#39;</span> <span style="color:#f92672">?</span> 1 <span style="color:#f92672">:</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-            /*
-             * First preserve the result of current calculation.
-             * Then restore previous calculation status. */
-            int num = l1 + o1 * l2;
-            if (stack.size() &gt; 0) {
-                o2 = stack.poll();
-            }
-            if (stack.size() &gt; 0) {
-                l2 = stack.poll();
-            }
-            if (stack.size() &gt; 0) {
-                o1 = stack.poll();
-            }
-            if (stack.size() &gt; 0) {
-                l1 = stack.poll();
-            }
+            l2 <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span>
+            o2 <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
 
-            l2 = (o2 == 1 ? l2 * num : l2 / num);       // previous calculation status is now in effect
-
-        } else if (c == '*' || c == '/') {
-            o2 = (c == '*' ? 1 : -1);
-
-        } else if (c == '+' || c == '-') {
-            if (c == '-' &amp;&amp; (i == 0 || s.charAt(i - 1) == '(')) {
-                o1 = -1;
-                continue;
-            }
-            l1 = l1 + o1 * l2;
-            o1 = (c == '+' ? 1 : -1);
-
-            l2 = 1;
-            o2 = 1;
-        }
-    }
-
-    return (l1 + o1 * l2);
-}
-</code></pre>
+    <span style="color:#66d9ef">return</span> <span style="color:#f92672">(</span>l1 <span style="color:#f92672">+</span> o1 <span style="color:#f92672">*</span> l2<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div>
               
             </div>
           </div>
@@ -675,7 +593,7 @@ public int calculate(String s) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>
@@ -733,7 +651,7 @@ public int calculate(String s) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>

@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.59.1 with theme Tranquilpeak 0.4.7-BETA">
+<meta name="generator" content="Hugo 0.60.1 with theme Tranquilpeak 0.4.7-BETA">
 <meta name="author" content="Steve Zhou">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -277,75 +277,53 @@
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
-<ul>
-<li><a href="#binary-tree-cameras">Binary Tree Cameras</a>
-<ul>
-<li><a href="#problem-description">Problem description</a></li>
-<li><a href="#method">Method</a></li>
-<li><a href="#code">Code</a></li>
-</ul></li>
-</ul>
-</nav>
-
+              <!-- raw HTML omitted -->
 <h1 id="binary-tree-cameras">Binary Tree Cameras</h1>
-
 <p>Link: <a href="https://leetcode.com/problems/binary-tree-cameras/">Binary Tree Cameras</a></p>
-
 <h2 id="problem-description">Problem description</h2>
-
 <p>Given a binary tree, we install cameras on the nodes of the tree.</p>
-
 <p>Each camera at a node can monitor <strong>its parent, itself, and its immediate children</strong>.</p>
-
 <p>Calculate the minimum number of cameras needed to monitor all nodes of the tree.</p>
-
 <p><strong>Example 1:</strong></p>
-
-<p><img src="../../../static/img/bst_cameras_01.png" alt="img" /></p>
-
+<p><img src="../../../static/img/bst_cameras_01.png" alt="img"></p>
 <h2 id="method">Method</h2>
-
-<p>Greedy. Start from the leave&rsquo;s parent, set a camera and remove all covered nodes.</p>
-
+<p>Greedy. Start from the leave's parent, set a camera and remove all covered nodes.</p>
 <p>Repeat this process until all nodes are covered.</p>
-
 <h2 id="code">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> res <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
 
-<pre><code class="language-java">private int res = 0;
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Greedy. Start from the leave&#39;s parent, set a camera and remove all covered nodes.
+</span><span style="color:#75715e"> * Repeat this process until all nodes are covered.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param root root node
+</span><span style="color:#75715e"> * @return minimum number of cameras needed to monitor all nodes of the tree
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">minCameraCover</span><span style="color:#f92672">(</span>TreeNode root<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">return</span> <span style="color:#f92672">(</span>dfs<span style="color:#f92672">(</span>root<span style="color:#f92672">)</span> <span style="color:#f92672">&lt;</span> 1 <span style="color:#f92672">?</span> 1 <span style="color:#f92672">:</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">+</span> res<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
 
-/**
- * Greedy. Start from the leave's parent, set a camera and remove all covered nodes.
- * Repeat this process until all nodes are covered.
- *
- * @param root root node
- * @return minimum number of cameras needed to monitor all nodes of the tree
- */
-public int minCameraCover(TreeNode root) {
-    return (dfs(root) &lt; 1 ? 1 : 0) + res;
-}
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * DFS to cover all nodes. If child of left or right has a camera, then current node is covered.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param root current root node
+</span><span style="color:#75715e"> * @return status of node, 0 for leaf, 1 for parent of a leaf with a camera on this node, 2 for covered without camera.
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">dfs</span><span style="color:#f92672">(</span>TreeNode root<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>root <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> 2<span style="color:#f92672">;</span>       <span style="color:#75715e">// null node classified as covered
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
 
-/**
- * DFS to cover all nodes. If child of left or right has a camera, then current node is covered.
- *
- * @param root current root node
- * @return status of node, 0 for leaf, 1 for parent of a leaf with a camera on this node, 2 for covered without camera.
- */
-public int dfs(TreeNode root) {
-    if (root == null) {
-        return 2;       // null node classified as covered
-    }
+    <span style="color:#66d9ef">int</span> left <span style="color:#f92672">=</span> dfs<span style="color:#f92672">(</span>root<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">)</span><span style="color:#f92672">,</span> right <span style="color:#f92672">=</span> dfs<span style="color:#f92672">(</span>root<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-    int left = dfs(root.left), right = dfs(root.right);
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>left <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 0 <span style="color:#f92672">|</span><span style="color:#f92672">|</span> right <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        res<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">return</span> 1<span style="color:#f92672">;</span>       <span style="color:#75715e">// add a camera to cover leave
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
 
-    if (left == 0 || right == 0) {
-        res++;
-        return 1;       // add a camera to cover leave
-    }
-
-    return (left == 1 || right == 1) ? 2 : 0;       // if any of child is as covered, then current node is covered without camera
-}
-</code></pre>
+    <span style="color:#66d9ef">return</span> <span style="color:#f92672">(</span>left <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 1 <span style="color:#f92672">|</span><span style="color:#f92672">|</span> right <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">?</span> 2 <span style="color:#f92672">:</span> 0<span style="color:#f92672">;</span>       <span style="color:#75715e">// if any of child is as covered, then current node is covered without camera
+</span><span style="color:#75715e"></span><span style="color:#f92672">}</span>
+</code></pre></div>
               
             </div>
           </div>
@@ -401,7 +379,7 @@ public int dfs(TreeNode root) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>
@@ -459,7 +437,7 @@ public int dfs(TreeNode root) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>

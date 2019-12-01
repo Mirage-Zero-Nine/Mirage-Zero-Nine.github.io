@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.59.1 with theme Tranquilpeak 0.4.7-BETA">
+<meta name="generator" content="Hugo 0.60.1 with theme Tranquilpeak 0.4.7-BETA">
 <meta name="author" content="Steve Zhou">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -279,39 +279,12 @@
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
-<ul>
-<li><a href="#implement-trie-prefix-tree">Implement Trie (Prefix Tree)</a>
-<ul>
-<li><a href="#problem-description">Problem description</a></li>
-<li><a href="#method">Method</a></li>
-<li><a href="#code">Code</a></li>
-</ul></li>
-<li><a href="#add-and-search-word-data-structure-design">Add and Search Word - Data structure design</a>
-<ul>
-<li><a href="#problem-description-1">Problem description</a></li>
-<li><a href="#method-1">Method</a></li>
-<li><a href="#code-1">Code</a></li>
-</ul></li>
-<li><a href="#word-search-ii">Word Search II</a>
-<ul>
-<li><a href="#problem-description-2">Problem description</a></li>
-<li><a href="#method-2">Method</a></li>
-<li><a href="#code-2">Code</a></li>
-</ul></li>
-</ul>
-</nav>
-
+              <!-- raw HTML omitted -->
 <h1 id="implement-trie-prefix-tree">Implement Trie (Prefix Tree)</h1>
-
 <p>Link: <a href="https://leetcode.com/problems/implement-trie-prefix-tree">Implement Trie (Prefix Tree)</a></p>
-
 <h2 id="problem-description">Problem description</h2>
-
 <p>Implement a trie with <code>insert</code>, <code>search</code>, and <code>startsWith</code> methods.</p>
-
 <p><strong>Example:</strong></p>
-
 <pre><code>Trie trie = new Trie();
 
 trie.insert(&quot;apple&quot;);
@@ -320,140 +293,122 @@ trie.search(&quot;app&quot;);     // returns false
 trie.startsWith(&quot;app&quot;); // returns true
 trie.insert(&quot;app&quot;);   
 trie.search(&quot;app&quot;);     // returns true
-</code></pre>
-
-<p><strong>Note:</strong></p>
-
+</code></pre><p><strong>Note:</strong></p>
 <ul>
 <li>You may assume that all inputs are consist of lowercase letters <code>a-z</code>.</li>
 <li>All inputs are guaranteed to be non-empty strings.</li>
 </ul>
-
 <h2 id="method">Method</h2>
-
 <p>Use a node structure to store each char in given word. Node of Trie has following attributes:</p>
-
 <ol>
 <li>A hash map (or char array) to store children.</li>
 <li>Get/set value in node.</li>
 <li>Get/add children.</li>
 <li>Check/set end flag to mark current node as end of word (to separate it from prefix).</li>
 </ol>
-
 <h2 id="code">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Trie</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">private</span> TrieNode root<span style="color:#f92672">;</span>
 
-<pre><code class="language-java">public class Trie {
-    private TrieNode root;
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * Initialize of Trie.
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">Trie</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        root <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> TrieNode<span style="color:#f92672">(</span><span style="color:#e6db74">&#39; &#39;</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-    /**
-     * Initialize of Trie.
-     */
-    public Trie() {
-        root = new TrieNode(' ');
-    }
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * Inserts a word into the trie.
+</span><span style="color:#75715e">     *
+</span><span style="color:#75715e">     * @param word word to be inserted to trie
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">insert</span><span style="color:#f92672">(</span>String word<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        TrieNode tmp <span style="color:#f92672">=</span> root<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> word<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>tmp<span style="color:#f92672">.</span><span style="color:#a6e22e">child</span><span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>word<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                TrieNode n <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> TrieNode<span style="color:#f92672">(</span>word<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+                tmp<span style="color:#f92672">.</span><span style="color:#a6e22e">child</span><span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>word<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span><span style="color:#f92672">,</span> n<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            <span style="color:#f92672">}</span>
+            tmp <span style="color:#f92672">=</span> tmp<span style="color:#f92672">.</span><span style="color:#a6e22e">child</span><span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>word<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+        tmp<span style="color:#f92672">.</span><span style="color:#a6e22e">isEnd</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-    /**
-     * Inserts a word into the trie.
-     *
-     * @param word word to be inserted to trie
-     */
-    public void insert(String word) {
-        TrieNode tmp = root;
-        for (int i = 0; i &lt; word.length(); i++) {
-            if (tmp.child.get(word.charAt(i)) == null) {
-                TrieNode n = new TrieNode(word.charAt(i));
-                tmp.child.put(word.charAt(i), n);
-            }
-            tmp = tmp.child.get(word.charAt(i));
-        }
-        tmp.isEnd = true;
-    }
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * Returns true if the word is in the trie.
+</span><span style="color:#75715e">     *
+</span><span style="color:#75715e">     * @param word given word
+</span><span style="color:#75715e">     * @return if word is in trie
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">search</span><span style="color:#f92672">(</span>String word<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        TrieNode tmp <span style="color:#f92672">=</span> findEnd<span style="color:#f92672">(</span>word<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">return</span> tmp <span style="color:#f92672">!</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> tmp<span style="color:#f92672">.</span><span style="color:#a6e22e">isEnd</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-    /**
-     * Returns true if the word is in the trie.
-     *
-     * @param word given word
-     * @return if word is in trie
-     */
-    public boolean search(String word) {
-        TrieNode tmp = findEnd(word);
-        return tmp != null &amp;&amp; tmp.isEnd;
-    }
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * Returns true if there exist a word in the trie that starts with the given prefix.
+</span><span style="color:#75715e">     *
+</span><span style="color:#75715e">     * @param prefix given prefix
+</span><span style="color:#75715e">     * @return if prefix is in trie
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">startsWith</span><span style="color:#f92672">(</span>String prefix<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> findEnd<span style="color:#f92672">(</span>prefix<span style="color:#f92672">)</span> <span style="color:#f92672">!</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-    /**
-     * Returns true if there exist a word in the trie that starts with the given prefix.
-     *
-     * @param prefix given prefix
-     * @return if prefix is in trie
-     */
-    public boolean startsWith(String prefix) {
-        return findEnd(prefix) != null;
-    }
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * Find longest reachable TrieNode in trie.
+</span><span style="color:#75715e">     *
+</span><span style="color:#75715e">     * @param w given string
+</span><span style="color:#75715e">     * @return longest reachable TrieNode, or null if given string contains char that is not exist in trie.
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">private</span> TrieNode <span style="color:#a6e22e">findEnd</span><span style="color:#f92672">(</span>String w<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        TrieNode tmp <span style="color:#f92672">=</span> root<span style="color:#f92672">;</span>
 
-    /**
-     * Find longest reachable TrieNode in trie.
-     *
-     * @param w given string
-     * @return longest reachable TrieNode, or null if given string contains char that is not exist in trie.
-     */
-    private TrieNode findEnd(String w) {
-        TrieNode tmp = root;
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> w<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>tmp<span style="color:#f92672">.</span><span style="color:#a6e22e">child</span><span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>w<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+            <span style="color:#f92672">}</span>
+            tmp <span style="color:#f92672">=</span> tmp<span style="color:#f92672">.</span><span style="color:#a6e22e">child</span><span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>w<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
 
-        for (int i = 0; i &lt; w.length(); i++) {
-            if (tmp.child.get(w.charAt(i)) == null) {
-                return null;
-            }
-            tmp = tmp.child.get(w.charAt(i));
-        }
-
-        return tmp;
-    }
+        <span style="color:#66d9ef">return</span> tmp<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
 
-    /**
-     * Nodes in trie.
-     */
-    static class TrieNode {
-        public HashMap&lt;Character, TrieNode&gt; child = new HashMap&lt;&gt;();
-        boolean isEnd = false;
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * Nodes in trie.
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">TrieNode</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">public</span> HashMap<span style="color:#f92672">&lt;</span>Character<span style="color:#f92672">,</span> TrieNode<span style="color:#f92672">&gt;</span> child <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashMap<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">boolean</span> isEnd <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
 
-        TrieNode(char val) {
-        }
-    }
+        TrieNode<span style="color:#f92672">(</span><span style="color:#66d9ef">char</span> val<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
 
-    public static void main(String[] args) {
-        Trie_208 test = new Trie_208();
-        test.insert(&quot;app&quot;);
-        test.insert(&quot;apple&quot;);
-        test.insert(&quot;beer&quot;);
-        test.insert(&quot;add&quot;);
-        test.insert(&quot;jam&quot;);
-        test.insert(&quot;rental&quot;);
-        System.out.println(test.search(&quot;app&quot;));
-        System.out.println(test.search(&quot;apps&quot;));
-        System.out.println(test.startsWith(&quot;beer&quot;));
-        test.insert(&quot;app&quot;);
-        System.out.println(test.search(&quot;app&quot;));
-    }
-}
-</code></pre>
-
-<h1 id="add-and-search-word-data-structure-design">Add and Search Word - Data structure design</h1>
-
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[</span><span style="color:#f92672">]</span> args<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        Trie_208 test <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Trie_208<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        test<span style="color:#f92672">.</span><span style="color:#a6e22e">insert</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;app&#34;</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        test<span style="color:#f92672">.</span><span style="color:#a6e22e">insert</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;apple&#34;</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        test<span style="color:#f92672">.</span><span style="color:#a6e22e">insert</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;beer&#34;</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        test<span style="color:#f92672">.</span><span style="color:#a6e22e">insert</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;add&#34;</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        test<span style="color:#f92672">.</span><span style="color:#a6e22e">insert</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;jam&#34;</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        test<span style="color:#f92672">.</span><span style="color:#a6e22e">insert</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;rental&#34;</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>test<span style="color:#f92672">.</span><span style="color:#a6e22e">search</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;app&#34;</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>test<span style="color:#f92672">.</span><span style="color:#a6e22e">search</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;apps&#34;</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>test<span style="color:#f92672">.</span><span style="color:#a6e22e">startsWith</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;beer&#34;</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        test<span style="color:#f92672">.</span><span style="color:#a6e22e">insert</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;app&#34;</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>test<span style="color:#f92672">.</span><span style="color:#a6e22e">search</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;app&#34;</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h1 id="add-and-search-word--data-structure-design">Add and Search Word - Data structure design</h1>
 <p>Link: <a href="https://leetcode.com/problems/add-and-search-word-data-structure-design">Add and Search Word - Data structure design</a></p>
-
-<h2 id="problem-description-1">Problem description</h2>
-
+<h2 id="problem-description1">Problem description</h2>
 <p>Design a data structure that supports the following two operations:</p>
-
 <pre><code>void addWord(word)
 bool search(word)
-</code></pre>
-
-<p>search(word) can search a literal word or a regular expression string containing only letters <code>a-z</code> or <code>.</code>. A <code>.</code> means it can represent any one letter.</p>
-
+</code></pre><p>search(word) can search a literal word or a regular expression string containing only letters <code>a-z</code> or <code>.</code>. A <code>.</code> means it can represent any one letter.</p>
 <p><strong>Example:</strong></p>
-
 <pre><code>addWord(&quot;bad&quot;)
 addWord(&quot;dad&quot;)
 addWord(&quot;mad&quot;)
@@ -461,199 +416,183 @@ search(&quot;pad&quot;) -&gt; false
 search(&quot;bad&quot;) -&gt; true
 search(&quot;.ad&quot;) -&gt; true
 search(&quot;b..&quot;) -&gt; true
-</code></pre>
-
-<p><strong>Note:</strong>
+</code></pre><p><strong>Note:</strong>
 You may assume that all words are consist of lowercase letters <code>a-z</code>.</p>
-
-<h2 id="method-1">Method</h2>
-
+<h2 id="method1">Method</h2>
 <p>Use the Trie designed in last problem. One thing to modify is that the addition of <code>.</code>. The <code>search()</code> has to handle the <code>.</code> problem.</p>
-
 <p>If current char is <code>.</code>, then find all children under current node and do the DFS on it until find all possible combinations.</p>
-
 <p>If current char is <code>.</code> and it is the end of given searching word, find if passing node is end of word. If it is not the end of it, return false. For instance, if a dictionary has a word <code>a</code>, then search <code>a.</code> should return false.</p>
+<h2 id="code1">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">WordDictionary</span> <span style="color:#f92672">{</span>
 
-<h2 id="code-1">Code</h2>
+    <span style="color:#66d9ef">private</span> TrieNode root<span style="color:#f92672">;</span>
 
-<pre><code class="language-java">public class WordDictionary {
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * Initialization.
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">WordDictionary</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">root</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> TrieNode<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-    private TrieNode root;
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * Adds a word into the data structure.
+</span><span style="color:#75715e">     *
+</span><span style="color:#75715e">     * @param word given word to be added
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">addWord</span><span style="color:#f92672">(</span>String word<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        TrieNode temp <span style="color:#f92672">=</span> root<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> word<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#f92672">!</span>temp<span style="color:#f92672">.</span><span style="color:#a6e22e">containsChild</span><span style="color:#f92672">(</span>word<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                temp<span style="color:#f92672">.</span><span style="color:#a6e22e">addChild</span><span style="color:#f92672">(</span>word<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            <span style="color:#f92672">}</span>
+            temp <span style="color:#f92672">=</span> temp<span style="color:#f92672">.</span><span style="color:#a6e22e">getChild</span><span style="color:#f92672">(</span>word<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+        temp<span style="color:#f92672">.</span><span style="color:#a6e22e">setEnd</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-    /**
-     * Initialization.
-     */
-    public WordDictionary() {
-        this.root = new TrieNode();
-    }
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * Returns if the word is in the data structure.
+</span><span style="color:#75715e">     * A word could contain the dot character &#39;.&#39; to represent any one letter.
+</span><span style="color:#75715e">     *
+</span><span style="color:#75715e">     * @param word given word
+</span><span style="color:#75715e">     * @return if the word is in dictionary
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">search</span><span style="color:#f92672">(</span>String word<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> find<span style="color:#f92672">(</span>word<span style="color:#f92672">.</span><span style="color:#a6e22e">toCharArray</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">,</span> 0<span style="color:#f92672">,</span> root<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-    /**
-     * Adds a word into the data structure.
-     *
-     * @param word given word to be added
-     */
-    public void addWord(String word) {
-        TrieNode temp = root;
-        for (int i = 0; i &lt; word.length(); i++) {
-            if (!temp.containsChild(word.charAt(i))) {
-                temp.addChild(word.charAt(i));
-            }
-            temp = temp.getChild(word.charAt(i));
-        }
-        temp.setEnd(true);
-    }
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * @param word  given word in char array
+</span><span style="color:#75715e">     * @param index current index in word
+</span><span style="color:#75715e">     * @param n     root node
+</span><span style="color:#75715e">     * @return if given word can be found in trie
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">find</span><span style="color:#f92672">(</span><span style="color:#66d9ef">char</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> word<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> index<span style="color:#f92672">,</span> TrieNode n<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-    /**
-     * Returns if the word is in the data structure.
-     * A word could contain the dot character '.' to represent any one letter.
-     *
-     * @param word given word
-     * @return if the word is in dictionary
-     */
-    public boolean search(String word) {
-        return find(word.toCharArray(), 0, root);
-    }
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>index <span style="color:#f92672">=</span><span style="color:#f92672">=</span> word<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">return</span> n<span style="color:#f92672">.</span><span style="color:#a6e22e">isEnd</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-    /**
-     * @param word  given word in char array
-     * @param index current index in word
-     * @param n     root node
-     * @return if given word can be found in trie
-     */
-    private boolean find(char[] word, int index, TrieNode n) {
+        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>word<span style="color:#f92672">[</span>index<span style="color:#f92672">]</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;.&#39;</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-        if (index == word.length) {
-            return n.isEnd();
+            List<span style="color:#f92672">&lt;</span>TrieNode<span style="color:#f92672">&gt;</span> temp <span style="color:#f92672">=</span> n<span style="color:#f92672">.</span><span style="color:#a6e22e">getAllChildren</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>TrieNode node <span style="color:#f92672">:</span> temp<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>find<span style="color:#f92672">(</span>word<span style="color:#f92672">,</span> index <span style="color:#f92672">+</span> 1<span style="color:#f92672">,</span> node<span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+                <span style="color:#f92672">}</span>
+            <span style="color:#f92672">}</span>
 
-        } else if (word[index] == '.') {
-
-            List&lt;TrieNode&gt; temp = n.getAllChildren();
-            for (TrieNode node : temp) {
-                if (find(word, index + 1, node)) {
-                    return true;
-                }
-            }
-
-        } else if (n.containsChild(word[index])) {
-            return find(word, index + 1, n.getChild(word[index]));
-        }
-        return false;
-    }
+        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>n<span style="color:#f92672">.</span><span style="color:#a6e22e">containsChild</span><span style="color:#f92672">(</span>word<span style="color:#f92672">[</span>index<span style="color:#f92672">]</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">return</span> find<span style="color:#f92672">(</span>word<span style="color:#f92672">,</span> index <span style="color:#f92672">+</span> 1<span style="color:#f92672">,</span> n<span style="color:#f92672">.</span><span style="color:#a6e22e">getChild</span><span style="color:#f92672">(</span>word<span style="color:#f92672">[</span>index<span style="color:#f92672">]</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
 
-    /**
-     * Nodes in trie.
-     */
-    class TrieNode {
-        private char val;       // value of current node
-        private HashMap&lt;Character, TrieNode&gt; m = new HashMap&lt;&gt;();       // save children of current trie
-        private boolean end = false;
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * Nodes in trie.
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">TrieNode</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">char</span> val<span style="color:#f92672">;</span>       <span style="color:#75715e">// value of current node
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">private</span> HashMap<span style="color:#f92672">&lt;</span>Character<span style="color:#f92672">,</span> TrieNode<span style="color:#f92672">&gt;</span> m <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashMap<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>       <span style="color:#75715e">// save children of current trie
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">boolean</span> end <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
 
-        /**
-         * Initialization.
-         */
-        TrieNode() {
-        }
+        <span style="color:#75715e">/**
+</span><span style="color:#75715e">         * Initialization.
+</span><span style="color:#75715e">         */</span>
+        TrieNode<span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#f92672">}</span>
 
-        /**
-         * Set current node's value.
-         *
-         * @param val value to be set
-         */
-        void setVal(char val) {
-            this.val = val;
-        }
+        <span style="color:#75715e">/**
+</span><span style="color:#75715e">         * Set current node&#39;s value.
+</span><span style="color:#75715e">         *
+</span><span style="color:#75715e">         * @param val value to be set
+</span><span style="color:#75715e">         */</span>
+        <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">setVal</span><span style="color:#f92672">(</span><span style="color:#66d9ef">char</span> val<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">val</span> <span style="color:#f92672">=</span> val<span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
 
-        /**
-         * Add child to current node.
-         *
-         * @param val children value
-         */
-        void addChild(char val) {
-            this.m.put(val, new TrieNode());
-            this.m.get(val).setVal(val);
-        }
+        <span style="color:#75715e">/**
+</span><span style="color:#75715e">         * Add child to current node.
+</span><span style="color:#75715e">         *
+</span><span style="color:#75715e">         * @param val children value
+</span><span style="color:#75715e">         */</span>
+        <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">addChild</span><span style="color:#f92672">(</span><span style="color:#66d9ef">char</span> val<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">m</span><span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>val<span style="color:#f92672">,</span> <span style="color:#66d9ef">new</span> TrieNode<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">m</span><span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>val<span style="color:#f92672">)</span><span style="color:#f92672">.</span><span style="color:#a6e22e">setVal</span><span style="color:#f92672">(</span>val<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
 
-        /**
-         * Mark current node as end of word.
-         *
-         * @param b boolean to be set
-         */
-        void setEnd(boolean b) {
-            this.end = b;
-        }
+        <span style="color:#75715e">/**
+</span><span style="color:#75715e">         * Mark current node as end of word.
+</span><span style="color:#75715e">         *
+</span><span style="color:#75715e">         * @param b boolean to be set
+</span><span style="color:#75715e">         */</span>
+        <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">setEnd</span><span style="color:#f92672">(</span><span style="color:#66d9ef">boolean</span> b<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">end</span> <span style="color:#f92672">=</span> b<span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
 
-        /**
-         * Check if current node is an end of a word.
-         *
-         * @return true if current node is an end of a word, false otherwise
-         */
-        boolean isEnd() {
-            return this.end;
-        }
+        <span style="color:#75715e">/**
+</span><span style="color:#75715e">         * Check if current node is an end of a word.
+</span><span style="color:#75715e">         *
+</span><span style="color:#75715e">         * @return true if current node is an end of a word, false otherwise
+</span><span style="color:#75715e">         */</span>
+        <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">isEnd</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">end</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
 
-        /**
-         * Return the child based on given value.
-         *
-         * @param val value of child
-         * @return child node
-         */
-        TrieNode getChild(char val) {
-            return m.get(val);
-        }
+        <span style="color:#75715e">/**
+</span><span style="color:#75715e">         * Return the child based on given value.
+</span><span style="color:#75715e">         *
+</span><span style="color:#75715e">         * @param val value of child
+</span><span style="color:#75715e">         * @return child node
+</span><span style="color:#75715e">         */</span>
+        TrieNode <span style="color:#a6e22e">getChild</span><span style="color:#f92672">(</span><span style="color:#66d9ef">char</span> val<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">return</span> m<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>val<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
 
-        /**
-         * Get value of current node.
-         *
-         * @return value in current node
-         */
-        char getVal() {
-            return this.val;
-        }
+        <span style="color:#75715e">/**
+</span><span style="color:#75715e">         * Get value of current node.
+</span><span style="color:#75715e">         *
+</span><span style="color:#75715e">         * @return value in current node
+</span><span style="color:#75715e">         */</span>
+        <span style="color:#66d9ef">char</span> <span style="color:#a6e22e">getVal</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">val</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
 
-        /**
-         * Check if given char is contained in current node's child.
-         *
-         * @param val given value
-         * @return true if given char is in child
-         */
-        boolean containsChild(char val) {
-            return m.containsKey(val);
-        }
+        <span style="color:#75715e">/**
+</span><span style="color:#75715e">         * Check if given char is contained in current node&#39;s child.
+</span><span style="color:#75715e">         *
+</span><span style="color:#75715e">         * @param val given value
+</span><span style="color:#75715e">         * @return true if given char is in child
+</span><span style="color:#75715e">         */</span>
+        <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">containsChild</span><span style="color:#f92672">(</span><span style="color:#66d9ef">char</span> val<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">return</span> m<span style="color:#f92672">.</span><span style="color:#a6e22e">containsKey</span><span style="color:#f92672">(</span>val<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
 
-        List&lt;TrieNode&gt; getAllChildren() {
-            return new ArrayList&lt;&gt;(m.values());
-        }
-    }
+        List<span style="color:#f92672">&lt;</span>TrieNode<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">getAllChildren</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span>m<span style="color:#f92672">.</span><span style="color:#a6e22e">values</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
 
-    public static void main(String[] args) {
-        WordDictionary test = new WordDictionary();
-        test.addWord(&quot;bad&quot;);
-        test.addWord(&quot;dad&quot;);
-        test.addWord(&quot;mad&quot;);
-        System.out.println(test.search(&quot;bad.&quot;));
-        System.out.println(test.search(&quot;b..&quot;));
-        System.out.println(test.search(&quot;...&quot;));
-        System.out.println(test.search(&quot;bad&quot;));
-        System.out.println(test.search(&quot;.ad&quot;));
-        System.out.println(test.search(&quot;dap&quot;));
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[</span><span style="color:#f92672">]</span> args<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        WordDictionary test <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> WordDictionary<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        test<span style="color:#f92672">.</span><span style="color:#a6e22e">addWord</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;bad&#34;</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        test<span style="color:#f92672">.</span><span style="color:#a6e22e">addWord</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;dad&#34;</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        test<span style="color:#f92672">.</span><span style="color:#a6e22e">addWord</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;mad&#34;</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>test<span style="color:#f92672">.</span><span style="color:#a6e22e">search</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;bad.&#34;</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>test<span style="color:#f92672">.</span><span style="color:#a6e22e">search</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;b..&#34;</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>test<span style="color:#f92672">.</span><span style="color:#a6e22e">search</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;...&#34;</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>test<span style="color:#f92672">.</span><span style="color:#a6e22e">search</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;bad&#34;</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>test<span style="color:#f92672">.</span><span style="color:#a6e22e">search</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;.ad&#34;</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>test<span style="color:#f92672">.</span><span style="color:#a6e22e">search</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;dap&#34;</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-    }
-}
-</code></pre>
-
-<h1 id="word-search-ii">Word Search II</h1>
-
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h1 id="word-search-ii">Word Search II</h1>
 <p>Link: <a href="https://leetcode.com/problems/word-search-ii">Word Search II</a></p>
-
-<h2 id="problem-description-2">Problem description</h2>
-
+<h2 id="problem-description2">Problem description</h2>
 <p>Given a 2D board and a list of words from the dictionary, find all words in the board.</p>
-
 <p>Each word must be constructed from letters of sequentially adjacent cell, where &ldquo;adjacent&rdquo; cells are those horizontally or vertically neighboring. The same letter cell may not be used more than once in a word.</p>
-
 <p><strong>Example:</strong></p>
-
 <pre><code>Input: 
 board = [
   ['o','a','a','n'],
@@ -664,120 +603,107 @@ board = [
 words = [&quot;oath&quot;,&quot;pea&quot;,&quot;eat&quot;,&quot;rain&quot;]
 
 Output: [&quot;eat&quot;,&quot;oath&quot;]
-</code></pre>
-
-<p><strong>Note:</strong></p>
-
+</code></pre><p><strong>Note:</strong></p>
 <ol>
 <li>All inputs are consist of lowercase letters <code>a-z</code>.</li>
 <li>The values of <code>words</code> are distinct.</li>
 </ol>
-
-<h2 id="method-2">Method</h2>
-
+<h2 id="method2">Method</h2>
 <p>The problem is actually a simplified crossword puzzle game, where the word solutions have been given on the board embedded with some noise letters.</p>
-
 <p>Intuitively, in order to cross out all potential words, the overall strategy would be to iterate the cell one by one, and from each cell, walking along its neighbors in four potential directions to find matched words.</p>
-
 <p>However, during the backtracking process, one would encounter more often the need to tell if there exists any word that contains certain prefix, rather than if a string exists as a word in the dictionary. Because if we know that there does not exist any match of word in the dictionary for a given prefix, then it would not need to further explore certain direction. And this, would greatly reduce the exploration space, therefore improve the performance of the backtracking algorithm.</p>
-
 <p>Here is an example of Trie that is built from a list of words. As the following graph shown, at the node denoted <code>d</code>, there are at least two words with the prefix <code>d</code> from the dictionary.</p>
-
-<p><img src="../../../static/img/212_trie_example-9193078.png" alt="pic" /></p>
-
+<p><img src="../../../static/img/212_trie_example-9193078.png" alt="pic"></p>
 <p>Use a simplified trie that store nodes by array instead of hash map to store given words. Search in board to see if board contains words from list.</p>
-
 <p>Time complexity:
 O(M * (4 * (3^(L - 1))), where M is the number of cells in the board and L is the maximum length of words.</p>
+<h2 id="code2">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Use a simplified trie that store nodes by array instead of hash map to store given words.
+</span><span style="color:#75715e"> * Search in board to see if board contains words from list.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param board given board
+</span><span style="color:#75715e"> * @param words words list
+</span><span style="color:#75715e"> * @return all words in list
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> List<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">findWords</span><span style="color:#f92672">(</span><span style="color:#66d9ef">char</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> board<span style="color:#f92672">,</span> String<span style="color:#f92672">[</span><span style="color:#f92672">]</span> words<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-<h2 id="code-2">Code</h2>
+    List<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> out <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    TrieNode root <span style="color:#f92672">=</span> trie<span style="color:#f92672">(</span>words<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-<pre><code class="language-java">/**
- * Use a simplified trie that store nodes by array instead of hash map to store given words.
- * Search in board to see if board contains words from list.
- *
- * @param board given board
- * @param words words list
- * @return all words in list
- */
-public List&lt;String&gt; findWords(char[][] board, String[] words) {
-
-    List&lt;String&gt; out = new ArrayList&lt;&gt;();
-    TrieNode root = trie(words);
-
-    for (int i = 0; i &lt; board.length; i++) {
-        for (int j = 0; j &lt; board[0].length; j++) {
-            dfs(board, i, j, root, out);
-        }
-    }
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> board<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> j <span style="color:#f92672">&lt;</span> board<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span><span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> j<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            dfs<span style="color:#f92672">(</span>board<span style="color:#f92672">,</span> i<span style="color:#f92672">,</span> j<span style="color:#f92672">,</span> root<span style="color:#f92672">,</span> out<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
     
-    return out;
-}
+    <span style="color:#66d9ef">return</span> out<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
 
-/**
- * DFS search in board.
- *
- * @param board given board
- * @param i     row
- * @param j     column
- * @param p     trie node
- * @param out   output list
- */
-private void dfs(char[][] board, int i, int j, TrieNode p, List&lt;String&gt; out) {
-    char c = board[i][j];
-    if (c == '#' || p.next[c - 'a'] == null) {
-        return;
-    }
-    p = p.next[c - 'a'];
-    if (p.word != null) {   // found one
-        out.add(p.word);
-        p.word = null;     // de-duplicate
-    }
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * DFS search in board.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param board given board
+</span><span style="color:#75715e"> * @param i     row
+</span><span style="color:#75715e"> * @param j     column
+</span><span style="color:#75715e"> * @param p     trie node
+</span><span style="color:#75715e"> * @param out   output list
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">dfs</span><span style="color:#f92672">(</span><span style="color:#66d9ef">char</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> board<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> i<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> j<span style="color:#f92672">,</span> TrieNode p<span style="color:#f92672">,</span> List<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> out<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">char</span> c <span style="color:#f92672">=</span> board<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">[</span>j<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>c <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;#&#39;</span> <span style="color:#f92672">|</span><span style="color:#f92672">|</span> p<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">[</span>c <span style="color:#f92672">-</span> <span style="color:#e6db74">&#39;a&#39;</span><span style="color:#f92672">]</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+    p <span style="color:#f92672">=</span> p<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">[</span>c <span style="color:#f92672">-</span> <span style="color:#e6db74">&#39;a&#39;</span><span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>p<span style="color:#f92672">.</span><span style="color:#a6e22e">word</span> <span style="color:#f92672">!</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>   <span style="color:#75715e">// found one
+</span><span style="color:#75715e"></span>        out<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>p<span style="color:#f92672">.</span><span style="color:#a6e22e">word</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        p<span style="color:#f92672">.</span><span style="color:#a6e22e">word</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>     <span style="color:#75715e">// de-duplicate
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
 
-    board[i][j] = '#';
-    if (i &gt; 0) {
-        dfs(board, i - 1, j, p, out);
-    }
-    if (j &gt; 0) {
-        dfs(board, i, j - 1, p, out);
-    }
-    if (i &lt; board.length - 1) {
-        dfs(board, i + 1, j, p, out);
-    }
-    if (j &lt; board[0].length - 1) {
-        dfs(board, i, j + 1, p, out);
-    }
-    board[i][j] = c;
-}
+    board<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">[</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;#&#39;</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">&gt;</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        dfs<span style="color:#f92672">(</span>board<span style="color:#f92672">,</span> i <span style="color:#f92672">-</span> 1<span style="color:#f92672">,</span> j<span style="color:#f92672">,</span> p<span style="color:#f92672">,</span> out<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>j <span style="color:#f92672">&gt;</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        dfs<span style="color:#f92672">(</span>board<span style="color:#f92672">,</span> i<span style="color:#f92672">,</span> j <span style="color:#f92672">-</span> 1<span style="color:#f92672">,</span> p<span style="color:#f92672">,</span> out<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">&lt;</span> board<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        dfs<span style="color:#f92672">(</span>board<span style="color:#f92672">,</span> i <span style="color:#f92672">+</span> 1<span style="color:#f92672">,</span> j<span style="color:#f92672">,</span> p<span style="color:#f92672">,</span> out<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>j <span style="color:#f92672">&lt;</span> board<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span><span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        dfs<span style="color:#f92672">(</span>board<span style="color:#f92672">,</span> i<span style="color:#f92672">,</span> j <span style="color:#f92672">+</span> 1<span style="color:#f92672">,</span> p<span style="color:#f92672">,</span> out<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+    board<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">[</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> c<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
 
-/**
- * Simplified trie constructed by array.
- *
- * @param words given words list
- * @return new trie
- */
-private TrieNode trie(String[] words) {
-    TrieNode root = new TrieNode();
-    for (String w : words) {
-        TrieNode p = root;
-        for (char c : w.toCharArray()) {
-            int i = c - 'a';
-            if (p.next[i] == null) p.next[i] = new TrieNode();
-            p = p.next[i];
-        }
-        p.word = w;
-    }
-    return root;
-}
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Simplified trie constructed by array.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param words given words list
+</span><span style="color:#75715e"> * @return new trie
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">private</span> TrieNode <span style="color:#a6e22e">trie</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[</span><span style="color:#f92672">]</span> words<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    TrieNode root <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> TrieNode<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>String w <span style="color:#f92672">:</span> words<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        TrieNode p <span style="color:#f92672">=</span> root<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">char</span> c <span style="color:#f92672">:</span> w<span style="color:#f92672">.</span><span style="color:#a6e22e">toCharArray</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> c <span style="color:#f92672">-</span> <span style="color:#e6db74">&#39;a&#39;</span><span style="color:#f92672">;</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>p<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> p<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> TrieNode<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            p <span style="color:#f92672">=</span> p<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+        p<span style="color:#f92672">.</span><span style="color:#a6e22e">word</span> <span style="color:#f92672">=</span> w<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">return</span> root<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
 
-/**
- * Node in trie.
- */
-class TrieNode {
-    TrieNode[] next = new TrieNode[26];
-    String word;
-}
-</code></pre>
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Node in trie.
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">TrieNode</span> <span style="color:#f92672">{</span>
+    TrieNode<span style="color:#f92672">[</span><span style="color:#f92672">]</span> next <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> TrieNode<span style="color:#f92672">[</span>26<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+    String word<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div>
               
             </div>
           </div>
@@ -831,7 +757,7 @@ class TrieNode {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>
@@ -889,7 +815,7 @@ class TrieNode {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>

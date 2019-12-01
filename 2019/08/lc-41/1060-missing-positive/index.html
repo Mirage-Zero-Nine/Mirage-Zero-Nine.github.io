@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.59.1 with theme Tranquilpeak 0.4.7-BETA">
+<meta name="generator" content="Hugo 0.60.1 with theme Tranquilpeak 0.4.7-BETA">
 <meta name="author" content="Steve Zhou">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -277,201 +277,137 @@
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
-<ul>
-<li><a href="#first-missing-positive">First Missing Positive</a>
-<ul>
-<li><a href="#problem-description">Problem description</a></li>
-<li><a href="#method">Method</a></li>
-<li><a href="#code">Code</a></li>
-</ul></li>
-<li><a href="#missing-element-in-sorted-array">Missing Element in Sorted Array</a>
-<ul>
-<li><a href="#problem-description-1">Problem description</a></li>
-<li><a href="#method-1">Method</a></li>
-<li><a href="#code-1">Code</a></li>
-</ul></li>
-</ul>
-</nav>
-
+              <!-- raw HTML omitted -->
 <h1 id="first-missing-positive">First Missing Positive</h1>
-
 <p>Link: <a href="https://leetcode.com/problems/first-missing-positive">First Missing Positive</a></p>
-
 <h2 id="problem-description">Problem description</h2>
-
 <p>Given an unsorted integer array, find the smallest missing positive integer.</p>
-
 <p><strong>Example 1:</strong></p>
-
 <pre><code>Input: [1,2,0]
 Output: 3
-</code></pre>
-
-<p><strong>Example 2:</strong></p>
-
+</code></pre><p><strong>Example 2:</strong></p>
 <pre><code>Input: [3,4,-1,1]
 Output: 2
-</code></pre>
-
-<p><strong>Example 3:</strong></p>
-
+</code></pre><p><strong>Example 3:</strong></p>
 <pre><code>Input: [7,8,9,11,12]
 Output: 1
-</code></pre>
-
-<p><strong>Note:</strong></p>
-
+</code></pre><p><strong>Note:</strong></p>
 <p>Your algorithm should run in <em>O</em>(<em>n</em>) time and uses constant extra space.</p>
-
 <h2 id="method">Method</h2>
-
 <p>Smallest missing positive integer can only be in <code>[1, n + 1]</code> (all inclusive). Hence, traverse array three times.</p>
-
-<p>First, replace all non-positive numbers to array&rsquo;s length.</p>
-
-<p>In second traversal, find nums[i] such that its absolute value is smaller than array&rsquo;s length. Mark its representative index&rsquo;s value to negative. i.e, abs<code>(nums[i]) = 5</code>, then <code>nums[4] = - nums[4]</code>.</p>
-
+<p>First, replace all non-positive numbers to array's length.</p>
+<p>In second traversal, find nums[i] such that its absolute value is smaller than array's length. Mark its representative index's value to negative. i.e, abs<code>(nums[i]) = 5</code>, then <code>nums[4] = - nums[4]</code>.</p>
 <p>The reason to use absolute value is to save while loop compare to swapping method.</p>
-
 <h2 id="code">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Traverse array three times.
+</span><span style="color:#75715e"> * Smallest missing positive integer can only be in [1, n + 1] (all inclusive).
+</span><span style="color:#75715e"> * First, replace all non-positive numbers to array&#39;s length.
+</span><span style="color:#75715e"> * In second traversal, find nums[i] such that its absolute value is smaller than array&#39;s length.
+</span><span style="color:#75715e"> * Mark its representative index&#39;s value to negative.
+</span><span style="color:#75715e"> * i.e, abs(nums[i]) = 5, then nums[4] = - nums[4]
+</span><span style="color:#75715e"> * The reason to use absolute value is to save while loop compare to swapping method.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param nums input int array
+</span><span style="color:#75715e"> * @return smallest missing positive int
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">firstMissingPositive</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> nums<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-<pre><code class="language-java">/**
- * Traverse array three times.
- * Smallest missing positive integer can only be in [1, n + 1] (all inclusive).
- * First, replace all non-positive numbers to array's length.
- * In second traversal, find nums[i] such that its absolute value is smaller than array's length.
- * Mark its representative index's value to negative.
- * i.e, abs(nums[i]) = 5, then nums[4] = - nums[4]
- * The reason to use absolute value is to save while loop compare to swapping method.
- *
- * @param nums input int array
- * @return smallest missing positive int
- */
-public int firstMissingPositive(int[] nums) {
+    <span style="color:#75715e">/* Corner case */</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> 1<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-    /* Corner case */
-    if (nums.length == 0) {
-        return 1;
-    }
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        nums<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>nums<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">&lt;</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">?</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">+</span> 1 <span style="color:#f92672">:</span> nums<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">;</span>      <span style="color:#75715e">// replace all negative value to n + 1
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
 
-    for (int i = 0; i &lt; nums.length; i++) {
-        nums[i] = (nums[i] &lt; 1) ? nums.length + 1 : nums[i];      // replace all negative value to n + 1
-    }
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>Math<span style="color:#f92672">.</span><span style="color:#a6e22e">abs</span><span style="color:#f92672">(</span>nums<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">)</span> <span style="color:#f92672">&lt;</span><span style="color:#f92672">=</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            nums<span style="color:#f92672">[</span>Math<span style="color:#f92672">.</span><span style="color:#a6e22e">abs</span><span style="color:#f92672">(</span>nums<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">)</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#f92672">-</span>Math<span style="color:#f92672">.</span><span style="color:#a6e22e">abs</span><span style="color:#f92672">(</span>nums<span style="color:#f92672">[</span>Math<span style="color:#f92672">.</span><span style="color:#a6e22e">abs</span><span style="color:#f92672">(</span>nums<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">)</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>       <span style="color:#75715e">// mark index as &#34;presented&#34;
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
 
-    for (int i = 0; i &lt; nums.length; i++) {
-        if (Math.abs(nums[i]) &lt;= nums.length) {
-            nums[Math.abs(nums[i]) - 1] = -Math.abs(nums[Math.abs(nums[i]) - 1]);       // mark index as &quot;presented&quot;
-        }
-    }
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>nums<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">&gt;</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">return</span> i <span style="color:#f92672">+</span> 1<span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
 
-    for (int i = 0; i &lt; nums.length; i++) {
-        if (nums[i] &gt; 0) {
-            return i + 1;
-        }
-    }
-
-    return nums.length + 1;
-}
-</code></pre>
-
-<h1 id="missing-element-in-sorted-array">Missing Element in Sorted Array</h1>
-
+    <span style="color:#66d9ef">return</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">+</span> 1<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h1 id="missing-element-in-sorted-array">Missing Element in Sorted Array</h1>
 <p>Link: <a href="https://leetcode.com/problems/missing-element-in-sorted-array/">Missing Element in Sorted Array</a></p>
-
-<h2 id="problem-description-1">Problem description</h2>
-
+<h2 id="problem-description1">Problem description</h2>
 <p>Given a sorted array <code>A</code> of <strong>unique</strong> numbers, find the <code>*K*-th</code> missing number starting from the leftmost number of the array.</p>
-
 <p><strong>Example 1:</strong></p>
-
 <pre><code>Input: A = [4,7,9,10], K = 1
 Output: 5
 Explanation: 
 The first missing number is 5.
-</code></pre>
-
-<p><strong>Example 2:</strong></p>
-
+</code></pre><p><strong>Example 2:</strong></p>
 <pre><code>Input: A = [4,7,9,10], K = 3
 Output: 8
 Explanation: 
 The missing numbers are [5,6,8,...], hence the third missing number is 8.
-</code></pre>
-
-<p><strong>Example 3:</strong></p>
-
+</code></pre><p><strong>Example 3:</strong></p>
 <pre><code>Input: A = [1,2,4], K = 3
 Output: 6
 Explanation: 
 The missing numbers are [3,5,6,7,...], hence the third missing number is 6.
-</code></pre>
-
-<p><strong>Note:</strong></p>
-
+</code></pre><p><strong>Note:</strong></p>
 <ol>
 <li><code>1 &lt;= A.length &lt;= 50000</code></li>
 <li><code>1 &lt;= A[i] &lt;= 1e7</code></li>
 <li><code>1 &lt;= K &lt;= 1e8</code></li>
 </ol>
-
-<h2 id="method-1">Method</h2>
-
+<h2 id="method1">Method</h2>
 <p>The idea is to find the leftmost element such that the number of missing numbers until this element is smaller or equal to k.</p>
-
-<p><img src="../../../static/img/inary-6154963.png" alt="fif" /></p>
-
+<p><img src="../../../static/img/inary-6154963.png" alt="fif"></p>
 <p>To find the kth missing element is actually to find the ith element in array that kth is in <code>nums[i, i+1]</code>. Use binary search to narrow the range of array. Implement <code>missing(idx)</code> function that returns how many numbers are missing until array element with index <code>idx</code>. Function returns <code>nums[idx] - nums[0] - idx</code>. Find an index such that <code>missing(idx - 1)</code> by a linear search.</p>
-
 <p>If left part of sub array has more than k missing #, narrow search range to left part.</p>
-
 <p>If left part has <code>k'</code> missing # and <code>k' &lt;= k</code>, turn to search right part and reduce <code>k</code> to <code>k - k'</code>.</p>
-
 <p>Finally, find the <code>num[i]</code> that is next to kth missing #. Return kth smallest <code>nums[idx - 1] + k - missing(idx - 1)</code>.</p>
+<p>Time complexity : if the missing element is larger than the last element of the array. otherwise, since it's not more than one pass along the array.</p>
+<p>Space complexity : since it's a constant space solution.</p>
+<h2 id="code1">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Binary search.
+</span><span style="color:#75715e"> * To find the kth missing element is actually to find the ith element in array that kth is in nums[i, i+1].
+</span><span style="color:#75715e"> * Use binary search to narrow the range of array.
+</span><span style="color:#75715e"> * If left part of sub array has more than k missing #, narrow search range to left part.
+</span><span style="color:#75715e"> * If left part has k&#39; missing # and k&#39; &lt;= k, turn to search right part and reduce k to k - k&#39;.
+</span><span style="color:#75715e"> * Finally, find the num[i] that is next to kth missing #.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param nums given array
+</span><span style="color:#75715e"> * @param k    kth missing #
+</span><span style="color:#75715e"> * @return K-th missing number starting from the leftmost number of the array
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">missingElement</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> nums<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> k<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">int</span> n <span style="color:#f92672">=</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">int</span> totalMissingInArray <span style="color:#f92672">=</span> nums<span style="color:#f92672">[</span>n<span style="color:#f92672">]</span> <span style="color:#f92672">-</span> nums<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> 1 <span style="color:#f92672">-</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span>
 
-<p>Time complexity : if the missing element is larger than the last element of the array. otherwise, since it&rsquo;s not more than one pass along the array.</p>
+    <span style="color:#75715e">/* Corner case */</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>totalMissingInArray <span style="color:#f92672">&lt;</span> k<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>      <span style="color:#75715e">// if missing # is less than k, then first missing # is out of array
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">return</span> nums<span style="color:#f92672">[</span>n<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> k <span style="color:#f92672">-</span> totalMissingInArray<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-<p>Space complexity : since it&rsquo;s a constant space solution.</p>
+    <span style="color:#66d9ef">int</span> left <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> right <span style="color:#f92672">=</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">;</span>
 
-<h2 id="code-1">Code</h2>
+    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>left <span style="color:#f92672">&lt;</span> right <span style="color:#f92672">-</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>      <span style="color:#75715e">// mid exists in at least 3 elements
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">int</span> mid <span style="color:#f92672">=</span> left <span style="color:#f92672">+</span> <span style="color:#f92672">(</span>right <span style="color:#f92672">-</span> left<span style="color:#f92672">)</span> <span style="color:#f92672">/</span> 2<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">int</span> missingInRange <span style="color:#f92672">=</span> nums<span style="color:#f92672">[</span>mid<span style="color:#f92672">]</span> <span style="color:#f92672">-</span> nums<span style="color:#f92672">[</span>left<span style="color:#f92672">]</span> <span style="color:#f92672">-</span> <span style="color:#f92672">(</span>mid <span style="color:#f92672">-</span> left<span style="color:#f92672">)</span><span style="color:#f92672">;</span>     <span style="color:#75715e">// count missing # under current subarray
+</span><span style="color:#75715e"></span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>missingInRange <span style="color:#f92672">&gt;</span><span style="color:#f92672">=</span> k<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>      <span style="color:#75715e">// narrow search range if current subarray has at least k missing #
+</span><span style="color:#75715e"></span>            right <span style="color:#f92672">=</span> mid<span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+            left <span style="color:#f92672">=</span> mid<span style="color:#f92672">;</span>
+            k <span style="color:#f92672">-</span><span style="color:#f92672">=</span> missingInRange<span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
 
-<pre><code class="language-java">/**
- * Binary search.
- * To find the kth missing element is actually to find the ith element in array that kth is in nums[i, i+1].
- * Use binary search to narrow the range of array.
- * If left part of sub array has more than k missing #, narrow search range to left part.
- * If left part has k' missing # and k' &lt;= k, turn to search right part and reduce k to k - k'.
- * Finally, find the num[i] that is next to kth missing #.
- *
- * @param nums given array
- * @param k    kth missing #
- * @return K-th missing number starting from the leftmost number of the array
- */
-public int missingElement(int[] nums, int k) {
-    int n = nums.length - 1;
-    int totalMissingInArray = nums[n] - nums[0] + 1 - nums.length;
-
-    /* Corner case */
-    if (totalMissingInArray &lt; k) {      // if missing # is less than k, then first missing # is out of array
-        return nums[n] + k - totalMissingInArray;
-    }
-
-    int left = 0, right = nums.length - 1;
-
-    while (left &lt; right - 1) {      // mid exists in at least 3 elements
-        int mid = left + (right - left) / 2;
-        int missingInRange = nums[mid] - nums[left] - (mid - left);     // count missing # under current subarray
-
-        if (missingInRange &gt;= k) {      // narrow search range if current subarray has at least k missing #
-            right = mid;
-        } else {
-            left = mid;
-            k -= missingInRange;
-        }
-    }
-
-    return nums[left] + k;      // if gap is large between final elements
-</code></pre>
+    <span style="color:#66d9ef">return</span> nums<span style="color:#f92672">[</span>left<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> k<span style="color:#f92672">;</span>      <span style="color:#75715e">// if gap is large between final elements
+</span></code></pre></div>
               
             </div>
           </div>
@@ -527,7 +463,7 @@ public int missingElement(int[] nums, int k) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>
@@ -585,7 +521,7 @@ public int missingElement(int[] nums, int k) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>

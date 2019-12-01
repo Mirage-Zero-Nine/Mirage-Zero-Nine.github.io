@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.59.1 with theme Tranquilpeak 0.4.7-BETA">
+<meta name="generator" content="Hugo 0.60.1 with theme Tranquilpeak 0.4.7-BETA">
 <meta name="author" content="Steve Zhou">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -277,84 +277,63 @@
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
-<ul>
-<li><a href="#moving-average-from-data-stream">Moving Average from Data Stream</a>
-<ul>
-<li><a href="#problem-description">Problem description</a></li>
-<li><a href="#method">Method</a></li>
-<li><a href="#code">Code</a></li>
-</ul></li>
-</ul>
-</nav>
-
+              <!-- raw HTML omitted -->
 <h1 id="moving-average-from-data-stream">Moving Average from Data Stream</h1>
-
 <p>Link: <a href="https://leetcode.com/problems/moving-average-from-data-stream/">Moving Average from Data Stream</a></p>
-
 <h2 id="problem-description">Problem description</h2>
-
 <p>Given a stream of integers and a window size, calculate the moving average of all integers in the sliding window.</p>
-
 <p><strong>Example:</strong></p>
-
 <pre><code>MovingAverage m = new MovingAverage(3);
 m.next(1) = 1
 m.next(10) = (1 + 10) / 2
 m.next(3) = (1 + 10 + 3) / 3
 m.next(5) = (10 + 3 + 5) / 3
-</code></pre>
-
-<h2 id="method">Method</h2>
-
+</code></pre><h2 id="method">Method</h2>
 <p>Use circular queue with array to store and add/remove elements in array. Tail is next to head.</p>
-
 <p>Each time, fill tail cell with new incoming value and move head to the previous tail position. In this way, the head will always stands at the newest elements and the replaced element is always the oldest.</p>
-
 <h2 id="code">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MovingAverage_346</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> size<span style="color:#f92672">,</span> head <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> count <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> sum <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> arr<span style="color:#f92672">;</span>
 
-<pre><code class="language-java">public class MovingAverage_346 {
-    private int size, head = 0, count = 0;
-    private int sum = 0;
-    private int[] arr;
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * Data structure initialize.
+</span><span style="color:#75715e">     *
+</span><span style="color:#75715e">     * @param size windows size that control the queue size
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">MovingAverage_346</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> size<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">size</span> <span style="color:#f92672">=</span> size<span style="color:#f92672">;</span>
+        arr <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>size<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-    /**
-     * Data structure initialize.
-     *
-     * @param size windows size that control the queue size
-     */
-    public MovingAverage_346(int size) {
-        this.size = size;
-        arr = new int[size];
-    }
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * Use circular queue with array to store and add/remove elements in array.
+</span><span style="color:#75715e">     * Tail is next to head.
+</span><span style="color:#75715e">     * Each time, fill tail cell with new incoming value and move head to the previous tail position.
+</span><span style="color:#75715e">     * In this way, the head will always stands at the newest elements and the replaced element is always the oldest.
+</span><span style="color:#75715e">     *
+</span><span style="color:#75715e">     * @param val given value
+</span><span style="color:#75715e">     * @return average of queue
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">double</span> <span style="color:#a6e22e">next</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> val<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>count <span style="color:#f92672">&lt;</span><span style="color:#f92672">=</span> size<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            count<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
 
-    /**
-     * Use circular queue with array to store and add/remove elements in array.
-     * Tail is next to head.
-     * Each time, fill tail cell with new incoming value and move head to the previous tail position.
-     * In this way, the head will always stands at the newest elements and the replaced element is always the oldest.
-     *
-     * @param val given value
-     * @return average of queue
-     */
-    public double next(int val) {
-        if (count &lt;= size) {
-            count++;
-        }
+        <span style="color:#75715e">/*
+</span><span style="color:#75715e">         * Tail is next to head.
+</span><span style="color:#75715e">         * Use mod to avoid overflow and convert out bound tail/head to the start of array. */</span>
+        <span style="color:#66d9ef">int</span> tail <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>head <span style="color:#f92672">+</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">%</span> size<span style="color:#f92672">;</span>
+        sum <span style="color:#f92672">=</span> sum <span style="color:#f92672">-</span> arr<span style="color:#f92672">[</span>tail<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> val<span style="color:#f92672">;</span>
 
-        /*
-         * Tail is next to head.
-         * Use mod to avoid overflow and convert out bound tail/head to the start of array. */
-        int tail = (head + 1) % size;
-        sum = sum - arr[tail] + val;
+        head <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>head <span style="color:#f92672">+</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">%</span> size<span style="color:#f92672">;</span>       <span style="color:#75715e">// move head to next position
+</span><span style="color:#75715e"></span>        arr<span style="color:#f92672">[</span>head<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> val<span style="color:#f92672">;</span>
 
-        head = (head + 1) % size;       // move head to next position
-        arr[head] = val;
-
-        return (double) sum / Math.min(size, count);
-    }
-}
-</code></pre>
+        <span style="color:#66d9ef">return</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">double</span><span style="color:#f92672">)</span> sum <span style="color:#f92672">/</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">min</span><span style="color:#f92672">(</span>size<span style="color:#f92672">,</span> count<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div>
               
             </div>
           </div>
@@ -410,7 +389,7 @@ m.next(5) = (10 + 3 + 5) / 3
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>
@@ -468,7 +447,7 @@ m.next(5) = (10 + 3 + 5) / 3
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>

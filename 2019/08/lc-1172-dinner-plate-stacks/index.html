@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.59.1 with theme Tranquilpeak 0.4.7-BETA">
+<meta name="generator" content="Hugo 0.60.1 with theme Tranquilpeak 0.4.7-BETA">
 <meta name="author" content="Steve Zhou">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -281,39 +281,19 @@
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
-<ul>
-<li><a href="#dinner-plate-stacks">Dinner Plate Stacks</a>
-<ul>
-<li>
-<ul>
-<li><a href="#problem-description">Problem description</a></li>
-<li><a href="#method">Method</a></li>
-<li><a href="#code">Code</a></li>
-</ul></li>
-</ul></li>
-</ul>
-</nav>
-
+              <!-- raw HTML omitted -->
 <h1 id="dinner-plate-stacks">Dinner Plate Stacks</h1>
-
 <p>Link: <a href="https://leetcode.com/problems/dinner-plate-stacks/">Dinner Plate Stacks</a></p>
-
 <h3 id="problem-description">Problem description</h3>
-
 <p>You have an infinite number of stacks arranged in a row and numbered (left to right) from 0, each of the stacks has the same maximum <code>capacity</code>.</p>
-
 <p>Implement the <code>DinnerPlates</code> class:</p>
-
 <ul>
 <li><code>DinnerPlates(int capacity)</code> Initializes the object with the maximum <code>capacity</code> of the stacks.</li>
 <li><code>void push(int val)</code> pushes the given positive integer <code>val</code> into the leftmost stack with size less than <code>capacity</code>.</li>
 <li><code>int pop()</code> returns the value at the top of the rightmost non-empty stack and removes it from that stack, and returns <code>-1</code> if all stacks are empty.</li>
 <li><code>int popAtStack(int index)</code> returns the value at the top of the stack with the given <code>index</code> and removes it from that stack, and returns -1 if the stack with that given <code>index</code> is empty.</li>
 </ul>
-
 <p><strong>Example:</strong></p>
-
 <pre><code>Input: 
 [&quot;DinnerPlates&quot;,&quot;push&quot;,&quot;push&quot;,&quot;push&quot;,&quot;push&quot;,&quot;push&quot;,&quot;popAtStack&quot;,&quot;push&quot;,&quot;push&quot;,&quot;popAtStack&quot;,&quot;popAtStack&quot;,&quot;pop&quot;,&quot;pop&quot;,&quot;pop&quot;,&quot;pop&quot;,&quot;pop&quot;]
 [[2],[1],[2],[3],[4],[5],[0],[20],[21],[0],[2],[],[],[],[],[]]
@@ -353,131 +333,124 @@ D.pop()            // Returns 3.  The stacks are now:   1
                                                         ﹈   
 D.pop()            // Returns 1.  There are no stacks.
 D.pop()            // Returns -1.  There are still no stacks.
-</code></pre>
-
-<p><strong>Constraints:</strong></p>
-
+</code></pre><p><strong>Constraints:</strong></p>
 <ul>
 <li><code>1 &lt;= capacity &lt;= 20000</code></li>
 <li><code>1 &lt;= val &lt;= 20000</code></li>
 <li><code>0 &lt;= index &lt;= 100000</code></li>
 <li>At most <code>200000</code> calls will be made to <code>push</code>, <code>pop</code>, and <code>popAtStack</code>.</li>
 </ul>
-
 <h3 id="method">Method</h3>
-
 <p>Use a TreeMap to store stacks, and a TreeSet to store all available stacks for push.</p>
-
 <h3 id="code">Code</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">DinnerPlates</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">private</span> TreeMap<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">,</span> Stack<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span> m <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> TreeMap<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> capacity<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">private</span> TreeSet<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> heap <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> TreeSet<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> max <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>        <span style="color:#75715e">// stacks has been used (this counter counting every used stack including empty stacks)
+</span><span style="color:#75715e"></span>
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * Use a TreeMap to store stacks, and a TreeSet to store all available stacks for push.
+</span><span style="color:#75715e">     *
+</span><span style="color:#75715e">     * @param capacity capacity for each stack
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">DinnerPlates</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> capacity<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">capacity</span> <span style="color:#f92672">=</span> capacity<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-<pre><code class="language-java">public class DinnerPlates {
-    private TreeMap&lt;Integer, Stack&lt;Integer&gt;&gt; m = new TreeMap&lt;&gt;();
-    private int capacity;
-    private TreeSet&lt;Integer&gt; heap = new TreeSet&lt;&gt;();
-    private int max = 0;        // stacks has been used (this counter counting every used stack including empty stacks)
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * Push elements into the leftmost stack with size less than capacity.
+</span><span style="color:#75715e">     *
+</span><span style="color:#75715e">     * @param val value to be pushed
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">push</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> val<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">int</span> p <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>heap<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">?</span> max<span style="color:#f92672">+</span><span style="color:#f92672">+</span> <span style="color:#f92672">:</span> heap<span style="color:#f92672">.</span><span style="color:#a6e22e">pollFirst</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-    /**
-     * Use a TreeMap to store stacks, and a TreeSet to store all available stacks for push.
-     *
-     * @param capacity capacity for each stack
-     */
-    public DinnerPlates(int capacity) {
-        this.capacity = capacity;
-    }
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#f92672">!</span>m<span style="color:#f92672">.</span><span style="color:#a6e22e">containsKey</span><span style="color:#f92672">(</span>p<span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            m<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>p<span style="color:#f92672">,</span> <span style="color:#66d9ef">new</span> Stack<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
 
-    /**
-     * Push elements into the leftmost stack with size less than capacity.
-     *
-     * @param val value to be pushed
-     */
-    public void push(int val) {
-        int p = (heap.isEmpty()) ? max++ : heap.pollFirst();
+        m<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>p<span style="color:#f92672">)</span><span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>val<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-        if (!m.containsKey(p)) {
-            m.put(p, new Stack&lt;&gt;());
-        }
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>m<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>p<span style="color:#f92672">)</span><span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">&lt;</span> capacity<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            heap<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>p<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
 
-        m.get(p).add(val);
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * Pop out the right-most non-empty stack top value and removes it from that stack.
+</span><span style="color:#75715e">     * Remove the right-most non-empty stack and pop out the top.
+</span><span style="color:#75715e">     * If the stack is not empty, add it back to TreeMap.
+</span><span style="color:#75715e">     * No matter it is empty or not, add the # of stack into heap for push.
+</span><span style="color:#75715e">     *
+</span><span style="color:#75715e">     * @return the value at the top of the rightmost non-empty stack
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">pop</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-        if (m.get(p).size() &lt; capacity) {
-            heap.add(p);
-        }
-    }
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>m<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
 
-    /**
-     * Pop out the right-most non-empty stack top value and removes it from that stack.
-     * Remove the right-most non-empty stack and pop out the top.
-     * If the stack is not empty, add it back to TreeMap.
-     * No matter it is empty or not, add the # of stack into heap for push.
-     *
-     * @return the value at the top of the rightmost non-empty stack
-     */
-    public int pop() {
+        Map<span style="color:#f92672">.</span><span style="color:#a6e22e">Entry</span><span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">,</span> Stack<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span> last <span style="color:#f92672">=</span> m<span style="color:#f92672">.</span><span style="color:#a6e22e">pollLastEntry</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">int</span> k <span style="color:#f92672">=</span> last<span style="color:#f92672">.</span><span style="color:#a6e22e">getKey</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        Stack<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> tmp <span style="color:#f92672">=</span> last<span style="color:#f92672">.</span><span style="color:#a6e22e">getValue</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">int</span> val <span style="color:#f92672">=</span> tmp<span style="color:#f92672">.</span><span style="color:#a6e22e">pop</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-        if (m.isEmpty()) {
-            return -1;
-        }
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#f92672">!</span>tmp<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            m<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>k<span style="color:#f92672">,</span> tmp<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+        heap<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>k<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-        Map.Entry&lt;Integer, Stack&lt;Integer&gt;&gt; last = m.pollLastEntry();
-        int k = last.getKey();
-        Stack&lt;Integer&gt; tmp = last.getValue();
-        int val = tmp.pop();
+        <span style="color:#66d9ef">return</span> val<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-        if (!tmp.isEmpty()) {
-            m.put(k, tmp);
-        }
-        heap.add(k);
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * Pop up the top of specific stack and removes it.
+</span><span style="color:#75715e">     * Get the stack by index, if that stack does not exist in map, return -1.
+</span><span style="color:#75715e">     * Otherwise, pop out the given stack and check if it is empty.
+</span><span style="color:#75715e">     * If it is empty, remove that stack.
+</span><span style="color:#75715e">     * No matter it is empty or not, add the # of stack into heap for push.
+</span><span style="color:#75715e">     *
+</span><span style="color:#75715e">     * @param index given index of stack
+</span><span style="color:#75715e">     * @return the value at the top of the stack with the given index
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">popAtStack</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> index<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-        return val;
-    }
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#f92672">!</span>m<span style="color:#f92672">.</span><span style="color:#a6e22e">containsKey</span><span style="color:#f92672">(</span>index<span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
 
-    /**
-     * Pop up the top of specific stack and removes it.
-     * Get the stack by index, if that stack does not exist in map, return -1.
-     * Otherwise, pop out the given stack and check if it is empty.
-     * If it is empty, remove that stack.
-     * No matter it is empty or not, add the # of stack into heap for push.
-     *
-     * @param index given index of stack
-     * @return the value at the top of the stack with the given index
-     */
-    public int popAtStack(int index) {
+        Stack<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> tmp <span style="color:#f92672">=</span> m<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>index<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">int</span> val <span style="color:#f92672">=</span> tmp<span style="color:#f92672">.</span><span style="color:#a6e22e">pop</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>tmp<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            m<span style="color:#f92672">.</span><span style="color:#a6e22e">remove</span><span style="color:#f92672">(</span>index<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+        heap<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>index<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-        if (!m.containsKey(index)) {
-            return -1;
-        }
+        <span style="color:#66d9ef">return</span> val<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-        Stack&lt;Integer&gt; tmp = m.get(index);
-        int val = tmp.pop();
-        if (tmp.isEmpty()) {
-            m.remove(index);
-        }
-        heap.add(index);
-
-        return val;
-    }
-
-    public static void main(String[] args) {
-        DinnerPlates_1172 test = new DinnerPlates_1172(2);
-        test.push(1);
-        test.push(2);
-        test.push(3);
-        test.push(4);
-        test.push(5);
-        System.out.println(test.popAtStack(0));     // 2
-        test.push(20);
-        test.push(21);
-        System.out.println(test.popAtStack(0));     // 20
-        System.out.println(test.popAtStack(2));     // 21
-        System.out.println(&quot;=====&quot;);
-        System.out.println(test.pop());     // 5
-        System.out.println(test.pop());     // 4
-        System.out.println(test.pop());     // 3
-        System.out.println(test.pop());     // 1
-        System.out.println(test.pop());     // -1
-    }
-}
-</code></pre>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[</span><span style="color:#f92672">]</span> args<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        DinnerPlates_1172 test <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> DinnerPlates_1172<span style="color:#f92672">(</span>2<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        test<span style="color:#f92672">.</span><span style="color:#a6e22e">push</span><span style="color:#f92672">(</span>1<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        test<span style="color:#f92672">.</span><span style="color:#a6e22e">push</span><span style="color:#f92672">(</span>2<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        test<span style="color:#f92672">.</span><span style="color:#a6e22e">push</span><span style="color:#f92672">(</span>3<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        test<span style="color:#f92672">.</span><span style="color:#a6e22e">push</span><span style="color:#f92672">(</span>4<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        test<span style="color:#f92672">.</span><span style="color:#a6e22e">push</span><span style="color:#f92672">(</span>5<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>test<span style="color:#f92672">.</span><span style="color:#a6e22e">popAtStack</span><span style="color:#f92672">(</span>0<span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>     <span style="color:#75715e">// 2
+</span><span style="color:#75715e"></span>        test<span style="color:#f92672">.</span><span style="color:#a6e22e">push</span><span style="color:#f92672">(</span>20<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        test<span style="color:#f92672">.</span><span style="color:#a6e22e">push</span><span style="color:#f92672">(</span>21<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>test<span style="color:#f92672">.</span><span style="color:#a6e22e">popAtStack</span><span style="color:#f92672">(</span>0<span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>     <span style="color:#75715e">// 20
+</span><span style="color:#75715e"></span>        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>test<span style="color:#f92672">.</span><span style="color:#a6e22e">popAtStack</span><span style="color:#f92672">(</span>2<span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>     <span style="color:#75715e">// 21
+</span><span style="color:#75715e"></span>        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;=====&#34;</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>test<span style="color:#f92672">.</span><span style="color:#a6e22e">pop</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>     <span style="color:#75715e">// 5
+</span><span style="color:#75715e"></span>        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>test<span style="color:#f92672">.</span><span style="color:#a6e22e">pop</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>     <span style="color:#75715e">// 4
+</span><span style="color:#75715e"></span>        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>test<span style="color:#f92672">.</span><span style="color:#a6e22e">pop</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>     <span style="color:#75715e">// 3
+</span><span style="color:#75715e"></span>        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>test<span style="color:#f92672">.</span><span style="color:#a6e22e">pop</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>     <span style="color:#75715e">// 1
+</span><span style="color:#75715e"></span>        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>test<span style="color:#f92672">.</span><span style="color:#a6e22e">pop</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>     <span style="color:#75715e">// -1
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div>
               
             </div>
           </div>
@@ -533,7 +506,7 @@ D.pop()            // Returns -1.  There are still no stacks.
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>
@@ -591,7 +564,7 @@ D.pop()            // Returns -1.  There are still no stacks.
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>

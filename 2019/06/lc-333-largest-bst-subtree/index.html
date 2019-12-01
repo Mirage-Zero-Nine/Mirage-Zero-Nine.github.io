@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.59.1 with theme Tranquilpeak 0.4.7-BETA">
+<meta name="generator" content="Hugo 0.60.1 with theme Tranquilpeak 0.4.7-BETA">
 <meta name="author" content="Steve Zhou">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -279,30 +279,14 @@
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
-<ul>
-<li><a href="#largest-bst-subtree">Largest BST Subtree</a>
-<ul>
-<li><a href="#problem-description">Problem description</a></li>
-<li><a href="#method">Method</a></li>
-<li><a href="#code">Code</a></li>
-</ul></li>
-</ul>
-</nav>
-
+              <!-- raw HTML omitted -->
 <h1 id="largest-bst-subtree">Largest BST Subtree</h1>
-
 <p>Link: <a href="https://leetcode.com/problems/largest-bst-subtree">Largest BST Subtree</a></p>
-
 <h2 id="problem-description">Problem description</h2>
-
 <p>Given a binary tree, find the largest subtree which is a Binary Search Tree (BST), where largest means subtree with largest number of nodes in it.</p>
-
 <p><strong>Note:</strong>
 A subtree must include all of its descendants.</p>
-
 <p><strong>Example:</strong></p>
-
 <pre><code>Input: [10,5,15,1,8,null,7]
 
    10 
@@ -314,90 +298,82 @@ A subtree must include all of its descendants.</p>
 Output: 3
 Explanation: The Largest BST Subtree in this case is the highlighted one.
              The return value is the subtree's size, which is 3.
-</code></pre>
-
-<p><strong>Follow up:</strong>
+</code></pre><p><strong>Follow up:</strong>
 Can you figure out ways to solve it with O(n) time complexity?</p>
-
 <h2 id="method">Method</h2>
-
 <p>To meet the O(n) time complexity, this problem have to add a “tracker” to track the size of tree. And the size can be -1 if current tree is not a BST.</p>
-
 <p>Null node has a size of 0, that is to say, a leaf has a size of 1.</p>
-
 <p>During the DFS process, if any of the sub tree has size of -1, then it will not be a BST.  If current sub tree is BST, compare it to a globe max value to find the largest one.</p>
-
 <h2 id="code">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">LargestBSTSubtree</span> <span style="color:#f92672">{</span>
 
-<pre><code class="language-java">public class LargestBSTSubtree {
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> max <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>        <span style="color:#75715e">// globe max
+</span><span style="color:#75715e"></span>
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * DFS with a tree size tracker from bottom to top to find largest sub BST.
+</span><span style="color:#75715e">     *
+</span><span style="color:#75715e">     * @param root root node
+</span><span style="color:#75715e">     * @return size of largest sub BST
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">largestBSTSubtree</span><span style="color:#f92672">(</span>TreeNode root<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>root <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">return</span> 0<span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+        dfs<span style="color:#f92672">(</span>root<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">return</span> max<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-    private int max = 0;        // globe max
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * DFS to traverse tree.
+</span><span style="color:#75715e">     * If current sub tree is not a BST, return a tree with size of -1.
+</span><span style="color:#75715e">     * If any of the sub tree has size of -1, then it will not be a BST.
+</span><span style="color:#75715e">     * If current sub tree is BST, compare it to a globe max value to find the largest one.
+</span><span style="color:#75715e">     *
+</span><span style="color:#75715e">     * @param r root node
+</span><span style="color:#75715e">     * @return size of largest sub BST
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">private</span> TreeSize <span style="color:#a6e22e">dfs</span><span style="color:#f92672">(</span>TreeNode r<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-    /**
-     * DFS with a tree size tracker from bottom to top to find largest sub BST.
-     *
-     * @param root root node
-     * @return size of largest sub BST
-     */
-    public int largestBSTSubtree(TreeNode root) {
-        if (root == null) {
-            return 0;
-        }
-        dfs(root);
-        return max;
-    }
+        <span style="color:#75715e">/* End point */</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>r <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> TreeSize<span style="color:#f92672">(</span>0<span style="color:#f92672">,</span> Integer<span style="color:#f92672">.</span><span style="color:#a6e22e">MAX_VALUE</span><span style="color:#f92672">,</span> Integer<span style="color:#f92672">.</span><span style="color:#a6e22e">MIN_VALUE</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>       <span style="color:#75715e">// reach leaf node
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
 
-    /**
-     * DFS to traverse tree.
-     * If current sub tree is not a BST, return a tree with size of -1.
-     * If any of the sub tree has size of -1, then it will not be a BST.
-     * If current sub tree is BST, compare it to a globe max value to find the largest one.
-     *
-     * @param r root node
-     * @return size of largest sub BST
-     */
-    private TreeSize dfs(TreeNode r) {
+        TreeSize left <span style="color:#f92672">=</span> dfs<span style="color:#f92672">(</span>r<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        TreeSize right <span style="color:#f92672">=</span> dfs<span style="color:#f92672">(</span>r<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-        /* End point */
-        if (r == null) {
-            return new TreeSize(0, Integer.MAX_VALUE, Integer.MIN_VALUE);       // reach leaf node
-        }
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>left<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#f92672">-</span>1 <span style="color:#f92672">|</span><span style="color:#f92672">|</span> right<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#f92672">-</span>1 <span style="color:#f92672">|</span><span style="color:#f92672">|</span> r<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span> <span style="color:#f92672">&gt;</span><span style="color:#f92672">=</span> right<span style="color:#f92672">.</span><span style="color:#a6e22e">low</span> <span style="color:#f92672">|</span><span style="color:#f92672">|</span> r<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span> <span style="color:#f92672">&lt;</span><span style="color:#f92672">=</span> left<span style="color:#f92672">.</span><span style="color:#a6e22e">high</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> TreeSize<span style="color:#f92672">(</span><span style="color:#f92672">-</span>1<span style="color:#f92672">,</span> 0<span style="color:#f92672">,</span> 0<span style="color:#f92672">)</span><span style="color:#f92672">;</span>      <span style="color:#75715e">// if subtree is not BST, then current tree is not BST
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
 
-        TreeSize left = dfs(r.left);
-        TreeSize right = dfs(r.right);
+        max <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>max<span style="color:#f92672">,</span> left<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span> <span style="color:#f92672">+</span> 1 <span style="color:#f92672">+</span> right<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>        <span style="color:#75715e">// find global max
+</span><span style="color:#75715e"></span>
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> TreeSize<span style="color:#f92672">(</span>left<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span> <span style="color:#f92672">+</span> 1 <span style="color:#f92672">+</span> right<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">,</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">min</span><span style="color:#f92672">(</span>left<span style="color:#f92672">.</span><span style="color:#a6e22e">low</span><span style="color:#f92672">,</span> r<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span><span style="color:#f92672">)</span><span style="color:#f92672">,</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>right<span style="color:#f92672">.</span><span style="color:#a6e22e">high</span><span style="color:#f92672">,</span> r<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
 
-        if (left.size == -1 || right.size == -1 || r.val &gt;= right.low || r.val &lt;= left.high) {
-            return new TreeSize(-1, 0, 0);      // if subtree is not BST, then current tree is not BST
-        }
-
-        max = Math.max(max, left.size + 1 + right.size);        // find global max
-
-        return new TreeSize(left.size + 1 + right.size, Math.min(left.low, r.val), Math.max(right.high, r.val));
-    }
-}
-
-/**
- * Save current tree's size and lower/upper bound of valid BST.
- */
-class TreeSize {
-    int size;
-    int low;        // lower bound of current BST
-    int high;       // upper bound of current BST
-
-    /**
-     * Save info of tree.
-     *
-     * @param size tree size
-     * @param low  lower bound
-     * @param high upper bound
-     */
-    TreeSize(int size, int low, int high) {
-        this.size = size;
-        this.low = low;
-        this.high = high;
-    }
-}
-</code></pre>
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Save current tree&#39;s size and lower/upper bound of valid BST.
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">TreeSize</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">int</span> size<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">int</span> low<span style="color:#f92672">;</span>        <span style="color:#75715e">// lower bound of current BST
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> high<span style="color:#f92672">;</span>       <span style="color:#75715e">// upper bound of current BST
+</span><span style="color:#75715e"></span>
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * Save info of tree.
+</span><span style="color:#75715e">     *
+</span><span style="color:#75715e">     * @param size tree size
+</span><span style="color:#75715e">     * @param low  lower bound
+</span><span style="color:#75715e">     * @param high upper bound
+</span><span style="color:#75715e">     */</span>
+    TreeSize<span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> size<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> low<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> high<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">size</span> <span style="color:#f92672">=</span> size<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">low</span> <span style="color:#f92672">=</span> low<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">high</span> <span style="color:#f92672">=</span> high<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div>
               
             </div>
           </div>
@@ -455,7 +431,7 @@ class TreeSize {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>
@@ -513,7 +489,7 @@ class TreeSize {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>

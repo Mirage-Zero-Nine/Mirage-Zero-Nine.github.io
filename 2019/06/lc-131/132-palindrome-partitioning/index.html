@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.59.1 with theme Tranquilpeak 0.4.7-BETA">
+<meta name="generator" content="Hugo 0.60.1 with theme Tranquilpeak 0.4.7-BETA">
 <meta name="author" content="Steve Zhou">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -279,184 +279,123 @@
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
-<ul>
-<li><a href="#palindrome-partitioning">Palindrome Partitioning</a>
-<ul>
-<li><a href="#problem-description">Problem description</a></li>
-<li><a href="#method">Method</a></li>
-<li><a href="#code">Code</a></li>
-</ul></li>
-<li><a href="#palindrome-partitioning-ii">Palindrome Partitioning II</a>
-<ul>
-<li><a href="#problem-description-1">Problem description</a></li>
-<li><a href="#method-1">Method</a></li>
-<li><a href="#code-1">Code</a></li>
-</ul></li>
-</ul>
-</nav>
-
-<h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
-<ul>
-<li><a href="#palindrome-partitioning">Palindrome Partitioning</a>
-<ul>
-<li><a href="#problem-description">Problem description</a></li>
-<li><a href="#method">Method</a></li>
-<li><a href="#code">Code</a></li>
-</ul></li>
-<li><a href="#palindrome-partitioning-ii">Palindrome Partitioning II</a>
-<ul>
-<li><a href="#problem-description-1">Problem description</a></li>
-<li><a href="#method-1">Method</a></li>
-<li><a href="#code-1">Code</a></li>
-</ul></li>
-</ul>
-</nav>
-
+              <!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
 <h1 id="palindrome-partitioning">Palindrome Partitioning</h1>
-
 <p>Link: <a href="https://leetcode.com/problems/palindrome-partitioning">Palindrome Partitioning</a></p>
-
 <h2 id="problem-description">Problem description</h2>
-
 <p>Given a string <em>s</em>, partition <em>s</em> such that every substring of the partition is a palindrome.</p>
-
 <p>Return all possible palindrome partitioning of <em>s</em>.</p>
-
 <p><strong>Example:</strong></p>
-
 <pre><code>Input: &quot;aab&quot;
 Output:
 [
   [&quot;aa&quot;,&quot;b&quot;],
   [&quot;a&quot;,&quot;a&quot;,&quot;b&quot;]
 ]
-</code></pre>
-
-<h2 id="method">Method</h2>
-
+</code></pre><h2 id="method">Method</h2>
 <p>There are two parts in this problem. First is to solve the palindrome substring, which simply traverse whole string will suffice. The second part is to generate all substrings and add the correct palindrome substring to result. Obviously, this is a backtracking problem. Note that the return value is a <code>List&lt;List&lt;String&gt;&gt;</code>, therefore, the generation part should follow an order.</p>
-
 <p>The order is to “insert” a breaker into each chars in the string. First check the substring before the breaker, if it is palindrome, add the rest part of string to recursion. Continue until all substring has been iterated.</p>
-
 <h2 id="code">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Backtracking.
+</span><span style="color:#75715e"> * Use backtracking to &#34;insert&#34; all possible breaking point for substring.
+</span><span style="color:#75715e"> * If creat a palindrome substring, then add it to list.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param s given string
+</span><span style="color:#75715e"> * @return all possible palindrome partitioning of s
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> List<span style="color:#f92672">&lt;</span>List<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">partition</span><span style="color:#f92672">(</span>String s<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    List<span style="color:#f92672">&lt;</span>List<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span> out <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-<pre><code class="language-java">/**
- * Backtracking.
- * Use backtracking to &quot;insert&quot; all possible breaking point for substring.
- * If creat a palindrome substring, then add it to list.
- *
- * @param s given string
- * @return all possible palindrome partitioning of s
- */
-public List&lt;List&lt;String&gt;&gt; partition(String s) {
-    List&lt;List&lt;String&gt;&gt; out = new ArrayList&lt;&gt;();
+    backtracking<span style="color:#f92672">(</span>s<span style="color:#f92672">,</span> out<span style="color:#f92672">,</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">return</span> out<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
 
-    backtracking(s, out, new ArrayList&lt;&gt;());
-    return out;
-}
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Backtracking to generate all possible substring to find all possible palindrome partitioning of s.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param s    given string
+</span><span style="color:#75715e"> * @param out  output list
+</span><span style="color:#75715e"> * @param temp temp list
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">backtracking</span><span style="color:#f92672">(</span>String s<span style="color:#f92672">,</span> List<span style="color:#f92672">&lt;</span>List<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span> out<span style="color:#f92672">,</span> List<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> temp<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        out<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span>temp<span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>     <span style="color:#75715e">// also hold the corner case
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span><span style="color:#f92672">=</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>     <span style="color:#75715e">// i should starts at 1 to avoid empty substring
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>isPalindrome<span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">substring</span><span style="color:#f92672">(</span>0<span style="color:#f92672">,</span> i<span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            temp<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">substring</span><span style="color:#f92672">(</span>0<span style="color:#f92672">,</span> i<span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            backtracking<span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">substring</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span><span style="color:#f92672">,</span> out<span style="color:#f92672">,</span> temp<span style="color:#f92672">)</span><span style="color:#f92672">;</span>        <span style="color:#75715e">// repeat this process to rest of string
+</span><span style="color:#75715e"></span>            temp<span style="color:#f92672">.</span><span style="color:#a6e22e">remove</span><span style="color:#f92672">(</span>temp<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
 
-/**
- * Backtracking to generate all possible substring to find all possible palindrome partitioning of s.
- *
- * @param s    given string
- * @param out  output list
- * @param temp temp list
- */
-private void backtracking(String s, List&lt;List&lt;String&gt;&gt; out, List&lt;String&gt; temp) {
-    if (s.length() == 0) {
-        out.add(new ArrayList&lt;&gt;(temp));     // also hold the corner case
-        return;
-    }
-    for (int i = 1; i &lt;= s.length(); i++) {     // i should starts at 1 to avoid empty substring
-        if (isPalindrome(s.substring(0, i))) {
-            temp.add(s.substring(0, i));
-            backtracking(s.substring(i), out, temp);        // repeat this process to rest of string
-            temp.remove(temp.size() - 1);
-        }
-    }
-}
-
-/**
- * Check whether given string is palindrome.
- *
- * @param s given string
- * @return whether given string is palindrome
- */
-private boolean isPalindrome(String s) {
-    for (int i = 0; i &lt; s.length() / 2; i++) {
-        if (s.charAt(i) != s.charAt(s.length() - 1 - i)) {
-            return false;
-        }
-    }
-    return true;
-}
-</code></pre>
-
-<h1 id="palindrome-partitioning-ii">Palindrome Partitioning II</h1>
-
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Check whether given string is palindrome.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param s given string
+</span><span style="color:#75715e"> * @return whether given string is palindrome
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">isPalindrome</span><span style="color:#f92672">(</span>String s<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">/</span> 2<span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span> <span style="color:#f92672">!</span><span style="color:#f92672">=</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">-</span> 1 <span style="color:#f92672">-</span> i<span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h1 id="palindrome-partitioning-ii">Palindrome Partitioning II</h1>
 <p>Link: <a href="https://leetcode.com/problems/palindrome-partitioning-ii">Palindrome Partitioning II</a></p>
-
-<h2 id="problem-description-1">Problem description</h2>
-
+<h2 id="problem-description1">Problem description</h2>
 <p>Given a string <em>s</em>, partition <em>s</em> such that every substring of the partition is a palindrome.</p>
-
 <p>Return the minimum cuts needed for a palindrome partitioning of <em>s</em>.</p>
-
 <p><strong>Example:</strong></p>
-
 <pre><code>Input: &quot;aab&quot;
 Output: 1
 Explanation: The palindrome partitioning [&quot;aa&quot;,&quot;b&quot;] could be produced using 1 cut.
-</code></pre>
-
-<h2 id="method-1">Method</h2>
-
+</code></pre><h2 id="method1">Method</h2>
 <p>Assume <code>i</code> is the index # that <code>0 &lt;= i &lt;= s.length()</code>, and <code>j</code> is one other index, that <code>0 &lt;= j &lt;= i</code>. In this way, the given string can be cut into two parts: <code>s(0, j)</code> and <code>s(j, i)</code>.</p>
-
 <p>This problem requires two tables. One <code>int[]</code> store the min cut # of <code>s(0, i)</code>. And the other table <code>boolean[][]</code> is for saving if <code>s(j, i)</code> is the palindrome string.</p>
-
 <p>The state transition is as following:</p>
-
 <pre><code>cut[i] = min(cut[j - 1] + 1 (j &lt;= i)), if [j, i] is palindrome.
 dp[j, i] is palindrome, if dp[j + 1, i - 1] is palindrome or they are adjacent (j + 1 &gt; i - 1).
-</code></pre>
+</code></pre><h2 id="code1">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Dynamic programming with two 1D boolean array.
+</span><span style="color:#75715e"> * Assume i, j are the index in string, cut[i] is the min cut time for s(0, i).
+</span><span style="color:#75715e"> * 1. cut[i] is the minimum of cut[j - 1] + 1 (j &lt;= i), if [j, i] is palindrome.
+</span><span style="color:#75715e"> * 2. If [j, i] is palindrome, then [j + 1, i - 1] is palindrome, and c[j] == c[i].
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param s given string
+</span><span style="color:#75715e"> * @return min cuts for a palindrome partitioning of s
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">minCut</span><span style="color:#f92672">(</span>String s<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-<h2 id="code-1">Code</h2>
+    <span style="color:#75715e">/* Corner case */</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> 0<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-<pre><code class="language-java">/**
- * Dynamic programming with two 1D boolean array.
- * Assume i, j are the index in string, cut[i] is the min cut time for s(0, i).
- * 1. cut[i] is the minimum of cut[j - 1] + 1 (j &lt;= i), if [j, i] is palindrome.
- * 2. If [j, i] is palindrome, then [j + 1, i - 1] is palindrome, and c[j] == c[i].
- *
- * @param s given string
- * @return min cuts for a palindrome partitioning of s
- */
-public int minCut(String s) {
+    <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> min <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">boolean</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> dp <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">boolean</span><span style="color:#f92672">[</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">]</span><span style="color:#f92672">[</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">]</span><span style="color:#f92672">;</span>
 
-    /* Corner case */
-    if (s.length() == 0) {
-        return 0;
-    }
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        min<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> i<span style="color:#f92672">;</span>		<span style="color:#75715e">// initial state
+</span><span style="color:#75715e"></span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> j <span style="color:#f92672">&lt;</span><span style="color:#f92672">=</span> i<span style="color:#f92672">;</span> j<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>      <span style="color:#75715e">// s(j, i): substring from j to i (inclusive)
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>j<span style="color:#f92672">)</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> <span style="color:#f92672">(</span>j <span style="color:#f92672">&gt;</span> i <span style="color:#f92672">-</span> 2 <span style="color:#f92672">|</span><span style="color:#f92672">|</span> dp<span style="color:#f92672">[</span>j <span style="color:#f92672">+</span> 1<span style="color:#f92672">]</span><span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                dp<span style="color:#f92672">[</span>j<span style="color:#f92672">]</span><span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>        <span style="color:#75715e">// s(j, i) is palindrome
+</span><span style="color:#75715e"></span>                min<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> j <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 0 <span style="color:#f92672">?</span> 0 <span style="color:#f92672">:</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">min</span><span style="color:#f92672">(</span>min<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">,</span> min<span style="color:#f92672">[</span>j <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> 1<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
 
-    int[] min = new int[s.length()];
-    boolean[][] dp = new boolean[s.length()][s.length()];
-
-    for (int i = 0; i &lt; s.length(); i++) {
-        min[i] = i;		// initial state
-
-        for (int j = 0; j &lt;= i; j++) {      // s(j, i): substring from j to i (inclusive)
-            if (s.charAt(i) == s.charAt(j) &amp;&amp; (j &gt; i - 2 || dp[j + 1][i - 1])) {
-                dp[j][i] = true;        // s(j, i) is palindrome
-                min[i] = j == 0 ? 0 : Math.min(min[i], min[j - 1] + 1);
-            }
-        }
-    }
-
-    return min[s.length() - 1];
-}
-</code></pre>
+    <span style="color:#66d9ef">return</span> min<span style="color:#f92672">[</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div>
               
             </div>
           </div>
@@ -510,7 +449,7 @@ public int minCut(String s) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>
@@ -568,7 +507,7 @@ public int minCut(String s) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>

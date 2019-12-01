@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.59.1 with theme Tranquilpeak 0.4.7-BETA">
+<meta name="generator" content="Hugo 0.60.1 with theme Tranquilpeak 0.4.7-BETA">
 <meta name="author" content="Steve Zhou">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -281,61 +281,29 @@
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
-<ul>
-<li><a href="#shortest-path-with-alternating-colors">Shortest Path with Alternating Colors</a>
-<ul>
-<li><a href="#problem-description">Problem description</a></li>
-<li><a href="#method">Method</a></li>
-<li><a href="#code">Code</a></li>
-</ul></li>
-</ul>
-</nav>
-
+              <!-- raw HTML omitted -->
 <h1 id="shortest-path-with-alternating-colors">Shortest Path with Alternating Colors</h1>
-
 <p>Link: <a href="https://leetcode.com/problems/shortest-path-with-alternating-colors/">Shortest Path with Alternating Colors</a></p>
-
 <h2 id="problem-description">Problem description</h2>
-
 <p>Consider a directed graph, with nodes labelled <code>0, 1, ..., n-1</code>.  In this graph, each edge is either red or blue, and there could be self-edges or parallel edges.</p>
-
 <p>Each <code>[i, j]</code>in <code>red_edges</code>denotes a red directed edge from node <code>i</code>to node <code>j</code>.  Similarly, each <code>[i, j]</code>in <code>blue_edges</code>denotes a blue directed edge from node <code>i</code>to node <code>j</code>.</p>
-
-<p>Return an array <code>answer</code> of length <code>n</code>, where each <code>answer[X]</code> is the length of the shortest path from node <code>0</code> to node <code>X</code> such that the edge colors alternate along the path (or <code>-1</code>if such a path doesn&rsquo;t exist).</p>
-
+<p>Return an array <code>answer</code> of length <code>n</code>, where each <code>answer[X]</code> is the length of the shortest path from node <code>0</code> to node <code>X</code> such that the edge colors alternate along the path (or <code>-1</code>if such a path doesn't exist).</p>
 <p><strong>Example 1:</strong></p>
-
 <pre><code>Input: n = 3, red_edges = [[0,1],[1,2]], blue_edges = []
 Output: [0,1,-1]
-</code></pre>
-
-<p><strong>Example 2:</strong></p>
-
+</code></pre><p><strong>Example 2:</strong></p>
 <pre><code>Input: n = 3, red_edges = [[0,1]], blue_edges = [[2,1]]
 Output: [0,1,-1]
-</code></pre>
-
-<p><strong>Example 3:</strong></p>
-
+</code></pre><p><strong>Example 3:</strong></p>
 <pre><code>Input: n = 3, red_edges = [[1,0]], blue_edges = [[2,1]]
 Output: [0,-1,-1]
-</code></pre>
-
-<p><strong>Example 4:</strong></p>
-
+</code></pre><p><strong>Example 4:</strong></p>
 <pre><code>Input: n = 3, red_edges = [[0,1]], blue_edges = [[1,2]]
 Output: [0,1,2]
-</code></pre>
-
-<p><strong>Example 5:</strong></p>
-
+</code></pre><p><strong>Example 5:</strong></p>
 <pre><code>Input: n = 3, red_edges = [[0,1],[0,2]], blue_edges = [[1,0]]
 Output: [0,1,1]
-</code></pre>
-
-<p><strong>Constraints:</strong></p>
-
+</code></pre><p><strong>Constraints:</strong></p>
 <ul>
 <li><code>1 &lt;= n &lt;= 100</code></li>
 <li><code>red_edges.length &lt;= 400</code></li>
@@ -343,87 +311,80 @@ Output: [0,1,1]
 <li><code>red_edges[i].length == blue_edges[i].length == 2</code></li>
 <li><code>0 &lt;= red_edges[i][j], blue_edges[i][j] &lt; n</code></li>
 </ul>
-
 <h2 id="method">Method</h2>
-
 <p>Use BFS to find the shortest path.</p>
-
 <p>During BFS, mark nodes connected via red edge to positive id, mark node connected via blue edges as negative id. Then push the upcoming node into queue to continue BFS.</p>
-
 <p>If a node can not be connected through alternate colored edge, leave it.</p>
-
 <p>Use two hash maps to record nodes and its connected edges, to save time.</p>
-
 <h2 id="code">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Use BFS to find the shortest path.
+</span><span style="color:#75715e"> * During BFS, mark nodes connected via red edge to positive id, mark node connected via blue edges as negative id.
+</span><span style="color:#75715e"> * Then push the upcoming node into queue to continue BFS.
+</span><span style="color:#75715e"> * If a node can not be connected through alternate colored edge, leave it.
+</span><span style="color:#75715e"> * Use two hash maps to record nodes and its connected edges, to save time.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param n          number of nodes
+</span><span style="color:#75715e"> * @param red_edges  red edges
+</span><span style="color:#75715e"> * @param blue_edges blue edges
+</span><span style="color:#75715e"> * @return from 0 to each node&#39;s shortest path
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> <span style="color:#a6e22e">shortestAlternatingPaths</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> n<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> red_edges<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> blue_edges<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-<pre><code class="language-java">/**
- * Use BFS to find the shortest path.
- * During BFS, mark nodes connected via red edge to positive id, mark node connected via blue edges as negative id.
- * Then push the upcoming node into queue to continue BFS.
- * If a node can not be connected through alternate colored edge, leave it.
- * Use two hash maps to record nodes and its connected edges, to save time.
- *
- * @param n          number of nodes
- * @param red_edges  red edges
- * @param blue_edges blue edges
- * @return from 0 to each node's shortest path
- */
-public int[] shortestAlternatingPaths(int n, int[][] red_edges, int[][] blue_edges) {
+    HashMap<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">,</span> List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span> b <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashMap<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    HashMap<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">,</span> List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span> r <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashMap<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-    HashMap&lt;Integer, List&lt;Integer&gt;&gt; b = new HashMap&lt;&gt;();
-    HashMap&lt;Integer, List&lt;Integer&gt;&gt; r = new HashMap&lt;&gt;();
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> e <span style="color:#f92672">:</span> red_edges<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> list <span style="color:#f92672">=</span> r<span style="color:#f92672">.</span><span style="color:#a6e22e">getOrDefault</span><span style="color:#f92672">(</span>e<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span><span style="color:#f92672">,</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        list<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>e<span style="color:#f92672">[</span>1<span style="color:#f92672">]</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        r<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>e<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span><span style="color:#f92672">,</span> list<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> e <span style="color:#f92672">:</span> blue_edges<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> list <span style="color:#f92672">=</span> b<span style="color:#f92672">.</span><span style="color:#a6e22e">getOrDefault</span><span style="color:#f92672">(</span>e<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span><span style="color:#f92672">,</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        list<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>e<span style="color:#f92672">[</span>1<span style="color:#f92672">]</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        b<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>e<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span><span style="color:#f92672">,</span> list<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-    for (int[] e : red_edges) {
-        List&lt;Integer&gt; list = r.getOrDefault(e[0], new ArrayList&lt;&gt;());
-        list.add(e[1]);
-        r.put(e[0], list);
-    }
-    for (int[] e : blue_edges) {
-        List&lt;Integer&gt; list = b.getOrDefault(e[0], new ArrayList&lt;&gt;());
-        list.add(e[1]);
-        b.put(e[0], list);
-    }
+    <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> out <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>n<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+    Arrays<span style="color:#f92672">.</span><span style="color:#a6e22e">fill</span><span style="color:#f92672">(</span>out<span style="color:#f92672">,</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    out<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+    Queue<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> q <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">boolean</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> isVisited <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">boolean</span><span style="color:#f92672">[</span>2 <span style="color:#f92672">*</span> n<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+    q<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>0<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    q<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">null</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">int</span> level <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span>          <span style="color:#75715e">// distance from 0 to other nodes
+</span><span style="color:#75715e"></span>
+    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span><span style="color:#f92672">!</span>q<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        Integer current <span style="color:#f92672">=</span> q<span style="color:#f92672">.</span><span style="color:#a6e22e">poll</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>current <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#f92672">!</span>q<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>      <span style="color:#75715e">// reaches the end of level
+</span><span style="color:#75715e"></span>                q<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">null</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+                level<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">;</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#f92672">!</span>isVisited<span style="color:#f92672">[</span>current <span style="color:#f92672">+</span> n<span style="color:#f92672">]</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            isVisited<span style="color:#f92672">[</span>current <span style="color:#f92672">+</span> n<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>current <span style="color:#f92672">&gt;</span><span style="color:#f92672">=</span> 0 <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> r<span style="color:#f92672">.</span><span style="color:#a6e22e">containsKey</span><span style="color:#f92672">(</span>current<span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">:</span> r<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>current<span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>out<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                        out<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> level<span style="color:#f92672">;</span>
+                    <span style="color:#f92672">}</span>
+                    q<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#f92672">-</span>i<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+                <span style="color:#f92672">}</span>
+            <span style="color:#f92672">}</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>current <span style="color:#f92672">&lt;</span><span style="color:#f92672">=</span> 0 <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> b<span style="color:#f92672">.</span><span style="color:#a6e22e">containsKey</span><span style="color:#f92672">(</span><span style="color:#f92672">-</span>current<span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">:</span> b<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span><span style="color:#f92672">-</span>current<span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>out<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                        out<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> level<span style="color:#f92672">;</span>
+                    <span style="color:#f92672">}</span>
+                    q<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+                <span style="color:#f92672">}</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
 
-    int[] out = new int[n];
-    Arrays.fill(out, -1);
-    out[0] = 0;
-    Queue&lt;Integer&gt; q = new LinkedList&lt;&gt;();
-    boolean[] isVisited = new boolean[2 * n];
-    q.add(0);
-    q.add(null);
-    int level = 1;          // distance from 0 to other nodes
-
-    while (!q.isEmpty()) {
-        Integer current = q.poll();
-        if (current == null) {
-            if (!q.isEmpty()) {      // reaches the end of level
-                q.add(null);
-                level++;
-            }
-        } else if (!isVisited[current + n]) {
-            isVisited[current + n] = true;
-            if (current &gt;= 0 &amp;&amp; r.containsKey(current)) {
-                for (int i : r.get(current)) {
-                    if (out[i] == -1) {
-                        out[i] = level;
-                    }
-                    q.add(-i);
-                }
-            }
-            if (current &lt;= 0 &amp;&amp; b.containsKey(-current)) {
-                for (int i : b.get(-current)) {
-                    if (out[i] == -1) {
-                        out[i] = level;
-                    }
-                    q.add(i);
-                }
-            }
-        }
-    }
-
-    return out;
-}
-</code></pre>
+    <span style="color:#66d9ef">return</span> out<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div>
               
             </div>
           </div>
@@ -479,7 +440,7 @@ public int[] shortestAlternatingPaths(int n, int[][] red_edges, int[][] blue_edg
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>
@@ -537,7 +498,7 @@ public int[] shortestAlternatingPaths(int n, int[][] red_edges, int[][] blue_edg
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>

@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.59.1 with theme Tranquilpeak 0.4.7-BETA">
+<meta name="generator" content="Hugo 0.60.1 with theme Tranquilpeak 0.4.7-BETA">
 <meta name="author" content="Steve Zhou">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -275,51 +275,31 @@
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
-<ul>
-<li><a href="#online-majority-element-in-subarray">Online Majority Element In Subarray</a>
-<ul>
-<li><a href="#problem-description">Problem description</a></li>
-<li><a href="#method">Method</a></li>
-<li><a href="#code">Code</a></li>
-</ul></li>
-</ul>
-</nav>
-
+              <!-- raw HTML omitted -->
 <h1 id="online-majority-element-in-subarray">Online Majority Element In Subarray</h1>
-
 <p>Link: <a href="https://leetcode.com/problems/online-majority-element-in-subarray/submissions/">Online Majority Element In Subarray</a></p>
-
 <h2 id="problem-description">Problem description</h2>
-
 <p>Implementing the class <code>MajorityChecker</code>, which has the following API:</p>
-
 <ul>
-<li><p><code>MajorityChecker(int[] arr)</code> constructs an instance of MajorityChecker with the given array <code>arr</code>;</p></li>
-
-<li><pre><code>int query(int left, int right, int threshold)
-</code></pre></li>
-</ul>
-
-<p>has arguments such that:</p>
-
+<li>
+<p><code>MajorityChecker(int[] arr)</code> constructs an instance of MajorityChecker with the given array <code>arr</code>;</p>
+</li>
+<li>
+<pre><code>int query(int left, int right, int threshold)
+</code></pre><p>has arguments such that:</p>
 <ul>
 <li><code>0 &lt;= left &lt;= right &lt; arr.length</code> representing a subarray of <code>arr</code>;</li>
 <li><code>2 * threshold &gt; right - left + 1</code>, ie. the threshold is always a strict majority of the length of the subarray</li>
 </ul>
-
+</li>
+</ul>
 <p>Each <code>query(...)</code> returns the element in <code>arr[left], arr[left+1], ..., arr[right]</code> that occurs at least <code>threshold</code>times, or <code>-1</code> if no such element exists.</p>
-
 <p><strong>Example:</strong></p>
-
 <pre><code>MajorityChecker majorityChecker = new MajorityChecker([1,1,2,2,1,1]);
 majorityChecker.query(0,5,4); // returns 1
 majorityChecker.query(0,3,3); // returns -1
 majorityChecker.query(2,3,2); // returns 2
-</code></pre>
-
-<p><strong>Constraints:</strong></p>
-
+</code></pre><p><strong>Constraints:</strong></p>
 <ul>
 <li><code>1 &lt;= arr.length &lt;= 20000</code></li>
 <li><code>1 &lt;= arr[i] &lt;= 20000</code></li>
@@ -327,67 +307,62 @@ majorityChecker.query(2,3,2); // returns 2
 <li>For each query, <code>2 * threshold &gt; right - left + 1</code></li>
 <li>The number of queries is at most <code>10000</code></li>
 </ul>
-
 <h2 id="method">Method</h2>
-
 <p>Implement Boyer-Moore voting algorithm to find majority element in subarray.</p>
-
 <p>The idea is same as previous finding majority problem, except in this problem is to find majority element of <code>n/2</code> instead of <code>n/3</code>, which is much more easier.</p>
-
 <h2 id="code">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MajorityChecker</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> arr<span style="color:#f92672">;</span>
 
-<pre><code class="language-java">public class MajorityChecker {
-    private int[] arr;
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * Initialization of structure.
+</span><span style="color:#75715e">     *
+</span><span style="color:#75715e">     * @param arr given array
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">MajorityChecker</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> arr<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">arr</span> <span style="color:#f92672">=</span> arr<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-    /**
-     * Initialization of structure.
-     *
-     * @param arr given array
-     */
-    public MajorityChecker(int[] arr) {
-        this.arr = arr;
-    }
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * Boyer-Moore voting algorithm.
+</span><span style="color:#75715e">     * Traverse array twice. First time find the majority and second time count if it is satisfied with threshold.
+</span><span style="color:#75715e">     * Majority element in array will be at least 2/n times.
+</span><span style="color:#75715e">     * Therefore, use a count and a temp to traverse the array.
+</span><span style="color:#75715e">     * If current element in array is temp, count++, otherwise, count--. 
+</span><span style="color:#75715e">     * And if count == 0, replace temp with current element in array.
+</span><span style="color:#75715e">     * The majority element will be the last element in temp when traverse completed.
+</span><span style="color:#75715e">     *
+</span><span style="color:#75715e">     * @param left      left bound
+</span><span style="color:#75715e">     * @param right     right bound
+</span><span style="color:#75715e">     * @param threshold limit of occurrence
+</span><span style="color:#75715e">     * @return the element in a[left], a[left+1], ..., a[right] that occurs at least threshold times, or -1 if none
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">query</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> left<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> right<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> threshold<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">int</span> count <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> majority <span style="color:#f92672">=</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> left<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span><span style="color:#f92672">=</span> right<span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>count <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                majority <span style="color:#f92672">=</span> arr<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+            <span style="color:#f92672">}</span>
+            count <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>majority <span style="color:#f92672">=</span><span style="color:#f92672">=</span> arr<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">)</span> <span style="color:#f92672">?</span> count <span style="color:#f92672">+</span> 1 <span style="color:#f92672">:</span> count <span style="color:#f92672">-</span> 1<span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
 
-    /**
-     * Boyer-Moore voting algorithm.
-     * Traverse array twice. First time find the majority and second time count if it is satisfied with threshold.
-     * Majority element in array will be at least 2/n times.
-     * Therefore, use a count and a temp to traverse the array.
-     * If current element in array is temp, count++, otherwise, count--. 
-     * And if count == 0, replace temp with current element in array.
-     * The majority element will be the last element in temp when traverse completed.
-     *
-     * @param left      left bound
-     * @param right     right bound
-     * @param threshold limit of occurrence
-     * @return the element in a[left], a[left+1], ..., a[right] that occurs at least threshold times, or -1 if none
-     */
-    public int query(int left, int right, int threshold) {
-        int count = 0, majority = -1;
-        for (int i = left; i &lt;= right; i++) {
-            if (count == 0) {
-                majority = arr[i];
-            }
-            count = (majority == arr[i]) ? count + 1 : count - 1;
-        }
+        count <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> left<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span><span style="color:#f92672">=</span> right<span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>arr<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> majority<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                count<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">;</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#f92672">(</span>count <span style="color:#f92672">&gt;</span><span style="color:#f92672">=</span> threshold<span style="color:#f92672">)</span> <span style="color:#f92672">?</span> majority <span style="color:#f92672">:</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-        count = 0;
-        for (int i = left; i &lt;= right; i++) {
-            if (arr[i] == majority) {
-                count++;
-            }
-        }
-        return (count &gt;= threshold) ? majority : -1;
-    }
-
-    public static void main(String[] args) {
-        MajorityChecker test = new MajorityChecker(new int[]{1, 1, 2, 2, 1, 1});
-        System.out.println(test.query(0, 5, 4));
-        System.out.println(test.query(0, 3, 3));
-        System.out.println(test.query(2, 3, 2));
-    }
-}
-</code></pre>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[</span><span style="color:#f92672">]</span> args<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        MajorityChecker test <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> MajorityChecker<span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">{</span>1<span style="color:#f92672">,</span> 1<span style="color:#f92672">,</span> 2<span style="color:#f92672">,</span> 2<span style="color:#f92672">,</span> 1<span style="color:#f92672">,</span> 1<span style="color:#f92672">}</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>test<span style="color:#f92672">.</span><span style="color:#a6e22e">query</span><span style="color:#f92672">(</span>0<span style="color:#f92672">,</span> 5<span style="color:#f92672">,</span> 4<span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>test<span style="color:#f92672">.</span><span style="color:#a6e22e">query</span><span style="color:#f92672">(</span>0<span style="color:#f92672">,</span> 3<span style="color:#f92672">,</span> 3<span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>test<span style="color:#f92672">.</span><span style="color:#a6e22e">query</span><span style="color:#f92672">(</span>2<span style="color:#f92672">,</span> 3<span style="color:#f92672">,</span> 2<span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div>
               
             </div>
           </div>
@@ -441,7 +416,7 @@ majorityChecker.query(2,3,2); // returns 2
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>
@@ -499,7 +474,7 @@ majorityChecker.query(2,3,2); // returns 2
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>

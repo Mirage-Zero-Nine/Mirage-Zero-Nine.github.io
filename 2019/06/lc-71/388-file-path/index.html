@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.59.1 with theme Tranquilpeak 0.4.7-BETA">
+<meta name="generator" content="Hugo 0.60.1 with theme Tranquilpeak 0.4.7-BETA">
 <meta name="author" content="Steve Zhou">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -275,131 +275,77 @@
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
-<ul>
-<li><a href="#simplify-path">Simplify Path</a>
-<ul>
-<li><a href="#problem-description">Problem description</a></li>
-<li><a href="#method">Method</a></li>
-<li><a href="#code">Code</a></li>
-</ul></li>
-<li><a href="#longest-absolute-file-path">Longest Absolute File Path</a>
-<ul>
-<li><a href="#problem-description-1">Problem description</a></li>
-<li><a href="#method-1">Method</a></li>
-<li><a href="#code-1">Code</a></li>
-</ul></li>
-</ul>
-</nav>
-
+              <!-- raw HTML omitted -->
 <h1 id="simplify-path">Simplify Path</h1>
-
 <p>Link: <a href="https://leetcode.com/problems/simplify-path">Simplify Path</a></p>
-
 <h2 id="problem-description">Problem description</h2>
-
 <p>Given an <strong>absolute path</strong> for a file (Unix-style), simplify it. Or in other words, convert it to the <strong>canonical path</strong>.</p>
-
 <p>In a UNIX-style file system, a period <code>.</code> refers to the current directory. Furthermore, a double period <code>..</code> moves the directory up a level. For more information, see: <a href="https://www.linuxnix.com/abslute-path-vs-relative-path-in-linuxunix/">Absolute path vs relative path in Linux/Unix</a></p>
-
 <p>Note that the returned canonical path must always begin with a slash <code>/</code>, and there must be only a single slash <code>/</code> between two directory names. The last directory name (if it exists) <strong>must not</strong> end with a trailing <code>/</code>. Also, the canonical path must be the <strong>shortest</strong> string representing the absolute path.</p>
-
 <p><strong>Example 1:</strong></p>
-
 <pre><code>Input: &quot;/home/&quot;
 Output: &quot;/home&quot;
 Explanation: Note that there is no trailing slash after the last directory name.
-</code></pre>
-
-<p><strong>Example 2:</strong></p>
-
+</code></pre><p><strong>Example 2:</strong></p>
 <pre><code>Input: &quot;/../&quot;
 Output: &quot;/&quot;
 Explanation: Going one level up from the root directory is a no-op, as the root level is the highest level you can go.
-</code></pre>
-
-<p><strong>Example 3:</strong></p>
-
+</code></pre><p><strong>Example 3:</strong></p>
 <pre><code>Input: &quot;/home//foo/&quot;
 Output: &quot;/home/foo&quot;
 Explanation: In the canonical path, multiple consecutive slashes are replaced by a single one.
-</code></pre>
-
-<p><strong>Example 4:</strong></p>
-
+</code></pre><p><strong>Example 4:</strong></p>
 <pre><code>Input: &quot;/a/./b/../../c/&quot;
 Output: &quot;/c&quot;
-</code></pre>
-
-<p><strong>Example 5:</strong></p>
-
+</code></pre><p><strong>Example 5:</strong></p>
 <pre><code>Input: &quot;/a/../../b/../c//.//&quot;
 Output: &quot;/c&quot;
-</code></pre>
-
-<p><strong>Example 6:</strong></p>
-
+</code></pre><p><strong>Example 6:</strong></p>
 <pre><code>Input: &quot;/a//b////c/d//././/..&quot;
 Output: &quot;/a/b/c&quot;
-</code></pre>
-
-<h2 id="method">Method</h2>
-
-<p>Spilt string by &ldquo;/&rdquo; and push the valid path to stack. If meets &ldquo;..&rdquo;, pop the last element in stack. If meets &ldquo;.&rdquo; or &ldquo;&rdquo;(stands for &ldquo;//&rdquo;), ignore it and continue.</p>
-
+</code></pre><h2 id="method">Method</h2>
+<p>Spilt string by &ldquo;/&rdquo; and push the valid path to stack. If meets &ldquo;..&quot;, pop the last element in stack. If meets &ldquo;.&rdquo; or &ldquo;&quot;(stands for &ldquo;//&quot;), ignore it and continue.</p>
 <h2 id="code">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Spilt string by &#34;/&#34; and push the valid path to stack.
+</span><span style="color:#75715e"> * If meets &#34;..&#34;, pop the last element in stack. If meets &#34;.&#34; or &#34;&#34;(stands for &#34;//&#34;), ignore it and continue.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param path given path string
+</span><span style="color:#75715e"> * @return shortest string representing the absolute path
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> String <span style="color:#a6e22e">simplifyPath</span><span style="color:#f92672">(</span>String path<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    Stack<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> stack <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Stack<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    StringBuilder out <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> StringBuilder<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-<pre><code class="language-java">/**
- * Spilt string by &quot;/&quot; and push the valid path to stack.
- * If meets &quot;..&quot;, pop the last element in stack. If meets &quot;.&quot; or &quot;&quot;(stands for &quot;//&quot;), ignore it and continue.
- *
- * @param path given path string
- * @return shortest string representing the absolute path
- */
-public String simplifyPath(String path) {
-    Stack&lt;String&gt; stack = new Stack&lt;&gt;();
-    StringBuilder out = new StringBuilder();
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>String s <span style="color:#f92672">:</span> path<span style="color:#f92672">.</span><span style="color:#a6e22e">split</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;/&#34;</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>      <span style="color:#75715e">// split path string by &#34;/&#34;, &#34;/&#34; will not show in spilt string
+</span><span style="color:#75715e"></span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">equals</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;..&#34;</span><span style="color:#f92672">)</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> <span style="color:#f92672">!</span>stack<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>       <span style="color:#75715e">// one folder back in path
+</span><span style="color:#75715e"></span>            stack<span style="color:#f92672">.</span><span style="color:#a6e22e">pop</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#f92672">!</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">equals</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;..&#34;</span><span style="color:#f92672">)</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> <span style="color:#f92672">!</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">equals</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;.&#34;</span><span style="color:#f92672">)</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> <span style="color:#f92672">!</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">equals</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;&#34;</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>        <span style="color:#75715e">// find valid folder path
+</span><span style="color:#75715e"></span>            stack<span style="color:#f92672">.</span><span style="color:#a6e22e">push</span><span style="color:#f92672">(</span>s<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
 
-    for (String s : path.split(&quot;/&quot;)) {      // split path string by &quot;/&quot;, &quot;/&quot; will not show in spilt string
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>stack<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;/&#34;</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>String s <span style="color:#f92672">:</span> stack<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        out<span style="color:#f92672">.</span><span style="color:#a6e22e">append</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;/&#34;</span><span style="color:#f92672">)</span><span style="color:#f92672">.</span><span style="color:#a6e22e">append</span><span style="color:#f92672">(</span>s<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-        if (s.equals(&quot;..&quot;) &amp;&amp; !stack.isEmpty()) {       // one folder back in path
-            stack.pop();
-        } else if (!s.equals(&quot;..&quot;) &amp;&amp; !s.equals(&quot;.&quot;) &amp;&amp; !s.equals(&quot;&quot;)) {        // find valid folder path
-            stack.push(s);
-        }
-    }
-
-    if (stack.isEmpty()) {
-        return &quot;/&quot;;
-    }
-    for (String s : stack) {
-        out.append(&quot;/&quot;).append(s);
-    }
-
-    return out.toString();
-}
-</code></pre>
-
-<h1 id="longest-absolute-file-path">Longest Absolute File Path</h1>
-
+    <span style="color:#66d9ef">return</span> out<span style="color:#f92672">.</span><span style="color:#a6e22e">toString</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h1 id="longest-absolute-file-path">Longest Absolute File Path</h1>
 <p>Link: <a href="https://leetcode.com/problems/longest-absolute-file-path">Longest Absolute File Path</a></p>
-
-<h2 id="problem-description-1">Problem description</h2>
-
+<h2 id="problem-description1">Problem description</h2>
 <p>Suppose we abstract our file system by a string in the following manner:</p>
-
 <p>The string <code>&quot;dir\n\tsubdir1\n\tsubdir2\n\t\tfile.ext&quot;</code> represents:</p>
-
 <pre><code>dir
     subdir1
     subdir2
         file.ext
-</code></pre>
-
-<p>The directory <code>dir</code> contains an empty sub-directory <code>subdir1</code> and a sub-directory <code>subdir2</code> containing a file <code>file.ext</code>.</p>
-
+</code></pre><p>The directory <code>dir</code> contains an empty sub-directory <code>subdir1</code> and a sub-directory <code>subdir2</code> containing a file <code>file.ext</code>.</p>
 <p>The string <code>&quot;dir\n\tsubdir1\n\t\tfile1.ext\n\t\tsubsubdir1\n\tsubdir2\n\t\tsubsubdir2\n\t\t\tfile2.ext&quot;</code>represents:</p>
-
 <pre><code>dir
     subdir1
         file1.ext
@@ -407,70 +353,56 @@ public String simplifyPath(String path) {
     subdir2
         subsubdir2
             file2.ext
-</code></pre>
-
-<p>The directory <code>dir</code> contains two sub-directories <code>subdir1</code> and <code>subdir2</code>. <code>subdir1</code> contains a file <code>file1.ext</code> and an empty second-level sub-directory <code>subsubdir1</code>. <code>subdir2</code> contains a second-level sub-directory <code>subsubdir2</code>containing a file <code>file2.ext</code>.</p>
-
+</code></pre><p>The directory <code>dir</code> contains two sub-directories <code>subdir1</code> and <code>subdir2</code>. <code>subdir1</code> contains a file <code>file1.ext</code> and an empty second-level sub-directory <code>subsubdir1</code>. <code>subdir2</code> contains a second-level sub-directory <code>subsubdir2</code>containing a file <code>file2.ext</code>.</p>
 <p>We are interested in finding the longest (number of characters) absolute path to a file within our file system. For example, in the second example above, the longest absolute path is <code>&quot;dir/subdir2/subsubdir2/file2.ext&quot;</code>, and its length is <code>32</code> (not including the double quotes).</p>
-
 <p>Given a string representing the file system in the above format, return the length of the longest absolute path to file in the abstracted file system. If there is no file in the system, return <code>0</code>.</p>
-
 <p><strong>Note:</strong></p>
-
 <ul>
 <li>The name of a file contains at least a <code>.</code> and an extension.</li>
 <li>The name of a directory or sub-directory will not contain a <code>.</code>.</li>
 </ul>
-
 <p>Time complexity required: <code>O(n)</code> where <code>n</code> is the size of the input string.</p>
-
 <p>Notice that <code>a/aa/aaa/file1.txt</code> is not the longest file path, if there is another path <code>aaaaaaaaaaaaaaaaaaaaa/sth.png</code>.</p>
-
-<h2 id="method-1">Method</h2>
-
+<h2 id="method1">Method</h2>
 <p>Use a stack to store length from root to current file. Each time in iteration, pop elements in stack  that is the length of other folder/file under different sub category.</p>
-
 <p>Some corner case:</p>
-
 <ul>
 <li>Length of <code>\t</code> is 1.</li>
 <li>Path is valid iff it contains a file inside it. i.e., path only contains folder will not be counted.</li>
 <li>Rememeber to add 1 when counting current position length, as all folders have a <code>/</code> before it.</li>
 <li>Remember to subtract 1 when finally counting the max length of path, since the first <code>/</code> is required to be removed when returning the max length.</li>
 </ul>
+<h2 id="code1">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Use a stack to store length from root to current file.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param input string representing the file system
+</span><span style="color:#75715e"> * @return length of the longest absolute path to file
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">lengthLongestPath</span><span style="color:#f92672">(</span>String input<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    Stack<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> stack <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Stack<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>      <span style="color:#75715e">// store length
+</span><span style="color:#75715e"></span>    stack<span style="color:#f92672">.</span><span style="color:#a6e22e">push</span><span style="color:#f92672">(</span>0<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">int</span> max <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
 
-<h2 id="code-1">Code</h2>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>String s <span style="color:#f92672">:</span> input<span style="color:#f92672">.</span><span style="color:#a6e22e">split</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;\n&#34;</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-<pre><code class="language-java">/**
- * Use a stack to store length from root to current file.
- *
- * @param input string representing the file system
- * @return length of the longest absolute path to file
- */
-public int lengthLongestPath(String input) {
-    Stack&lt;Integer&gt; stack = new Stack&lt;&gt;();      // store length
-    stack.push(0);
-    int max = 0;
+        <span style="color:#66d9ef">int</span> level <span style="color:#f92672">=</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">lastIndexOf</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;\t&#34;</span><span style="color:#f92672">)</span> <span style="color:#f92672">+</span> 1<span style="color:#f92672">;</span>      <span style="color:#75715e">// # of \t, representing the level of sub folder
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>level <span style="color:#f92672">+</span> 1 <span style="color:#f92672">&lt;</span> stack<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            stack<span style="color:#f92672">.</span><span style="color:#a6e22e">pop</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>        <span style="color:#75715e">// pop elements that are under same parent but not in same sub folder
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">int</span> length <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
 
-    for (String s : input.split(&quot;\n&quot;)) {
-
-        int level = s.lastIndexOf(&quot;\t&quot;) + 1;      // # of \t, representing the level of sub folder
-        while (level + 1 &lt; stack.size()) {
-            stack.pop();        // pop elements that are under same parent but not in same sub folder
-        }
-        int length = 0;
-
-        if (!stack.isEmpty()) {     // current sub folder or file path length
-            length = stack.peek() + s.length() - level + 1;     // each file path requires a additional &quot;/&quot;
-        }
-        stack.push(length);
-        if (s.contains(&quot;.&quot;) &amp;&amp; !stack.isEmpty()) {      // a valid path requires a file in it
-            max = Math.max(max, stack.peek() - 1);      // remove the &quot;/&quot; at the beginning of path
-        }
-    }
-    return max;
-}
-</code></pre>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#f92672">!</span>stack<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>     <span style="color:#75715e">// current sub folder or file path length
+</span><span style="color:#75715e"></span>            length <span style="color:#f92672">=</span> stack<span style="color:#f92672">.</span><span style="color:#a6e22e">peek</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">+</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">-</span> level <span style="color:#f92672">+</span> 1<span style="color:#f92672">;</span>     <span style="color:#75715e">// each file path requires a additional &#34;/&#34;
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
+        stack<span style="color:#f92672">.</span><span style="color:#a6e22e">push</span><span style="color:#f92672">(</span>length<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">contains</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;.&#34;</span><span style="color:#f92672">)</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> <span style="color:#f92672">!</span>stack<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>      <span style="color:#75715e">// a valid path requires a file in it
+</span><span style="color:#75715e"></span>            max <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>max<span style="color:#f92672">,</span> stack<span style="color:#f92672">.</span><span style="color:#a6e22e">peek</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">)</span><span style="color:#f92672">;</span>      <span style="color:#75715e">// remove the &#34;/&#34; at the beginning of path
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">return</span> max<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div>
               
             </div>
           </div>
@@ -524,7 +456,7 @@ public int lengthLongestPath(String input) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>
@@ -582,7 +514,7 @@ public int lengthLongestPath(String input) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>

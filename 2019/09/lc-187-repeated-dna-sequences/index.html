@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.59.1 with theme Tranquilpeak 0.4.7-BETA">
+<meta name="generator" content="Hugo 0.60.1 with theme Tranquilpeak 0.4.7-BETA">
 <meta name="author" content="Steve Zhou">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -277,91 +277,69 @@
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
-<ul>
-<li><a href="#repeated-dna-sequences">Repeated DNA Sequences</a>
-<ul>
-<li><a href="#problem-description">Problem description</a></li>
-<li><a href="#method">Method</a></li>
-<li><a href="#code">Code</a></li>
-</ul></li>
-</ul>
-</nav>
-
+              <!-- raw HTML omitted -->
 <h1 id="repeated-dna-sequences">Repeated DNA Sequences</h1>
-
 <p>Link: <a href="https://leetcode.com/problems/repeated-dna-sequences">Repeated DNA Sequences</a></p>
-
 <h2 id="problem-description">Problem description</h2>
-
 <p>All DNA is composed of a series of nucleotides abbreviated as A, C, G, and T, for example: &ldquo;ACGAATTCCG&rdquo;. When studying DNA, it is sometimes useful to identify repeated sequences within the DNA.</p>
-
 <p>Write a function to find all the 10-letter-long sequences (substrings) that occur more than once in a DNA molecule.</p>
-
 <p><strong>Example:</strong></p>
-
 <pre><code>Input: s = &quot;AAAAACCCCCAAAAACCCCCCAAAAAGGGTTT&quot;
 
 Output: [&quot;AAAAACCCCC&quot;, &quot;CCCCCAAAAA&quot;]
-</code></pre>
-
-<h2 id="method">Method</h2>
-
-<p>Encoding each &lsquo;A&rsquo;, &lsquo;C&rsquo;, &lsquo;G&rsquo;, &rsquo;T&rsquo; into binary digit, such as 00, 01, 10, 11. In this way, each 10-letter-long sequences will be 20 bits long, which is under size of an int. Map each subsequence into bits and check if each sequence has been shown before.</p>
-
+</code></pre><h2 id="method">Method</h2>
+<p>Encoding each &lsquo;A&rsquo;, &lsquo;C&rsquo;, &lsquo;G&rsquo;, &lsquo;T&rsquo; into binary digit, such as 00, 01, 10, 11. In this way, each 10-letter-long sequences will be 20 bits long, which is under size of an int. Map each subsequence into bits and check if each sequence has been shown before.</p>
 <p>Note that to set n-th bit of bitmask equal to 0: <code>mask &amp;= ~(1 &lt;&lt; n)</code>. Hence, to unset first two bits in mask, simply do <code>mask &amp;= ~(3 &lt;&lt; 20)</code>.</p>
-
 <h2 id="code">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Encoding each &#39;A&#39;, &#39;C&#39;, &#39;G&#39;, &#39;T&#39; into binary digit, such as 00, 01, 10, 11.
+</span><span style="color:#75715e"> * In this way, each 10-letter-long sequences will be 20 bits long, which is under size of an int.
+</span><span style="color:#75715e"> * Map each subsequence into bits and check if each sequence has been shown before.
+</span><span style="color:#75715e"> * Note that to set n-th bit of bitmask equal to 0: bitmask &amp;= ~(1 &lt;&lt; n).
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param s given DNA molecule
+</span><span style="color:#75715e"> * @return all the 10-letter-long sequences in s
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> List<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">findRepeatedDnaSequences</span><span style="color:#f92672">(</span>String s<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-<pre><code class="language-java">/**
- * Encoding each 'A', 'C', 'G', 'T' into binary digit, such as 00, 01, 10, 11.
- * In this way, each 10-letter-long sequences will be 20 bits long, which is under size of an int.
- * Map each subsequence into bits and check if each sequence has been shown before.
- * Note that to set n-th bit of bitmask equal to 0: bitmask &amp;= ~(1 &lt;&lt; n).
- *
- * @param s given DNA molecule
- * @return all the 10-letter-long sequences in s
- */
-public List&lt;String&gt; findRepeatedDnaSequences(String s) {
+    <span style="color:#75715e">/* Corner case */</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">&lt;</span> 10<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-    /* Corner case */
-    if (s.length() &lt; 10) {
-        return new ArrayList&lt;&gt;();
-    }
+    <span style="color:#66d9ef">int</span> n <span style="color:#f92672">=</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-    int n = s.length();
+    HashMap<span style="color:#f92672">&lt;</span>Character<span style="color:#f92672">,</span> Integer<span style="color:#f92672">&gt;</span> m <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashMap<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>        <span style="color:#75715e">// save mapping relation
+</span><span style="color:#75715e"></span>    m<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#39;A&#39;</span><span style="color:#f92672">,</span> 0<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    m<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#39;C&#39;</span><span style="color:#f92672">,</span> 1<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    m<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#39;G&#39;</span><span style="color:#f92672">,</span> 2<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    m<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#39;T&#39;</span><span style="color:#f92672">,</span> 3<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-    HashMap&lt;Character, Integer&gt; m = new HashMap&lt;&gt;();        // save mapping relation
-    m.put('A', 0);
-    m.put('C', 1);
-    m.put('G', 2);
-    m.put('T', 3);
+    <span style="color:#66d9ef">int</span> mask <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+    Set<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> sequence <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashSet<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>        <span style="color:#75715e">// save previous sequence
+</span><span style="color:#75715e"></span>    Set<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> out <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashSet<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-    int mask = 0;
-    Set&lt;Integer&gt; sequence = new HashSet&lt;&gt;();        // save previous sequence
-    Set&lt;String&gt; out = new HashSet&lt;&gt;();
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> 10<span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>      <span style="color:#75715e">// first sequence
+</span><span style="color:#75715e"></span>        mask <span style="color:#f92672">&lt;</span><span style="color:#f92672">&lt;</span><span style="color:#f92672">=</span> 2<span style="color:#f92672">;</span>
+        mask <span style="color:#f92672">|</span><span style="color:#f92672">=</span> m<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+    sequence<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>mask<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-    for (int i = 0; i &lt; 10; i++) {      // first sequence
-        mask &lt;&lt;= 2;
-        mask |= m.get(s.charAt(i));
-    }
-    sequence.add(mask);
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> n <span style="color:#f92672">-</span> 9<span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>           <span style="color:#75715e">// rolling hash
+</span><span style="color:#75715e"></span>
+        mask <span style="color:#f92672">&lt;</span><span style="color:#f92672">&lt;</span><span style="color:#f92672">=</span> 2<span style="color:#f92672">;</span>                             <span style="color:#75715e">// left shift to free the last 2 bit
+</span><span style="color:#75715e"></span>        mask <span style="color:#f92672">|</span><span style="color:#f92672">=</span> m<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i <span style="color:#f92672">+</span> 9<span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>         <span style="color:#75715e">// add a new 2-bits number in the last two bits
+</span><span style="color:#75715e"></span>        mask <span style="color:#f92672">&amp;</span><span style="color:#f92672">=</span> <span style="color:#f92672">~</span><span style="color:#f92672">(</span>3 <span style="color:#f92672">&lt;</span><span style="color:#f92672">&lt;</span> 20<span style="color:#f92672">)</span><span style="color:#f92672">;</span>                     <span style="color:#75715e">// unset first two bits: 2L-bit and (2L + 1)-bit
+</span><span style="color:#75715e"></span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>sequence<span style="color:#f92672">.</span><span style="color:#a6e22e">contains</span><span style="color:#f92672">(</span>mask<span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            out<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">substring</span><span style="color:#f92672">(</span>i<span style="color:#f92672">,</span> i <span style="color:#f92672">+</span> 10<span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+        sequence<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>mask<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-    for (int i = 1; i &lt; n - 9; i++) {           // rolling hash
-
-        mask &lt;&lt;= 2;                             // left shift to free the last 2 bit
-        mask |= m.get(s.charAt(i + 9));         // add a new 2-bits number in the last two bits
-        mask &amp;= ~(3 &lt;&lt; 20);                     // unset first two bits: 2L-bit and (2L + 1)-bit
-
-        if (sequence.contains(mask)) {
-            out.add(s.substring(i, i + 10));
-        }
-        sequence.add(mask);
-    }
-
-    return new ArrayList&lt;&gt;(out);
-}
-</code></pre>
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span>out<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div>
               
             </div>
           </div>
@@ -417,7 +395,7 @@ public List&lt;String&gt; findRepeatedDnaSequences(String s) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>
@@ -475,7 +453,7 @@ public List&lt;String&gt; findRepeatedDnaSequences(String s) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>

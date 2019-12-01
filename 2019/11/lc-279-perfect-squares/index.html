@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.59.1 with theme Tranquilpeak 0.4.7-BETA">
+<meta name="generator" content="Hugo 0.60.1 with theme Tranquilpeak 0.4.7-BETA">
 <meta name="author" content="Steve Zhou">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -277,80 +277,55 @@
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
-<ul>
-<li><a href="#perfect-squares">Perfect Squares</a>
-<ul>
-<li><a href="#problem-description">Problem description</a></li>
-<li><a href="#method">Method</a></li>
-<li><a href="#code">Code</a></li>
-</ul></li>
-</ul>
-</nav>
-
+              <!-- raw HTML omitted -->
 <h1 id="perfect-squares">Perfect Squares</h1>
-
 <p>Link: <a href="https://leetcode.com/problems/perfect-squares/">Perfect Squares</a></p>
-
 <h2 id="problem-description">Problem description</h2>
-
 <p>Given a positive integer <em>n</em>, find the least number of perfect square numbers (for example, <code>1, 4, 9, 16, ...</code>) which sum to <em>n</em>.</p>
-
 <p><strong>Example 1:</strong></p>
-
 <pre><code>Input: n = 12
 Output: 3 
 Explanation: 12 = 4 + 4 + 4.
-</code></pre>
-
-<p><strong>Example 2:</strong></p>
-
+</code></pre><p><strong>Example 2:</strong></p>
 <pre><code>Input: n = 13
 Output: 2
 Explanation: 13 = 4 + 9.
-</code></pre>
-
-<h2 id="method">Method</h2>
-
+</code></pre><h2 id="method">Method</h2>
 <p>Dynamic programming.</p>
-
 <p><code>dp[i] = min(dp[j] + 1)</code>, where <code>i - j^2 &gt;= 0</code>.</p>
-
 <p>Time complexity: <code>O(n * sqrt(n))</code>.</p>
-
 <h2 id="code">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Dynamic programming.
+</span><span style="color:#75715e"> * dp[i] = min(dp[j] + 1), where i - j^2 &gt;= 0
+</span><span style="color:#75715e"> * Time complexity: O(n * sqrt(n))
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param n given integer
+</span><span style="color:#75715e"> * @return least number of perfect square numbers (1, 4, 9, 16, ...) which sum to n
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">numSquares</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> n<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-<pre><code class="language-java">/**
- * Dynamic programming.
- * dp[i] = min(dp[j] + 1), where i - j^2 &gt;= 0
- * Time complexity: O(n * sqrt(n))
- *
- * @param n given integer
- * @return least number of perfect square numbers (1, 4, 9, 16, ...) which sum to n
- */
-public int numSquares(int n) {
+    <span style="color:#75715e">/* Corner case */</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>n <span style="color:#f92672">&lt;</span> 2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> n<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-    /* Corner case */
-    if (n &lt; 2) {
-        return n;
-    }
+    <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> dp <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>n <span style="color:#f92672">+</span> 1<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+    dp<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">int</span> min<span style="color:#f92672">,</span> square<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span><span style="color:#f92672">=</span> n<span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        min <span style="color:#f92672">=</span> i<span style="color:#f92672">;</span>
+        square <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">-</span> square <span style="color:#f92672">*</span> square <span style="color:#f92672">&gt;</span><span style="color:#f92672">=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>      <span style="color:#75715e">// find all possible square solution
+</span><span style="color:#75715e"></span>            min <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">min</span><span style="color:#f92672">(</span>dp<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> square <span style="color:#f92672">*</span> square<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> 1<span style="color:#f92672">,</span> min<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            square<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+        dp<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> min<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-    int[] dp = new int[n + 1];
-    dp[0] = 0;
-    int min, square;
-    for (int i = 1; i &lt;= n; i++) {
-        min = i;
-        square = 1;
-        while (i - square * square &gt;= 0) {      // find all possible square solution
-            min = Math.min(dp[i - square * square] + 1, min);
-            square++;
-        }
-        dp[i] = min;
-    }
-
-    return dp[n];
-}
-</code></pre>
+    <span style="color:#66d9ef">return</span> dp<span style="color:#f92672">[</span>n<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div>
               
             </div>
           </div>
@@ -406,7 +381,7 @@ public int numSquares(int n) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>
@@ -464,7 +439,7 @@ public int numSquares(int n) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>

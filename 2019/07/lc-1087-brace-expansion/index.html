@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.59.1 with theme Tranquilpeak 0.4.7-BETA">
+<meta name="generator" content="Hugo 0.60.1 with theme Tranquilpeak 0.4.7-BETA">
 <meta name="author" content="Steve Zhou">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -275,121 +275,92 @@
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
-<ul>
-<li><a href="#brace-expansion">Brace Expansion</a>
-<ul>
-<li><a href="#problem-description">Problem description</a></li>
-<li><a href="#method">Method</a></li>
-<li><a href="#code">Code</a></li>
-</ul></li>
-</ul>
-</nav>
-
+              <!-- raw HTML omitted -->
 <h1 id="brace-expansion">Brace Expansion</h1>
-
 <p>Link: <a href="https://leetcode.com/problems/brace-expansion/">Brace Expansion</a></p>
-
 <h2 id="problem-description">Problem description</h2>
-
 <p>A string <code>S</code> represents a list of words.</p>
-
 <p>Each letter in the word has 1 or more options.  If there is one option, the letter is represented as is.  If there is more than one option, then curly braces delimit the options.  For example, <code>&quot;{a,b,c}&quot;</code> represents options <code>[&quot;a&quot;, &quot;b&quot;, &quot;c&quot;]</code>.</p>
-
 <p>For example, <code>&quot;{a,b,c}d{e,f}&quot;</code> represents the list <code>[&quot;ade&quot;, &quot;adf&quot;, &quot;bde&quot;, &quot;bdf&quot;, &quot;cde&quot;, &quot;cdf&quot;]</code>.</p>
-
 <p>Return all words that can be formed in this manner, in lexicographical order.</p>
-
 <p><strong>Example 1:</strong></p>
-
 <pre><code>Input: &quot;{a,b}c{d,e}f&quot;
 Output: [&quot;acdf&quot;,&quot;acef&quot;,&quot;bcdf&quot;,&quot;bcef&quot;]
-</code></pre>
-
-<p><strong>Example 2:</strong></p>
-
+</code></pre><p><strong>Example 2:</strong></p>
 <pre><code>Input: &quot;abcd&quot;
 Output: [&quot;abcd&quot;]
-</code></pre>
-
-<p><strong>Note:</strong></p>
-
+</code></pre><p><strong>Note:</strong></p>
 <ol>
 <li><code>1 &lt;= S.length &lt;= 50</code></li>
 <li>There are no nested curly brackets.</li>
 <li>All characters inside a pair of consecutive opening and ending curly brackets are different.</li>
 </ol>
-
 <h2 id="method">Method</h2>
-
 <p>Backtracking.</p>
-
 <p>Note that the string requires reformatting to divide chars can be backtracking.</p>
-
 <h2 id="code">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Backtracking.
+</span><span style="color:#75715e"> * Note that the string requires reformatting to divide chars can be backtracking.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param s given string
+</span><span style="color:#75715e"> * @return all words that can be formed in lexicographical order
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> String<span style="color:#f92672">[</span><span style="color:#f92672">]</span> <span style="color:#a6e22e">expand</span><span style="color:#f92672">(</span>String s<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-<pre><code class="language-java">/**
- * Backtracking.
- * Note that the string requires reformatting to divide chars can be backtracking.
- *
- * @param s given string
- * @return all words that can be formed in lexicographical order
- */
-public String[] expand(String s) {
+    List<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> res <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-    List&lt;String&gt; res = new ArrayList&lt;&gt;();
+    backtracking<span style="color:#f92672">(</span>s<span style="color:#f92672">,</span> 0<span style="color:#f92672">,</span> <span style="color:#66d9ef">new</span> StringBuilder<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">,</span> res<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-    backtracking(s, 0, new StringBuilder(), res);
+    String<span style="color:#f92672">[</span><span style="color:#f92672">]</span> out <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> String<span style="color:#f92672">[</span>res<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> res<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        out<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> res<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">return</span> out<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
 
-    String[] out = new String[res.size()];
-    for (int i = 0; i &lt; res.size(); i++) {
-        out[i] = res.get(i);
-    }
-    return out;
-}
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Backtracking to find all possible combinations.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param s     given string
+</span><span style="color:#75715e"> * @param index start index
+</span><span style="color:#75715e"> * @param sb    string builder
+</span><span style="color:#75715e"> * @param temp  output list
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">backtracking</span><span style="color:#f92672">(</span>String s<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> index<span style="color:#f92672">,</span> StringBuilder sb<span style="color:#f92672">,</span> List<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> temp<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>index <span style="color:#f92672">=</span><span style="color:#f92672">=</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>sb<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">&gt;</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            temp<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>sb<span style="color:#f92672">.</span><span style="color:#a6e22e">toString</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-/**
- * Backtracking to find all possible combinations.
- *
- * @param s     given string
- * @param index start index
- * @param sb    string builder
- * @param temp  output list
- */
-private void backtracking(String s, int index, StringBuilder sb, List&lt;String&gt; temp) {
-    if (index == s.length()) {
-        if (sb.length() &gt; 0) {
-            temp.add(sb.toString());
-        }
-        return;
-    }
+    <span style="color:#66d9ef">char</span> c <span style="color:#f92672">=</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>index<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">int</span> position <span style="color:#f92672">=</span> sb<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-    char c = s.charAt(index);
-    int position = sb.length();
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>c <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;{&#39;</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        List<span style="color:#f92672">&lt;</span>Character<span style="color:#f92672">&gt;</span> charList <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">int</span> endIndex <span style="color:#f92672">=</span> index <span style="color:#f92672">+</span> 1<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>endIndex <span style="color:#f92672">&lt;</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>endIndex<span style="color:#f92672">)</span> <span style="color:#f92672">!</span><span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;}&#39;</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>Character<span style="color:#f92672">.</span><span style="color:#a6e22e">isLetter</span><span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>endIndex<span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                charList<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>endIndex<span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            <span style="color:#f92672">}</span>
+            endIndex<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
 
-    if (c == '{') {
-        List&lt;Character&gt; charList = new ArrayList&lt;&gt;();
-        int endIndex = index + 1;
-        while (endIndex &lt; s.length() &amp;&amp; s.charAt(endIndex) != '}') {
-            if (Character.isLetter(s.charAt(endIndex))) {
-                charList.add(s.charAt(endIndex));
-            }
-            endIndex++;
-        }
+        Collections<span style="color:#f92672">.</span><span style="color:#a6e22e">sort</span><span style="color:#f92672">(</span>charList<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">char</span> d <span style="color:#f92672">:</span> charList<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            sb<span style="color:#f92672">.</span><span style="color:#a6e22e">append</span><span style="color:#f92672">(</span>d<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            backtracking<span style="color:#f92672">(</span>s<span style="color:#f92672">,</span> endIndex <span style="color:#f92672">+</span> 1<span style="color:#f92672">,</span> sb<span style="color:#f92672">,</span> temp<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            sb<span style="color:#f92672">.</span><span style="color:#a6e22e">setLength</span><span style="color:#f92672">(</span>position<span style="color:#f92672">)</span><span style="color:#f92672">;</span>     <span style="color:#75715e">// remove last char
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
 
-        Collections.sort(charList);
-        for (char d : charList) {
-            sb.append(d);
-            backtracking(s, endIndex + 1, sb, temp);
-            sb.setLength(position);     // remove last char
-        }
-
-    } else if (Character.isLetter(c)) {     // if current char is not in {}
-        sb.append(s.charAt(index));
-        backtracking(s, index + 1, sb, temp);
-    }
-}
-</code></pre>
+    <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>Character<span style="color:#f92672">.</span><span style="color:#a6e22e">isLetter</span><span style="color:#f92672">(</span>c<span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>     <span style="color:#75715e">// if current char is not in {}
+</span><span style="color:#75715e"></span>        sb<span style="color:#f92672">.</span><span style="color:#a6e22e">append</span><span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>index<span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        backtracking<span style="color:#f92672">(</span>s<span style="color:#f92672">,</span> index <span style="color:#f92672">+</span> 1<span style="color:#f92672">,</span> sb<span style="color:#f92672">,</span> temp<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div>
               
             </div>
           </div>
@@ -443,7 +414,7 @@ private void backtracking(String s, int index, StringBuilder sb, List&lt;String&
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>
@@ -501,7 +472,7 @@ private void backtracking(String s, int index, StringBuilder sb, List&lt;String&
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>

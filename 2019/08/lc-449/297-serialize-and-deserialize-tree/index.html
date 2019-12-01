@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.59.1 with theme Tranquilpeak 0.4.7-BETA">
+<meta name="generator" content="Hugo 0.60.1 with theme Tranquilpeak 0.4.7-BETA">
 <meta name="author" content="Steve Zhou">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -283,137 +283,101 @@
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
-<ul>
-<li><a href="#serialize-and-deserialize-bst">Serialize and Deserialize BST</a>
-<ul>
-<li><a href="#problem-description">Problem description</a></li>
-<li><a href="#method">Method</a></li>
-<li><a href="#code">Code</a></li>
-</ul></li>
-<li><a href="#serialize-and-deserialize-binary-tree">Serialize and Deserialize Binary Tree</a>
-<ul>
-<li><a href="#problem-description-1">Problem description</a></li>
-<li><a href="#method-1">Method</a></li>
-<li><a href="#code-1">Code</a></li>
-</ul></li>
-</ul>
-</nav>
-
+              <!-- raw HTML omitted -->
 <h1 id="serialize-and-deserialize-bst">Serialize and Deserialize BST</h1>
-
 <p>Link: <a href="https://leetcode.com/problems/serialize-and-deserialize-bst/">Serialize and Deserialize BST</a></p>
-
 <h2 id="problem-description">Problem description</h2>
-
 <p>Serialization is the process of converting a data structure or object into a sequence of bits so that it can be stored in a file or memory buffer, or transmitted across a network connection link to be reconstructed later in the same or another computer environment.</p>
-
 <p>Design an algorithm to serialize and deserialize a <strong>binary search tree</strong>. There is no restriction on how your serialization/deserialization algorithm should work. You just need to ensure that a binary search tree can be serialized to a string and this string can be deserialized to the original tree structure.</p>
-
 <p><strong>The encoded string should be as compact as possible.</strong></p>
-
 <p><strong>Note:</strong> Do not use class member/global/static variables to store states. Your serialize and deserialize algorithms should be stateless.</p>
-
 <h2 id="method">Method</h2>
-
 <p>Encoding: DFS traversal to add node values into a <code>StringBuilder</code>.</p>
-
 <p>Decoding: Firstly, use a queue to store all nodes. Each time, peek the head of node. Since BST left child is smaller than root, and right child is larger than root, if current value is out of limitation, then return <code>Null</code>. Otherwise, create a new node as current tree’s root node and keep the DFS process.</p>
-
 <p>If the serialize and deserialize is targeted to BT, then add special mark to null node, such as <code>#</code>. During the decode process, when current value is <code>#</code>, return null.</p>
-
 <h2 id="code">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Codec</span> <span style="color:#f92672">{</span>
 
-<pre><code class="language-java">public class Codec {
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * Encodes a tree to a single string.
+</span><span style="color:#75715e">     * Use DFS during the encoding process.
+</span><span style="color:#75715e">     *
+</span><span style="color:#75715e">     * @param root given root of BST
+</span><span style="color:#75715e">     * @return serialize tree
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">public</span> String <span style="color:#a6e22e">serialize</span><span style="color:#f92672">(</span>TreeNode root<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        StringBuilder sb <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> StringBuilder<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        encoding<span style="color:#f92672">(</span>root<span style="color:#f92672">,</span> sb<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">return</span> sb<span style="color:#f92672">.</span><span style="color:#a6e22e">toString</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-    /**
-     * Encodes a tree to a single string.
-     * Use DFS during the encoding process.
-     *
-     * @param root given root of BST
-     * @return serialize tree
-     */
-    public String serialize(TreeNode root) {
-        StringBuilder sb = new StringBuilder();
-        encoding(root, sb);
-        return sb.toString();
-    }
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * DFS traverse the tree and convert data into string.
+</span><span style="color:#75715e">     *
+</span><span style="color:#75715e">     * @param root root node
+</span><span style="color:#75715e">     * @param sb   string builder
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">encoding</span><span style="color:#f92672">(</span>TreeNode root<span style="color:#f92672">,</span> StringBuilder sb<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>root <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+        sb<span style="color:#f92672">.</span><span style="color:#a6e22e">append</span><span style="color:#f92672">(</span>root<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span><span style="color:#f92672">)</span><span style="color:#f92672">.</span><span style="color:#a6e22e">append</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;,&#34;</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-    /**
-     * DFS traverse the tree and convert data into string.
-     *
-     * @param root root node
-     * @param sb   string builder
-     */
-    private void encoding(TreeNode root, StringBuilder sb) {
-        if (root == null) {
-            return;
-        }
-        sb.append(root.val).append(&quot;,&quot;);
+        encoding<span style="color:#f92672">(</span>root<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">,</span> sb<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        encoding<span style="color:#f92672">(</span>root<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span><span style="color:#f92672">,</span> sb<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-        encoding(root.left, sb);
-        encoding(root.right, sb);
-    }
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * Decodes encoded data to tree.
+</span><span style="color:#75715e">     *
+</span><span style="color:#75715e">     * @param data given serialized tree
+</span><span style="color:#75715e">     * @return origin BST
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">public</span> TreeNode <span style="color:#a6e22e">deserialize</span><span style="color:#f92672">(</span>String data<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>data<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
 
-    /**
-     * Decodes encoded data to tree.
-     *
-     * @param data given serialized tree
-     * @return origin BST
-     */
-    public TreeNode deserialize(String data) {
-        if (data.length() == 0) {
-            return null;
-        }
+        Queue<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> nodes <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span>Arrays<span style="color:#f92672">.</span><span style="color:#a6e22e">asList</span><span style="color:#f92672">(</span>data<span style="color:#f92672">.</span><span style="color:#a6e22e">split</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;,&#34;</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-        Queue&lt;String&gt; nodes = new LinkedList&lt;&gt;(Arrays.asList(data.split(&quot;,&quot;)));
-
-        return decoding(nodes, Integer.MIN_VALUE, Integer.MAX_VALUE);
-    }
+        <span style="color:#66d9ef">return</span> decoding<span style="color:#f92672">(</span>nodes<span style="color:#f92672">,</span> Integer<span style="color:#f92672">.</span><span style="color:#a6e22e">MIN_VALUE</span><span style="color:#f92672">,</span> Integer<span style="color:#f92672">.</span><span style="color:#a6e22e">MAX_VALUE</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
 
-    /**
-     * Decoding serialized string to tree.
-     * Each time, if the peek value in tree is larger than max or smaller than min, then return null.
-     * Otherwise, poll out the head of queue and create a new tree node with value.
-     *
-     * @param q   queue stores all nodes
-     * @param min min value under current BST
-     * @param max max value under current BST
-     * @return tree
-     */
-    private TreeNode decoding(Queue&lt;String&gt; q, int min, int max) {
-        if (q.isEmpty()) {
-            return null;
-        }
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * Decoding serialized string to tree.
+</span><span style="color:#75715e">     * Each time, if the peek value in tree is larger than max or smaller than min, then return null.
+</span><span style="color:#75715e">     * Otherwise, poll out the head of queue and create a new tree node with value.
+</span><span style="color:#75715e">     *
+</span><span style="color:#75715e">     * @param q   queue stores all nodes
+</span><span style="color:#75715e">     * @param min min value under current BST
+</span><span style="color:#75715e">     * @param max max value under current BST
+</span><span style="color:#75715e">     * @return tree
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">private</span> TreeNode <span style="color:#a6e22e">decoding</span><span style="color:#f92672">(</span>Queue<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> q<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> min<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> max<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>q<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
 
-        int val = Integer.parseInt(q.peek());
-        if (val &lt; min || val &gt; max) {
-            return null;        // BST
-        }
-        q.poll();
-        TreeNode r = new TreeNode(val);
+        <span style="color:#66d9ef">int</span> val <span style="color:#f92672">=</span> Integer<span style="color:#f92672">.</span><span style="color:#a6e22e">parseInt</span><span style="color:#f92672">(</span>q<span style="color:#f92672">.</span><span style="color:#a6e22e">peek</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>val <span style="color:#f92672">&lt;</span> min <span style="color:#f92672">|</span><span style="color:#f92672">|</span> val <span style="color:#f92672">&gt;</span> max<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>        <span style="color:#75715e">// BST
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
+        q<span style="color:#f92672">.</span><span style="color:#a6e22e">poll</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        TreeNode r <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> TreeNode<span style="color:#f92672">(</span>val<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-        r.left = decoding(q, min, val);
-        r.right = decoding(q, val, max);
+        r<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span> <span style="color:#f92672">=</span> decoding<span style="color:#f92672">(</span>q<span style="color:#f92672">,</span> min<span style="color:#f92672">,</span> val<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        r<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span> <span style="color:#f92672">=</span> decoding<span style="color:#f92672">(</span>q<span style="color:#f92672">,</span> val<span style="color:#f92672">,</span> max<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-        return r;
-    }
-}
-</code></pre>
-
-<h1 id="serialize-and-deserialize-binary-tree">Serialize and Deserialize Binary Tree</h1>
-
+        <span style="color:#66d9ef">return</span> r<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h1 id="serialize-and-deserialize-binary-tree">Serialize and Deserialize Binary Tree</h1>
 <p>Link: <a href="https://leetcode.com/problems/serialize-and-deserialize-binary-tree/">Serialize and Deserialize Binary Tree</a></p>
-
-<h2 id="problem-description-1">Problem description</h2>
-
+<h2 id="problem-description1">Problem description</h2>
 <p>Serialization is the process of converting a data structure or object into a sequence of bits so that it can be stored in a file or memory buffer, or transmitted across a network connection link to be reconstructed later in the same or another computer environment.</p>
-
 <p>Design an algorithm to serialize and deserialize a binary tree. There is no restriction on how your serialization/deserialization algorithm should work. You just need to ensure that a binary tree can be serialized to a string and this string can be deserialized to the original tree structure.</p>
-
 <p><strong>Example:</strong></p>
-
 <pre><code>You may serialize the following tree:
 
     1
@@ -423,87 +387,80 @@
     4   5
 
 as &quot;[1,2,3,null,null,4,5]&quot;
-</code></pre>
-
-<p><strong>Clarification:</strong> The above format is the same as <a href="https://leetcode.com/faq/#binary-tree">how LeetCode serializes a binary tree</a>. You do not necessarily need to follow this format, so please be creative and come up with different approaches yourself.</p>
-
+</code></pre><p><strong>Clarification:</strong> The above format is the same as <a href="https://leetcode.com/faq/#binary-tree">how LeetCode serializes a binary tree</a>. You do not necessarily need to follow this format, so please be creative and come up with different approaches yourself.</p>
 <p><strong>Note:</strong> Do not use class member/global/static variables to store states. Your serialize and deserialize algorithms should be stateless.</p>
-
-<h2 id="method-1">Method</h2>
-
+<h2 id="method1">Method</h2>
 <p>The process is almost same as previous problem. The difference is that binary tree does not have the character that binary search tree has. Hence, use a mark such as <code>#</code> to mark all <code>Null</code> nodes. When deserialize data to tree, return null if current head of queue is <code>#</code>.</p>
+<h2 id="code1">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Codec</span> <span style="color:#f92672">{</span>
 
-<h2 id="code-1">Code</h2>
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * Encodes a tree to a single string by DFS.
+</span><span style="color:#75715e">     *
+</span><span style="color:#75715e">     * @param root root node
+</span><span style="color:#75715e">     * @return serialized tree
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">public</span> String <span style="color:#a6e22e">serialize</span><span style="color:#f92672">(</span>TreeNode root<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        StringBuilder sb <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> StringBuilder<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        encode<span style="color:#f92672">(</span>root<span style="color:#f92672">,</span> sb<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">return</span> sb<span style="color:#f92672">.</span><span style="color:#a6e22e">toString</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-<pre><code class="language-java">public class Codec {
-
-    /**
-     * Encodes a tree to a single string by DFS.
-     *
-     * @param root root node
-     * @return serialized tree
-     */
-    public String serialize(TreeNode root) {
-        StringBuilder sb = new StringBuilder();
-        encode(root, sb);
-        return sb.toString();
-    }
-
-    /**
-     * DFS to encode tree to string. Use &quot;#&quot; to mark null nodes.
-     *
-     * @param r  root node
-     * @param sb string builder to save tree value.
-     */
-    private void encode(TreeNode r, StringBuilder sb) {
-        if (r == null) {
-            sb.append(&quot;#&quot;).append(',');
-            return;
-        }
-        sb.append(r.val).append(',');
-        encode(r.left, sb);
-        encode(r.right, sb);
-    }
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * DFS to encode tree to string. Use &#34;#&#34; to mark null nodes.
+</span><span style="color:#75715e">     *
+</span><span style="color:#75715e">     * @param r  root node
+</span><span style="color:#75715e">     * @param sb string builder to save tree value.
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">encode</span><span style="color:#f92672">(</span>TreeNode r<span style="color:#f92672">,</span> StringBuilder sb<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>r <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            sb<span style="color:#f92672">.</span><span style="color:#a6e22e">append</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;#&#34;</span><span style="color:#f92672">)</span><span style="color:#f92672">.</span><span style="color:#a6e22e">append</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#39;,&#39;</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+        sb<span style="color:#f92672">.</span><span style="color:#a6e22e">append</span><span style="color:#f92672">(</span>r<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span><span style="color:#f92672">)</span><span style="color:#f92672">.</span><span style="color:#a6e22e">append</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#39;,&#39;</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        encode<span style="color:#f92672">(</span>r<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">,</span> sb<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        encode<span style="color:#f92672">(</span>r<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span><span style="color:#f92672">,</span> sb<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
 
-    /**
-     * Decodes your encoded data to tree.
-     *
-     * @param data encoded string
-     * @return deserialized root of tree
-     */
-    public TreeNode deserialize(String data) {
-        Queue&lt;String&gt; nodes = new LinkedList&lt;&gt;(Arrays.asList(data.split(&quot;,&quot;)));
-        return decode(nodes);
-    }
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * Decodes your encoded data to tree.
+</span><span style="color:#75715e">     *
+</span><span style="color:#75715e">     * @param data encoded string
+</span><span style="color:#75715e">     * @return deserialized root of tree
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">public</span> TreeNode <span style="color:#a6e22e">deserialize</span><span style="color:#f92672">(</span>String data<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        Queue<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> nodes <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span>Arrays<span style="color:#f92672">.</span><span style="color:#a6e22e">asList</span><span style="color:#f92672">(</span>data<span style="color:#f92672">.</span><span style="color:#a6e22e">split</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;,&#34;</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">return</span> decode<span style="color:#f92672">(</span>nodes<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-    /**
-     * Build tree by queue. Right node and left node is recursively completed.
-     * If current head of queue is &quot;#&quot;, add null to current node.
-     *
-     * @param q queue stores serialized node value
-     * @return deserialized root of tree
-     */
-    private TreeNode decode(Queue&lt;String&gt; q) {
-        if (q.isEmpty()) {
-            return null;
-        }
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * Build tree by queue. Right node and left node is recursively completed.
+</span><span style="color:#75715e">     * If current head of queue is &#34;#&#34;, add null to current node.
+</span><span style="color:#75715e">     *
+</span><span style="color:#75715e">     * @param q queue stores serialized node value
+</span><span style="color:#75715e">     * @return deserialized root of tree
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">private</span> TreeNode <span style="color:#a6e22e">decode</span><span style="color:#f92672">(</span>Queue<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> q<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>q<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
 
-        String val = q.poll();
+        String val <span style="color:#f92672">=</span> q<span style="color:#f92672">.</span><span style="color:#a6e22e">poll</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-        if (val.equals(&quot;#&quot;)) {
-            return null;
-        }
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>val<span style="color:#f92672">.</span><span style="color:#a6e22e">equals</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;#&#34;</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
 
-        TreeNode r = new TreeNode(Integer.parseInt(val));
+        TreeNode r <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> TreeNode<span style="color:#f92672">(</span>Integer<span style="color:#f92672">.</span><span style="color:#a6e22e">parseInt</span><span style="color:#f92672">(</span>val<span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-        r.left = decode(q);
-        r.right = decode(q);
+        r<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span> <span style="color:#f92672">=</span> decode<span style="color:#f92672">(</span>q<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        r<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span> <span style="color:#f92672">=</span> decode<span style="color:#f92672">(</span>q<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-        return r;
-    }
-}
-</code></pre>
+        <span style="color:#66d9ef">return</span> r<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div>
               
             </div>
           </div>
@@ -561,7 +518,7 @@ as &quot;[1,2,3,null,null,4,5]&quot;
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>
@@ -619,7 +576,7 @@ as &quot;[1,2,3,null,null,4,5]&quot;
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>

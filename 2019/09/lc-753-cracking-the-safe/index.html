@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.59.1 with theme Tranquilpeak 0.4.7-BETA">
+<meta name="generator" content="Hugo 0.60.1 with theme Tranquilpeak 0.4.7-BETA">
 <meta name="author" content="Steve Zhou">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -277,111 +277,81 @@
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
-<ul>
-<li><a href="#cracking-the-safe">Cracking the Safe</a>
-<ul>
-<li><a href="#problem-description">Problem description</a></li>
-<li><a href="#method">Method</a></li>
-<li><a href="#code">Code</a></li>
-</ul></li>
-</ul>
-</nav>
-
+              <!-- raw HTML omitted -->
 <h1 id="cracking-the-safe">Cracking the Safe</h1>
-
 <p>Link: <a href="https://leetcode.com/problems/cracking-the-safe/">Cracking the Safe</a></p>
-
 <h2 id="problem-description">Problem description</h2>
-
 <p>There is a box protected by a password. The password is a sequence of <code>n</code> digits where each digit can be one of the first <code>k</code> digits <code>0, 1, ..., k-1</code>.</p>
-
 <p>While entering a password, the last <code>n</code> digits entered will automatically be matched against the correct password.</p>
-
 <p>For example, assuming the correct password is <code>&quot;345&quot;</code>, if you type <code>&quot;012345&quot;</code>, the box will open because the correct password matches the suffix of the entered password.</p>
-
 <p>Return any password of <strong>minimum length</strong> that is guaranteed to open the box at some point of entering it.</p>
-
 <p><strong>Example 1:</strong></p>
-
 <pre><code>Input: n = 1, k = 2
 Output: &quot;01&quot;
 Note: &quot;10&quot; will be accepted too.
-</code></pre>
-
-<p><strong>Example 2:</strong></p>
-
+</code></pre><p><strong>Example 2:</strong></p>
 <pre><code>Input: n = 2, k = 2
 Output: &quot;00110&quot;
 Note: &quot;01100&quot;, &quot;10011&quot;, &quot;11001&quot; will be accepted too.
-</code></pre>
-
-<p><strong>Note:</strong></p>
-
+</code></pre><p><strong>Note:</strong></p>
 <ol>
 <li><code>n</code> will be in the range <code>[1, 4]</code>.</li>
 <li><code>k</code> will be in the range <code>[1, 10]</code>.</li>
 <li><code>k^n</code> will be at most <code>4096</code>.</li>
 </ol>
-
 <h2 id="method">Method</h2>
-
 <p>Backtracking to find all possible combination, and append each char to result from 0 to k.</p>
-
 <p>Each time in the backtracking, split last <code>n - 1</code> digits from the buffer that store the sequence of output. Next, append one digit at the end of the last <code>n - 1</code> digits to create a new combination. If this combination was not created before, append current digit to buffer. Continue backtracking process until the set contains all the combinations.</p>
-
 <p>Finally, convert this buffer to string and return it.</p>
-
 <h2 id="code">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Backtracking to find all possible combination, and append each char to result from 0 to k.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param n password sequence of n digits
+</span><span style="color:#75715e"> * @param k password combination from 0 to k - 1
+</span><span style="color:#75715e"> * @return any password of minimum length that is guaranteed to open the box at some point of entering it
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> String <span style="color:#a6e22e">crackSafe</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> n<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> k<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    String init <span style="color:#f92672">=</span> String<span style="color:#f92672">.</span><span style="color:#a6e22e">join</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;&#34;</span><span style="color:#f92672">,</span> Collections<span style="color:#f92672">.</span><span style="color:#a6e22e">nCopies</span><span style="color:#f92672">(</span>n<span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;0&#34;</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    HashSet<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> set <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashSet<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    set<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>init<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    StringBuilder sb <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> StringBuilder<span style="color:#f92672">(</span>init<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    backtracking<span style="color:#f92672">(</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">)</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">pow</span><span style="color:#f92672">(</span>k<span style="color:#f92672">,</span> n<span style="color:#f92672">)</span><span style="color:#f92672">,</span> n<span style="color:#f92672">,</span> k<span style="color:#f92672">,</span> sb<span style="color:#f92672">,</span> set<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">return</span> sb<span style="color:#f92672">.</span><span style="color:#a6e22e">toString</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
 
-<pre><code class="language-java">/**
- * Backtracking to find all possible combination, and append each char to result from 0 to k.
- *
- * @param n password sequence of n digits
- * @param k password combination from 0 to k - 1
- * @return any password of minimum length that is guaranteed to open the box at some point of entering it
- */
-public String crackSafe(int n, int k) {
-    String init = String.join(&quot;&quot;, Collections.nCopies(n, &quot;0&quot;));
-    HashSet&lt;String&gt; set = new HashSet&lt;&gt;();
-    set.add(init);
-    StringBuilder sb = new StringBuilder(init);
-    backtracking((int) Math.pow(k, n), n, k, sb, set);
-    return sb.toString();
-}
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Backtracking to find all possible combination.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param limit number of combination with size of n and made up with digits from 0 to k - 1
+</span><span style="color:#75715e"> * @param n     password sequence of n digits
+</span><span style="color:#75715e"> * @param k     password combination from 0 to k - 1
+</span><span style="color:#75715e"> * @param sb    string builder to build one min length combination
+</span><span style="color:#75715e"> * @param set   contains combinations have been found
+</span><span style="color:#75715e"> * @return true if set is reached
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">backtracking</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> limit<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> n<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> k<span style="color:#f92672">,</span> StringBuilder sb<span style="color:#f92672">,</span> HashSet<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> set<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>set<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> limit<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-/**
- * Backtracking to find all possible combination.
- *
- * @param limit number of combination with size of n and made up with digits from 0 to k - 1
- * @param n     password sequence of n digits
- * @param k     password combination from 0 to k - 1
- * @param sb    string builder to build one min length combination
- * @param set   contains combinations have been found
- * @return true if set is reached
- */
-private boolean backtracking(int limit, int n, int k, StringBuilder sb, HashSet&lt;String&gt; set) {
-    if (set.size() == limit) {
-        return true;
-    }
-
-    String last = sb.substring(sb.length() - n + 1);        // get last n - 1 digits
-
-    for (int i = 0; i &lt; k; i++) {
-        String tmp = last + i;      // add one digit to create a new combination based on n - 1 digits
-        if (!set.contains(tmp)) {
-            set.add(tmp);
-            sb.append(i);
-            if (backtracking(limit, n, k, sb, set)) {
-                return true;
-            }
-            set.remove(tmp);
-            sb.deleteCharAt(sb.length() - 1);
-        }
-    }
-    return false;
-}
-</code></pre>
+    String last <span style="color:#f92672">=</span> sb<span style="color:#f92672">.</span><span style="color:#a6e22e">substring</span><span style="color:#f92672">(</span>sb<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">-</span> n <span style="color:#f92672">+</span> 1<span style="color:#f92672">)</span><span style="color:#f92672">;</span>        <span style="color:#75715e">// get last n - 1 digits
+</span><span style="color:#75715e"></span>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> k<span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        String tmp <span style="color:#f92672">=</span> last <span style="color:#f92672">+</span> i<span style="color:#f92672">;</span>      <span style="color:#75715e">// add one digit to create a new combination based on n - 1 digits
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#f92672">!</span>set<span style="color:#f92672">.</span><span style="color:#a6e22e">contains</span><span style="color:#f92672">(</span>tmp<span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            set<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>tmp<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            sb<span style="color:#f92672">.</span><span style="color:#a6e22e">append</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>backtracking<span style="color:#f92672">(</span>limit<span style="color:#f92672">,</span> n<span style="color:#f92672">,</span> k<span style="color:#f92672">,</span> sb<span style="color:#f92672">,</span> set<span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+            <span style="color:#f92672">}</span>
+            set<span style="color:#f92672">.</span><span style="color:#a6e22e">remove</span><span style="color:#f92672">(</span>tmp<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            sb<span style="color:#f92672">.</span><span style="color:#a6e22e">deleteCharAt</span><span style="color:#f92672">(</span>sb<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div>
               
             </div>
           </div>
@@ -437,7 +407,7 @@ private boolean backtracking(int limit, int n, int k, StringBuilder sb, HashSet&
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>
@@ -495,7 +465,7 @@ private boolean backtracking(int limit, int n, int k, StringBuilder sb, HashSet&
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>

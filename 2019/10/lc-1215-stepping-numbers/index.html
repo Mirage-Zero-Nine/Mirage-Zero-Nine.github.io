@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.59.1 with theme Tranquilpeak 0.4.7-BETA">
+<meta name="generator" content="Hugo 0.60.1 with theme Tranquilpeak 0.4.7-BETA">
 <meta name="author" content="Steve Zhou">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -275,94 +275,70 @@
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
-<ul>
-<li><a href="#stepping-numbers">Stepping Numbers</a>
-<ul>
-<li><a href="#problem-description">Problem description</a></li>
-<li><a href="#method">Method</a></li>
-<li><a href="#code">Code</a></li>
-</ul></li>
-</ul>
-</nav>
-
+              <!-- raw HTML omitted -->
 <h1 id="stepping-numbers">Stepping Numbers</h1>
-
 <p>Link: <a href="https://leetcode.com/problems/stepping-numbers/">Stepping Numbers</a></p>
-
 <h2 id="problem-description">Problem description</h2>
-
 <p>A <em>Stepping Number</em> is an integer such that all of its adjacent digits have an absolute difference of exactly <code>1</code>. For example, <code>321</code> is a Stepping Number while <code>421</code> is not.</p>
-
 <p>Given two integers <code>low</code> and <code>high</code>, find and return a <strong>sorted</strong> list of all the Stepping Numbers in the range <code>[low, high]</code> inclusive.</p>
-
 <p><strong>Example 1:</strong></p>
-
 <pre><code>Input: low = 0, high = 21
 Output: [0,1,2,3,4,5,6,7,8,9,10,12,21]
-</code></pre>
-
-<p><strong>Constraints:</strong></p>
-
+</code></pre><p><strong>Constraints:</strong></p>
 <ul>
 <li><code>0 &lt;= low &lt;= high &lt;= 2 * 10^9</code></li>
 </ul>
-
 <h2 id="method">Method</h2>
-
 <p>DFS to find each available result.</p>
-
 <p>Note that the overflow of temporary value may cause TLE, hence use <code>long</code> to cast temporary value.</p>
-
 <h2 id="code">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * DFS to find each available result.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param low  low bound
+</span><span style="color:#75715e"> * @param high high bound
+</span><span style="color:#75715e"> * @return sorted list of all the Stepping Numbers in the range [low, high] inclusive
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">countSteppingNumbers</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> low<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> high<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> out <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-<pre><code class="language-java">/**
- * DFS to find each available result.
- *
- * @param low  low bound
- * @param high high bound
- * @return sorted list of all the Stepping Numbers in the range [low, high] inclusive
- */
-public List&lt;Integer&gt; countSteppingNumbers(int low, int high) {
-    List&lt;Integer&gt; out = new LinkedList&lt;&gt;();
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> 10<span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        dfs<span style="color:#f92672">(</span>low<span style="color:#f92672">,</span> high<span style="color:#f92672">,</span> out<span style="color:#f92672">,</span> i<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+    Collections<span style="color:#f92672">.</span><span style="color:#a6e22e">sort</span><span style="color:#f92672">(</span>out<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">return</span> out<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
 
-    for (int i = 0; i &lt; 10; i++) {
-        dfs(low, high, out, i);
-    }
-    Collections.sort(out);
-    return out;
-}
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * DFS search to find all correct answer.
+</span><span style="color:#75715e"> * Use long for temporary value during DFS.
+</span><span style="color:#75715e"> * During the traverse, temp value may overflow and hence become negative, which will never end the DFS recursion.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param low  low bound
+</span><span style="color:#75715e"> * @param high high bound
+</span><span style="color:#75715e"> * @param out  output list
+</span><span style="color:#75715e"> * @param tmp  temp value during DFS, use long to avoid TLE caused by overflow
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">dfs</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> low<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> high<span style="color:#f92672">,</span> List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> out<span style="color:#f92672">,</span> <span style="color:#66d9ef">long</span> tmp<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-/**
- * DFS search to find all correct answer.
- * Use long for temporary value during DFS.
- * During the traverse, temp value may overflow and hence become negative, which will never end the DFS recursion.
- *
- * @param low  low bound
- * @param high high bound
- * @param out  output list
- * @param tmp  temp value during DFS, use long to avoid TLE caused by overflow
- */
-private void dfs(int low, int high, List&lt;Integer&gt; out, long tmp) {
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>tmp <span style="color:#f92672">&gt;</span><span style="color:#f92672">=</span> low <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> tmp <span style="color:#f92672">&lt;</span><span style="color:#f92672">=</span> high<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        out<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">)</span> tmp<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-    if (tmp &gt;= low &amp;&amp; tmp &lt;= high) {
-        out.add((int) tmp);
-    }
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>tmp <span style="color:#f92672">&gt;</span> high <span style="color:#f92672">|</span><span style="color:#f92672">|</span> tmp <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-    if (tmp &gt; high || tmp == 0) {
-        return;
-    }
-
-    if (tmp % 10 == 0) {
-        dfs(low, high, out, tmp % 10 + 1 + tmp * 10);
-    } else if (tmp % 10 == 9) {
-        dfs(low, high, out, tmp % 10 - 1 + tmp * 10);
-    } else {
-        dfs(low, high, out, tmp % 10 + 1 + tmp * 10);
-        dfs(low, high, out, tmp % 10 - 1 + tmp * 10);
-    }
-}
-</code></pre>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>tmp <span style="color:#f92672">%</span> 10 <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        dfs<span style="color:#f92672">(</span>low<span style="color:#f92672">,</span> high<span style="color:#f92672">,</span> out<span style="color:#f92672">,</span> tmp <span style="color:#f92672">%</span> 10 <span style="color:#f92672">+</span> 1 <span style="color:#f92672">+</span> tmp <span style="color:#f92672">*</span> 10<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>tmp <span style="color:#f92672">%</span> 10 <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 9<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        dfs<span style="color:#f92672">(</span>low<span style="color:#f92672">,</span> high<span style="color:#f92672">,</span> out<span style="color:#f92672">,</span> tmp <span style="color:#f92672">%</span> 10 <span style="color:#f92672">-</span> 1 <span style="color:#f92672">+</span> tmp <span style="color:#f92672">*</span> 10<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+        dfs<span style="color:#f92672">(</span>low<span style="color:#f92672">,</span> high<span style="color:#f92672">,</span> out<span style="color:#f92672">,</span> tmp <span style="color:#f92672">%</span> 10 <span style="color:#f92672">+</span> 1 <span style="color:#f92672">+</span> tmp <span style="color:#f92672">*</span> 10<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        dfs<span style="color:#f92672">(</span>low<span style="color:#f92672">,</span> high<span style="color:#f92672">,</span> out<span style="color:#f92672">,</span> tmp <span style="color:#f92672">%</span> 10 <span style="color:#f92672">-</span> 1 <span style="color:#f92672">+</span> tmp <span style="color:#f92672">*</span> 10<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div>
               
             </div>
           </div>
@@ -416,7 +392,7 @@ private void dfs(int low, int high, List&lt;Integer&gt; out, long tmp) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>
@@ -474,7 +450,7 @@ private void dfs(int low, int high, List&lt;Integer&gt; out, long tmp) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>

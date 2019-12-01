@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.59.1 with theme Tranquilpeak 0.4.7-BETA">
+<meta name="generator" content="Hugo 0.60.1 with theme Tranquilpeak 0.4.7-BETA">
 <meta name="author" content="Steve Zhou">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -275,93 +275,71 @@
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li><a href="#problem-description">Problem description</a></li>
-<li><a href="#method">Method</a></li>
-<li><a href="#code">Code</a></li>
-</ul></li>
-</ul>
-</nav>
-
+              <!-- raw HTML omitted -->
 <p>Link: <a href="https://leetcode.com/problems/decode-string">Decode String</a></p>
-
 <h2 id="problem-description">Problem description</h2>
-
 <p>Given an encoded string, return its decoded string.</p>
-
 <p>The encoding rule is: <code>k[encoded_string]</code>, where the <em>encoded_string</em> inside the square brackets is being repeated exactly <em>k</em> times. Note that <em>k</em> is guaranteed to be a positive integer.</p>
-
 <p>You may assume that the input string is always valid; No extra white spaces, square brackets are well-formed, etc.</p>
-
-<p>Furthermore, you may assume that the original data does not contain any digits and that digits are only for those repeat numbers, <em>k</em>. For example, there won&rsquo;t be input like <code>3a</code> or <code>2[4]</code>.</p>
-
+<p>Furthermore, you may assume that the original data does not contain any digits and that digits are only for those repeat numbers, <em>k</em>. For example, there won't be input like <code>3a</code> or <code>2[4]</code>.</p>
 <p><strong>Examples:</strong></p>
-
 <pre><code>s = &quot;3[a]2[bc]&quot;, return &quot;aaabcbc&quot;.
 s = &quot;3[a2[c]]&quot;, return &quot;accaccacc&quot;.
 s = &quot;2[abc]3[cd]ef&quot;, return &quot;abcabccdcdcdef&quot;.
-</code></pre>
-
-<h2 id="method">Method</h2>
-
+</code></pre><h2 id="method">Method</h2>
 <p>Use two stacks to store the repeat time and previous substring when a # of repeat time is found. When a &lsquo;]&rsquo; is found, concatenate repeat substring to previous non-repeat substring. The concatenated string will be the next repeating part, or becomes the final result if no repetition is found.</p>
-
 <h2 id="code">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Use two stacks to store the repeat time and previous substring when a # of repeat time is found.
+</span><span style="color:#75715e"> * When a &#39;]&#39; is found, concatenate repeat substring to previous non-repeat substring.
+</span><span style="color:#75715e"> * The concatenated string will be the next repeating part, or becomes the final result if no repetition is found.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param s given encoded string
+</span><span style="color:#75715e"> * @return decoded string
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> String <span style="color:#a6e22e">decodeString</span><span style="color:#f92672">(</span>String s<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-<pre><code class="language-java">/**
- * Use two stacks to store the repeat time and previous substring when a # of repeat time is found.
- * When a ']' is found, concatenate repeat substring to previous non-repeat substring.
- * The concatenated string will be the next repeating part, or becomes the final result if no repetition is found.
- *
- * @param s given encoded string
- * @return decoded string
- */
-public String decodeString(String s) {
+    Stack<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> repeat <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Stack<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>      <span style="color:#75715e">// save repeat time
+</span><span style="color:#75715e"></span>    Stack<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> temp <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Stack<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>     <span style="color:#75715e">// save temporary string
+</span><span style="color:#75715e"></span>    String out <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;&#34;</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
 
-    Stack&lt;Integer&gt; repeat = new Stack&lt;&gt;();      // save repeat time
-    Stack&lt;String&gt; temp = new Stack&lt;&gt;();     // save temporary string
-    String out = &quot;&quot;;
-    int i = 0;
+    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">&lt;</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>Character<span style="color:#f92672">.</span><span style="color:#a6e22e">isDigit</span><span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">int</span> count <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+            <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>Character<span style="color:#f92672">.</span><span style="color:#a6e22e">isDigit</span><span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                count <span style="color:#f92672">=</span> 10 <span style="color:#f92672">*</span> count <span style="color:#f92672">+</span> <span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span> <span style="color:#f92672">-</span> <span style="color:#e6db74">&#39;0&#39;</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+                i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">;</span>
+            <span style="color:#f92672">}</span>
+            repeat<span style="color:#f92672">.</span><span style="color:#a6e22e">push</span><span style="color:#f92672">(</span>count<span style="color:#f92672">)</span><span style="color:#f92672">;</span>     <span style="color:#75715e">// add repeat time to stack
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;[&#39;</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            temp<span style="color:#f92672">.</span><span style="color:#a6e22e">push</span><span style="color:#f92672">(</span>out<span style="color:#f92672">)</span><span style="color:#f92672">;</span>     <span style="color:#75715e">// add previous decoded string to stack for later repeat process
+</span><span style="color:#75715e"></span>            out <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;&#34;</span><span style="color:#f92672">;</span>       <span style="color:#75715e">// reset to record next string clip
+</span><span style="color:#75715e"></span>            i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;]&#39;</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-    while (i &lt; s.length()) {
-        if (Character.isDigit(s.charAt(i))) {
-            int count = 0;
-            while (Character.isDigit(s.charAt(i))) {
-                count = 10 * count + (s.charAt(i) - '0');
-                i++;
-            }
-            repeat.push(count);     // add repeat time to stack
-        } else if (s.charAt(i) == '[') {
-            temp.push(out);     // add previous decoded string to stack for later repeat process
-            out = &quot;&quot;;       // reset to record next string clip
-            i++;
-        } else if (s.charAt(i) == ']') {
+            <span style="color:#75715e">/*
+</span><span style="color:#75715e">             * Top of the stack is the substring before repeat count.
+</span><span style="color:#75715e">             * Add this part to StringBuilder and then add repeat part to the end of it. */</span>
+            StringBuilder cache <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> StringBuilder<span style="color:#f92672">(</span>temp<span style="color:#f92672">.</span><span style="color:#a6e22e">pop</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            <span style="color:#66d9ef">int</span> count <span style="color:#f92672">=</span> repeat<span style="color:#f92672">.</span><span style="color:#a6e22e">pop</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> j <span style="color:#f92672">&lt;</span> count<span style="color:#f92672">;</span> j<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                cache<span style="color:#f92672">.</span><span style="color:#a6e22e">append</span><span style="color:#f92672">(</span>out<span style="color:#f92672">)</span><span style="color:#f92672">;</span>      <span style="color:#75715e">// concatenate repeat substring to previous non-repeat substring
+</span><span style="color:#75715e"></span>            <span style="color:#f92672">}</span>
 
-            /*
-             * Top of the stack is the substring before repeat count.
-             * Add this part to StringBuilder and then add repeat part to the end of it. */
-            StringBuilder cache = new StringBuilder(temp.pop());
-            int count = repeat.pop();
-            for (int j = 0; j &lt; count; j++) {
-                cache.append(out);      // concatenate repeat substring to previous non-repeat substring
-            }
-
-            /*
-             * Now this string will have two possibility:
-             * 1. Becomes the repetition of previous part, and will be reset after repetition is completed.
-             * 2. Be reset and push to stack when a new '[' is found. */
-            out = cache.toString();
-            i++;
-        } else {
-            out += s.charAt(i++);       // if current char is normal alphabet, continue add it to the end of output
-        }
-    }
-    return out;
-}
-</code></pre>
+            <span style="color:#75715e">/*
+</span><span style="color:#75715e">             * Now this string will have two possibility:
+</span><span style="color:#75715e">             * 1. Becomes the repetition of previous part, and will be reset after repetition is completed.
+</span><span style="color:#75715e">             * 2. Be reset and push to stack when a new &#39;[&#39; is found. */</span>
+            out <span style="color:#f92672">=</span> cache<span style="color:#f92672">.</span><span style="color:#a6e22e">toString</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+            out <span style="color:#f92672">+</span><span style="color:#f92672">=</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>       <span style="color:#75715e">// if current char is normal alphabet, continue add it to the end of output
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">return</span> out<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div>
               
             </div>
           </div>
@@ -415,7 +393,7 @@ public String decodeString(String s) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>
@@ -473,7 +451,7 @@ public String decodeString(String s) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>

@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.59.1 with theme Tranquilpeak 0.4.7-BETA">
+<meta name="generator" content="Hugo 0.60.1 with theme Tranquilpeak 0.4.7-BETA">
 <meta name="author" content="Steve Zhou">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -275,147 +275,121 @@
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
-<ul>
-<li><a href="#sort-list">Sort List</a>
-<ul>
-<li><a href="#problem-description">Problem description</a></li>
-<li><a href="#method">Method</a></li>
-<li><a href="#code">Code</a></li>
-</ul></li>
-</ul>
-</nav>
-
+              <!-- raw HTML omitted -->
 <h1 id="sort-list">Sort List</h1>
-
 <p>Link: <a href="https://leetcode.com/problems/sort-list/">Sort List</a></p>
-
 <h2 id="problem-description">Problem description</h2>
-
 <p>Sort a linked list in <em>O</em>(<em>n</em> log <em>n</em>) time using constant space complexity.</p>
-
 <p><strong>Example 1:</strong></p>
-
 <pre><code>Input: 4-&gt;2-&gt;1-&gt;3
 Output: 1-&gt;2-&gt;3-&gt;4
-</code></pre>
-
-<p><strong>Example 2:</strong></p>
-
+</code></pre><p><strong>Example 2:</strong></p>
 <pre><code>Input: -1-&gt;5-&gt;3-&gt;4-&gt;0
 Output: -1-&gt;0-&gt;3-&gt;4-&gt;5
-</code></pre>
-
-<h2 id="method">Method</h2>
-
+</code></pre><h2 id="method">Method</h2>
 <p>Bottom-up merge sort (without recursion).</p>
-
 <p>The normal merge sort with recursion is to split list into single element and combine them together. Bottom-up merge sort complete this process by iteration.</p>
-
 <p>Each loop takes length from <code>1</code> to <code>2^n</code>, until <code>2^n</code> is larger than given list’s length.During each loop with length of <code>2^n</code>, sort the sub list with that length.</p>
-
 <p>In this way to complete the merge sort from bottom to top (and without recursion to extend extra required space).</p>
-
 <h2 id="code">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Bottom-up merge sort (without recursion).
+</span><span style="color:#75715e"> * The normal merge sort with recursion is to split list into single element and combine them together.
+</span><span style="color:#75715e"> * Bottom-up merge sort complete this process by iteration.
+</span><span style="color:#75715e"> * Each loop takes length from 1 to 2^n, until 2^n is larger than length.
+</span><span style="color:#75715e"> * During each loop with length of 2^n, sort the sub list with that length.
+</span><span style="color:#75715e"> * In this way to complete the merge sort from bottom to top.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param head head node of list
+</span><span style="color:#75715e"> * @return sorted list
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> ListNode <span style="color:#a6e22e">sortList</span><span style="color:#f92672">(</span>ListNode head<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-<pre><code class="language-java">/**
- * Bottom-up merge sort (without recursion).
- * The normal merge sort with recursion is to split list into single element and combine them together.
- * Bottom-up merge sort complete this process by iteration.
- * Each loop takes length from 1 to 2^n, until 2^n is larger than length.
- * During each loop with length of 2^n, sort the sub list with that length.
- * In this way to complete the merge sort from bottom to top.
- *
- * @param head head node of list
- * @return sorted list
- */
-public ListNode sortList(ListNode head) {
+    <span style="color:#75715e">/* Corner case */</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>head <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">|</span><span style="color:#f92672">|</span> head<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> head<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-    /* Corner case */
-    if (head == null || head.next == null) {
-        return head;
-    }
+    ListNode dummy <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ListNode<span style="color:#f92672">(</span><span style="color:#f92672">-</span>1<span style="color:#f92672">)</span><span style="color:#f92672">,</span> previous<span style="color:#f92672">,</span> current<span style="color:#f92672">,</span> tmp<span style="color:#f92672">;</span>
+    dummy<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span> <span style="color:#f92672">=</span> head<span style="color:#f92672">;</span>
 
-    ListNode dummy = new ListNode(-1), previous, current, tmp;
-    dummy.next = head;
+    <span style="color:#66d9ef">int</span> length <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
 
-    int length = 0;
+    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>head <span style="color:#f92672">!</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>      <span style="color:#75715e">// count list length for later merge
+</span><span style="color:#75715e"></span>        head <span style="color:#f92672">=</span> head<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">;</span>
+        length<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-    while (head != null) {      // count list length for later merge
-        head = head.next;
-        length++;
-    }
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> length<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span><span style="color:#f92672">&lt;</span><span style="color:#f92672">=</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>      <span style="color:#75715e">// each time, merge sort list with length of 2^i from start
+</span><span style="color:#75715e"></span>        previous <span style="color:#f92672">=</span> dummy<span style="color:#f92672">;</span>
+        current <span style="color:#f92672">=</span> dummy<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">;</span>
 
-    for (int i = 1; i &lt; length; i &lt;&lt;= 1) {      // each time, merge sort list with length of 2^i from start
-        previous = dummy;
-        current = dummy.next;
+        <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>current <span style="color:#f92672">!</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            tmp <span style="color:#f92672">=</span> previous<span style="color:#f92672">;</span>
+            ListNode start <span style="color:#f92672">=</span> current<span style="color:#f92672">;</span>               <span style="color:#75715e">// start point
+</span><span style="color:#75715e"></span>            ListNode sub <span style="color:#f92672">=</span> split<span style="color:#f92672">(</span>start<span style="color:#f92672">,</span> i<span style="color:#f92672">)</span><span style="color:#f92672">;</span>         <span style="color:#75715e">// split current and forwarding i nodes to sort
+</span><span style="color:#75715e"></span>            current <span style="color:#f92672">=</span> split<span style="color:#f92672">(</span>sub<span style="color:#f92672">,</span> i<span style="color:#f92672">)</span><span style="color:#f92672">;</span>                <span style="color:#75715e">// from current + i to current + 2i nodes
+</span><span style="color:#75715e"></span>            previous <span style="color:#f92672">=</span> merge<span style="color:#f92672">(</span>start<span style="color:#f92672">,</span> sub<span style="color:#f92672">,</span> tmp<span style="color:#f92672">)</span><span style="color:#f92672">;</span>      <span style="color:#75715e">// merge two lists and sort
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
 
-        while (current != null) {
-            tmp = previous;
-            ListNode start = current;               // start point
-            ListNode sub = split(start, i);         // split current and forwarding i nodes to sort
-            current = split(sub, i);                // from current + i to current + 2i nodes
-            previous = merge(start, sub, tmp);      // merge two lists and sort
-        }
-    }
+    <span style="color:#66d9ef">return</span> dummy<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
 
-    return dummy.next;
-}
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Split list with given start point and length
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param start start node
+</span><span style="color:#75715e"> * @param n     length of list to be cut
+</span><span style="color:#75715e"> * @return right part start node of split list
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">private</span> ListNode <span style="color:#a6e22e">split</span><span style="color:#f92672">(</span>ListNode start<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> n<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>start <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-/**
- * Split list with given start point and length
- *
- * @param start start node
- * @param n     length of list to be cut
- * @return right part start node of split list
- */
-private ListNode split(ListNode start, int n) {
-    if (start == null) {
-        return null;
-    }
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> start<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span> <span style="color:#f92672">!</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> i <span style="color:#f92672">&lt;</span> n<span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>      <span style="color:#75715e">// length starts at 1 (given start node itself)
+</span><span style="color:#75715e"></span>        start <span style="color:#f92672">=</span> start<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-    for (int i = 1; start.next != null &amp;&amp; i &lt; n; i++) {      // length starts at 1 (given start node itself)
-        start = start.next;
-    }
+    ListNode right <span style="color:#f92672">=</span> start<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">;</span>
+    start<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
 
-    ListNode right = start.next;
-    start.next = null;
+    <span style="color:#66d9ef">return</span> right<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
 
-    return right;
-}
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Merge two list with sorting.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param n1       first list
+</span><span style="color:#75715e"> * @param n2       second list
+</span><span style="color:#75715e"> * @param previous previous node to combine the result
+</span><span style="color:#75715e"> * @return sorted list
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">private</span> ListNode <span style="color:#a6e22e">merge</span><span style="color:#f92672">(</span>ListNode n1<span style="color:#f92672">,</span> ListNode n2<span style="color:#f92672">,</span> ListNode previous<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    ListNode dummy <span style="color:#f92672">=</span> previous<span style="color:#f92672">;</span>      <span style="color:#75715e">// dummy as moving pointer during merging
+</span><span style="color:#75715e"></span>
+    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>n1 <span style="color:#f92672">!</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> n2 <span style="color:#f92672">!</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>n1<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span> <span style="color:#f92672">&gt;</span> n2<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            dummy<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span> <span style="color:#f92672">=</span> n2<span style="color:#f92672">;</span>
+            n2 <span style="color:#f92672">=</span> n2<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+            dummy<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span> <span style="color:#f92672">=</span> n1<span style="color:#f92672">;</span>
+            n1 <span style="color:#f92672">=</span> n1<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
 
-/**
- * Merge two list with sorting.
- *
- * @param n1       first list
- * @param n2       second list
- * @param previous previous node to combine the result
- * @return sorted list
- */
-private ListNode merge(ListNode n1, ListNode n2, ListNode previous) {
-    ListNode dummy = previous;      // dummy as moving pointer during merging
+        dummy <span style="color:#f92672">=</span> dummy<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-    while (n1 != null &amp;&amp; n2 != null) {
-        if (n1.val &gt; n2.val) {
-            dummy.next = n2;
-            n2 = n2.next;
-        } else {
-            dummy.next = n1;
-            n1 = n1.next;
-        }
+    dummy<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span> <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>n1 <span style="color:#f92672">!</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">?</span> n1 <span style="color:#f92672">:</span> n2<span style="color:#f92672">;</span>
 
-        dummy = dummy.next;
-    }
+    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>dummy<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span> <span style="color:#f92672">!</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        dummy <span style="color:#f92672">=</span> dummy<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-    dummy.next = (n1 != null) ? n1 : n2;
-
-    while (dummy.next != null) {
-        dummy = dummy.next;
-    }
-
-    return previous;
-}
-</code></pre>
+    <span style="color:#66d9ef">return</span> previous<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div>
               
             </div>
           </div>
@@ -469,7 +443,7 @@ private ListNode merge(ListNode n1, ListNode n2, ListNode previous) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>
@@ -527,7 +501,7 @@ private ListNode merge(ListNode n1, ListNode n2, ListNode previous) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>

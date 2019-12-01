@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.59.1 with theme Tranquilpeak 0.4.7-BETA">
+<meta name="generator" content="Hugo 0.60.1 with theme Tranquilpeak 0.4.7-BETA">
 <meta name="author" content="Steve Zhou">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -277,31 +277,14 @@
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
-<ul>
-<li><a href="#maximum-difference-between-node-and-ancestor">Maximum Difference Between Node and Ancestor</a>
-<ul>
-<li><a href="#problem-description">Problem description</a></li>
-<li><a href="#method">Method</a></li>
-<li><a href="#code">Code</a></li>
-</ul></li>
-</ul>
-</nav>
-
+              <!-- raw HTML omitted -->
 <h1 id="maximum-difference-between-node-and-ancestor">Maximum Difference Between Node and Ancestor</h1>
-
 <p>Link: <a href="https://leetcode.com/problems/maximum-difference-between-node-and-ancestor/">Maximum Difference Between Node and Ancestor</a></p>
-
 <h2 id="problem-description">Problem description</h2>
-
 <p>Given the <code>root</code> of a binary tree, find the maximum value <code>V</code> for which there exists <strong>different</strong> nodes <code>A</code> and <code>B</code> where <code>V = |A.val - B.val|</code> and <code>A</code> is an ancestor of <code>B</code>.</p>
-
 <p>(A node A is an ancestor of B if either: any child of A is equal to B, or any child of A is an ancestor of B.)</p>
-
 <p><strong>Example 1:</strong></p>
-
-<p><img src="../../../static/img/2whqcep.jpg" alt="img" /></p>
-
+<p><img src="../../../static/img/2whqcep.jpg" alt="img"></p>
 <pre><code>Input: [8,3,10,1,6,null,14,null,null,4,7,13]
 Output: 7
 Explanation: 
@@ -311,55 +294,48 @@ We have various ancestor-node differences, some of which are given below :
 |8 - 1| = 7
 |10 - 13| = 3
 Among all possible differences, the maximum value of 7 is obtained by |8 - 1| = 7.
-</code></pre>
-
-<p><strong>Note:</strong></p>
-
+</code></pre><p><strong>Note:</strong></p>
 <ol>
 <li>The number of nodes in the tree is between <code>2</code> and <code>5000</code>.</li>
 <li>Each node will have value between <code>0</code> and <code>100000</code>.</li>
 </ol>
-
 <h2 id="method">Method</h2>
-
 <p>DFS with top-down comparison. Compare the left subtree <code>max - min</code> and left sub tree <code>max - min</code>.</p>
-
 <h2 id="code">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * DFS with top-down comparison.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param root root node
+</span><span style="color:#75715e"> * @return max absolute value between one node and its child
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">maxAncestorDiff</span><span style="color:#f92672">(</span>TreeNode root<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-<pre><code class="language-java">/**
- * DFS with top-down comparison.
- *
- * @param root root node
- * @return max absolute value between one node and its child
- */
-public int maxAncestorDiff(TreeNode root) {
+    <span style="color:#66d9ef">return</span> dfs<span style="color:#f92672">(</span>root<span style="color:#f92672">,</span> root<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span><span style="color:#f92672">,</span> root<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
 
-    return dfs(root, root.val, root.val);
-}
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * DFS top-down comparison.
+</span><span style="color:#75715e"> * Each time, find the max and min value during the tree traversal under current path.
+</span><span style="color:#75715e"> * If reaches null, then the tree traversal has completed and max node diff of current path can be found.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param r   root node
+</span><span style="color:#75715e"> * @param min min value in tree
+</span><span style="color:#75715e"> * @param max max value in tree
+</span><span style="color:#75715e"> * @return max absolute value between one node and its child
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">dfs</span><span style="color:#f92672">(</span>TreeNode r<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> min<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> max<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-/**
- * DFS top-down comparison.
- * Each time, find the max and min value during the tree traversal under current path.
- * If reaches null, then the tree traversal has completed and max node diff of current path can be found.
- *
- * @param r   root node
- * @param min min value in tree
- * @param max max value in tree
- * @return max absolute value between one node and its child
- */
-private int dfs(TreeNode r, int min, int max) {
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>r <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>        <span style="color:#75715e">// end point
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">return</span> max <span style="color:#f92672">-</span> min<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-    if (r == null) {        // end point
-        return max - min;
-    }
+    min <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">min</span><span style="color:#f92672">(</span>min<span style="color:#f92672">,</span> r<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    max <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>max<span style="color:#f92672">,</span> r<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-    min = Math.min(min, r.val);
-    max = Math.max(max, r.val);
+    <span style="color:#66d9ef">return</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>dfs<span style="color:#f92672">(</span>r<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">,</span> min<span style="color:#f92672">,</span> max<span style="color:#f92672">)</span><span style="color:#f92672">,</span> dfs<span style="color:#f92672">(</span>r<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span><span style="color:#f92672">,</span> min<span style="color:#f92672">,</span> max<span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-    return Math.max(dfs(r.left, min, max), dfs(r.right, min, max));
-
-}
-</code></pre>
+<span style="color:#f92672">}</span>
+</code></pre></div>
               
             </div>
           </div>
@@ -415,7 +391,7 @@ private int dfs(TreeNode r, int min, int max) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>
@@ -473,7 +449,7 @@ private int dfs(TreeNode r, int min, int max) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>

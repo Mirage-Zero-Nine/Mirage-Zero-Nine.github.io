@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.59.1 with theme Tranquilpeak 0.4.7-BETA">
+<meta name="generator" content="Hugo 0.60.1 with theme Tranquilpeak 0.4.7-BETA">
 <meta name="author" content="Steve Zhou">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -277,37 +277,20 @@
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
-<ul>
-<li><a href="#path-with-maximum-gold">Path with Maximum Gold</a>
-<ul>
-<li><a href="#problem-description">Problem description</a></li>
-<li><a href="#method">Method</a></li>
-<li><a href="#code">Code</a></li>
-</ul></li>
-</ul>
-</nav>
-
+              <!-- raw HTML omitted -->
 <h1 id="path-with-maximum-gold">Path with Maximum Gold</h1>
-
 <p>Link: <a href="https://leetcode.com/problems/path-with-maximum-gold/">Path with Maximum Gold</a></p>
-
 <h2 id="problem-description">Problem description</h2>
-
 <p>In a gold mine <code>grid</code> of size <code>m * n</code>, each cell in this mine has an integer representing the amount of gold in that cell, <code>0</code> if it is empty.</p>
-
 <p>Return the maximum amount of gold you can collect under the conditions:</p>
-
 <ul>
 <li>Every time you are located in a cell you will collect all the gold in that cell.</li>
 <li>From your position you can walk one step to the left, right, up or down.</li>
-<li>You can&rsquo;t visit the same cell more than once.</li>
+<li>You can't visit the same cell more than once.</li>
 <li>Never visit a cell with <code>0</code> gold.</li>
 <li>You can start and stop collecting gold from <strong>any</strong> position in the grid that has some gold.</li>
 </ul>
-
 <p><strong>Example 1:</strong></p>
-
 <pre><code>Input: grid = [[0,6,0],[5,8,7],[0,9,0]]
 Output: 24
 Explanation:
@@ -315,10 +298,7 @@ Explanation:
  [5,8,7],
  [0,9,0]]
 Path to get the maximum gold, 9 -&gt; 8 -&gt; 7.
-</code></pre>
-
-<p><strong>Example 2:</strong></p>
-
+</code></pre><p><strong>Example 2:</strong></p>
 <pre><code>Input: grid = [[1,0,7],[2,0,6],[3,4,5],[0,3,0],[9,0,20]]
 Output: 28
 Explanation:
@@ -328,70 +308,63 @@ Explanation:
  [0,3,0],
  [9,0,20]]
 Path to get the maximum gold, 1 -&gt; 2 -&gt; 3 -&gt; 4 -&gt; 5 -&gt; 6 -&gt; 7.
-</code></pre>
-
-<p><strong>Constraints:</strong></p>
-
+</code></pre><p><strong>Constraints:</strong></p>
 <ul>
 <li><code>1 &lt;= grid.length, grid[i].length &lt;= 15</code></li>
 <li><code>0 &lt;= grid[i][j] &lt;= 100</code></li>
 <li>There are at most <strong>25</strong> cells containing gold.</li>
 </ul>
-
 <h2 id="method">Method</h2>
-
 <p>Basic backtracking with pruning. Use a 2D array to record visited cell.</p>
-
 <h2 id="code">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> max <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> dir <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">{</span>1<span style="color:#f92672">,</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">,</span> 0<span style="color:#f92672">,</span> 0<span style="color:#f92672">,</span> 0<span style="color:#f92672">,</span> 0<span style="color:#f92672">,</span> 1<span style="color:#f92672">,</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">}</span><span style="color:#f92672">;</span>
 
-<pre><code class="language-java">private int max = 0;
-private int[] dir = new int[]{1, -1, 0, 0, 0, 0, 1, -1};
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Backtracking with pruning.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param grid given grid
+</span><span style="color:#75715e"> * @return maximum amount of gold can be collected
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">getMaximumGold</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> grid<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">boolean</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> isVisited <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">boolean</span><span style="color:#f92672">[</span>grid<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">]</span><span style="color:#f92672">[</span>grid<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span><span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> grid<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> j <span style="color:#f92672">&lt;</span> grid<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span><span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> j<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>grid<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">[</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">!</span><span style="color:#f92672">=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                isVisited<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">[</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+                backtracking<span style="color:#f92672">(</span>i<span style="color:#f92672">,</span> j<span style="color:#f92672">,</span> grid<span style="color:#f92672">,</span> isVisited<span style="color:#f92672">,</span> grid<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">[</span>j<span style="color:#f92672">]</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+                isVisited<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">[</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
 
-/**
- * Backtracking with pruning.
- *
- * @param grid given grid
- * @return maximum amount of gold can be collected
- */
-public int getMaximumGold(int[][] grid) {
-    boolean[][] isVisited = new boolean[grid.length][grid[0].length];
-    for (int i = 0; i &lt; grid.length; i++) {
-        for (int j = 0; j &lt; grid[0].length; j++) {
-            if (grid[i][j] != 0) {
-                isVisited[i][j] = true;
-                backtracking(i, j, grid, isVisited, grid[i][j]);
-                isVisited[i][j] = false;
-            }
-        }
-    }
+    <span style="color:#66d9ef">return</span> max<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
 
-    return max;
-}
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Backtracking to find the max value.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param x         coord x
+</span><span style="color:#75715e"> * @param y         coord y
+</span><span style="color:#75715e"> * @param grid      given grid
+</span><span style="color:#75715e"> * @param isVisited record cells visited
+</span><span style="color:#75715e"> * @param sum       currently total value
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">backtracking</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> x<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> y<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> grid<span style="color:#f92672">,</span> <span style="color:#66d9ef">boolean</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> isVisited<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> sum<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    max <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>sum<span style="color:#f92672">,</span> max<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-/**
- * Backtracking to find the max value.
- *
- * @param x         coord x
- * @param y         coord y
- * @param grid      given grid
- * @param isVisited record cells visited
- * @param sum       currently total value
- */
-private void backtracking(int x, int y, int[][] grid, boolean[][] isVisited, int sum) {
-    max = Math.max(sum, max);
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> 4<span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">int</span> xx <span style="color:#f92672">=</span> x <span style="color:#f92672">+</span> dir<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">int</span> yy <span style="color:#f92672">=</span> y <span style="color:#f92672">+</span> dir<span style="color:#f92672">[</span>i <span style="color:#f92672">+</span> 4<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
 
-    for (int i = 0; i &lt; 4; i++) {
-        int xx = x + dir[i];
-        int yy = y + dir[i + 4];
-
-        if (xx &gt;= 0 &amp;&amp; xx &lt; grid.length &amp;&amp; yy &gt;= 0 &amp;&amp; yy &lt; grid[0].length &amp;&amp; !isVisited[xx][yy] &amp;&amp; grid[xx][yy] != 0) {
-            isVisited[xx][yy] = true;
-            backtracking(xx, yy, grid, isVisited, sum + grid[x][y]);
-            isVisited[xx][yy] = false;
-        }
-    }
-}
-</code></pre>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>xx <span style="color:#f92672">&gt;</span><span style="color:#f92672">=</span> 0 <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> xx <span style="color:#f92672">&lt;</span> grid<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> yy <span style="color:#f92672">&gt;</span><span style="color:#f92672">=</span> 0 <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> yy <span style="color:#f92672">&lt;</span> grid<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span><span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> <span style="color:#f92672">!</span>isVisited<span style="color:#f92672">[</span>xx<span style="color:#f92672">]</span><span style="color:#f92672">[</span>yy<span style="color:#f92672">]</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> grid<span style="color:#f92672">[</span>xx<span style="color:#f92672">]</span><span style="color:#f92672">[</span>yy<span style="color:#f92672">]</span> <span style="color:#f92672">!</span><span style="color:#f92672">=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            isVisited<span style="color:#f92672">[</span>xx<span style="color:#f92672">]</span><span style="color:#f92672">[</span>yy<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+            backtracking<span style="color:#f92672">(</span>xx<span style="color:#f92672">,</span> yy<span style="color:#f92672">,</span> grid<span style="color:#f92672">,</span> isVisited<span style="color:#f92672">,</span> sum <span style="color:#f92672">+</span> grid<span style="color:#f92672">[</span>x<span style="color:#f92672">]</span><span style="color:#f92672">[</span>y<span style="color:#f92672">]</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            isVisited<span style="color:#f92672">[</span>xx<span style="color:#f92672">]</span><span style="color:#f92672">[</span>yy<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div>
               
             </div>
           </div>
@@ -447,7 +420,7 @@ private void backtracking(int x, int y, int[][] grid, boolean[][] isVisited, int
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>
@@ -505,7 +478,7 @@ private void backtracking(int x, int y, int[][] grid, boolean[][] isVisited, int
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>

@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.59.1 with theme Tranquilpeak 0.4.7-BETA">
+<meta name="generator" content="Hugo 0.60.1 with theme Tranquilpeak 0.4.7-BETA">
 <meta name="author" content="Steve Zhou">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -279,42 +279,22 @@
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
-<ul>
-<li><a href="#design-search-autocomplete-system">Design Search Autocomplete System</a>
-<ul>
-<li><a href="#problem-description">Problem description</a></li>
-<li><a href="#method">Method</a></li>
-<li><a href="#code">Code</a></li>
-</ul></li>
-</ul>
-</nav>
-
+              <!-- raw HTML omitted -->
 <h1 id="design-search-autocomplete-system">Design Search Autocomplete System</h1>
-
 <p>Link: <a href="https://leetcode.com/problems/design-search-autocomplete-system/">Design Search Autocomplete System</a></p>
-
 <h2 id="problem-description">Problem description</h2>
-
-<p>Design a search autocomplete system for a search engine. Users may input a sentence (at least one word and end with a special character <code>'#'</code>). For <strong>each character</strong>they type <strong>except &lsquo;#&rsquo;</strong>, you need to return the <strong>top 3</strong>historical hot sentences that have prefix the same as the part of sentence already typed. Here are the specific rules:</p>
-
+<p>Design a search autocomplete system for a search engine. Users may input a sentence (at least one word and end with a special character <code>'#'</code>). For <strong>each character</strong>they type <strong>except &lsquo;#'</strong>, you need to return the <strong>top 3</strong>historical hot sentences that have prefix the same as the part of sentence already typed. Here are the specific rules:</p>
 <ol>
 <li>The hot degree for a sentence is defined as the number of times a user typed the exactly same sentence before.</li>
 <li>The returned top 3 hot sentences should be sorted by hot degree (The first is the hottest one). If several sentences have the same degree of hot, you need to use ASCII-code order (smaller one appears first).</li>
 <li>If less than 3 hot sentences exist, then just return as many as you can.</li>
 <li>When the input is a special character, it means the sentence ends, and in this case, you need to return an empty list.</li>
 </ol>
-
 <p>Your job is to implement the following functions:</p>
-
 <p>The constructor function:</p>
-
 <p><code>AutocompleteSystem(String[] sentences, int[] times):</code>This is the constructor. The input is <strong>historical data</strong>. <code>Sentences</code>is a string array consists of previously typed sentences. <code>Times</code>is the corresponding times a sentence has been typed. Your system should record these historical data.</p>
-
 <p>Now, the user wants to input a new sentence. The following function will provide the next character the user types:</p>
-
 <p><code>List&lt;String&gt; input(char c):</code>The input <code>c</code>is the next character typed by the user. The character will only be lower-case letters (<code>'a'</code>to <code>'z'</code>), blank space (<code>' '</code>) or a special character (<code>'#'</code>). Also, the previously typed sentence should be recorded in your system. The output will be the <strong>top 3</strong>historical hot sentences that have prefix the same as the part of sentence already typed.</p>
-
 <pre><code>Example:
 Operation: AutocompleteSystem([&quot;i love you&quot;, &quot;island&quot;,&quot;ironman&quot;, &quot;i love leetcode&quot;], [5,3,2,2])
 The system have already tracked down the following sentences and their corresponding times:
@@ -343,170 +323,161 @@ Operation: input('#')
 Output: []
 Explanation:
 The user finished the input, the sentence &quot;i a&quot; should be saved as a historical sentence in system. And the following input will be counted as a new search.
-</code></pre>
-
-<p><strong>Note:</strong></p>
-
+</code></pre><p><strong>Note:</strong></p>
 <ol>
-<li>The input sentence will always start with a letter and end with &lsquo;#&rsquo;, and only one blank space will exist between two words.</li>
-<li>The number of <strong>complete sentences</strong>that to be searched won&rsquo;t exceed 100. The length of each sentence including those in the historical data won&rsquo;t exceed 100.</li>
+<li>The input sentence will always start with a letter and end with &lsquo;#', and only one blank space will exist between two words.</li>
+<li>The number of <strong>complete sentences</strong>that to be searched won't exceed 100. The length of each sentence including those in the historical data won't exceed 100.</li>
 <li>Please use double-quote instead of single-quote when you write test cases even for a character input.</li>
 <li>Please remember to <strong>RESET</strong>your class variables declared in class AutocompleteSystem, as static/class variables are <strong>persisted across multiple test cases</strong>. Please see <a href="https://leetcode.com/faq/#different-output">here</a>for more details.</li>
 </ol>
-
 <h2 id="method">Method</h2>
-
 <p>Use a trie to save all chars and its relating sentence/frequency.</p>
-
 <p>The key points of trie design is as following:</p>
-
 <ol>
 <li>Each trie node will store the relating string for later top 3 output.</li>
 <li>The history list will only be reset when the input is <code>#</code>. Therefore, if the input char is not found in trie, all the later input char will always return an empty list until a <code>#</code> is received.</li>
 <li>Use a heap to sort the entry set to find top 3 most visited.</li>
 <li>The trie build process should not use the <code>put</code> method to build the map. Instead, it should use <code>getOrDefault</code> method, so that it could also complete the update process if user input same sentence twice.</li>
 </ol>
-
 <h2 id="code">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">AutocompleteSystem</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">private</span> List<span style="color:#f92672">&lt;</span>Character<span style="color:#f92672">&gt;</span> l <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>     <span style="color:#75715e">// history list
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> TrieNode root<span style="color:#f92672">;</span>      <span style="color:#75715e">// root node of trie
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> TrieNode tmp<span style="color:#f92672">;</span>       <span style="color:#75715e">// current trie node for next search
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> p <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>          <span style="color:#75715e">// pointer point at current char for searching
+</span><span style="color:#75715e"></span>
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * Use a trie to save all chars and its relating sentence/frequency.
+</span><span style="color:#75715e">     *
+</span><span style="color:#75715e">     * @param sentences given sentences
+</span><span style="color:#75715e">     * @param times     weight of each sentences
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">AutocompleteSystem</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[</span><span style="color:#f92672">]</span> sentences<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> times<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        root <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> TrieNode<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        tmp <span style="color:#f92672">=</span> root<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">root</span> <span style="color:#f92672">=</span> build<span style="color:#f92672">(</span>sentences<span style="color:#f92672">,</span> times<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-<pre><code class="language-java">public class AutocompleteSystem {
-    private List&lt;Character&gt; l = new LinkedList&lt;&gt;();     // history list
-    private TrieNode root;      // root node of trie
-    private TrieNode tmp;       // current trie node for next search
-    private int p = 0;          // pointer point at current char for searching
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * Based on given input char, return the result list.
+</span><span style="color:#75715e">     * Each TrieNode contains the string that all its sub trie node containing via a hash map.
+</span><span style="color:#75715e">     * When a new char comes in, search the trie to find the
+</span><span style="color:#75715e">     * If input is &#39;#&#39;, update trie as new history.
+</span><span style="color:#75715e">     *
+</span><span style="color:#75715e">     * @param c given char
+</span><span style="color:#75715e">     * @return result list, if input is &#39;#&#39; or not exist, return empty list
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">public</span> List<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">input</span><span style="color:#f92672">(</span><span style="color:#66d9ef">char</span> c<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        List<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> out <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-    /**
-     * Use a trie to save all chars and its relating sentence/frequency.
-     *
-     * @param sentences given sentences
-     * @param times     weight of each sentences
-     */
-    public AutocompleteSystem(String[] sentences, int[] times) {
-        root = new TrieNode();
-        tmp = root;
-        this.root = build(sentences, times);
-    }
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>c <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;#&#39;</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            StringBuilder sb <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> StringBuilder<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>Character ch <span style="color:#f92672">:</span> l<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                sb<span style="color:#f92672">.</span><span style="color:#a6e22e">append</span><span style="color:#f92672">(</span>ch<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            <span style="color:#f92672">}</span>
+            root <span style="color:#f92672">=</span> build<span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> String<span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">{</span>sb<span style="color:#f92672">.</span><span style="color:#a6e22e">toString</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">}</span><span style="color:#f92672">,</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">{</span>1<span style="color:#f92672">}</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>        <span style="color:#75715e">// if input is &#39;#&#39;, update trie
+</span><span style="color:#75715e"></span>            l <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            tmp <span style="color:#f92672">=</span> root<span style="color:#f92672">;</span>
+            p <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
 
-    /**
-     * Based on given input char, return the result list.
-     * Each TrieNode contains the string that all its sub trie node containing via a hash map.
-     * When a new char comes in, search the trie to find the
-     * If input is '#', update trie as new history.
-     *
-     * @param c given char
-     * @return result list, if input is '#' or not exist, return empty list
-     */
-    public List&lt;String&gt; input(char c) {
-        List&lt;String&gt; out = new LinkedList&lt;&gt;();
+            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
 
-        if (c == '#') {
-            StringBuilder sb = new StringBuilder();
-            for (Character ch : l) {
-                sb.append(ch);
-            }
-            root = build(new String[]{sb.toString()}, new int[]{1});        // if input is '#', update trie
-            l = new LinkedList&lt;&gt;();
-            tmp = root;
-            p = 0;
+        l<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>c<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-            return new LinkedList&lt;&gt;();
-        }
+        <span style="color:#75715e">/*
+</span><span style="color:#75715e">         * If input char is not in trie, stop moving pointer forward.
+</span><span style="color:#75715e">         * The history list will not reset until accept a &#39;#&#39;.
+</span><span style="color:#75715e">         * Therefore, if a input char is not found in trie, then the later input char will always return empty list. */</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#f92672">!</span>tmp<span style="color:#f92672">.</span><span style="color:#a6e22e">child</span><span style="color:#f92672">.</span><span style="color:#a6e22e">containsKey</span><span style="color:#f92672">(</span>l<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>p<span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+        tmp <span style="color:#f92672">=</span> tmp<span style="color:#f92672">.</span><span style="color:#a6e22e">child</span><span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>l<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>p<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-        l.add(c);
+        PriorityQueue<span style="color:#f92672">&lt;</span>Map<span style="color:#f92672">.</span><span style="color:#a6e22e">Entry</span><span style="color:#f92672">&lt;</span>String<span style="color:#f92672">,</span> Integer<span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span> pq <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> PriorityQueue<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> Comparator<span style="color:#f92672">&lt;</span>Map<span style="color:#f92672">.</span><span style="color:#a6e22e">Entry</span><span style="color:#f92672">&lt;</span>String<span style="color:#f92672">,</span> Integer<span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#a6e22e">@Override</span>
+            <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">compare</span><span style="color:#f92672">(</span>Map<span style="color:#f92672">.</span><span style="color:#a6e22e">Entry</span><span style="color:#f92672">&lt;</span>String<span style="color:#f92672">,</span> Integer<span style="color:#f92672">&gt;</span> o1<span style="color:#f92672">,</span> Map<span style="color:#f92672">.</span><span style="color:#a6e22e">Entry</span><span style="color:#f92672">&lt;</span>String<span style="color:#f92672">,</span> Integer<span style="color:#f92672">&gt;</span> o2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>o2<span style="color:#f92672">.</span><span style="color:#a6e22e">getValue</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">.</span><span style="color:#a6e22e">equals</span><span style="color:#f92672">(</span>o1<span style="color:#f92672">.</span><span style="color:#a6e22e">getValue</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                    <span style="color:#66d9ef">return</span> o1<span style="color:#f92672">.</span><span style="color:#a6e22e">getKey</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">.</span><span style="color:#a6e22e">compareTo</span><span style="color:#f92672">(</span>o2<span style="color:#f92672">.</span><span style="color:#a6e22e">getKey</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+                <span style="color:#f92672">}</span>
+                <span style="color:#66d9ef">return</span> <span style="color:#f92672">(</span>o2<span style="color:#f92672">.</span><span style="color:#a6e22e">getValue</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">.</span><span style="color:#a6e22e">compareTo</span><span style="color:#f92672">(</span>o1<span style="color:#f92672">.</span><span style="color:#a6e22e">getValue</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        pq<span style="color:#f92672">.</span><span style="color:#a6e22e">addAll</span><span style="color:#f92672">(</span>tmp<span style="color:#f92672">.</span><span style="color:#a6e22e">sentence</span><span style="color:#f92672">.</span><span style="color:#a6e22e">entrySet</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>     <span style="color:#75715e">// use a heap to add all entries in each trie node, then sort them
+</span><span style="color:#75715e"></span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> <span style="color:#f92672">!</span>pq<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> i <span style="color:#f92672">&lt;</span> 3<span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>      <span style="color:#75715e">// find top 3 most visited
+</span><span style="color:#75715e"></span>            out<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>pq<span style="color:#f92672">.</span><span style="color:#a6e22e">poll</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">.</span><span style="color:#a6e22e">getKey</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
 
-        /*
-         * If input char is not in trie, stop moving pointer forward.
-         * The history list will not reset until accept a '#'.
-         * Therefore, if a input char is not found in trie, then the later input char will always return empty list. */
-        if (!tmp.child.containsKey(l.get(p))) {
-            return new LinkedList&lt;&gt;();
-        }
-        tmp = tmp.child.get(l.get(p++));
+        <span style="color:#66d9ef">return</span> out<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-        PriorityQueue&lt;Map.Entry&lt;String, Integer&gt;&gt; pq = new PriorityQueue&lt;&gt;(new Comparator&lt;Map.Entry&lt;String, Integer&gt;&gt;() {
-            @Override
-            public int compare(Map.Entry&lt;String, Integer&gt; o1, Map.Entry&lt;String, Integer&gt; o2) {
-                if (o2.getValue().equals(o1.getValue())) {
-                    return o1.getKey().compareTo(o2.getKey());
-                }
-                return (o2.getValue()).compareTo(o1.getValue());
-            }
-        });
-        pq.addAll(tmp.sentence.entrySet());     // use a heap to add all entries in each trie node, then sort them
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * Build trie based on given sentences and count.
+</span><span style="color:#75715e">     *
+</span><span style="color:#75715e">     * @param sentences given sentences list
+</span><span style="color:#75715e">     * @param times     given sentences count
+</span><span style="color:#75715e">     * @return root of trie node
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">private</span> TrieNode <span style="color:#a6e22e">build</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[</span><span style="color:#f92672">]</span> sentences<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> times<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-        for (int i = 0; !pq.isEmpty() &amp;&amp; i &lt; 3; i++) {      // find top 3 most visited
-            out.add(pq.poll().getKey());
-        }
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> sentences<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            String s <span style="color:#f92672">=</span> sentences<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+            TrieNode tmp <span style="color:#f92672">=</span> root<span style="color:#f92672">;</span>
 
-        return out;
-    }
+            <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> j <span style="color:#f92672">&lt;</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span> j<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#f92672">!</span>tmp<span style="color:#f92672">.</span><span style="color:#a6e22e">child</span><span style="color:#f92672">.</span><span style="color:#a6e22e">containsKey</span><span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>j<span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                    tmp<span style="color:#f92672">.</span><span style="color:#a6e22e">child</span><span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>j<span style="color:#f92672">)</span><span style="color:#f92672">,</span> <span style="color:#66d9ef">new</span> TrieNode<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+                <span style="color:#f92672">}</span>
 
-    /**
-     * Build trie based on given sentences and count.
-     *
-     * @param sentences given sentences list
-     * @param times     given sentences count
-     * @return root of trie node
-     */
-    private TrieNode build(String[] sentences, int[] times) {
+                tmp <span style="color:#f92672">=</span> tmp<span style="color:#f92672">.</span><span style="color:#a6e22e">child</span><span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>j<span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+                tmp<span style="color:#f92672">.</span><span style="color:#a6e22e">sentence</span><span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>s<span style="color:#f92672">,</span> tmp<span style="color:#f92672">.</span><span style="color:#a6e22e">sentence</span><span style="color:#f92672">.</span><span style="color:#a6e22e">getOrDefault</span><span style="color:#f92672">(</span>s<span style="color:#f92672">,</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">+</span> times<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
 
-        for (int i = 0; i &lt; sentences.length; i++) {
-            String s = sentences[i];
-            TrieNode tmp = root;
+        <span style="color:#66d9ef">return</span> root<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-            for (int j = 0; j &lt; s.length(); j++) {
-                if (!tmp.child.containsKey(s.charAt(j))) {
-                    tmp.child.put(s.charAt(j), new TrieNode());
-                }
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * Constructor of trie node.
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">TrieNode</span> <span style="color:#f92672">{</span>
+        HashMap<span style="color:#f92672">&lt;</span>Character<span style="color:#f92672">,</span> TrieNode<span style="color:#f92672">&gt;</span> child <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashMap<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>       <span style="color:#75715e">// save child node of current node
+</span><span style="color:#75715e"></span>        HashMap<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">,</span> Integer<span style="color:#f92672">&gt;</span> sentence <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashMap<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>        <span style="color:#75715e">// save each node&#39;s relating sentence and count
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
 
-                tmp = tmp.child.get(s.charAt(j));
-                tmp.sentence.put(s, tmp.sentence.getOrDefault(s, 0) + times[i]);
-            }
-        }
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[</span><span style="color:#f92672">]</span> args<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        String<span style="color:#f92672">[</span><span style="color:#f92672">]</span> s <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> String<span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">{</span><span style="color:#e6db74">&#34;i love you&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;island&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;iroman&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;i love leetcode&#34;</span><span style="color:#f92672">}</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> time <span style="color:#f92672">=</span> <span style="color:#f92672">{</span>5<span style="color:#f92672">,</span> 3<span style="color:#f92672">,</span> 2<span style="color:#f92672">,</span> 2<span style="color:#f92672">}</span><span style="color:#f92672">;</span>
+        AutocompleteSystem_642 test <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> AutocompleteSystem_642<span style="color:#f92672">(</span>s<span style="color:#f92672">,</span> time<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>test<span style="color:#f92672">.</span><span style="color:#a6e22e">input</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#39;i&#39;</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>test<span style="color:#f92672">.</span><span style="color:#a6e22e">input</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#39; &#39;</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>test<span style="color:#f92672">.</span><span style="color:#a6e22e">input</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#39;a&#39;</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>test<span style="color:#f92672">.</span><span style="color:#a6e22e">input</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#39;#&#39;</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>test<span style="color:#f92672">.</span><span style="color:#a6e22e">input</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#39;i&#39;</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>test<span style="color:#f92672">.</span><span style="color:#a6e22e">input</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#39; &#39;</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>test<span style="color:#f92672">.</span><span style="color:#a6e22e">input</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#39;a&#39;</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>test<span style="color:#f92672">.</span><span style="color:#a6e22e">input</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#39;#&#39;</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>test<span style="color:#f92672">.</span><span style="color:#a6e22e">input</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#39;i&#39;</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>test<span style="color:#f92672">.</span><span style="color:#a6e22e">input</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#39; &#39;</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>test<span style="color:#f92672">.</span><span style="color:#a6e22e">input</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#39;a&#39;</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>test<span style="color:#f92672">.</span><span style="color:#a6e22e">input</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#39;#&#39;</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-        return root;
-    }
-
-    /**
-     * Constructor of trie node.
-     */
-    static class TrieNode {
-        HashMap&lt;Character, TrieNode&gt; child = new HashMap&lt;&gt;();       // save child node of current node
-        HashMap&lt;String, Integer&gt; sentence = new HashMap&lt;&gt;();        // save each node's relating sentence and count
-    }
-
-    public static void main(String[] args) {
-        String[] s = new String[]{&quot;i love you&quot;, &quot;island&quot;, &quot;iroman&quot;, &quot;i love leetcode&quot;};
-        int[] time = {5, 3, 2, 2};
-        AutocompleteSystem_642 test = new AutocompleteSystem_642(s, time);
-        System.out.println(test.input('i'));
-        System.out.println(test.input(' '));
-        System.out.println(test.input('a'));
-        System.out.println(test.input('#'));
-        System.out.println(test.input('i'));
-        System.out.println(test.input(' '));
-        System.out.println(test.input('a'));
-        System.out.println(test.input('#'));
-        System.out.println(test.input('i'));
-        System.out.println(test.input(' '));
-        System.out.println(test.input('a'));
-        System.out.println(test.input('#'));
-
-        // [&quot;i love you&quot;,&quot;island&quot;,&quot;i love leetcode&quot;],
-        // [&quot;i love you&quot;,&quot;i love leetcode&quot;],
-        // [],
-        // [],
-        // [&quot;i love you&quot;,&quot;island&quot;,&quot;i love leetcode&quot;],
-        // [&quot;i love you&quot;,&quot;i love leetcode&quot;,&quot;i a&quot;],
-        // [&quot;i a&quot;],
-        // [],
-        // [&quot;i love you&quot;,&quot;island&quot;,&quot;i a&quot;],
-        // [&quot;i love you&quot;,&quot;i a&quot;,&quot;i love leetcode&quot;],
-        // [&quot;i a&quot;],
-        // []
-    }
-}
-</code></pre>
+        <span style="color:#75715e">// [&#34;i love you&#34;,&#34;island&#34;,&#34;i love leetcode&#34;],
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">// [&#34;i love you&#34;,&#34;i love leetcode&#34;],
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">// [],
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">// [],
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">// [&#34;i love you&#34;,&#34;island&#34;,&#34;i love leetcode&#34;],
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">// [&#34;i love you&#34;,&#34;i love leetcode&#34;,&#34;i a&#34;],
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">// [&#34;i a&#34;],
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">// [],
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">// [&#34;i love you&#34;,&#34;island&#34;,&#34;i a&#34;],
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">// [&#34;i love you&#34;,&#34;i a&#34;,&#34;i love leetcode&#34;],
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">// [&#34;i a&#34;],
+</span><span style="color:#75715e"></span>        <span style="color:#75715e">// []
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div>
               
             </div>
           </div>
@@ -560,7 +531,7 @@ The user finished the input, the sentence &quot;i a&quot; should be saved as a h
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>
@@ -618,7 +589,7 @@ The user finished the input, the sentence &quot;i a&quot; should be saved as a h
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>

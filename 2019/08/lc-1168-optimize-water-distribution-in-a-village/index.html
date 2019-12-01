@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.59.1 with theme Tranquilpeak 0.4.7-BETA">
+<meta name="generator" content="Hugo 0.60.1 with theme Tranquilpeak 0.4.7-BETA">
 <meta name="author" content="Steve Zhou">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -285,42 +285,21 @@
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
-<ul>
-<li><a href="#optimize-water-distribution-in-a-village">Optimize Water Distribution in a Village</a>
-<ul>
-<li><a href="#problem-description">Problem description</a></li>
-<li><a href="#method">Method</a></li>
-<li><a href="#code">Code</a></li>
-</ul></li>
-</ul>
-</nav>
-
+              <!-- raw HTML omitted -->
 <h1 id="optimize-water-distribution-in-a-village">Optimize Water Distribution in a Village</h1>
-
 <p>Link: <a href="https://leetcode.com/problems/optimize-water-distribution-in-a-village/">Optimize Water Distribution in a Village</a></p>
-
 <h2 id="problem-description">Problem description</h2>
-
 <p>There are <code>n</code> houses in a village. We want to supply water for all the houses by building wells and laying pipes.</p>
-
 <p>For each house <code>i</code>, we can either build a well inside it directly with cost <code>wells[i]</code>, or pipe in water from another well to it. The costs to lay pipes between houses are given by the array <code>pipes</code>, where each <code>pipes[i] = [house1, house2, cost]</code> represents the cost to connect <code>house1</code> and <code>house2</code> together using a pipe. Connections are bidirectional.</p>
-
 <p>Find the minimum total cost to supply water to all houses.</p>
-
 <p><strong>Example 1:</strong></p>
-
-<p><strong><img src="../../../static/img/1359_ex1-6876851.png" alt="img" /></strong></p>
-
+<p><strong><img src="../../../static/img/1359_ex1-6876851.png" alt="img"></strong></p>
 <pre><code>Input: n = 3, wells = [1,2,2], pipes = [[1,2,1],[2,3,1]]
 Output: 3
 Explanation: 
 The image shows the costs of connecting houses using pipes.
 The best strategy is to build a well in the first house with cost 1 and connect the other houses to it with cost 2 so the total cost is 3.
-</code></pre>
-
-<p><strong>Constraints:</strong></p>
-
+</code></pre><p><strong>Constraints:</strong></p>
 <ul>
 <li><code>1 &lt;= n &lt;= 10000</code></li>
 <li><code>wells.length == n</code></li>
@@ -330,110 +309,104 @@ The best strategy is to build a well in the first house with cost 1 and connect 
 <li><code>0 &lt;= pipes[i][2] &lt;= 10^5</code></li>
 <li><code>pipes[i][0] != pipes[i][1]</code></li>
 </ul>
-
 <h2 id="method">Method</h2>
-
 <p>Add a &ldquo;hidden house&rdquo; that connect with each house with weight of cost for building well inside it. Then find the minimum spanning tree in this graph.</p>
-
-<p>Sort weight first, then use Kruskal&rsquo;s algorithm to find MST with union find to check if all nodes are connected.</p>
-
-<p><strong>Kruskal&rsquo;s algorithm</strong>: sort edges by weight first, then poll out min edge until all nodes are connected.</p>
-
+<p>Sort weight first, then use Kruskal's algorithm to find MST with union find to check if all nodes are connected.</p>
+<p><strong>Kruskal's algorithm</strong>: sort edges by weight first, then poll out min edge until all nodes are connected.</p>
 <h2 id="code">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Add a &#34;hidden house&#34; that connect with each house with weight of cost for building well inside it.
+</span><span style="color:#75715e"> * Then find the minimum spanning tree in this graph.
+</span><span style="color:#75715e"> * Sort weight first, then use Kruskal&#39;s algorithm to find MST with union find to check if all nodes are connected.
+</span><span style="color:#75715e"> * Kruskal&#39;s algorithm: sort edges by weight first, then poll out min edge until all nodes are connected.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param n     n houses
+</span><span style="color:#75715e"> * @param wells cost of build a well inside house
+</span><span style="color:#75715e"> * @param pipes cost of connect with house and well with pipe, pipes[i] = [house1, house2, cost]
+</span><span style="color:#75715e"> * @return minimum total cost to supply water to all houses
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">minCostToSupplyWater</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> n<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> wells<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> pipes<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    UnionFind uf <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> UnionFind<span style="color:#f92672">(</span>n <span style="color:#f92672">+</span> 1<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-<pre><code class="language-java">/**
- * Add a &quot;hidden house&quot; that connect with each house with weight of cost for building well inside it.
- * Then find the minimum spanning tree in this graph.
- * Sort weight first, then use Kruskal's algorithm to find MST with union find to check if all nodes are connected.
- * Kruskal's algorithm: sort edges by weight first, then poll out min edge until all nodes are connected.
- *
- * @param n     n houses
- * @param wells cost of build a well inside house
- * @param pipes cost of connect with house and well with pipe, pipes[i] = [house1, house2, cost]
- * @return minimum total cost to supply water to all houses
- */
-public int minCostToSupplyWater(int n, int[] wells, int[][] pipes) {
-    UnionFind uf = new UnionFind(n + 1);
+    PriorityQueue<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">&gt;</span> pq <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> PriorityQueue<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> Comparator<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#a6e22e">@Override</span>
+        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">compare</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> o1<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> o2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">return</span> o1<span style="color:#f92672">[</span>2<span style="color:#f92672">]</span> <span style="color:#f92672">-</span> o2<span style="color:#f92672">[</span>2<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-    PriorityQueue&lt;int[]&gt; pq = new PriorityQueue&lt;&gt;(new Comparator&lt;int[]&gt;() {
-        @Override
-        public int compare(int[] o1, int[] o2) {
-            return o1[2] - o2[2];
-        }
-    });
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> n<span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        pq<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">{</span>0<span style="color:#f92672">,</span> i <span style="color:#f92672">+</span> 1<span style="color:#f92672">,</span> wells<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">}</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-    for (int i = 0; i &lt; n; i++) {
-        pq.add(new int[]{0, i + 1, wells[i]});
-    }
+    pq<span style="color:#f92672">.</span><span style="color:#a6e22e">addAll</span><span style="color:#f92672">(</span>Arrays<span style="color:#f92672">.</span><span style="color:#a6e22e">asList</span><span style="color:#f92672">(</span>pipes<span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-    pq.addAll(Arrays.asList(pipes));
+    <span style="color:#66d9ef">int</span> total <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>uf<span style="color:#f92672">.</span><span style="color:#a6e22e">count</span> <span style="color:#f92672">!</span><span style="color:#f92672">=</span> 0 <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> <span style="color:#f92672">!</span>pq<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> edge <span style="color:#f92672">=</span> pq<span style="color:#f92672">.</span><span style="color:#a6e22e">poll</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-    int total = 0;
-    while (uf.count != 0 &amp;&amp; !pq.isEmpty()) {
-        int[] edge = pq.poll();
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>uf<span style="color:#f92672">.</span><span style="color:#a6e22e">find</span><span style="color:#f92672">(</span>edge<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span><span style="color:#f92672">)</span> <span style="color:#f92672">!</span><span style="color:#f92672">=</span> uf<span style="color:#f92672">.</span><span style="color:#a6e22e">find</span><span style="color:#f92672">(</span>edge<span style="color:#f92672">[</span>1<span style="color:#f92672">]</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>     <span style="color:#75715e">// if they are not connected into MST
+</span><span style="color:#75715e"></span>            uf<span style="color:#f92672">.</span><span style="color:#a6e22e">union</span><span style="color:#f92672">(</span>edge<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span><span style="color:#f92672">,</span> edge<span style="color:#f92672">[</span>1<span style="color:#f92672">]</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            total <span style="color:#f92672">+</span><span style="color:#f92672">=</span> edge<span style="color:#f92672">[</span>2<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
 
-        if (uf.find(edge[0]) != uf.find(edge[1])) {     // if they are not connected into MST
-            uf.union(edge[0], edge[1]);
-            total += edge[2];
-        }
-    }
+    <span style="color:#66d9ef">return</span> total<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
 
-    return total;
-}
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Union find.
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">static</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">UnionFind</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> uf<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">int</span> count<span style="color:#f92672">;</span>
 
-/**
- * Union find.
- */
-static class UnionFind {
-    int[] uf;
-    int count;
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * Init of class.
+</span><span style="color:#75715e">     *
+</span><span style="color:#75715e">     * @param n # of houses
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#a6e22e">UnionFind</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> n<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        uf <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>n<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> n<span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            uf<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> i<span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+        count <span style="color:#f92672">=</span> n<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-    /**
-     * Init of class.
-     *
-     * @param n # of houses
-     */
-    private UnionFind(int n) {
-        uf = new int[n];
-        for (int i = 1; i &lt; n; i++) {
-            uf[i] = i;
-        }
-        count = n;
-    }
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * Find parent of given node.
+</span><span style="color:#75715e">     *
+</span><span style="color:#75715e">     * @param x given node
+</span><span style="color:#75715e">     * @return parent of given node
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">find</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> x<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>uf<span style="color:#f92672">[</span>x<span style="color:#f92672">]</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> x<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">return</span> x<span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
 
-    /**
-     * Find parent of given node.
-     *
-     * @param x given node
-     * @return parent of given node
-     */
-    private int find(int x) {
-        if (uf[x] == x) {
-            return x;
-        }
+        uf<span style="color:#f92672">[</span>x<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> find<span style="color:#f92672">(</span>uf<span style="color:#f92672">[</span>x<span style="color:#f92672">]</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-        uf[x] = find(uf[x]);
+        <span style="color:#66d9ef">return</span> uf<span style="color:#f92672">[</span>x<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-        return uf[x];
-    }
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * Union two nodes.
+</span><span style="color:#75715e">     *
+</span><span style="color:#75715e">     * @param a first node
+</span><span style="color:#75715e">     * @param b second node
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">union</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> a<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> b<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">int</span> find1 <span style="color:#f92672">=</span> find<span style="color:#f92672">(</span>a<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">int</span> find2 <span style="color:#f92672">=</span> find<span style="color:#f92672">(</span>b<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-    /**
-     * Union two nodes.
-     *
-     * @param a first node
-     * @param b second node
-     */
-    private void union(int a, int b) {
-        int find1 = find(a);
-        int find2 = find(b);
-
-        if (find1 != find2) {
-            uf[find1] = find2;
-            count -= 1;
-        }
-    }
-}
-</code></pre>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>find1 <span style="color:#f92672">!</span><span style="color:#f92672">=</span> find2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            uf<span style="color:#f92672">[</span>find1<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> find2<span style="color:#f92672">;</span>
+            count <span style="color:#f92672">-</span><span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div>
               
             </div>
           </div>
@@ -493,7 +466,7 @@ static class UnionFind {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>
@@ -551,7 +524,7 @@ static class UnionFind {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>

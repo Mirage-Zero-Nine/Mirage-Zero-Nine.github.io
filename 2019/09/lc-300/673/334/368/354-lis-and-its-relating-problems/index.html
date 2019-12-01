@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.59.1 with theme Tranquilpeak 0.4.7-BETA">
+<meta name="generator" content="Hugo 0.60.1 with theme Tranquilpeak 0.4.7-BETA">
 <meta name="author" content="Steve Zhou">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -277,490 +277,370 @@
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
-<ul>
-<li><a href="#longest-increasing-subsequence">Longest Increasing Subsequence</a>
-<ul>
-<li><a href="#problem-description">Problem description</a></li>
-<li><a href="#method">Method</a></li>
-<li><a href="#code">Code</a></li>
-</ul></li>
-<li><a href="#number-of-longest-increasing-subsequence">Number of Longest Increasing Subsequence</a>
-<ul>
-<li><a href="#problem-description-1">Problem description</a></li>
-<li><a href="#method-1">Method</a></li>
-<li><a href="#code-1">Code</a></li>
-</ul></li>
-<li><a href="#increasing-triplet-subsequence">Increasing Triplet Subsequence</a>
-<ul>
-<li><a href="#problem-description-2">Problem description</a></li>
-<li><a href="#method-2">Method</a></li>
-<li><a href="#code-2">Code</a></li>
-</ul></li>
-<li><a href="#largest-divisible-subset">Largest Divisible Subset</a>
-<ul>
-<li><a href="#problem-description-3">Problem description</a></li>
-<li><a href="#method-3">Method</a></li>
-<li><a href="#code-3">Code</a></li>
-</ul></li>
-<li><a href="#russian-doll-envelopes">Russian Doll Envelopes</a>
-<ul>
-<li><a href="#problem-description-4">Problem description</a></li>
-<li><a href="#method-4">Method</a></li>
-<li><a href="#code-4">Code</a></li>
-</ul></li>
-</ul>
-</nav>
-
+              <!-- raw HTML omitted -->
 <h1 id="longest-increasing-subsequence">Longest Increasing Subsequence</h1>
-
 <p>Link: <a href="https://leetcode.com/problems/longest-increasing-subsequence">Longest Increasing Subsequence</a></p>
-
 <h2 id="problem-description">Problem description</h2>
-
 <p>Given an unsorted array of integers, find the length of longest increasing subsequence.</p>
-
 <p><strong>Example:</strong></p>
-
 <pre><code>Input: [10,9,2,5,3,7,101,18]
 Output: 4 
 Explanation: The longest increasing subsequence is [2,3,7,101], therefore the length is 4. 
-</code></pre>
-
-<p><strong>Note:</strong></p>
-
+</code></pre><p><strong>Note:</strong></p>
 <ul>
 <li>There may be more than one LIS combination, it is only necessary for you to return the length.</li>
 <li>Your algorithm should run in O(<em>n2</em>) complexity.</li>
 </ul>
-
 <p><strong>Follow up:</strong> Could you improve it to O(<em>n</em> log <em>n</em>) time complexity?</p>
-
 <h2 id="method">Method</h2>
-
 <p>Dynamic programming with 1D array. The 1D array stores the previous LIS by its length and the minimum value of LIS.</p>
-
 <p>Traverse the array, and use binary search to find correct position that <code>tails[i-1] &lt; x &lt;= tails[i]</code>. If it is larger than all tails, append it, increase size.</p>
-
 <h2 id="code">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Dynamic programming with 1D array.
+</span><span style="color:#75715e"> * The 1D array stores the previous LIS by its length and the minimum value of LIS.
+</span><span style="color:#75715e"> * Traverse the array, and use binary search to find correct position that tails[i-1] &lt; x &lt;= tails[i].
+</span><span style="color:#75715e"> * If it is larger than all tails, append it, increase size.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param nums given array
+</span><span style="color:#75715e"> * @return length of longest increasing sub sequence
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">lengthOfLIS</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> nums<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-<pre><code class="language-java">/**
- * Dynamic programming with 1D array.
- * The 1D array stores the previous LIS by its length and the minimum value of LIS.
- * Traverse the array, and use binary search to find correct position that tails[i-1] &lt; x &lt;= tails[i].
- * If it is larger than all tails, append it, increase size.
- *
- * @param nums given array
- * @return length of longest increasing sub sequence
- */
-public int lengthOfLIS(int[] nums) {
+    <span style="color:#75715e">/* Corner case */</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">&lt;</span> 2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-    /* Corner case */
-    if (nums.length &lt; 2) {
-        return nums.length;
-    }
+    <span style="color:#75715e">/*
+</span><span style="color:#75715e">     * Index is the length of LIS in array.
+</span><span style="color:#75715e">     * Values under corresponding index is the minimum value of last element in each length of LIS.
+</span><span style="color:#75715e">     * Size is the length in tails[] filled with numbers (length of LIS found)
+</span><span style="color:#75715e">     *  */</span>
+    <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> tails <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">int</span> size <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
 
-    /*
-     * Index is the length of LIS in array.
-     * Values under corresponding index is the minimum value of last element in each length of LIS.
-     * Size is the length in tails[] filled with numbers (length of LIS found)
-     *  */
-    int[] tails = new int[nums.length];
-    int size = 0;
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> num <span style="color:#f92672">:</span> nums<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">int</span> left <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> right <span style="color:#f92672">=</span> size<span style="color:#f92672">;</span>
 
-    for (int num : nums) {
-        int left = 0, right = size;
+        <span style="color:#75715e">/*
+</span><span style="color:#75715e">         * Binary search to find correct LIS tail that it should be inserted to.
+</span><span style="color:#75715e">         * Each element should be inserted to position where tails[i-1] &lt; x &lt;= tails[i].
+</span><span style="color:#75715e">         * If current element is the largest one, then the size will increase 1, as new LIS is found.
+</span><span style="color:#75715e">         * */</span>
+        <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>left <span style="color:#f92672">&lt;</span> right<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-        /*
-         * Binary search to find correct LIS tail that it should be inserted to.
-         * Each element should be inserted to position where tails[i-1] &lt; x &lt;= tails[i].
-         * If current element is the largest one, then the size will increase 1, as new LIS is found.
-         * */
-        while (left &lt; right) {
+            <span style="color:#66d9ef">int</span> mid <span style="color:#f92672">=</span> left <span style="color:#f92672">+</span> <span style="color:#f92672">(</span>right <span style="color:#f92672">-</span> left<span style="color:#f92672">)</span> <span style="color:#f92672">/</span> 2<span style="color:#f92672">;</span>
 
-            int mid = left + (right - left) / 2;
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>tails<span style="color:#f92672">[</span>mid<span style="color:#f92672">]</span> <span style="color:#f92672">&lt;</span> num<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>     <span style="color:#75715e">// tails[mid] &lt; x, move to right sub array
+</span><span style="color:#75715e"></span>                left <span style="color:#f92672">=</span> mid <span style="color:#f92672">+</span> 1<span style="color:#f92672">;</span>
+            <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>        <span style="color:#75715e">// otherwise, move to left sub array
+</span><span style="color:#75715e"></span>                right <span style="color:#f92672">=</span> mid<span style="color:#f92672">;</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
 
-            if (tails[mid] &lt; num) {     // tails[mid] &lt; x, move to right sub array
-                left = mid + 1;
-            } else {        // otherwise, move to left sub array
-                right = mid;
-            }
-        }
+        tails<span style="color:#f92672">[</span>left<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> num<span style="color:#f92672">;</span>      <span style="color:#75715e">// insert element
+</span><span style="color:#75715e"></span>        size <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>left <span style="color:#f92672">=</span><span style="color:#f92672">=</span> size<span style="color:#f92672">)</span> <span style="color:#f92672">?</span> size <span style="color:#f92672">+</span> 1 <span style="color:#f92672">:</span> size<span style="color:#f92672">;</span>        <span style="color:#75715e">// if it is larger than all tails, append it, increase size
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
 
-        tails[left] = num;      // insert element
-        size = (left == size) ? size + 1 : size;        // if it is larger than all tails, append it, increase size
-    }
-
-    return size;
-}
-</code></pre>
-
-<h1 id="number-of-longest-increasing-subsequence">Number of Longest Increasing Subsequence</h1>
-
+    <span style="color:#66d9ef">return</span> size<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h1 id="number-of-longest-increasing-subsequence">Number of Longest Increasing Subsequence</h1>
 <p>Link: <a href="https://leetcode.com/problems/number-of-longest-increasing-subsequence/">Number of Longest Increasing Subsequence</a></p>
-
-<h2 id="problem-description-1">Problem description</h2>
-
+<h2 id="problem-description1">Problem description</h2>
 <p>Given an unsorted array of integers, find the number of longest increasing subsequence.</p>
-
 <p><strong>Example 1:</strong></p>
-
 <pre><code>Input: [1,3,5,4,7]
 Output: 2
 Explanation: The two longest increasing subsequence are [1, 3, 4, 7] and [1, 3, 5, 7].
-</code></pre>
-
-<p><strong>Example 2:</strong></p>
-
+</code></pre><p><strong>Example 2:</strong></p>
 <pre><code>Input: [2,2,2,2,2]
 Output: 5
 Explanation: The length of longest continuous increasing subsequence is 1, and there are 5 subsequences' length is 1, so output 5.
-</code></pre>
-
-<p><strong>Note:</strong> Length of the given array will be not exceed 2000 and the answer is guaranteed to be fit in 32-bit signed int.</p>
-
-<h2 id="method-1">Method</h2>
-
+</code></pre><p><strong>Note:</strong> Length of the given array will be not exceed 2000 and the answer is guaranteed to be fit in 32-bit signed int.</p>
+<h2 id="method1">Method</h2>
 <p>Dynamic programming.</p>
-
 <p>One array save the length of the LIS ends with nums[i], one array count number of the LIS ends with nums[i].</p>
-
 <p>If <code>nums[i] &gt; nums[j]</code>  (j &lt; i):</p>
-
 <ol>
 <li><code>length[i] &lt; length[j] + 1</code>: <code>count[i] = count[j]</code>, <code>length[i] = length[j] + 1</code></li>
 <li><code>length[i] == length[j] + 1</code>: <code>count[i] += count[j]</code>;</li>
 <li><code>length[i] &gt; length[j]</code>: stay same (included in other LIS)</li>
 </ol>
+<h2 id="code1">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Dynamic programming.
+</span><span style="color:#75715e"> * One array save the length of the LIS ends with nums[i], one array count number of the LIS ends with nums[i].
+</span><span style="color:#75715e"> * If nums[i] &gt; nums[j] (j &lt; i):
+</span><span style="color:#75715e"> * 1. length[i] &lt; length[j] + 1: count[i] = count[j], length[i] = length[j] + 1;
+</span><span style="color:#75715e"> * 2. length[i] == length[j] + 1: count[i] += count[j];
+</span><span style="color:#75715e"> * 3. length[i] &gt; length[j]: stay same (included in other LIS)
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param nums given array
+</span><span style="color:#75715e"> * @return number of longest increasing subsequence
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">findNumberOfLIS</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> nums<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-<h2 id="code-1">Code</h2>
+    <span style="color:#75715e">/* Corner case */</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> 0<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-<pre><code class="language-java">/**
- * Dynamic programming.
- * One array save the length of the LIS ends with nums[i], one array count number of the LIS ends with nums[i].
- * If nums[i] &gt; nums[j] (j &lt; i):
- * 1. length[i] &lt; length[j] + 1: count[i] = count[j], length[i] = length[j] + 1;
- * 2. length[i] == length[j] + 1: count[i] += count[j];
- * 3. length[i] &gt; length[j]: stay same (included in other LIS)
- *
- * @param nums given array
- * @return number of longest increasing subsequence
- */
-public int findNumberOfLIS(int[] nums) {
+    <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> length <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">]</span><span style="color:#f92672">;</span>        <span style="color:#75715e">// length of the LIS ends with nums[i]
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> count <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">]</span><span style="color:#f92672">;</span>         <span style="color:#75715e">// count number of the LIS ends with nums[i]
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> maxLength <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> maxNumber <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
 
-    /* Corner case */
-    if (nums.length == 0) {
-        return 0;
-    }
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        length<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span>
+        count<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span>
 
-    int[] length = new int[nums.length];        // length of the LIS ends with nums[i]
-    int[] count = new int[nums.length];         // count number of the LIS ends with nums[i]
-    int maxLength = 0, maxNumber = 0;
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> j <span style="color:#f92672">&lt;</span> i<span style="color:#f92672">;</span> j<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-    for (int i = 0; i &lt; nums.length; i++) {
-        length[i] = 1;
-        count[i] = 1;
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>nums<span style="color:#f92672">[</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">&lt;</span> nums<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>     <span style="color:#75715e">// find a increasing subsequence
+</span><span style="color:#75715e"></span>
+                <span style="color:#75715e">/*
+</span><span style="color:#75715e">                 * If length of LIS to nums[j] + 1 == length of LIS to nums[i], then nums[i] can be added to LIS to j.
+</span><span style="color:#75715e">                 * And # of LIS in count[j] can be added to count[i].
+</span><span style="color:#75715e">                 * Otherwise, if length[j] + 1 &gt; length[i], then a new length of LIS is found.
+</span><span style="color:#75715e">                 * Then, update length[i] to length[j] + 1.
+</span><span style="color:#75715e">                 * count[i] will be replaced with count[j]. */</span>
+                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>length<span style="color:#f92672">[</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> 1 <span style="color:#f92672">=</span><span style="color:#f92672">=</span> length<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                    count<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">+</span><span style="color:#f92672">=</span> count<span style="color:#f92672">[</span>j<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+                <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>length<span style="color:#f92672">[</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> 1 <span style="color:#f92672">&gt;</span> length<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                    length<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> length<span style="color:#f92672">[</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> 1<span style="color:#f92672">;</span>
+                    count<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> count<span style="color:#f92672">[</span>j<span style="color:#f92672">]</span><span style="color:#f92672">;</span>        <span style="color:#75715e">// now there is a new LIS and replace counter with previous one
+</span><span style="color:#75715e"></span>                <span style="color:#f92672">}</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
 
-        for (int j = 0; j &lt; i; j++) {
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>maxLength <span style="color:#f92672">=</span><span style="color:#f92672">=</span> length<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>       <span style="color:#75715e">// if no new longest LIS
+</span><span style="color:#75715e"></span>            maxNumber <span style="color:#f92672">+</span><span style="color:#f92672">=</span> count<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>maxLength <span style="color:#f92672">&lt;</span> length<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>     <span style="color:#75715e">// if there is a new longest LIS
+</span><span style="color:#75715e"></span>            maxLength <span style="color:#f92672">=</span> length<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">;</span>      <span style="color:#75715e">// update max length
+</span><span style="color:#75715e"></span>            maxNumber <span style="color:#f92672">=</span> count<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">;</span>       <span style="color:#75715e">// new max number of LIS
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
 
-            if (nums[j] &lt; nums[i]) {     // find a increasing subsequence
-
-                /*
-                 * If length of LIS to nums[j] + 1 == length of LIS to nums[i], then nums[i] can be added to LIS to j.
-                 * And # of LIS in count[j] can be added to count[i].
-                 * Otherwise, if length[j] + 1 &gt; length[i], then a new length of LIS is found.
-                 * Then, update length[i] to length[j] + 1.
-                 * count[i] will be replaced with count[j]. */
-                if (length[j] + 1 == length[i]) {
-                    count[i] += count[j];
-                } else if (length[j] + 1 &gt; length[i]) {
-                    length[i] = length[j] + 1;
-                    count[i] = count[j];        // now there is a new LIS and replace counter with previous one
-                }
-            }
-        }
-
-        if (maxLength == length[i]) {       // if no new longest LIS
-            maxNumber += count[i];
-        } else if (maxLength &lt; length[i]) {     // if there is a new longest LIS
-            maxLength = length[i];      // update max length
-            maxNumber = count[i];       // new max number of LIS
-        }
-    }
-
-    return maxNumber;
-}
-</code></pre>
-
-<h1 id="increasing-triplet-subsequence">Increasing Triplet Subsequence</h1>
-
+    <span style="color:#66d9ef">return</span> maxNumber<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h1 id="increasing-triplet-subsequence">Increasing Triplet Subsequence</h1>
 <p>Link: <a href="https://leetcode.com/problems/increasing-triplet-subsequence">Increasing Triplet Subsequence</a></p>
-
-<h2 id="problem-description-2">Problem description</h2>
-
+<h2 id="problem-description2">Problem description</h2>
 <p>Given an unsorted array return whether an increasing subsequence of length 3 exists or not in the array.</p>
-
 <p>Formally the function should:</p>
-
 <blockquote>
 <p>Return true if there exists <em>i, j, k</em>
 such that <em>arr[i]</em> &lt; <em>arr[j]</em> &lt; <em>arr[k]</em> given 0 ≤ <em>i</em> &lt; <em>j</em> &lt; <em>k</em> ≤ <em>n</em>-1 else return false.</p>
 </blockquote>
-
 <p><strong>Note:</strong> Your algorithm should run in O(<em>n</em>) time complexity and O(<em>1</em>) space complexity.</p>
-
 <p><strong>Example 1:</strong></p>
-
 <pre><code>Input: [1,2,3,4,5]
 Output: true
-</code></pre>
-
-<p><strong>Example 2:</strong></p>
-
+</code></pre><p><strong>Example 2:</strong></p>
 <pre><code>Input: [5,4,3,2,1]
 Output: false
-</code></pre>
-
-<h2 id="method-2">Method</h2>
-
+</code></pre><h2 id="method2">Method</h2>
 <p>Same as LIS problem, simply limit the tail array size to 3.</p>
+<h2 id="code2">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Same as LIS problem, simply limit the tail array size to 3.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param nums given array
+</span><span style="color:#75715e"> * @return whether an increasing subsequence of length 3 exists or not in the array
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">increasingTriplet</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> nums<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-<h2 id="code-2">Code</h2>
+    <span style="color:#75715e">/* Corner case */</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">&lt;</span> 3<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-<pre><code class="language-java">/**
- * Same as LIS problem, simply limit the tail array size to 3.
- *
- * @param nums given array
- * @return whether an increasing subsequence of length 3 exists or not in the array
- */
-public boolean increasingTriplet(int[] nums) {
+    <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> tails <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>3<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">int</span> size <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
 
-    /* Corner case */
-    if (nums.length &lt; 3) {
-        return false;
-    }
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> num <span style="color:#f92672">:</span> nums<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">int</span> left <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> right <span style="color:#f92672">=</span> size<span style="color:#f92672">;</span>
 
-    int[] tails = new int[3];
-    int size = 0;
+        <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>left <span style="color:#f92672">&lt;</span> right<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">int</span> mid <span style="color:#f92672">=</span> left <span style="color:#f92672">+</span> <span style="color:#f92672">(</span>right <span style="color:#f92672">-</span> left<span style="color:#f92672">)</span> <span style="color:#f92672">/</span> 2<span style="color:#f92672">;</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>tails<span style="color:#f92672">[</span>mid<span style="color:#f92672">]</span> <span style="color:#f92672">&lt;</span> num<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                left <span style="color:#f92672">=</span> mid <span style="color:#f92672">+</span> 1<span style="color:#f92672">;</span>
+            <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+                right <span style="color:#f92672">=</span> mid<span style="color:#f92672">;</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
 
-    for (int num : nums) {
-        int left = 0, right = size;
+        tails<span style="color:#f92672">[</span>left<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> num<span style="color:#f92672">;</span>
 
-        while (left &lt; right) {
-            int mid = left + (right - left) / 2;
-            if (tails[mid] &lt; num) {
-                left = mid + 1;
-            } else {
-                right = mid;
-            }
-        }
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>left <span style="color:#f92672">=</span><span style="color:#f92672">=</span> size<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            size<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">;</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>left <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>        <span style="color:#75715e">// found a increasing triplet
+</span><span style="color:#75715e"></span>                <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
 
-        tails[left] = num;
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Another solution.
+</span><span style="color:#75715e"> * Start with two largest values.
+</span><span style="color:#75715e"> * As soon as we find a number bigger than both, while both have been updated, return true.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param nums given array
+</span><span style="color:#75715e"> * @return whether an increasing subsequence of length 3 exists or not in the array
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">traverse</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> nums<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-        if (left == size) {
-            size++;
-            if (left == 2) {        // found a increasing triplet
-                return true;
-            }
-        }
-    }
-    return false;
-}
-
-/**
- * Another solution.
- * Start with two largest values.
- * As soon as we find a number bigger than both, while both have been updated, return true.
- *
- * @param nums given array
- * @return whether an increasing subsequence of length 3 exists or not in the array
- */
-public boolean traverse(int[] nums) {
-
-    int small = Integer.MAX_VALUE, big = Integer.MAX_VALUE;
-    for (int n : nums) {
-        if (n &lt;= small) {
-            small = n;
-        } else if (n &lt;= big) {
-            big = n;
-        } else {
-            return true;        // return if you find a number bigger than both
-        }
-    }
-    return false;
-}
-</code></pre>
-
-<h1 id="largest-divisible-subset">Largest Divisible Subset</h1>
-
+    <span style="color:#66d9ef">int</span> small <span style="color:#f92672">=</span> Integer<span style="color:#f92672">.</span><span style="color:#a6e22e">MAX_VALUE</span><span style="color:#f92672">,</span> big <span style="color:#f92672">=</span> Integer<span style="color:#f92672">.</span><span style="color:#a6e22e">MAX_VALUE</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> n <span style="color:#f92672">:</span> nums<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>n <span style="color:#f92672">&lt;</span><span style="color:#f92672">=</span> small<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            small <span style="color:#f92672">=</span> n<span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>n <span style="color:#f92672">&lt;</span><span style="color:#f92672">=</span> big<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            big <span style="color:#f92672">=</span> n<span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>        <span style="color:#75715e">// return if you find a number bigger than both
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h1 id="largest-divisible-subset">Largest Divisible Subset</h1>
 <p>Link: <a href="https://leetcode.com/problems/largest-divisible-subset/">Largest Divisible Subset</a></p>
-
-<h2 id="problem-description-3">Problem description</h2>
-
+<h2 id="problem-description3">Problem description</h2>
 <p>Given a set of <strong>distinct</strong> positive integers, find the largest subset such that every pair (Si, Sj) of elements in this subset satisfies:</p>
-
 <p>Si % Sj = 0 or Sj % Si = 0.</p>
-
 <p>If there are multiple solutions, return any subset is fine.</p>
-
 <p><strong>Example 1:</strong></p>
-
 <pre><code>Input: [1,2,3]
 Output: [1,2] (of course, [1,3] will also be ok)
-</code></pre>
-
-<p><strong>Example 2:</strong></p>
-
+</code></pre><p><strong>Example 2:</strong></p>
 <pre><code>Input: [1,2,4,8]
 Output: [1,2,4,8]
-</code></pre>
-
-<h2 id="method-3">Method</h2>
-
+</code></pre><h2 id="method3">Method</h2>
 <p>Similar to LIS problem.</p>
-
 <p>Each time, check if <code>nums[i] % nums[j] == 0</code>, where <code>0 &lt;= j &lt; i</code>.</p>
-
 <p>If <code>nums[i] % nums[j] == 0</code>, then check if subset ends in <code>j</code> is larger than current subset. If it is larger than current subset, replaced with current subset.</p>
-
 <p>To reconstruct the max subset, use a pointer array that stores the pointers point to previous element in subset.</p>
+<h2 id="code3">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Similar to LIS problem.
+</span><span style="color:#75715e"> * Each time, check if nums[i] % nums[j] == 0, where 0 &lt;= j &lt; i.
+</span><span style="color:#75715e"> * If nums[i] % nums[j] == 0, then check if subset ends in j is larger than current subset.
+</span><span style="color:#75715e"> * If it is larger than current subset, replaced with current subset.
+</span><span style="color:#75715e"> * To reconstruct the max subset, use a pointer array that stores the pointers point to previous element in subset.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param nums given int array
+</span><span style="color:#75715e"> * @return largest subset such that every pair (Si, Sj) in this subset satisfies Si % Sj = 0 or Sj % Si = 0
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">largestDivisibleSubset</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> nums<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-<h2 id="code-3">Code</h2>
+    List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> out <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-<pre><code class="language-java">/**
- * Similar to LIS problem.
- * Each time, check if nums[i] % nums[j] == 0, where 0 &lt;= j &lt; i.
- * If nums[i] % nums[j] == 0, then check if subset ends in j is larger than current subset.
- * If it is larger than current subset, replaced with current subset.
- * To reconstruct the max subset, use a pointer array that stores the pointers point to previous element in subset.
- *
- * @param nums given int array
- * @return largest subset such that every pair (Si, Sj) in this subset satisfies Si % Sj = 0 or Sj % Si = 0
- */
-public List&lt;Integer&gt; largestDivisibleSubset(int[] nums) {
+    <span style="color:#75715e">/* Corner case */</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">&lt;</span> 2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            out<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>nums<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">return</span> out<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-    List&lt;Integer&gt; out = new LinkedList&lt;&gt;();
+    <span style="color:#66d9ef">int</span> n <span style="color:#f92672">=</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span>
+    Arrays<span style="color:#f92672">.</span><span style="color:#a6e22e">sort</span><span style="color:#f92672">(</span>nums<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> previous <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>n<span style="color:#f92672">]</span><span style="color:#f92672">;</span>        <span style="color:#75715e">// pointer array save pointers point to previous subset elements in nums
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> count <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>n<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">int</span> max <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> p <span style="color:#f92672">=</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">;</span>
 
-    /* Corner case */
-    if (nums.length &lt; 2) {
-        if (nums.length == 1) {
-            out.add(nums[0]);
-        }
-        return out;
-    }
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> n<span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        count<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span>       <span style="color:#75715e">// the smallest pair is the element it self
+</span><span style="color:#75715e"></span>        previous<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">;</span>      <span style="color:#75715e">// link to previous element in current subset
+</span><span style="color:#75715e"></span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> i <span style="color:#f92672">-</span> 1<span style="color:#f92672">;</span> j <span style="color:#f92672">&gt;</span><span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> j<span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-    int n = nums.length;
-    Arrays.sort(nums);
-    int[] previous = new int[n];        // pointer array save pointers point to previous subset elements in nums
-    int[] count = new int[n];
-    int max = 0, p = -1;
+            <span style="color:#75715e">/*
+</span><span style="color:#75715e">             * If nums[i] % nums[j] == 0, then pair under subset nums[j] will be a valid subset to nums[i].
+</span><span style="color:#75715e">             * To find the max subset, check if previous subset has same or more elements. */</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>nums<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">%</span> nums<span style="color:#f92672">[</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 0 <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> count<span style="color:#f92672">[</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> 1 <span style="color:#f92672">&gt;</span> count<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                count<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> count<span style="color:#f92672">[</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> 1<span style="color:#f92672">;</span>
+                previous<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> j<span style="color:#f92672">;</span>        <span style="color:#75715e">// 
+</span><span style="color:#75715e"></span>            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
 
-    for (int i = 0; i &lt; n; i++) {
-        count[i] = 1;       // the smallest pair is the element it self
-        previous[i] = -1;      // link to previous element in current subset
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>count<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">&gt;</span> max<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            max <span style="color:#f92672">=</span> count<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+            p <span style="color:#f92672">=</span> i<span style="color:#f92672">;</span>      <span style="color:#75715e">// if found larger subset, set pointer to current ending element of subset
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
 
-        for (int j = i - 1; j &gt;= 0; j--) {
+    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>p <span style="color:#f92672">!</span><span style="color:#f92672">=</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>       <span style="color:#75715e">// use pointer stored previously to reconstruct the subset
+</span><span style="color:#75715e"></span>        out<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>nums<span style="color:#f92672">[</span>p<span style="color:#f92672">]</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        p <span style="color:#f92672">=</span> previous<span style="color:#f92672">[</span>p<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+    Collections<span style="color:#f92672">.</span><span style="color:#a6e22e">reverse</span><span style="color:#f92672">(</span>out<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-            /*
-             * If nums[i] % nums[j] == 0, then pair under subset nums[j] will be a valid subset to nums[i].
-             * To find the max subset, check if previous subset has same or more elements. */
-            if (nums[i] % nums[j] == 0 &amp;&amp; count[j] + 1 &gt; count[i]) {
-                count[i] = count[j] + 1;
-                previous[i] = j;        // 
-            }
-        }
-
-        if (count[i] &gt; max) {
-            max = count[i];
-            p = i;      // if found larger subset, set pointer to current ending element of subset
-        }
-    }
-
-    while (p != -1) {       // use pointer stored previously to reconstruct the subset
-        out.add(nums[p]);
-        p = previous[p];
-    }
-    Collections.reverse(out);
-
-    return out;
-}
-</code></pre>
-
-<h1 id="russian-doll-envelopes">Russian Doll Envelopes</h1>
-
+    <span style="color:#66d9ef">return</span> out<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h1 id="russian-doll-envelopes">Russian Doll Envelopes</h1>
 <p>Link: <a href="https://leetcode.com/problems/russian-doll-envelopes">Russian Doll Envelopes</a></p>
-
-<h2 id="problem-description-4">Problem description</h2>
-
+<h2 id="problem-description4">Problem description</h2>
 <p>You have a number of envelopes with widths and heights given as a pair of integers <code>(w, h)</code>. One envelope can fit into another if and only if both the width and height of one envelope is greater than the width and height of the other envelope.</p>
-
 <p>What is the maximum number of envelopes can you Russian doll? (put one inside other)</p>
-
 <p><strong>Note:</strong>
 Rotation is not allowed.</p>
-
 <p><strong>Example:</strong></p>
-
 <pre><code>Input: [[5,4],[6,4],[6,7],[2,3]]
 Output: 3 
 Explanation: The maximum number of envelopes you can Russian doll is 3 ([2,3] =&gt; [5,4] =&gt; [6,7]).
-</code></pre>
-
-<h2 id="method-4">Method</h2>
-
+</code></pre><h2 id="method4">Method</h2>
 <p>Sort the array. Ascend on width and descend on height if width are same.</p>
-
 <p>Find the longest increasing subsequence based on height.</p>
+<h2 id="code4">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Sort the array. Ascend on width and descend on height if width are same.
+</span><span style="color:#75715e"> * Find the longest increasing subsequence based on height.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param envelopes given list with width and height
+</span><span style="color:#75715e"> * @return maximum number of envelopes can be filled into
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">maxEnvelopes</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> envelopes<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-<h2 id="code-4">Code</h2>
+    <span style="color:#75715e">/* Corner case */</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>envelopes<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 0 <span style="color:#f92672">|</span><span style="color:#f92672">|</span> envelopes<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span><span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> 0<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-<pre><code class="language-java">/**
- * Sort the array. Ascend on width and descend on height if width are same.
- * Find the longest increasing subsequence based on height.
- *
- * @param envelopes given list with width and height
- * @return maximum number of envelopes can be filled into
- */
-public int maxEnvelopes(int[][] envelopes) {
+    Arrays<span style="color:#f92672">.</span><span style="color:#a6e22e">sort</span><span style="color:#f92672">(</span>envelopes<span style="color:#f92672">,</span> <span style="color:#66d9ef">new</span> EnvelopeComparator<span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-    /* Corner case */
-    if (envelopes.length == 0 || envelopes[0].length == 0) {
-        return 0;
-    }
+    <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> tails <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>envelopes<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">]</span><span style="color:#f92672">;</span>
 
-    Arrays.sort(envelopes, new EnvelopeComparator());
+    <span style="color:#66d9ef">int</span> size <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
 
-    int[] tails = new int[envelopes.length];
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> envelope <span style="color:#f92672">:</span> envelopes<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">int</span> left <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> right <span style="color:#f92672">=</span> size<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>left <span style="color:#f92672">&lt;</span> right<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">int</span> mid <span style="color:#f92672">=</span> left <span style="color:#f92672">+</span> <span style="color:#f92672">(</span>right <span style="color:#f92672">-</span> left<span style="color:#f92672">)</span> <span style="color:#f92672">/</span> 2<span style="color:#f92672">;</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>tails<span style="color:#f92672">[</span>mid<span style="color:#f92672">]</span> <span style="color:#f92672">&lt;</span> envelope<span style="color:#f92672">[</span>1<span style="color:#f92672">]</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                left <span style="color:#f92672">=</span> mid <span style="color:#f92672">+</span> 1<span style="color:#f92672">;</span>
+            <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+                right <span style="color:#f92672">=</span> mid<span style="color:#f92672">;</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+        tails<span style="color:#f92672">[</span>left<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> envelope<span style="color:#f92672">[</span>1<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>left <span style="color:#f92672">=</span><span style="color:#f92672">=</span> size<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            size<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">return</span> size<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
 
-    int size = 0;
-
-    for (int[] envelope : envelopes) {
-        int left = 0, right = size;
-        while (left &lt; right) {
-            int mid = left + (right - left) / 2;
-            if (tails[mid] &lt; envelope[1]) {
-                left = mid + 1;
-            } else {
-                right = mid;
-            }
-        }
-        tails[left] = envelope[1];
-        if (left == size) {
-            size++;
-        }
-    }
-    return size;
-}
-
-/**
- * Sort envelops descending on height when they have same width.
- */
-class EnvelopeComparator implements Comparator&lt;int[]&gt; {
-    public int compare(int[] e1, int[] e2) {
-        return e1[0] == e2[0] ? e2[1] - e1[1] : e1[0] - e2[0];
-    }
-}
-</code></pre>
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Sort envelops descending on height when they have same width.
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">EnvelopeComparator</span> <span style="color:#66d9ef">implements</span> Comparator<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">&gt;</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">compare</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> e1<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> e2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> e1<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> e2<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span> <span style="color:#f92672">?</span> e2<span style="color:#f92672">[</span>1<span style="color:#f92672">]</span> <span style="color:#f92672">-</span> e1<span style="color:#f92672">[</span>1<span style="color:#f92672">]</span> <span style="color:#f92672">:</span> e1<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span> <span style="color:#f92672">-</span> e2<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div>
               
             </div>
           </div>
@@ -816,7 +696,7 @@ class EnvelopeComparator implements Comparator&lt;int[]&gt; {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>
@@ -874,7 +754,7 @@ class EnvelopeComparator implements Comparator&lt;int[]&gt; {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>

@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.59.1 with theme Tranquilpeak 0.4.7-BETA">
+<meta name="generator" content="Hugo 0.60.1 with theme Tranquilpeak 0.4.7-BETA">
 <meta name="author" content="Steve Zhou">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -279,35 +279,13 @@
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
-<ul>
-<li><a href="#distinct-subsequences">Distinct Subsequences</a>
-<ul>
-<li><a href="#problem-description">Problem description</a></li>
-<li><a href="#method">Method</a></li>
-<li><a href="#code">Code</a></li>
-</ul></li>
-<li><a href="#distinct-subsequences-ii">Distinct Subsequences II</a>
-<ul>
-<li><a href="#problem-description-1">Problem description</a></li>
-<li><a href="#method-1">Method</a></li>
-<li><a href="#code-1">Code</a></li>
-</ul></li>
-</ul>
-</nav>
-
+              <!-- raw HTML omitted -->
 <h1 id="distinct-subsequences">Distinct Subsequences</h1>
-
 <p>Link: <a href="https://leetcode.com/problems/distinct-subsequences/">Distinct Subsequences</a></p>
-
 <h2 id="problem-description">Problem description</h2>
-
 <p>Given a string <strong>S</strong> and a string <strong>T</strong>, count the number of distinct subsequences of <strong>S</strong> which equals <strong>T</strong>.</p>
-
 <p>A subsequence of a string is a new string which is formed from the original string by deleting some (can be none) of the characters without disturbing the relative positions of the remaining characters. (ie, <code>&quot;ACE&quot;</code> is a subsequence of <code>&quot;ABCDE&quot;</code> while <code>&quot;AEC&quot;</code> is not).</p>
-
 <p><strong>Example 1:</strong></p>
-
 <pre><code>Input: S = &quot;rabbbit&quot;, T = &quot;rabbit&quot;
 Output: 3
 Explanation:
@@ -321,10 +299,7 @@ rabbbit
 ^^ ^^^^
 rabbbit
 ^^^ ^^^
-</code></pre>
-
-<p><strong>Example 2:</strong></p>
-
+</code></pre><p><strong>Example 2:</strong></p>
 <pre><code>Input: S = &quot;babgbag&quot;, T = &quot;bag&quot;
 Output: 5
 Explanation:
@@ -342,152 +317,116 @@ babgbag
   ^  ^^
 babgbag
     ^^^
-</code></pre>
-
-<h2 id="method">Method</h2>
-
+</code></pre><h2 id="method">Method</h2>
 <p>Dynamic programming.</p>
-
 <p>State transition:</p>
-
 <p><code>dp[i][j]</code>: Numbers of distinct subsequences of <code>s[1..i]</code> which equals <code>t[1..j]</code>.</p>
-
 <ol>
 <li><code>dp[i][j] = dp[i][j - 1]</code>.</li>
 <li>If <code>s.charAt(j - 1) == t.charAt(i - 1)</code>, then <code>dp[i][j] += dp[i - 1][j - 1]</code>.</li>
 </ol>
-
 <p>If <code>s.charAt(j - 1) != t.charAt(i - 1)</code>, then <code>dp[i, j] = dp[i, j - 1]</code>, since current char will not be taken.</p>
-
 <p>If <code>s.charAt(j - 1) == t.charAt(i - 1)</code>, then current char can be taken to make the last char of T. Under this condition, <code>dp[i][j] = dp[i - 1][j - 1]</code>, which is # of previous condition. Current char is last char that made up of subsequence, therefore, no extra value needed under this condition. But it is also possible that current char is not taken, which is same as first situation. Therefore, no matter which condition is triggered, <code>dp[i][j]</code> should be at least <code>dp[i][j - 1]</code>.</p>
-
 <p>Time complexity: <code>O(n^2)</code>.</p>
-
 <p>Space complexity: <code>O(n)</code> by rolling array.</p>
-
 <h2 id="code">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Dynamic programming.
+</span><span style="color:#75715e"> * State transition:
+</span><span style="color:#75715e"> * dp[i][j] = dp[i][j - 1], if s.charAt(j - 1) == t.charAt(i - 1), then dp[i][j] += dp[i - 1][j - 1]
+</span><span style="color:#75715e"> * dp[i][j]: S(0, j) contains distinct subsequences of T(0, i).
+</span><span style="color:#75715e"> * If T[i] != S[j], then dp[i,j] = dp[i,j-1], since current char will not be taken.
+</span><span style="color:#75715e"> * If T[i] == S[j], then current char can be taken to make the last char of T.
+</span><span style="color:#75715e"> * Under this condition, dp[i][j] = dp[i-1][j-1], which is # of previous condition.
+</span><span style="color:#75715e"> * Current char is last char that made up of subsequence, therefore, no extra value needed under this condition.
+</span><span style="color:#75715e"> * But it is also possible that current char is not taken, which is same as first situation.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param s string not longer than t
+</span><span style="color:#75715e"> * @param t second string
+</span><span style="color:#75715e"> * @return number of distinct subsequences of S which equals T
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">numDistinct</span><span style="color:#f92672">(</span>String s<span style="color:#f92672">,</span> String t<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">int</span> n <span style="color:#f92672">=</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">,</span> m <span style="color:#f92672">=</span> t<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-<pre><code class="language-java">/**
- * Dynamic programming.
- * State transition:
- * dp[i][j] = dp[i][j - 1], if s.charAt(j - 1) == t.charAt(i - 1), then dp[i][j] += dp[i - 1][j - 1]
- * dp[i][j]: S(0, j) contains distinct subsequences of T(0, i).
- * If T[i] != S[j], then dp[i,j] = dp[i,j-1], since current char will not be taken.
- * If T[i] == S[j], then current char can be taken to make the last char of T.
- * Under this condition, dp[i][j] = dp[i-1][j-1], which is # of previous condition.
- * Current char is last char that made up of subsequence, therefore, no extra value needed under this condition.
- * But it is also possible that current char is not taken, which is same as first situation.
- *
- * @param s string not longer than t
- * @param t second string
- * @return number of distinct subsequences of S which equals T
- */
-public int numDistinct(String s, String t) {
-    int n = s.length(), m = t.length();
+    <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> dp <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>m <span style="color:#f92672">+</span> 1<span style="color:#f92672">]</span><span style="color:#f92672">[</span>n <span style="color:#f92672">+</span> 1<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
 
-    int[][] dp = new int[m + 1][n + 1];
+    Arrays<span style="color:#f92672">.</span><span style="color:#a6e22e">fill</span><span style="color:#f92672">(</span>dp<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span><span style="color:#f92672">,</span> 1<span style="color:#f92672">)</span><span style="color:#f92672">;</span>      <span style="color:#75715e">// empty string is a subsequence
+</span><span style="color:#75715e"></span>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> dp<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>     <span style="color:#75715e">// row: char in t
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> j <span style="color:#f92672">&lt;</span> dp<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span><span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> j<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>      <span style="color:#75715e">// column: char in s
+</span><span style="color:#75715e"></span>
+            <span style="color:#75715e">/*
+</span><span style="color:#75715e">             * Two conditions:
+</span><span style="color:#75715e">             * 1. If chars in S and T is not matched, then dp[i][j] = dp[i][j-1]. Char in S will not influence [j-1]
+</span><span style="color:#75715e">             * 2. If two chars is matched, then based on condition 1, dp[i][j] += dp[i - 1][j - 1].
+</span><span style="color:#75715e">             * dp[i - 1][j - 1]: S(0, j - 1) contains distinct subsequences of T(0, i - 1) */</span>
+            dp<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">[</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> dp<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">[</span>j <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
 
-    Arrays.fill(dp[0], 1);      // empty string is a subsequence
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>j <span style="color:#f92672">-</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> t<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                dp<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">[</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">+</span><span style="color:#f92672">=</span> dp<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span><span style="color:#f92672">[</span>j <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
 
-    for (int i = 1; i &lt; dp.length; i++) {     // row: char in t
-        for (int j = 1; j &lt; dp[0].length; j++) {      // column: char in s
-
-            /*
-             * Two conditions:
-             * 1. If chars in S and T is not matched, then dp[i][j] = dp[i][j-1]. Char in S will not influence [j-1]
-             * 2. If two chars is matched, then based on condition 1, dp[i][j] += dp[i - 1][j - 1].
-             * dp[i - 1][j - 1]: S(0, j - 1) contains distinct subsequences of T(0, i - 1) */
-            dp[i][j] = dp[i][j - 1];
-
-            if (s.charAt(j - 1) == t.charAt(i - 1)) {
-                dp[i][j] += dp[i - 1][j - 1];
-            }
-        }
-    }
-
-    return dp[m][n];
-}
-</code></pre>
-
-<h1 id="distinct-subsequences-ii">Distinct Subsequences II</h1>
-
+    <span style="color:#66d9ef">return</span> dp<span style="color:#f92672">[</span>m<span style="color:#f92672">]</span><span style="color:#f92672">[</span>n<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h1 id="distinct-subsequences-ii">Distinct Subsequences II</h1>
 <p>Link: <a href="https://leetcode.com/problems/distinct-subsequences-ii/">Distinct Subsequences II</a></p>
-
-<h2 id="problem-description-1">Problem description</h2>
-
+<h2 id="problem-description1">Problem description</h2>
 <p>Given a string <code>S</code>, count the number of distinct, non-empty subsequences of <code>S</code> .</p>
-
 <p>Since the result may be large, <strong>return the answer modulo 10^9 + 7</strong>.</p>
-
 <p><strong>Example 1:</strong></p>
-
 <pre><code>Input: &quot;abc&quot;
 Output: 7
 Explanation: The 7 distinct subsequences are &quot;a&quot;, &quot;b&quot;, &quot;c&quot;, &quot;ab&quot;, &quot;ac&quot;, &quot;bc&quot;, and &quot;abc&quot;.
-</code></pre>
-
-<p><strong>Example 2:</strong></p>
-
+</code></pre><p><strong>Example 2:</strong></p>
 <pre><code>Input: &quot;aba&quot;
 Output: 6
 Explanation: The 6 distinct subsequences are &quot;a&quot;, &quot;b&quot;, &quot;ab&quot;, &quot;ba&quot;, &quot;aa&quot; and &quot;aba&quot;.
-</code></pre>
-
-<p><strong>Example 3:</strong></p>
-
+</code></pre><p><strong>Example 3:</strong></p>
 <pre><code>Input: &quot;aaa&quot;
 Output: 3
 Explanation: The 3 distinct subsequences are &quot;a&quot;, &quot;aa&quot; and &quot;aaa&quot;.
-</code></pre>
-
-<h2 id="method-1">Method</h2>
-
+</code></pre><h2 id="method1">Method</h2>
 <p>Dynamic programming.</p>
-
 <p><code>dp[i]</code> represents the count of unique subsequence ends with <code>S[i]</code>. <code>dp[i]</code> is initialized to 1 for <code>S[0 ... i]</code>.
 For each <code>dp[i]</code>, define <code>j</code> from <code>0</code> to <code>i - 1</code>:</p>
-
 <ol>
 <li>If <code>s[j] != s[i]</code>, then <code>dp[i] += dp[j]</code>.</li>
 <li>If <code>s[j] == s[i]</code>, do nothing to avoid duplicates.</li>
 </ol>
-
 <p>Finally, <code>result = sum(dp[0], ... dp[n - 1])</code>.</p>
-
 <p>As optimization, use a int represent current # of sequence.</p>
-
 <p>Each time, count current sum of subsequence minus duplicated # of subsequence.</p>
+<h2 id="code1">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Dynamic programming.
+</span><span style="color:#75715e"> * dp[i] represents the count of unique subsequence ends with S[i].
+</span><span style="color:#75715e"> * dp[i] is initialized to 1 for S[0 ... i].
+</span><span style="color:#75715e"> * For each dp[i], define j from 0 to i - 1:
+</span><span style="color:#75715e"> * 1. If s[j] != s[i], then dp[i] += dp[j]
+</span><span style="color:#75715e"> * 2. If s[j] == s[i], do nothing to avoid duplicates.
+</span><span style="color:#75715e"> * Finally, result = sum(dp[0], ... dp[n - 1]).
+</span><span style="color:#75715e"> * As optimization, use a int represent current # of sequence.
+</span><span style="color:#75715e"> * Each time, count current sum of subsequence minus duplicated # of subsequence.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param S given string
+</span><span style="color:#75715e"> * @return count the number of distinct, non-empty subsequences of S modulo 10^9 + 7
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">distinctSubseqII</span><span style="color:#f92672">(</span>String S<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">int</span> mod <span style="color:#f92672">=</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">)</span> 1e9 <span style="color:#f92672">+</span> 7<span style="color:#f92672">,</span> n <span style="color:#f92672">=</span> S<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">,</span> sum <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> count <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>26<span style="color:#f92672">]</span><span style="color:#f92672">;</span>      <span style="color:#75715e">// count # of subsequence under each character
+</span><span style="color:#75715e"></span>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> n<span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">int</span> c <span style="color:#f92672">=</span> S<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span> <span style="color:#f92672">-</span> <span style="color:#e6db74">&#39;a&#39;</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">int</span> cur <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>1 <span style="color:#f92672">+</span> sum <span style="color:#f92672">-</span> count<span style="color:#f92672">[</span>c<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> mod<span style="color:#f92672">)</span> <span style="color:#f92672">%</span> mod<span style="color:#f92672">;</span>     <span style="color:#75715e">// current sum is based on previous sum minus duplicated #
+</span><span style="color:#75715e"></span>        sum <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>sum <span style="color:#f92672">+</span> cur<span style="color:#f92672">)</span> <span style="color:#f92672">%</span> mod<span style="color:#f92672">;</span>
+        count<span style="color:#f92672">[</span>c<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>count<span style="color:#f92672">[</span>c<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> cur<span style="color:#f92672">)</span> <span style="color:#f92672">%</span> mod<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-<h2 id="code-1">Code</h2>
-
-<pre><code class="language-java">/**
- * Dynamic programming.
- * dp[i] represents the count of unique subsequence ends with S[i].
- * dp[i] is initialized to 1 for S[0 ... i].
- * For each dp[i], define j from 0 to i - 1:
- * 1. If s[j] != s[i], then dp[i] += dp[j]
- * 2. If s[j] == s[i], do nothing to avoid duplicates.
- * Finally, result = sum(dp[0], ... dp[n - 1]).
- * As optimization, use a int represent current # of sequence.
- * Each time, count current sum of subsequence minus duplicated # of subsequence.
- *
- * @param S given string
- * @return count the number of distinct, non-empty subsequences of S modulo 10^9 + 7
- */
-public int distinctSubseqII(String S) {
-    int mod = (int) 1e9 + 7, n = S.length(), sum = 0;
-    int[] count = new int[26];      // count # of subsequence under each character
-
-    for (int i = 0; i &lt; n; i++) {
-        int c = S.charAt(i) - 'a';
-        int cur = (1 + sum - count[c] + mod) % mod;     // current sum is based on previous sum minus duplicated #
-        sum = (sum + cur) % mod;
-        count[c] = (count[c] + cur) % mod;
-    }
-
-    return sum;
-}
-</code></pre>
+    <span style="color:#66d9ef">return</span> sum<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div>
               
             </div>
           </div>
@@ -541,7 +480,7 @@ public int distinctSubseqII(String S) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>
@@ -599,7 +538,7 @@ public int distinctSubseqII(String S) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>

@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.59.1 with theme Tranquilpeak 0.4.7-BETA">
+<meta name="generator" content="Hugo 0.60.1 with theme Tranquilpeak 0.4.7-BETA">
 <meta name="author" content="Steve Zhou">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -275,39 +275,20 @@
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
-<ul>
-<li><a href="#minimum-cost-for-tickets">Minimum Cost For Tickets</a>
-<ul>
-<li><a href="#problem-description">Problem description</a></li>
-<li><a href="#method">Method</a></li>
-<li><a href="#code">Code</a></li>
-</ul></li>
-</ul>
-</nav>
-
+              <!-- raw HTML omitted -->
 <h1 id="minimum-cost-for-tickets">Minimum Cost For Tickets</h1>
-
 <p>Link: <a href="https://leetcode.com/problems/minimum-cost-for-tickets/">Minimum Cost For Tickets</a></p>
-
 <h2 id="problem-description">Problem description</h2>
-
 <p>In a country popular for train travel, you have planned some train travelling one year in advance.  The days of the year that you will travel is given as an array <code>days</code>.  Each day is an integer from <code>1</code> to <code>365</code>.</p>
-
 <p>Train tickets are sold in 3 different ways:</p>
-
 <ul>
 <li>a 1-day pass is sold for <code>costs[0]</code> dollars;</li>
 <li>a 7-day pass is sold for <code>costs[1]</code> dollars;</li>
 <li>a 30-day pass is sold for <code>costs[2]</code> dollars.</li>
 </ul>
-
 <p>The passes allow that many days of consecutive travel.  For example, if we get a 7-day pass on day 2, then we can travel for 7 days: day 2, 3, 4, 5, 6, 7, and 8.</p>
-
 <p>Return the minimum number of dollars you need to travel every day in the given list of <code>days</code>.</p>
-
 <p><strong>Example 1:</strong></p>
-
 <pre><code>Input: days = [1,4,6,7,8,20], costs = [2,7,15]
 Output: 11
 Explanation: 
@@ -316,10 +297,7 @@ On day 1, you bought a 1-day pass for costs[0] = $2, which covered day 1.
 On day 3, you bought a 7-day pass for costs[1] = $7, which covered days 3, 4, ..., 9.
 On day 20, you bought a 1-day pass for costs[0] = $2, which covered day 20.
 In total you spent $11 and covered all the days of your travel.
-</code></pre>
-
-<p><strong>Example 2:</strong></p>
-
+</code></pre><p><strong>Example 2:</strong></p>
 <pre><code>Input: days = [1,2,3,4,5,6,7,8,9,10,30,31], costs = [2,7,15]
 Output: 17
 Explanation: 
@@ -327,10 +305,7 @@ For example, here is one way to buy passes that lets you travel your travel plan
 On day 1, you bought a 30-day pass for costs[2] = $15 which covered days 1, 2, ..., 30.
 On day 31, you bought a 1-day pass for costs[0] = $2 which covered day 31.
 In total you spent $17 and covered all the days of your travel.
-</code></pre>
-
-<p><strong>Note:</strong></p>
-
+</code></pre><p><strong>Note:</strong></p>
 <ol>
 <li><code>1 &lt;= days.length &lt;= 365</code></li>
 <li><code>1 &lt;= days[i] &lt;= 365</code></li>
@@ -338,62 +313,56 @@ In total you spent $17 and covered all the days of your travel.
 <li><code>costs.length == 3</code></li>
 <li><code>1 &lt;= costs[i] &lt;= 1000</code></li>
 </ol>
-
 <h2 id="method">Method</h2>
-
 <p>Dynamic programming with a queue to track days of travel.</p>
-
 <p>One queue save the costs within 7 weeks (one 7 days pass can cover). The other queue save the cost within 1 month (one 30 days pass can cover).</p>
-
 <p>If current date compare to head of each queue is larger than a week or 30 days, remove head of queue. Then find min value between buy a one day pass, buy a seven days pass, or 30 days pass ahead.</p>
-
 <h2 id="code">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Dynamic programming with a queue to track days of travel.
+</span><span style="color:#75715e"> * One queue save the costs within 7 weeks (one 7 days pass can cover).
+</span><span style="color:#75715e"> * The other queue save the cost within 1 month (one 30 days pass can cover).
+</span><span style="color:#75715e"> * If current date compare to head of each queue is larger than a week or 30 days, remove head of queue.
+</span><span style="color:#75715e"> * Then find min value between buy a one day pass, buy a seven days pass, or 30 days pass ahead.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param days  given days array
+</span><span style="color:#75715e"> * @param costs given cost array
+</span><span style="color:#75715e"> * @return minimum number of dollars for travel
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">minCostTickets</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> days<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> costs<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-<pre><code class="language-java">/**
- * Dynamic programming with a queue to track days of travel.
- * One queue save the costs within 7 weeks (one 7 days pass can cover).
- * The other queue save the cost within 1 month (one 30 days pass can cover).
- * If current date compare to head of each queue is larger than a week or 30 days, remove head of queue.
- * Then find min value between buy a one day pass, buy a seven days pass, or 30 days pass ahead.
- *
- * @param days  given days array
- * @param costs given cost array
- * @return minimum number of dollars for travel
- */
-public int minCostTickets(int[] days, int[] costs) {
+    <span style="color:#75715e">/* Corner case (days &gt;= 1) */</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>days<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">&lt;</span> 2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> costs<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-    /* Corner case (days &gt;= 1) */
-    if (days.length &lt; 2) {
-        return costs[0];
-    }
+    Queue<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">&gt;</span> last7 <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">,</span> last30 <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-    Queue&lt;int[]&gt; last7 = new LinkedList&lt;&gt;(), last30 = new LinkedList&lt;&gt;();
+    <span style="color:#66d9ef">int</span> total <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
 
-    int total = 0;
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> date <span style="color:#f92672">:</span> days<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-    for (int date : days) {
+        <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span><span style="color:#f92672">!</span>last7<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> last7<span style="color:#f92672">.</span><span style="color:#a6e22e">peek</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">[</span>0<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> 7 <span style="color:#f92672">&lt;</span><span style="color:#f92672">=</span> date<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>        <span style="color:#75715e">// if head of queue is longer than one week
+</span><span style="color:#75715e"></span>            last7<span style="color:#f92672">.</span><span style="color:#a6e22e">poll</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>       <span style="color:#75715e">// remove dates more than one week
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span><span style="color:#f92672">!</span>last30<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> last30<span style="color:#f92672">.</span><span style="color:#a6e22e">peek</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">[</span>0<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> 30 <span style="color:#f92672">&lt;</span><span style="color:#f92672">=</span> date<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            last30<span style="color:#f92672">.</span><span style="color:#a6e22e">poll</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>      <span style="color:#75715e">// remove dates more than one month
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
 
-        while (!last7.isEmpty() &amp;&amp; last7.peek()[0] + 7 &lt;= date) {        // if head of queue is longer than one week
-            last7.poll();       // remove dates more than one week
-        }
-        while (!last30.isEmpty() &amp;&amp; last30.peek()[0] + 30 &lt;= date) {
-            last30.poll();      // remove dates more than one month
-        }
-
-        /* After the poll process, the head of queue is the furthest cost with a 7 days pass or 30 days pass.
-         * Continue add today's 7 day pass and 30 days pass to queue.
-         * In this way, only to peek the head of queue can obtain the cost with a 7 days pass or a 30 days pass.
-         * The reason is that any dates longer than 7 days or 30 days has been removed. */
-        last7.add(new int[]{date, total + costs[1]});       // add date with seven days pass to the end of queue
-        last30.add(new int[]{date, total + costs[2]});      // add date with monthly pass to the end of queue
-
-        if (!last7.isEmpty() &amp;&amp; !last30.isEmpty()) {
-            total = Math.min(Math.min(last7.peek()[1], last30.peek()[1]), total + costs[0]);
-        }
-    }
-    return total;
-}
-</code></pre>
+        <span style="color:#75715e">/* After the poll process, the head of queue is the furthest cost with a 7 days pass or 30 days pass.
+</span><span style="color:#75715e">         * Continue add today&#39;s 7 day pass and 30 days pass to queue.
+</span><span style="color:#75715e">         * In this way, only to peek the head of queue can obtain the cost with a 7 days pass or a 30 days pass.
+</span><span style="color:#75715e">         * The reason is that any dates longer than 7 days or 30 days has been removed. */</span>
+        last7<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">{</span>date<span style="color:#f92672">,</span> total <span style="color:#f92672">+</span> costs<span style="color:#f92672">[</span>1<span style="color:#f92672">]</span><span style="color:#f92672">}</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>       <span style="color:#75715e">// add date with seven days pass to the end of queue
+</span><span style="color:#75715e"></span>        last30<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">{</span>date<span style="color:#f92672">,</span> total <span style="color:#f92672">+</span> costs<span style="color:#f92672">[</span>2<span style="color:#f92672">]</span><span style="color:#f92672">}</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>      <span style="color:#75715e">// add date with monthly pass to the end of queue
+</span><span style="color:#75715e"></span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#f92672">!</span>last7<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> <span style="color:#f92672">!</span>last30<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            total <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">min</span><span style="color:#f92672">(</span>Math<span style="color:#f92672">.</span><span style="color:#a6e22e">min</span><span style="color:#f92672">(</span>last7<span style="color:#f92672">.</span><span style="color:#a6e22e">peek</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">[</span>1<span style="color:#f92672">]</span><span style="color:#f92672">,</span> last30<span style="color:#f92672">.</span><span style="color:#a6e22e">peek</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">[</span>1<span style="color:#f92672">]</span><span style="color:#f92672">)</span><span style="color:#f92672">,</span> total <span style="color:#f92672">+</span> costs<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">return</span> total<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div>
               
             </div>
           </div>
@@ -447,7 +416,7 @@ public int minCostTickets(int[] days, int[] costs) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>
@@ -505,7 +474,7 @@ public int minCostTickets(int[] days, int[] costs) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>

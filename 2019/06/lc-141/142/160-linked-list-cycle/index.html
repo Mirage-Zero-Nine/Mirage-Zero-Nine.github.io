@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.59.1 with theme Tranquilpeak 0.4.7-BETA">
+<meta name="generator" content="Hugo 0.60.1 with theme Tranquilpeak 0.4.7-BETA">
 <meta name="author" content="Steve Zhou">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -281,299 +281,197 @@
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
-<ul>
-<li><a href="#linked-list-cycle">Linked List Cycle</a>
-<ul>
-<li><a href="#problem-description">Problem description</a></li>
-<li><a href="#method">Method</a></li>
-<li><a href="#code">Code</a></li>
-</ul></li>
-<li><a href="#linked-list-cycle-ii">Linked List Cycle II</a>
-<ul>
-<li><a href="#problem-description-1">Problem description</a></li>
-<li><a href="#method-1">Method</a></li>
-<li><a href="#code-1">Code</a></li>
-</ul></li>
-<li><a href="#intersection-of-two-linked-lists">Intersection of Two Linked Lists</a>
-<ul>
-<li><a href="#problem-description-2">Problem description</a></li>
-<li><a href="#method-2">Method</a></li>
-<li><a href="#code-2">Code</a></li>
-</ul></li>
-</ul>
-</nav>
-
+              <!-- raw HTML omitted -->
 <h1 id="linked-list-cycle">Linked List Cycle</h1>
-
 <p>Link: <a href="https://leetcode.com/problems/linked-list-cycle">Linked List Cycle</a></p>
-
 <h2 id="problem-description">Problem description</h2>
-
 <p>Given a linked list, determine if it has a cycle in it.</p>
-
 <p>To represent a cycle in the given linked list, we use an integer <code>pos</code> which represents the position (0-indexed) in the linked list where tail connects to. If <code>pos</code> is <code>-1</code>, then there is no cycle in the linked list.</p>
-
 <p><strong>Example 1:</strong></p>
-
 <pre><code>Input: head = [3,2,0,-4], pos = 1
 Output: true
 Explanation: There is a cycle in the linked list, where tail connects to the second node.
-</code></pre>
-
-<p><img src="../../../static/img/circularlinkedlist.png" alt="img" /></p>
-
+</code></pre><p><img src="../../../static/img/circularlinkedlist.png" alt="img"></p>
 <p><strong>Example 2:</strong></p>
-
 <pre><code>Input: head = [1,2], pos = 0
 Output: true
 Explanation: There is a cycle in the linked list, where tail connects to the first node.
-</code></pre>
-
-<p><img src="../../../static/img/circularlinkedlist_test2.png" alt="img" /></p>
-
+</code></pre><p><img src="../../../static/img/circularlinkedlist_test2.png" alt="img"></p>
 <p><strong>Example 3:</strong></p>
-
 <pre><code>Input: head = [1], pos = -1
 Output: false
 Explanation: There is no cycle in the linked list.
-</code></pre>
-
-<p><img src="../../../static/img/circularlinkedlist_test3.png" alt="img" /></p>
-
+</code></pre><p><img src="../../../static/img/circularlinkedlist_test3.png" alt="img"></p>
 <p><strong>Follow up:</strong></p>
-
 <p>Can you solve it using <em>O(1)</em> (i.e. constant) memory?</p>
-
 <h2 id="method">Method</h2>
-
 <p>Two pointers. Faster one moves twice as slow pointer. If the given list has a cycle, two pointers will eventually meet.</p>
-
 <h2 id="code">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Two pointers. Faster one moves twice as slow pointer.
+</span><span style="color:#75715e"> * If the given list has a cycle, two pointers will eventually meet.
+</span><span style="color:#75715e"> * Otherwise, if fast reaches null, then there is no cycle in list.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param head head of list
+</span><span style="color:#75715e"> * @return if it has a cycle in it
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">hasCycle</span><span style="color:#f92672">(</span>ListNode head<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-<pre><code class="language-java">/**
- * Two pointers. Faster one moves twice as slow pointer.
- * If the given list has a cycle, two pointers will eventually meet.
- * Otherwise, if fast reaches null, then there is no cycle in list.
- *
- * @param head head of list
- * @return if it has a cycle in it
- */
-public boolean hasCycle(ListNode head) {
+    <span style="color:#75715e">/* Corner case */</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>head <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">|</span><span style="color:#f92672">|</span> head<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-    /* Corner case */
-    if (head == null || head.next == null) {
-        return false;
-    }
+    ListNode slow <span style="color:#f92672">=</span> head<span style="color:#f92672">;</span>
+    ListNode fast <span style="color:#f92672">=</span> head<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">;</span>
 
-    ListNode slow = head;
-    ListNode fast = head.next;
+    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>slow <span style="color:#f92672">!</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-    while (slow != null) {
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>slow<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> fast<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
 
-        if (slow.val == fast.val) {
-            return true;
-        }
+        slow <span style="color:#f92672">=</span> slow<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">;</span>
 
-        slow = slow.next;
-
-        if (fast.next != null &amp;&amp; fast.next.next != null) {      // reaches the end of list if no cycle found
-            fast = fast.next.next;
-        } else {
-            return false;
-        }
-    }
-    return false;
-}
-</code></pre>
-
-<h1 id="linked-list-cycle-ii">Linked List Cycle II</h1>
-
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>fast<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span> <span style="color:#f92672">!</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> fast<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">.</span><span style="color:#a6e22e">next</span> <span style="color:#f92672">!</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>      <span style="color:#75715e">// reaches the end of list if no cycle found
+</span><span style="color:#75715e"></span>            fast <span style="color:#f92672">=</span> fast<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h1 id="linked-list-cycle-ii">Linked List Cycle II</h1>
 <p>Link: <a href="https://leetcode.com/problems/linked-list-cycle-ii">Linked List Cycle II</a></p>
-
-<h2 id="problem-description-1">Problem description</h2>
-
+<h2 id="problem-description1">Problem description</h2>
 <p>Given a linked list, return the node where the cycle begins. If there is no cycle, return <code>null</code>.</p>
-
 <p>To represent a cycle in the given linked list, we use an integer <code>pos</code> which represents the position (0-indexed) in the linked list where tail connects to. If <code>pos</code> is <code>-1</code>, then there is no cycle in the linked list.</p>
-
 <p><strong>Note:</strong> Do not modify the linked list.</p>
-
 <p><strong>Example 1:</strong></p>
-
 <pre><code>Input: head = [3,2,0,-4], pos = 1
 Output: tail connects to node index 1
 Explanation: There is a cycle in the linked list, where tail connects to the second node.
-</code></pre>
-
-<p><img src="../../../static/img/circularlinkedlist.png" alt="img" /></p>
-
+</code></pre><p><img src="../../../static/img/circularlinkedlist.png" alt="img"></p>
 <p><strong>Example 2:</strong></p>
-
 <pre><code>Input: head = [1,2], pos = 0
 Output: tail connects to node index 0
 Explanation: There is a cycle in the linked list, where tail connects to the first node.
-</code></pre>
-
-<p><img src="../../../static/img/circularlinkedlist_test2.png" alt="img" /></p>
-
+</code></pre><p><img src="../../../static/img/circularlinkedlist_test2.png" alt="img"></p>
 <p><strong>Example 3:</strong></p>
-
 <pre><code>Input: head = [1], pos = -1
 Output: no cycle
 Explanation: There is no cycle in the linked list.
-</code></pre>
-
-<p><img src="../../../static/img/circularlinkedlist_test3.png" alt="img" /></p>
-
+</code></pre><p><img src="../../../static/img/circularlinkedlist_test3.png" alt="img"></p>
 <p><strong>Follow-up</strong>:
 Can you solve it without using extra space?</p>
-
-<h2 id="method-1">Method</h2>
-
+<h2 id="method1">Method</h2>
 <p>Two pointers. One fast and one slow. Fast pointer moves two nodes one time and slow pointer moves one node each time.</p>
-
 <p>Suppose the first meet at step k, the length of the Cycle is r, then:</p>
-
 <pre><code>2k - k = n * r 
 =&gt; k = n * r
-</code></pre>
-
-<p>Assume distance between the start node of list and the start node of cycle is s, the distance between the start of list and the first meeting node is k, distance between the start node of cycle and the first meeting node is m</p>
-
+</code></pre><p>Assume distance between the start node of list and the start node of cycle is s, the distance between the start of list and the first meeting node is k, distance between the start node of cycle and the first meeting node is m</p>
 <pre><code>=&gt; s = k - m
 =&gt; s = nr - m = (n - 1) * r + (r - m)
-</code></pre>
+</code></pre><p>Take n = 1, using one pointer start at the beginning of list, another pointer start at meeting node. All of them wake one step at a time. The first time they meeting each other is the start of the cycle.</p>
+<h2 id="code1">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Two pointers. Fast pointer moves two nodes one time and slow pointer moves one node each time.
+</span><span style="color:#75715e"> * Suppose the first meet at step k, the length of the Cycle is r, then, 2k - k = n * r =&gt; k = n * r
+</span><span style="color:#75715e"> * Assume distance between the start node of list and the start node of cycle is s.
+</span><span style="color:#75715e"> * The distance between the start of list and the first meeting node is k.
+</span><span style="color:#75715e"> * The distance between the start node of cycle and the first meeting node is m
+</span><span style="color:#75715e"> * =&gt; s = k - m
+</span><span style="color:#75715e"> * =&gt; s = nr - m = (n - 1) * r + (r - m)
+</span><span style="color:#75715e"> * Take n = 1, using one pointer start at the beginning of list, another pointer start at meeting node.
+</span><span style="color:#75715e"> * All of them wake one step at a time.
+</span><span style="color:#75715e"> * The first time they meeting each other is the start of the cycle.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param head head node of list
+</span><span style="color:#75715e"> * @return the node where the cycle begins, return null if there is no cycle
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> ListNode <span style="color:#a6e22e">detectCycle</span><span style="color:#f92672">(</span>ListNode head<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-<p>Take n = 1, using one pointer start at the beginning of list, another pointer start at meeting node. All of them wake one step at a time. The first time they meeting each other is the start of the cycle.</p>
+    <span style="color:#75715e">/* Corner case */</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>head <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">|</span><span style="color:#f92672">|</span> head<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-<h2 id="code-1">Code</h2>
+    ListNode slow <span style="color:#f92672">=</span> head<span style="color:#f92672">,</span> fast <span style="color:#f92672">=</span> head<span style="color:#f92672">;</span>
 
-<pre><code class="language-java">/**
- * Two pointers. Fast pointer moves two nodes one time and slow pointer moves one node each time.
- * Suppose the first meet at step k, the length of the Cycle is r, then, 2k - k = n * r =&gt; k = n * r
- * Assume distance between the start node of list and the start node of cycle is s.
- * The distance between the start of list and the first meeting node is k.
- * The distance between the start node of cycle and the first meeting node is m
- * =&gt; s = k - m
- * =&gt; s = nr - m = (n - 1) * r + (r - m)
- * Take n = 1, using one pointer start at the beginning of list, another pointer start at meeting node.
- * All of them wake one step at a time.
- * The first time they meeting each other is the start of the cycle.
- *
- * @param head head node of list
- * @return the node where the cycle begins, return null if there is no cycle
- */
-public ListNode detectCycle(ListNode head) {
+    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>fast <span style="color:#f92672">!</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> fast<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span> <span style="color:#f92672">!</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        slow <span style="color:#f92672">=</span> slow<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">;</span>
+        fast <span style="color:#f92672">=</span> fast<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">;</span>
 
-    /* Corner case */
-    if (head == null || head.next == null) {
-        return null;
-    }
-
-    ListNode slow = head, fast = head;
-
-    while (fast != null &amp;&amp; fast.next != null) {
-        slow = slow.next;
-        fast = fast.next.next;
-
-        if (slow == fast) {     // found a cycle
-            while (head != slow) {
-                head = head.next;       // move head (as a pointer) until slow and start meets
-                slow = slow.next;       // actually I think this is not safe (memory)
-            }
-            return head;        // two nodes will meet at cycle start
-        }
-    }
-    return null;
-}
-</code></pre>
-
-<h1 id="intersection-of-two-linked-lists">Intersection of Two Linked Lists</h1>
-
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>slow <span style="color:#f92672">=</span><span style="color:#f92672">=</span> fast<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>     <span style="color:#75715e">// found a cycle
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>head <span style="color:#f92672">!</span><span style="color:#f92672">=</span> slow<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                head <span style="color:#f92672">=</span> head<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">;</span>       <span style="color:#75715e">// move head (as a pointer) until slow and start meets
+</span><span style="color:#75715e"></span>                slow <span style="color:#f92672">=</span> slow<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">;</span>       <span style="color:#75715e">// actually I think this is not safe (memory)
+</span><span style="color:#75715e"></span>            <span style="color:#f92672">}</span>
+            <span style="color:#66d9ef">return</span> head<span style="color:#f92672">;</span>        <span style="color:#75715e">// two nodes will meet at cycle start
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h1 id="intersection-of-two-linked-lists">Intersection of Two Linked Lists</h1>
 <p>Link: <a href="https://leetcode.com/problems/intersection-of-two-linked-lists">Intersection of Two Linked Lists</a></p>
-
-<h2 id="problem-description-2">Problem description</h2>
-
+<h2 id="problem-description2">Problem description</h2>
 <p>Write a program to find the node at which the intersection of two singly linked lists begins.</p>
-
 <p>For example, the following two linked lists:</p>
-
-<p><img src="../../../static/img/160_statement.png" alt="img" /></p>
-
+<p><img src="../../../static/img/160_statement.png" alt="img"></p>
 <p>begin to intersect at node c1.</p>
-
 <p><strong>Example 1:</strong></p>
-
-<p><img src="../../../static/img/160_example_1.png" alt="img" /></p>
-
+<p><img src="../../../static/img/160_example_1.png" alt="img"></p>
 <pre><code>Input: intersectVal = 8, listA = [4,1,8,4,5], listB = [5,0,1,8,4,5], skipA = 2, skipB = 3
 Output: Reference of the node with value = 8
 Input Explanation: The intersected node's value is 8 (note that this must not be 0 if the two lists intersect). From the head of A, it reads as [4,1,8,4,5]. From the head of B, it reads as [5,0,1,8,4,5]. There are 2 nodes before the intersected node in A; There are 3 nodes before the intersected node in B.
-</code></pre>
-
-<p><strong>Example 2:</strong></p>
-
-<p><img src="../../../static/img/160_example_2.png" alt="img" /></p>
-
+</code></pre><p><strong>Example 2:</strong></p>
+<p><img src="../../../static/img/160_example_2.png" alt="img"></p>
 <pre><code>Input: intersectVal = 2, listA = [0,9,1,2,4], listB = [3,2,4], skipA = 3, skipB = 1
 Output: Reference of the node with value = 2
 Input Explanation: The intersected node's value is 2 (note that this must not be 0 if the two lists intersect). From the head of A, it reads as [0,9,1,2,4]. From the head of B, it reads as [3,2,4]. There are 3 nodes before the intersected node in A; There are 1 node before the intersected node in B.
-</code></pre>
-
-<p><strong>Example 3:</strong></p>
-
-<p><img src="../../../static/img/160_example_3.png" alt="img" /></p>
-
+</code></pre><p><strong>Example 3:</strong></p>
+<p><img src="../../../static/img/160_example_3.png" alt="img"></p>
 <pre><code>Input: intersectVal = 0, listA = [2,6,4], listB = [1,5], skipA = 3, skipB = 2
 Output: null
 Input Explanation: From the head of A, it reads as [2,6,4]. From the head of B, it reads as [1,5]. Since the two lists do not intersect, intersectVal must be 0, while skipA and skipB can be arbitrary values.
 Explanation: The two lists do not intersect, so return null.
-</code></pre>
-
-<p><strong>Notes:</strong></p>
-
+</code></pre><p><strong>Notes:</strong></p>
 <ul>
 <li>If the two linked lists have no intersection at all, return <code>null</code>.</li>
 <li>The linked lists must retain their original structure after the function returns.</li>
 <li>You may assume there are no cycles anywhere in the entire linked structure.</li>
 <li>Your code should preferably run in O(n) time and use only O(1) memory.</li>
 </ul>
-
-<h2 id="method-2">Method</h2>
-
+<h2 id="method2">Method</h2>
 <p>Two pointers. Each pointer starts at the beginning of A/B. When traverse to the end of each list, swap to the other list. If there is an intersection, these two pointers will meet there.</p>
-
 <p>The reason is that if there is an intersection, then the difference between first pointer and second pointer is the path difference before the intersection. Hence, move pointers to the other list will make them have moving distance when they meet.</p>
+<h2 id="code2">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Two pointers. Each pointer starts at the beginning of A/B.
+</span><span style="color:#75715e"> * When traverse to the end of each list, swap to the other list.
+</span><span style="color:#75715e"> * If there is an intersection, these two pointers will meet there.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param headA first list head
+</span><span style="color:#75715e"> * @param headB second list head
+</span><span style="color:#75715e"> * @return intersection node
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> ListNode <span style="color:#a6e22e">getIntersectionNode</span><span style="color:#f92672">(</span>ListNode headA<span style="color:#f92672">,</span> ListNode headB<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-<h2 id="code-2">Code</h2>
+    <span style="color:#75715e">/* Corner case */</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>headA <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">|</span><span style="color:#f92672">|</span> headB <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-<pre><code class="language-java">/**
- * Two pointers. Each pointer starts at the beginning of A/B.
- * When traverse to the end of each list, swap to the other list.
- * If there is an intersection, these two pointers will meet there.
- *
- * @param headA first list head
- * @param headB second list head
- * @return intersection node
- */
-public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+    ListNode p1 <span style="color:#f92672">=</span> headA<span style="color:#f92672">,</span> p2 <span style="color:#f92672">=</span> headB<span style="color:#f92672">;</span>
 
-    /* Corner case */
-    if (headA == null || headB == null) {
-        return null;
-    }
+    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>p1 <span style="color:#f92672">!</span><span style="color:#f92672">=</span> p2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        p1 <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>p1 <span style="color:#f92672">!</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">?</span> p1<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span> <span style="color:#f92672">:</span> headB<span style="color:#f92672">;</span>        <span style="color:#75715e">// if reaches the end, move to next list
+</span><span style="color:#75715e"></span>        p2 <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>p2 <span style="color:#f92672">!</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">?</span> p2<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span> <span style="color:#f92672">:</span> headA<span style="color:#f92672">;</span>        <span style="color:#75715e">// if reaches the end, move to next list
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
 
-    ListNode p1 = headA, p2 = headB;
-
-    while (p1 != p2) {
-        p1 = (p1 != null) ? p1.next : headB;        // if reaches the end, move to next list
-        p2 = (p2 != null) ? p2.next : headA;        // if reaches the end, move to next list
-    }
-
-    return p1;
-}
-</code></pre>
+    <span style="color:#66d9ef">return</span> p1<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div>
               
             </div>
           </div>
@@ -629,7 +527,7 @@ public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>
@@ -687,7 +585,7 @@ public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>

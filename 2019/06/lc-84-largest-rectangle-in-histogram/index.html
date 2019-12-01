@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.59.1 with theme Tranquilpeak 0.4.7-BETA">
+<meta name="generator" content="Hugo 0.60.1 with theme Tranquilpeak 0.4.7-BETA">
 <meta name="author" content="Steve Zhou">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -275,126 +275,100 @@
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
-<ul>
-<li><a href="#largest-rectangle-in-histogram">Largest Rectangle in Histogram</a>
-<ul>
-<li><a href="#problem-description">Problem description</a></li>
-<li><a href="#method">Method</a></li>
-<li><a href="#code">Code</a></li>
-</ul></li>
-</ul>
-</nav>
-
+              <!-- raw HTML omitted -->
 <h1 id="largest-rectangle-in-histogram">Largest Rectangle in Histogram</h1>
-
 <p>Link: <a href="https://leetcode.com/problems/largest-rectangle-in-histogram">Largest Rectangle in Histogram</a></p>
-
 <h2 id="problem-description">Problem description</h2>
-
-<p>Given <em>n</em> non-negative integers representing the histogram&rsquo;s bar height where the width of each bar is 1, find the area of largest rectangle in the histogram.</p>
-
-<p><img src="../../../static/img/histogram.png" alt="img" />
+<p>Given <em>n</em> non-negative integers representing the histogram's bar height where the width of each bar is 1, find the area of largest rectangle in the histogram.</p>
+<p><img src="../../../static/img/histogram.png" alt="img">
 Above is a histogram where width of each bar is 1, given height = <code>[2,1,5,6,2,3]</code>.</p>
-
-<p><img src="../../../static/img/histogram_area.png" alt="img" />
+<p><img src="../../../static/img/histogram_area.png" alt="img">
 The largest rectangle is shown in the shaded area, which has area = <code>10</code> unit.</p>
-
 <p><strong>Example:</strong></p>
-
 <pre><code>Input: [2,1,5,6,2,3]
 Output: 10
-</code></pre>
-
-<h2 id="method">Method</h2>
-
+</code></pre><h2 id="method">Method</h2>
 <p>Faster solution with stack.</p>
-
 <p>Traverse all elements in array and find each increasing subarray.</p>
-
 <p>If increasing subarray is ended, then calculate rectangle size starts from largest element in subarray. The initially length of rectangle is 1 (itself). With the pop of stack, length increased by 1 each time until value at top of stack is smaller than current element.</p>
-
 <p>For each deceasing area, simply count the area with itself and compared with max.</p>
-
 <p>Note that if stack is empty, current element is the smallest element in current subarray. The area length of this rectangle is <code>[0,i]</code>.</p>
-
 <h2 id="code">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Faster solution with stack.
+</span><span style="color:#75715e"> * Traverse all elements in array and find each increasing subarray.
+</span><span style="color:#75715e"> * If increasing subarray is ended, then calculate rectangle size starts from largest element in subarray.
+</span><span style="color:#75715e"> * The initially length of rectangle is 1 (itself).
+</span><span style="color:#75715e"> * With the pop of stack, length increased by 1 each time until value at top of stack is smaller than current element.
+</span><span style="color:#75715e"> * For each deceasing area, simply count the area with itself and compared with max.
+</span><span style="color:#75715e"> * Note that if stack is empty, current element is the smallest element in current subarray.
+</span><span style="color:#75715e"> * The area length of this rectangle is [0,i].
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param heights input histogram&#39;s bar height array
+</span><span style="color:#75715e"> * @return area of largest rectangle
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">largestRectangleArea</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> heights<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-<pre><code class="language-java">/**
- * Faster solution with stack.
- * Traverse all elements in array and find each increasing subarray.
- * If increasing subarray is ended, then calculate rectangle size starts from largest element in subarray.
- * The initially length of rectangle is 1 (itself).
- * With the pop of stack, length increased by 1 each time until value at top of stack is smaller than current element.
- * For each deceasing area, simply count the area with itself and compared with max.
- * Note that if stack is empty, current element is the smallest element in current subarray.
- * The area length of this rectangle is [0,i].
- *
- * @param heights input histogram's bar height array
- * @return area of largest rectangle
- */
-public int largestRectangleArea(int[] heights) {
+    Stack<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> stack <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Stack<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>       <span style="color:#75715e">// store index of array
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> max <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
 
-    Stack&lt;Integer&gt; stack = new Stack&lt;&gt;();       // store index of array
-    int max = 0;
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span><span style="color:#f92672">=</span> heights<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-    for (int i = 0; i &lt;= heights.length; i++) {
+        <span style="color:#66d9ef">int</span> h <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">=</span><span style="color:#f92672">=</span> heights<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">)</span> <span style="color:#f92672">?</span> 0 <span style="color:#f92672">:</span> heights<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
 
-        int h = (i == heights.length) ? 0 : heights[i];
+        <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span><span style="color:#f92672">!</span>stack<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> h <span style="color:#f92672">&lt;</span> heights<span style="color:#f92672">[</span>stack<span style="color:#f92672">.</span><span style="color:#a6e22e">peek</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">]</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>      <span style="color:#75715e">// increasing subarray stopped
+</span><span style="color:#75715e"></span>
+            <span style="color:#75715e">/*
+</span><span style="color:#75715e">             * Stack only store index, therefore, heights[s.pop()] stands for the length of current height.
+</span><span style="color:#75715e">             * The other part of area calculation is the length of rectangle.
+</span><span style="color:#75715e">             * The length is between current bar and the max bar in increasing subarray.
+</span><span style="color:#75715e">             * If stack is empty, then current element is the smallest element in [0,i], and length will be i.
+</span><span style="color:#75715e">             * i - 1 is to move i to previous max value in previous increasing subarray.
+</span><span style="color:#75715e">             * If stack is empty, current element is the smallest element in current subarray.
+</span><span style="color:#75715e">             * The area length of this rectangle is [0,i]. */</span>
+            <span style="color:#66d9ef">int</span> area <span style="color:#f92672">=</span> heights<span style="color:#f92672">[</span>stack<span style="color:#f92672">.</span><span style="color:#a6e22e">pop</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">]</span> <span style="color:#f92672">*</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">-</span> 1 <span style="color:#f92672">-</span> <span style="color:#f92672">(</span>stack<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">?</span> <span style="color:#f92672">-</span>1 <span style="color:#f92672">:</span> stack<span style="color:#f92672">.</span><span style="color:#a6e22e">peek</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            max <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>max<span style="color:#f92672">,</span> area<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+        stack<span style="color:#f92672">.</span><span style="color:#a6e22e">push</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">return</span> max<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
 
-        while (!stack.isEmpty() &amp;&amp; h &lt; heights[stack.peek()]) {      // increasing subarray stopped
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Slow yet plain brute force solution.
+</span><span style="color:#75715e"> * Traverse all elements in array.
+</span><span style="color:#75715e"> * In each round, find all elements that is larger than current bar. Calculate max area based on current bar.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param heights input histogram&#39;s bar height array
+</span><span style="color:#75715e"> * @return area of largest rectangle
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">largestRectangleAreaSlow</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> heights<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-            /*
-             * Stack only store index, therefore, heights[s.pop()] stands for the length of current height.
-             * The other part of area calculation is the length of rectangle.
-             * The length is between current bar and the max bar in increasing subarray.
-             * If stack is empty, then current element is the smallest element in [0,i], and length will be i.
-             * i - 1 is to move i to previous max value in previous increasing subarray.
-             * If stack is empty, current element is the smallest element in current subarray.
-             * The area length of this rectangle is [0,i]. */
-            int area = heights[stack.pop()] * (i - 1 - (stack.isEmpty() ? -1 : stack.peek()));
-            max = Math.max(max, area);
-        }
-        stack.push(i);
-    }
-    return max;
-}
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>heights<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> 0<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-/**
- * Slow yet plain brute force solution.
- * Traverse all elements in array.
- * In each round, find all elements that is larger than current bar. Calculate max area based on current bar.
- *
- * @param heights input histogram's bar height array
- * @return area of largest rectangle
- */
-public int largestRectangleAreaSlow(int[] heights) {
+    <span style="color:#66d9ef">int</span> maxArea <span style="color:#f92672">=</span> heights<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
 
-    if (heights.length == 0) {
-        return 0;
-    }
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> heights<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">int</span> l <span style="color:#f92672">=</span> i <span style="color:#f92672">-</span> 1<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">int</span> r <span style="color:#f92672">=</span> i <span style="color:#f92672">+</span> 1<span style="color:#f92672">;</span>
 
-    int maxArea = heights[0];
+        <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>l <span style="color:#f92672">&gt;</span><span style="color:#f92672">=</span> 0 <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> heights<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">&lt;</span><span style="color:#f92672">=</span> heights<span style="color:#f92672">[</span>l<span style="color:#f92672">]</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            l<span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
 
-    for (int i = 0; i &lt; heights.length; i++) {
-        int l = i - 1;
-        int r = i + 1;
+        <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>r <span style="color:#f92672">&lt;</span> heights<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> heights<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">&lt;</span><span style="color:#f92672">=</span> heights<span style="color:#f92672">[</span>r<span style="color:#f92672">]</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            r<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
 
-        while (l &gt;= 0 &amp;&amp; heights[i] &lt;= heights[l]) {
-            l--;
-        }
+        <span style="color:#66d9ef">int</span> temp <span style="color:#f92672">=</span> heights<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">*</span> <span style="color:#f92672">(</span>r <span style="color:#f92672">-</span> l <span style="color:#f92672">-</span> 1<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        maxArea <span style="color:#f92672">=</span> Integer<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>maxArea<span style="color:#f92672">,</span> temp<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-        while (r &lt; heights.length &amp;&amp; heights[i] &lt;= heights[r]) {
-            r++;
-        }
-
-        int temp = heights[i] * (r - l - 1);
-        maxArea = Integer.max(maxArea, temp);
-    }
-
-    return maxArea;
-}
-</code></pre>
+    <span style="color:#66d9ef">return</span> maxArea<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div>
               
             </div>
           </div>
@@ -448,7 +422,7 @@ public int largestRectangleAreaSlow(int[] heights) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>
@@ -506,7 +480,7 @@ public int largestRectangleAreaSlow(int[] heights) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>

@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.59.1 with theme Tranquilpeak 0.4.7-BETA">
+<meta name="generator" content="Hugo 0.60.1 with theme Tranquilpeak 0.4.7-BETA">
 <meta name="author" content="Steve Zhou">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -281,114 +281,87 @@
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
-<ul>
-<li><a href="#median-of-two-sorted-arrays">Median of Two Sorted Arrays</a>
-<ul>
-<li><a href="#problem-description">Problem description</a></li>
-<li><a href="#method">Method</a></li>
-<li><a href="#code">Code</a></li>
-</ul></li>
-</ul>
-</nav>
-
+              <!-- raw HTML omitted -->
 <h1 id="median-of-two-sorted-arrays">Median of Two Sorted Arrays</h1>
-
 <p>Link: <a href="https://leetcode.com/problems/median-of-two-sorted-arrays">Median of Two Sorted Arrays</a></p>
-
 <h2 id="problem-description">Problem description</h2>
-
 <p>There are two sorted arrays <strong>nums1</strong> and <strong>nums2</strong> of size m and n respectively.</p>
-
 <p>Find the median of the two sorted arrays. The overall run time complexity should be O(log (m+n)).</p>
-
 <p>You may assume <strong>nums1</strong> and <strong>nums2</strong> cannot be both empty.</p>
-
 <p><strong>Example 1:</strong></p>
-
 <pre><code>nums1 = [1, 3]
 nums2 = [2]
 
 The median is 2.0
-</code></pre>
-
-<p><strong>Example 2:</strong></p>
-
+</code></pre><p><strong>Example 2:</strong></p>
 <pre><code>nums1 = [1, 2]
 nums2 = [3, 4]
 
 The median is (2 + 3)/2 = 2.5
-</code></pre>
-
-<h2 id="method">Method</h2>
-
+</code></pre><h2 id="method">Method</h2>
 <p>The basic idea is that, to find median, two arrays should be divided into 4 parts, <code>smaller1</code>, <code>smaller2</code>, <code>larger1</code>, <code>larger2</code>. The elements in <code>smaller1</code>, <code>smaller2</code> and <code>larger1</code>, <code>larger2</code> can only at most has a difference of 1. That is to say, <code>abs[(small1 + small2) - (larger1 + larger2)]&lt;=1</code>. If total length of two arrays are even, then it can be evenly divided into two parts. Otherwise, one part will have one more element.</p>
-
 <p>The way to find the correct partition is using binary search in first array. Note that to avoid out of bound exception, the first array should be assured as shorter array. Each time, the first array will be divided into two parts. Since this array is sorted, the two parts will be assured to be one small part, and one large part. Then, the partition position of second array will be fixed as well: <code>middle2 = (nums2.length + nums1.length + 1) / 2 - middle1</code>. Index smaller than <code>middle2</code> will be divided into <code>small2</code> and larger elements will be divided into <code>large2</code>.</p>
-
 <p>To ensure the division is correct, check if this <code>maxLeft1 &lt;= minRight2 &amp;&amp; maxLeft2 &lt;= minRight1</code>  is met. The division above ensure that two arrays is divided into two parts, and this condition assure all elements in small part will be less than or equal to larger part. If both conditions are matched, then median can be found.</p>
-
 <h2 id="code">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Divide and conquer, compare the middle elements of two arrays, and recurse.
+</span><span style="color:#75715e"> * Each time, do binary search at first array (shorter array).
+</span><span style="color:#75715e"> * Array will be divided into 2 parts, since array is sorted, it will be one small part and one large part.
+</span><span style="color:#75715e"> * To find median, the second array will be divided into two parts.
+</span><span style="color:#75715e"> * The # of elements in both part is fixed, that sum of elements # in both parts difference should be less than 2.
+</span><span style="color:#75715e"> * To ensure current partition has correctly divided all elements, maxLeft1 &lt;= minRight2 &amp;&amp; maxLeft2 &lt;= minRight1.
+</span><span style="color:#75715e"> * If the condition is not matched, keep binary search in first array until the condition is matched.
+</span><span style="color:#75715e"> * Time complexity: O(log(m+n)).
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param nums1 first sorted array with length m
+</span><span style="color:#75715e"> * @param nums2 second sorted array with length n
+</span><span style="color:#75715e"> * @return median of the two sorted arrays
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">double</span> <span style="color:#a6e22e">findMedianSortedArrays</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> nums1<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> nums2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-<pre><code class="language-java">/**
- * Divide and conquer, compare the middle elements of two arrays, and recurse.
- * Each time, do binary search at first array (shorter array).
- * Array will be divided into 2 parts, since array is sorted, it will be one small part and one large part.
- * To find median, the second array will be divided into two parts.
- * The # of elements in both part is fixed, that sum of elements # in both parts difference should be less than 2.
- * To ensure current partition has correctly divided all elements, maxLeft1 &lt;= minRight2 &amp;&amp; maxLeft2 &lt;= minRight1.
- * If the condition is not matched, keep binary search in first array until the condition is matched.
- * Time complexity: O(log(m+n)).
- *
- * @param nums1 first sorted array with length m
- * @param nums2 second sorted array with length n
- * @return median of the two sorted arrays
- */
-public double findMedianSortedArrays(int[] nums1, int[] nums2) {
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>nums1<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">&gt;</span> nums2<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> findMedianSortedArrays<span style="color:#f92672">(</span>nums2<span style="color:#f92672">,</span> nums1<span style="color:#f92672">)</span><span style="color:#f92672">;</span>        <span style="color:#75715e">// assure nums1 is shorter array to avoid corner case
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
 
-    if (nums1.length &gt; nums2.length) {
-        return findMedianSortedArrays(nums2, nums1);        // assure nums1 is shorter array to avoid corner case
-    }
+    <span style="color:#66d9ef">int</span> left <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> right <span style="color:#f92672">=</span> nums1<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span>
 
-    int left = 0, right = nums1.length;
+    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>left <span style="color:#f92672">&lt;</span><span style="color:#f92672">=</span> right<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>     <span style="color:#75715e">// binary search only in first array, partition position in second array is fixed
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">int</span> middle1 <span style="color:#f92672">=</span> left <span style="color:#f92672">+</span> <span style="color:#f92672">(</span>right <span style="color:#f92672">-</span> left<span style="color:#f92672">)</span> <span style="color:#f92672">/</span> 2<span style="color:#f92672">;</span>       <span style="color:#75715e">// binary search middle index
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">int</span> middle2 <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>nums2<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">+</span> nums1<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">+</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">/</span> 2 <span style="color:#f92672">-</span> middle1<span style="color:#f92672">;</span>
 
-    while (left &lt;= right) {     // binary search only in first array, partition position in second array is fixed
-        int middle1 = left + (right - left) / 2;       // binary search middle index
-        int middle2 = (nums2.length + nums1.length + 1) / 2 - middle1;
-
-        /*
-         * maxLeft1 is the max value in left subarray of first array.
-         * maxLeft2 is the max value in left subarray of second array.
-         * minRight1 is the min value in right subarray of first array.
-         * minRight2 is the min value in right subarray of second array.
-         * Corner case: partition index reaches the end (or beginning) of array.
-         * If reaches the end of array, then set to MAX_VALUE.
-         * If reaches the beginning of array, set to MIN_VALUE. */
-        int maxLeft1 = (middle1 == 0) ? Integer.MIN_VALUE : nums1[middle1 - 1];     // left of middle index
-        int minRight1 = (middle1 == nums1.length) ? Integer.MAX_VALUE : nums1[middle1];     // middle index
-        int maxLeft2 = (middle2 == 0) ? Integer.MIN_VALUE : nums2[middle2 - 1];     // left of middle index
-        int minRight2 = (middle2 == nums2.length) ? Integer.MAX_VALUE : nums2[middle2];     // middle index
-
-        /*
-         * The condition for finding the median is that maxLeft1 &lt;= minRight2 &amp;&amp; maxLeft2 &lt;= minRight1.
-         * If so, the partition has already divide to parts that all left values are smaller than all right values.
-         * If sum of two arrays are even, then return the average of median.
-         * If sum of two arrays are odd, return the median.
-         * If the condition is not met, then the partition position is incorrect,
-         * If max in left subarray 1 is larger than min in right subarray 2, move partition position to left.
-         * Since the partition has include elements that should belong to right sub array.
-         * Otherwise, move partition position to right. */
-        if (maxLeft1 &lt;= minRight2 &amp;&amp; maxLeft2 &lt;= minRight1) {
-            return ((nums1.length + nums2.length) % 2 == 0) ? ((double) Math.max(maxLeft1, maxLeft2) + Math.min(minRight1, minRight2)) / 2 : Math.max(maxLeft1, maxLeft2);
-        } else if (maxLeft1 &gt; minRight2) {
-            right = middle1 - 1;
-        } else {
-            left = middle1 + 1;
-        }
-    }
-    return -1;
-}
-</code></pre>
+        <span style="color:#75715e">/*
+</span><span style="color:#75715e">         * maxLeft1 is the max value in left subarray of first array.
+</span><span style="color:#75715e">         * maxLeft2 is the max value in left subarray of second array.
+</span><span style="color:#75715e">         * minRight1 is the min value in right subarray of first array.
+</span><span style="color:#75715e">         * minRight2 is the min value in right subarray of second array.
+</span><span style="color:#75715e">         * Corner case: partition index reaches the end (or beginning) of array.
+</span><span style="color:#75715e">         * If reaches the end of array, then set to MAX_VALUE.
+</span><span style="color:#75715e">         * If reaches the beginning of array, set to MIN_VALUE. */</span>
+        <span style="color:#66d9ef">int</span> maxLeft1 <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>middle1 <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">?</span> Integer<span style="color:#f92672">.</span><span style="color:#a6e22e">MIN_VALUE</span> <span style="color:#f92672">:</span> nums1<span style="color:#f92672">[</span>middle1 <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span><span style="color:#f92672">;</span>     <span style="color:#75715e">// left of middle index
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">int</span> minRight1 <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>middle1 <span style="color:#f92672">=</span><span style="color:#f92672">=</span> nums1<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">)</span> <span style="color:#f92672">?</span> Integer<span style="color:#f92672">.</span><span style="color:#a6e22e">MAX_VALUE</span> <span style="color:#f92672">:</span> nums1<span style="color:#f92672">[</span>middle1<span style="color:#f92672">]</span><span style="color:#f92672">;</span>     <span style="color:#75715e">// middle index
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">int</span> maxLeft2 <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>middle2 <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">?</span> Integer<span style="color:#f92672">.</span><span style="color:#a6e22e">MIN_VALUE</span> <span style="color:#f92672">:</span> nums2<span style="color:#f92672">[</span>middle2 <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span><span style="color:#f92672">;</span>     <span style="color:#75715e">// left of middle index
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">int</span> minRight2 <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>middle2 <span style="color:#f92672">=</span><span style="color:#f92672">=</span> nums2<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">)</span> <span style="color:#f92672">?</span> Integer<span style="color:#f92672">.</span><span style="color:#a6e22e">MAX_VALUE</span> <span style="color:#f92672">:</span> nums2<span style="color:#f92672">[</span>middle2<span style="color:#f92672">]</span><span style="color:#f92672">;</span>     <span style="color:#75715e">// middle index
+</span><span style="color:#75715e"></span>
+        <span style="color:#75715e">/*
+</span><span style="color:#75715e">         * The condition for finding the median is that maxLeft1 &lt;= minRight2 &amp;&amp; maxLeft2 &lt;= minRight1.
+</span><span style="color:#75715e">         * If so, the partition has already divide to parts that all left values are smaller than all right values.
+</span><span style="color:#75715e">         * If sum of two arrays are even, then return the average of median.
+</span><span style="color:#75715e">         * If sum of two arrays are odd, return the median.
+</span><span style="color:#75715e">         * If the condition is not met, then the partition position is incorrect,
+</span><span style="color:#75715e">         * If max in left subarray 1 is larger than min in right subarray 2, move partition position to left.
+</span><span style="color:#75715e">         * Since the partition has include elements that should belong to right sub array.
+</span><span style="color:#75715e">         * Otherwise, move partition position to right. */</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>maxLeft1 <span style="color:#f92672">&lt;</span><span style="color:#f92672">=</span> minRight2 <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> maxLeft2 <span style="color:#f92672">&lt;</span><span style="color:#f92672">=</span> minRight1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">return</span> <span style="color:#f92672">(</span><span style="color:#f92672">(</span>nums1<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">+</span> nums2<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">)</span> <span style="color:#f92672">%</span> 2 <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">?</span> <span style="color:#f92672">(</span><span style="color:#f92672">(</span><span style="color:#66d9ef">double</span><span style="color:#f92672">)</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>maxLeft1<span style="color:#f92672">,</span> maxLeft2<span style="color:#f92672">)</span> <span style="color:#f92672">+</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">min</span><span style="color:#f92672">(</span>minRight1<span style="color:#f92672">,</span> minRight2<span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">/</span> 2 <span style="color:#f92672">:</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>maxLeft1<span style="color:#f92672">,</span> maxLeft2<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>maxLeft1 <span style="color:#f92672">&gt;</span> minRight2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            right <span style="color:#f92672">=</span> middle1 <span style="color:#f92672">-</span> 1<span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+            left <span style="color:#f92672">=</span> middle1 <span style="color:#f92672">+</span> 1<span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div>
               
             </div>
           </div>
@@ -444,7 +417,7 @@ public double findMedianSortedArrays(int[] nums1, int[] nums2) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>
@@ -502,7 +475,7 @@ public double findMedianSortedArrays(int[] nums1, int[] nums2) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>

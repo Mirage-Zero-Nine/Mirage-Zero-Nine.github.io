@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.59.1 with theme Tranquilpeak 0.4.7-BETA">
+<meta name="generator" content="Hugo 0.60.1 with theme Tranquilpeak 0.4.7-BETA">
 <meta name="author" content="Steve Zhou">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -275,131 +275,107 @@
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
-<ul>
-<li><a href="#evaluate-division">Evaluate Division</a>
-<ul>
-<li><a href="#problem-description">Problem description</a></li>
-<li><a href="#method">Method</a></li>
-<li><a href="#code">Code</a></li>
-</ul></li>
-</ul>
-</nav>
-
+              <!-- raw HTML omitted -->
 <h1 id="evaluate-division">Evaluate Division</h1>
-
 <p>Link: <a href="https://leetcode.com/problems/evaluate-division">Evaluate Division</a></p>
-
 <h2 id="problem-description">Problem description</h2>
-
 <p>Equations are given in the format <code>A / B = k</code>, where <code>A</code> and <code>B</code> are variables represented as strings, and <code>k</code> is a real number (floating point number). Given some queries, return the answers. If the answer does not exist, return <code>-1.0</code>.</p>
-
 <p><strong>Example:</strong>
 Given <code>a / b = 2.0, b / c = 3.0.</code>
 queries are: <code>a / c = ?, b / a = ?, a / e = ?, a / a = ?, x / x = ? .</code>
 return <code>[6.0, 0.5, -1.0, 1.0, -1.0 ].</code></p>
-
-<p>The input is: <code>vector&lt;pair&lt;string, string&gt;&gt; equations, vector&lt;double&gt;&amp; values, vector&lt;pair&lt;string, string&gt;&gt; queries</code>, where <code>equations.size() == values.size()</code>, and the values are positive. This represents the equations. Return <code>vector&lt;double&gt;</code>.</p>
-
+<p>The input is: <code>vector&lt;pair&lt;string, string&gt;&gt; equations, vector&lt;double&gt;&amp; values, vector&lt;pair&lt;string, string&gt;&gt; queries </code>, where <code>equations.size() == values.size()</code>, and the values are positive. This represents the equations. Return <code>vector&lt;double&gt;</code>.</p>
 <p>According to the example above:</p>
-
 <pre><code>equations = [ [&quot;a&quot;, &quot;b&quot;], [&quot;b&quot;, &quot;c&quot;] ],
 values = [2.0, 3.0],
 queries = [ [&quot;a&quot;, &quot;c&quot;], [&quot;b&quot;, &quot;a&quot;], [&quot;a&quot;, &quot;e&quot;], [&quot;a&quot;, &quot;a&quot;], [&quot;x&quot;, &quot;x&quot;] ]. 
-</code></pre>
-
-<p>The input is always valid. You may assume that evaluating the queries will result in no division by zero and there is no contradiction.</p>
-
+</code></pre><p>The input is always valid. You may assume that evaluating the queries will result in no division by zero and there is no contradiction.</p>
 <h2 id="method">Method</h2>
-
 <p>Union find.</p>
-
 <p>Given a query <code>[a, b]</code>, if they share the same root, find out the value of <code>common_root/a and common_root/b</code>. Then the result is <code>(common_root/b) / (common_root/a)</code>.</p>
-
 <h2 id="code">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">private</span> HashMap<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">,</span> String<span style="color:#f92672">&gt;</span> parent <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashMap<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>       <span style="color:#75715e">// parent of current node
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">private</span> HashMap<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">,</span> Double<span style="color:#f92672">&gt;</span> ratio <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashMap<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>        <span style="color:#75715e">// ratio of edge
+</span><span style="color:#75715e"></span>
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Union find.
+</span><span style="color:#75715e"> * Given a query [a, b], if they share the same root, find out the value of common_root/a and common_root/b.
+</span><span style="color:#75715e"> * Then the result is (common_root/b) / (common_root/a).
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param equations given equations list
+</span><span style="color:#75715e"> * @param values    given value list representing each equation&#39;s result
+</span><span style="color:#75715e"> * @param queries   given queries
+</span><span style="color:#75715e"> * @return answers of queries
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">double</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> <span style="color:#a6e22e">calcEquation</span><span style="color:#f92672">(</span>List<span style="color:#f92672">&lt;</span>List<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span> equations<span style="color:#f92672">,</span> <span style="color:#66d9ef">double</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> values<span style="color:#f92672">,</span> List<span style="color:#f92672">&lt;</span>List<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span> queries<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-<pre><code class="language-java">private HashMap&lt;String, String&gt; parent = new HashMap&lt;&gt;();       // parent of current node
-private HashMap&lt;String, Double&gt; ratio = new HashMap&lt;&gt;();        // ratio of edge
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>equations <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">|</span><span style="color:#f92672">|</span> equations<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">double</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">{</span><span style="color:#f92672">}</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-/**
- * Union find.
- * Given a query [a, b], if they share the same root, find out the value of common_root/a and common_root/b.
- * Then the result is (common_root/b) / (common_root/a).
- *
- * @param equations given equations list
- * @param values    given value list representing each equation's result
- * @param queries   given queries
- * @return answers of queries
- */
-public double[] calcEquation(List&lt;List&lt;String&gt;&gt; equations, double[] values, List&lt;List&lt;String&gt;&gt; queries) {
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> equations<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        union<span style="color:#f92672">(</span>equations<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span><span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>0<span style="color:#f92672">)</span><span style="color:#f92672">,</span> equations<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span><span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>1<span style="color:#f92672">)</span><span style="color:#f92672">,</span> values<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-    if (equations == null || equations.size() == 0) {
-        return new double[]{};
-    }
+    <span style="color:#66d9ef">double</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> out <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">double</span><span style="color:#f92672">[</span>queries<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> queries<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        String s1 <span style="color:#f92672">=</span> queries<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span><span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>0<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        String s2 <span style="color:#f92672">=</span> queries<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span><span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>1<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#f92672">!</span>parent<span style="color:#f92672">.</span><span style="color:#a6e22e">containsKey</span><span style="color:#f92672">(</span>s1<span style="color:#f92672">)</span> <span style="color:#f92672">|</span><span style="color:#f92672">|</span> <span style="color:#f92672">!</span>parent<span style="color:#f92672">.</span><span style="color:#a6e22e">containsKey</span><span style="color:#f92672">(</span>s2<span style="color:#f92672">)</span> <span style="color:#f92672">|</span><span style="color:#f92672">|</span> <span style="color:#f92672">!</span>find<span style="color:#f92672">(</span>s1<span style="color:#f92672">)</span><span style="color:#f92672">.</span><span style="color:#a6e22e">equals</span><span style="color:#f92672">(</span>find<span style="color:#f92672">(</span>s2<span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            out<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">.</span><span style="color:#a6e22e">0</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+            out<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> ratio<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>s1<span style="color:#f92672">)</span> <span style="color:#f92672">/</span> ratio<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>s2<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+    System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>parent<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">return</span> out<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
 
-    for (int i = 0; i &lt; equations.size(); i++) {
-        union(equations.get(i).get(0), equations.get(i).get(1), values[i]);
-    }
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Union.
+</span><span style="color:#75715e"> * If map does not contains the given node, then put it in map and consider it as root of itself.
+</span><span style="color:#75715e"> * This is the initially state of each given operand of equation.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param e1  first equation
+</span><span style="color:#75715e"> * @param e2  second equation
+</span><span style="color:#75715e"> * @param val value of equation
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">union</span><span style="color:#f92672">(</span>String e1<span style="color:#f92672">,</span> String e2<span style="color:#f92672">,</span> <span style="color:#66d9ef">double</span> val<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-    double[] out = new double[queries.size()];
-    for (int i = 0; i &lt; queries.size(); i++) {
-        String s1 = queries.get(i).get(0);
-        String s2 = queries.get(i).get(1);
-        if (!parent.containsKey(s1) || !parent.containsKey(s2) || !find(s1).equals(find(s2))) {
-            out[i] = -1.0;
-        } else {
-            out[i] = ratio.get(s1) / ratio.get(s2);
-        }
-    }
-    System.out.println(parent);
-    return out;
-}
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#f92672">!</span>parent<span style="color:#f92672">.</span><span style="color:#a6e22e">containsKey</span><span style="color:#f92672">(</span>e1<span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        parent<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>e1<span style="color:#f92672">,</span> e1<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        ratio<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>e1<span style="color:#f92672">,</span> 1<span style="color:#f92672">.</span><span style="color:#a6e22e">0</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>     <span style="color:#75715e">// a / a = 1
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#f92672">!</span>parent<span style="color:#f92672">.</span><span style="color:#a6e22e">containsKey</span><span style="color:#f92672">(</span>e2<span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        parent<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>e2<span style="color:#f92672">,</span> e2<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        ratio<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>e2<span style="color:#f92672">,</span> 1<span style="color:#f92672">.</span><span style="color:#a6e22e">0</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-/**
- * Union.
- * If map does not contains the given node, then put it in map and consider it as root of itself.
- * This is the initially state of each given operand of equation.
- *
- * @param e1  first equation
- * @param e2  second equation
- * @param val value of equation
- */
-private void union(String e1, String e2, double val) {
+    String p1 <span style="color:#f92672">=</span> find<span style="color:#f92672">(</span>e1<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    String p2 <span style="color:#f92672">=</span> find<span style="color:#f92672">(</span>e2<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    parent<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>p1<span style="color:#f92672">,</span> p2<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    ratio<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>p1<span style="color:#f92672">,</span> val <span style="color:#f92672">*</span> ratio<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>e2<span style="color:#f92672">)</span> <span style="color:#f92672">/</span> ratio<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>e1<span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
 
-    if (!parent.containsKey(e1)) {
-        parent.put(e1, e1);
-        ratio.put(e1, 1.0);     // a / a = 1
-    }
-    if (!parent.containsKey(e2)) {
-        parent.put(e2, e2);
-        ratio.put(e2, 1.0);
-    }
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Find root of given equation string.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param s given equation string
+</span><span style="color:#75715e"> * @return root of s
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">private</span> String <span style="color:#a6e22e">find</span><span style="color:#f92672">(</span>String s<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-    String p1 = find(e1);
-    String p2 = find(e2);
-    parent.put(p1, p2);
-    ratio.put(p1, val * ratio.get(e2) / ratio.get(e1));
-}
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">equals</span><span style="color:#f92672">(</span>parent<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>s<span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> s<span style="color:#f92672">;</span>       <span style="color:#75715e">// s is root
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
 
-/**
- * Find root of given equation string.
- *
- * @param s given equation string
- * @return root of s
- */
-private String find(String s) {
-
-    if (s.equals(parent.get(s))) {
-        return s;       // s is root
-    }
-
-    String previous = parent.get(s);
-    String root = find(previous);       // find root
-    parent.put(s, root);        // update given operand's root
-    ratio.put(s, ratio.get(s) * ratio.get(previous));
-    return root;
-}
-</code></pre>
+    String previous <span style="color:#f92672">=</span> parent<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>s<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    String root <span style="color:#f92672">=</span> find<span style="color:#f92672">(</span>previous<span style="color:#f92672">)</span><span style="color:#f92672">;</span>       <span style="color:#75715e">// find root
+</span><span style="color:#75715e"></span>    parent<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>s<span style="color:#f92672">,</span> root<span style="color:#f92672">)</span><span style="color:#f92672">;</span>        <span style="color:#75715e">// update given operand&#39;s root
+</span><span style="color:#75715e"></span>    ratio<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>s<span style="color:#f92672">,</span> ratio<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>s<span style="color:#f92672">)</span> <span style="color:#f92672">*</span> ratio<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>previous<span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">return</span> root<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div>
               
             </div>
           </div>
@@ -453,7 +429,7 @@ private String find(String s) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>
@@ -511,7 +487,7 @@ private String find(String s) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>

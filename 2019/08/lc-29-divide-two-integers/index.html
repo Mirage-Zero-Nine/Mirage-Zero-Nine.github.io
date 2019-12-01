@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.59.1 with theme Tranquilpeak 0.4.7-BETA">
+<meta name="generator" content="Hugo 0.60.1 with theme Tranquilpeak 0.4.7-BETA">
 <meta name="author" content="Steve Zhou">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -279,90 +279,61 @@
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
-<ul>
-<li><a href="#divide-two-integers">Divide Two Integers</a>
-<ul>
-<li><a href="#problem-description">Problem description</a></li>
-<li><a href="#method">Method</a></li>
-<li><a href="#code">Code</a></li>
-</ul></li>
-</ul>
-</nav>
-
+              <!-- raw HTML omitted -->
 <h1 id="divide-two-integers">Divide Two Integers</h1>
-
 <p>Link: <a href="https://leetcode.com/problems/divide-two-integers/">Divide Two Integers</a></p>
-
 <h2 id="problem-description">Problem description</h2>
-
 <p>Given two integers <code>dividend</code> and <code>divisor</code>, divide two integers without using multiplication, division and mod operator.</p>
-
 <p>Return the quotient after dividing <code>dividend</code> by <code>divisor</code>.</p>
-
 <p>The integer division should truncate toward zero.</p>
-
 <p><strong>Example 1:</strong></p>
-
 <pre><code>Input: dividend = 10, divisor = 3
 Output: 3
-</code></pre>
-
-<p><strong>Example 2:</strong></p>
-
+</code></pre><p><strong>Example 2:</strong></p>
 <pre><code>Input: dividend = 7, divisor = -3
 Output: -2
-</code></pre>
-
-<p><strong>Note:</strong></p>
-
+</code></pre><p><strong>Note:</strong></p>
 <ul>
 <li>Both dividend and divisor will be 32-bit signed integers.</li>
 <li>The divisor will never be 0.</li>
 <li>Assume we are dealing with an environment which could only store integers within the 32-bit signed integer range: <code>[−2^31,  2^31 − 1]</code>. For the purpose of this problem, assume that your function returns <code>2^31 − 1</code> when the division result overflows.</li>
 </ul>
-
 <h2 id="method">Method</h2>
-
 <p>Binary search.</p>
-
 <p>Each time, shift divisor to right for <code>x + 1</code> bits. Dividend should reduce divisor each time.</p>
-
 <p>Time complexity: <code>O(logN^2)</code>.</p>
-
 <h2 id="code">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Binary search.
+</span><span style="color:#75715e"> * Each time, shift divisor to right for x + 1 bits.
+</span><span style="color:#75715e"> * Dividend should reduce divisor each time.
+</span><span style="color:#75715e"> * Time complexity: O(logN^2).
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param dividend int dividend
+</span><span style="color:#75715e"> * @param divisor  int divisor
+</span><span style="color:#75715e"> * @return quotient
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">divide</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> dividend<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> divisor<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-<pre><code class="language-java">/**
- * Binary search.
- * Each time, shift divisor to right for x + 1 bits.
- * Dividend should reduce divisor each time.
- * Time complexity: O(logN^2).
- *
- * @param dividend int dividend
- * @param divisor  int divisor
- * @return quotient
- */
-public int divide(int dividend, int divisor) {
+    <span style="color:#75715e">/* Corner case */</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>dividend <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 1 <span style="color:#f92672">&lt;</span><span style="color:#f92672">&lt;</span> 31 <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> divisor <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#f92672">(</span>1 <span style="color:#f92672">&lt;</span><span style="color:#f92672">&lt;</span> 31<span style="color:#f92672">)</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">;</span>       <span style="color:#75715e">// 2^31 / -1 cause overflow, excepted return MAX_VALUE
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
 
-    /* Corner case */
-    if (dividend == 1 &lt;&lt; 31 &amp;&amp; divisor == -1) {
-        return (1 &lt;&lt; 31) - 1;       // 2^31 / -1 cause overflow, excepted return MAX_VALUE
-    }
+    <span style="color:#66d9ef">int</span> a <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">abs</span><span style="color:#f92672">(</span>dividend<span style="color:#f92672">)</span><span style="color:#f92672">,</span> b <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">abs</span><span style="color:#f92672">(</span>divisor<span style="color:#f92672">)</span><span style="color:#f92672">,</span> res <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> x<span style="color:#f92672">;</span>
 
-    int a = Math.abs(dividend), b = Math.abs(divisor), res = 0, x;
+    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>a <span style="color:#f92672">-</span> b <span style="color:#f92672">&gt;</span><span style="color:#f92672">=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        x <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>a <span style="color:#f92672">-</span> <span style="color:#f92672">(</span>b <span style="color:#f92672">&lt;</span><span style="color:#f92672">&lt;</span> x <span style="color:#f92672">&lt;</span><span style="color:#f92672">&lt;</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">&gt;</span><span style="color:#f92672">=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>        <span style="color:#75715e">// a - (b * 2^x * 2^1), shift b to reach a as close as possible
+</span><span style="color:#75715e"></span>            x<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
 
-    while (a - b &gt;= 0) {
-        x = 0;
-        while (a - (b &lt;&lt; x &lt;&lt; 1) &gt;= 0) {        // a - (b * 2^x * 2^1), shift b to reach a as close as possible
-            x++;
-        }
-
-        res += 1 &lt;&lt; x;      // res += 1 * 2^x
-        a -= b &lt;&lt; x;
-    }
-    return (dividend &lt; 0) ^ (divisor &lt; 0) ? -res : res;     // check negative
-}
-</code></pre>
+        res <span style="color:#f92672">+</span><span style="color:#f92672">=</span> 1 <span style="color:#f92672">&lt;</span><span style="color:#f92672">&lt;</span> x<span style="color:#f92672">;</span>      <span style="color:#75715e">// res += 1 * 2^x
+</span><span style="color:#75715e"></span>        a <span style="color:#f92672">-</span><span style="color:#f92672">=</span> b <span style="color:#f92672">&lt;</span><span style="color:#f92672">&lt;</span> x<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">return</span> <span style="color:#f92672">(</span>dividend <span style="color:#f92672">&lt;</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">^</span> <span style="color:#f92672">(</span>divisor <span style="color:#f92672">&lt;</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">?</span> <span style="color:#f92672">-</span>res <span style="color:#f92672">:</span> res<span style="color:#f92672">;</span>     <span style="color:#75715e">// check negative
+</span><span style="color:#75715e"></span><span style="color:#f92672">}</span>
+</code></pre></div>
               
             </div>
           </div>
@@ -416,7 +387,7 @@ public int divide(int dividend, int divisor) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>
@@ -474,7 +445,7 @@ public int divide(int dividend, int divisor) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>

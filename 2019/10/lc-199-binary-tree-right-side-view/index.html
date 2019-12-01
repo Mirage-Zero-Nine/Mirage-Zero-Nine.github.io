@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.59.1 with theme Tranquilpeak 0.4.7-BETA">
+<meta name="generator" content="Hugo 0.60.1 with theme Tranquilpeak 0.4.7-BETA">
 <meta name="author" content="Steve Zhou">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -279,27 +279,12 @@
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
-<ul>
-<li><a href="#binary-tree-right-side-view">Binary Tree Right Side View</a>
-<ul>
-<li><a href="#problem-description">Problem description</a></li>
-<li><a href="#method">Method</a></li>
-<li><a href="#code">Code</a></li>
-</ul></li>
-</ul>
-</nav>
-
+              <!-- raw HTML omitted -->
 <h1 id="binary-tree-right-side-view">Binary Tree Right Side View</h1>
-
 <p>Link: <a href="https://leetcode.com/problems/binary-tree-right-side-view">Binary Tree Right Side View</a></p>
-
 <h2 id="problem-description">Problem description</h2>
-
 <p>Given a binary tree, imagine yourself standing on the <em>right</em> side of it, return the values of the nodes you can see ordered from top to bottom.</p>
-
 <p><strong>Example:</strong></p>
-
 <pre><code>Input: [1,2,3,null,5,null,4]
 Output: [1, 3, 4]
 Explanation:
@@ -309,107 +294,94 @@ Explanation:
 2     3         &lt;---
  \     \
   5     4       &lt;---
-</code></pre>
-
-<h2 id="method">Method</h2>
-
+</code></pre><h2 id="method">Method</h2>
 <p>Two approaches: DFS and BFS.</p>
-
 <p><strong>DFS</strong>:</p>
-
 <p>Each time, try to reach the rightmost child of each node. The &ldquo;first&rdquo; node can be found by checking level and output list size. If the size of output list is same as level number, then this node is the first and rightmost node under current level, since total number of accept nodes are same as level of tree.</p>
-
 <p>Time complexity: <code>O(n)</code>.</p>
-
 <p>Space complexity: <code>O(h)</code>, <code>h</code> is the height of tree.</p>
-
 <p><strong>BFS</strong>:</p>
-
 <p>Basic level order traverse, when find the last (or first, based on traverse order) element in same level, add to output list.</p>
-
 <p>Time complexity: <code>O(n)</code>.</p>
-
 <p>Space complexity: <code>O(2^(h-1))</code>, <code>h</code> is the height of tree.</p>
-
 <h2 id="code">Code</h2>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * DFS.
+</span><span style="color:#75715e"> * Traverse right subtree first, add each rightmost child that first meet in each level.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param root root node
+</span><span style="color:#75715e"> * @return values of the nodes you can see ordered from top to bottom
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">rightSideView</span><span style="color:#f92672">(</span>TreeNode root<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>root <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-<pre><code class="language-java">/**
- * DFS.
- * Traverse right subtree first, add each rightmost child that first meet in each level.
- *
- * @param root root node
- * @return values of the nodes you can see ordered from top to bottom
- */
-public List&lt;Integer&gt; rightSideView(TreeNode root) {
-    if (root == null) {
-        return new LinkedList&lt;&gt;();
-    }
+    List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> out <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    dfs<span style="color:#f92672">(</span>root<span style="color:#f92672">,</span> out<span style="color:#f92672">,</span> 0<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">return</span> out<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
 
-    List&lt;Integer&gt; out = new LinkedList&lt;&gt;();
-    dfs(root, out, 0);
-    return out;
-}
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * DFS traversal.
+</span><span style="color:#75715e"> * Each time, try to reach the rightmost child of each node.
+</span><span style="color:#75715e"> * The &#34;first&#34; node can be found by checking level and output list size.
+</span><span style="color:#75715e"> * The total number of accept nodes are same as level of tree.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param r     root node
+</span><span style="color:#75715e"> * @param out   output list
+</span><span style="color:#75715e"> * @param level # of largest reached level
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">dfs</span><span style="color:#f92672">(</span>TreeNode r<span style="color:#f92672">,</span> List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> out<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> level<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>r <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-/**
- * DFS traversal.
- * Each time, try to reach the rightmost child of each node.
- * The &quot;first&quot; node can be found by checking level and output list size.
- * The total number of accept nodes are same as level of tree.
- *
- * @param r     root node
- * @param out   output list
- * @param level # of largest reached level
- */
-private void dfs(TreeNode r, List&lt;Integer&gt; out, int level) {
-    if (r == null) {
-        return;
-    }
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>level <span style="color:#f92672">=</span><span style="color:#f92672">=</span> out<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>      <span style="color:#75715e">// rightmost element in subtree
+</span><span style="color:#75715e"></span>        out<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>r<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-    if (level == out.size()) {      // rightmost element in subtree
-        out.add(r.val);
-    }
+    dfs<span style="color:#f92672">(</span>r<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span><span style="color:#f92672">,</span> out<span style="color:#f92672">,</span> level <span style="color:#f92672">+</span> 1<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    dfs<span style="color:#f92672">(</span>r<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">,</span> out<span style="color:#f92672">,</span> level <span style="color:#f92672">+</span> 1<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
 
-    dfs(r.right, out, level + 1);
-    dfs(r.left, out, level + 1);
-}
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Another basic solution based on BFS.
+</span><span style="color:#75715e"> * Each time, add all nodes in same level and add the rightmost one to the output list.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param root given root node
+</span><span style="color:#75715e"> * @return values of the nodes you can see ordered from top to bottom
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">bfs</span><span style="color:#f92672">(</span>TreeNode root<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>root <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-/**
- * Another basic solution based on BFS.
- * Each time, add all nodes in same level and add the rightmost one to the output list.
- *
- * @param root given root node
- * @return values of the nodes you can see ordered from top to bottom
- */
-public List&lt;Integer&gt; bfs(TreeNode root) {
-    if (root == null) {
-        return new LinkedList&lt;&gt;();
-    }
+    Queue<span style="color:#f92672">&lt;</span>TreeNode<span style="color:#f92672">&gt;</span> q <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    q<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>root<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> out <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">int</span> size<span style="color:#f92672">;</span>
 
-    Queue&lt;TreeNode&gt; q = new LinkedList&lt;&gt;();
-    q.add(root);
-    List&lt;Integer&gt; out = new LinkedList&lt;&gt;();
-    int size;
+    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span><span style="color:#f92672">!</span>q<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        size <span style="color:#f92672">=</span> q<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        TreeNode tmp <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
 
-    while (!q.isEmpty()) {
-        size = q.size();
-        TreeNode tmp = null;
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> size<span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            tmp <span style="color:#f92672">=</span> q<span style="color:#f92672">.</span><span style="color:#a6e22e">poll</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>tmp<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span> <span style="color:#f92672">!</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                q<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>tmp<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            <span style="color:#f92672">}</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>tmp<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span> <span style="color:#f92672">!</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                q<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>tmp<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
 
-        for (int i = 0; i &lt; size; i++) {
-            tmp = q.poll();
-            if (tmp.left != null) {
-                q.add(tmp.left);
-            }
-            if (tmp.right != null) {
-                q.add(tmp.right);
-            }
-        }
+        out<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>tmp<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>       <span style="color:#75715e">// add rightmost node value
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
 
-        out.add(tmp.val);       // add rightmost node value
-    }
-
-    return out;
-}
-</code></pre>
+    <span style="color:#66d9ef">return</span> out<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div>
               
             </div>
           </div>
@@ -467,7 +439,7 @@ public List&lt;Integer&gt; bfs(TreeNode root) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>
@@ -525,7 +497,7 @@ public List&lt;Integer&gt; bfs(TreeNode root) {
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#table-of-contents">
+          <a class="post-action-btn btn btn--default" href="#">
         
           <i class="fa fa-list"></i>
         </a>
