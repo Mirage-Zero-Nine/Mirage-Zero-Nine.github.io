@@ -355,19 +355,21 @@ Output: [[1,5],[6,9]]
 Output: [[1,2],[3,10],[12,16]]
 Explanation: Because the new interval [4,8] overlaps with [3,5],[6,7],[8,10].
 </code></pre><h2 id="method1">Method</h2>
-<p>Starts from new interval. New interval is the temporary value.</p>
-<ul>
-<li>If given internal's right bound is smaller than left bound of new interval, insert given interval into list.</li>
-<li>If new interval is smaller than given internal, insert new interval into list, replace temp value by given interval.</li>
-<li>These two situations are both non-overlapping. If found a overlapping, find larger bound of each value and continue.</li>
-</ul>
-<p>Finally, after the iteration, add final temp value into list.</p>
+<p>The input interval is sorted. Therefore, starts at the first element in intervals.
+There are three conditions:</p>
+<ol>
+<li>new interval is later than current interval: directly add current interval to output</li>
+<li>new interval is at front of interval: directly add current interval to output and set interval to current one</li>
+<li>overlap: merge two intervals and wait for later interval to check if there is more overlap
+Finally, after the iteration, add final temp value into list.</li>
+</ol>
 <h2 id="code1">Code</h2>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Starts from new interval. New interval is the temporary value.
-</span><span style="color:#75715e"> * If given internal&#39;s right bound is smaller than left bound of new interval, insert given interval into list.
-</span><span style="color:#75715e"> * If new interval is smaller than given internal, insert new interval into list, replace temp value by given interval.
-</span><span style="color:#75715e"> * These two situations are both non-overlapping. If found a overlapping, find larger bound of each value and continue.
+</span><span style="color:#75715e"> * The input interval is sorted. Therefore, starts at the first element in intervals.
+</span><span style="color:#75715e"> * There are three conditions:
+</span><span style="color:#75715e"> * 1. new interval is later than current interval: directly add current interval to output
+</span><span style="color:#75715e"> * 2. new interval is at front of interval: directly add current interval to output and set interval to current one
+</span><span style="color:#75715e"> * 3. overlap: merge two intervals and wait for later interval to check if there is more overlap
 </span><span style="color:#75715e"> * Finally, after the iteration, add final temp value into list.
 </span><span style="color:#75715e"> *
 </span><span style="color:#75715e"> * @param intervals   interval list
@@ -376,22 +378,28 @@ Explanation: Because the new interval [4,8] overlaps with [3,5],[6,7],[8,10].
 </span><span style="color:#75715e"> */</span>
 <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> <span style="color:#a6e22e">insert</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> intervals<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> newInterval<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-    List<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">&gt;</span> out <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> temp <span style="color:#f92672">=</span> newInterval<span style="color:#f92672">;</span>
+    <span style="color:#75715e">/* Corner case */</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>intervals <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">|</span><span style="color:#f92672">|</span> newInterval <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">|</span><span style="color:#f92672">|</span> newInterval<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> intervals<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> interval <span style="color:#f92672">:</span> intervals<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>      <span style="color:#75715e">// during the iteration, interval[i][0] &lt;= interval[i+1][0]
-</span><span style="color:#75715e"></span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>temp<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span> <span style="color:#f92672">&gt;</span> interval<span style="color:#f92672">[</span>1<span style="color:#f92672">]</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            out<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>interval<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>temp<span style="color:#f92672">[</span>1<span style="color:#f92672">]</span> <span style="color:#f92672">&lt;</span> interval<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            out<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>temp<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-            temp <span style="color:#f92672">=</span> interval<span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
-            temp<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">min</span><span style="color:#f92672">(</span>temp<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span><span style="color:#f92672">,</span> interval<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-            temp<span style="color:#f92672">[</span>1<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>temp<span style="color:#f92672">[</span>1<span style="color:#f92672">]</span><span style="color:#f92672">,</span> interval<span style="color:#f92672">[</span>1<span style="color:#f92672">]</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#75715e">// Arrays.sort(intervals, Comparator.comparingInt(i -&gt; i[0]));
+</span><span style="color:#75715e"></span>    List<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">&gt;</span> out <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> tmp <span style="color:#f92672">=</span> newInterval<span style="color:#f92672">;</span>
+
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> i <span style="color:#f92672">:</span> intervals<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>tmp<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span> <span style="color:#f92672">&gt;</span> i<span style="color:#f92672">[</span>1<span style="color:#f92672">]</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            out<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>tmp<span style="color:#f92672">[</span>1<span style="color:#f92672">]</span> <span style="color:#f92672">&lt;</span> i<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>     <span style="color:#75715e">// interval has been merged or no overlap
+</span><span style="color:#75715e"></span>            out<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>tmp<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            tmp <span style="color:#f92672">=</span> i<span style="color:#f92672">;</span>                    <span style="color:#75715e">// set tmp to current interval
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+            tmp<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">min</span><span style="color:#f92672">(</span>tmp<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span><span style="color:#f92672">,</span> i<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            tmp<span style="color:#f92672">[</span>1<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>tmp<span style="color:#f92672">[</span>1<span style="color:#f92672">]</span><span style="color:#f92672">,</span> i<span style="color:#f92672">[</span>1<span style="color:#f92672">]</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
         <span style="color:#f92672">}</span>
     <span style="color:#f92672">}</span>
-    out<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>temp<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    out<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>tmp<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+
     <span style="color:#66d9ef">return</span> out<span style="color:#f92672">.</span><span style="color:#a6e22e">toArray</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>out<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">]</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 <span style="color:#f92672">}</span>
 </code></pre></div><h1 id="meeting-rooms">Meeting Rooms</h1>
