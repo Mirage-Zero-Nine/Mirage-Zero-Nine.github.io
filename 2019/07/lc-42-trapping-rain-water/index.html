@@ -287,11 +287,20 @@ The above elevation map is represented by array [0,1,0,2,1,0,1,3,2,1,2,1]. In th
 <pre><code>Input: [0,1,0,2,1,0,1,3,2,1,2,1]
 Output: 6
 </code></pre><h2 id="method">Method</h2>
-<p>Use two pointers as left start pointer and right start pointer. Move pointer toward center in iteration and add valid value to result.</p>
+<p>There are two approaches to solve this problem: two pointers and stack.</p>
+<p><strong>Two pointers</strong></p>
+<p>Two pointers solution. Starts at the beginning and the end of given array.</p>
+<p>First, find the correct start position for two pointers: find first decreasing/increasing element. From left to right, only decreasing subarray will be possible to trap water, and same as right to left (assume &ldquo;decreasing array&rdquo; is <code>array[i] &lt; array [i - 1]</code>). Then, there must be some place trapping water, since for both left and right, a decreasing subarray is found.</p>
+<p>Find the amount of trapping water by calculate the difference in decreasing subarray and move the corresponding pointer. If current decreasing subarray ends, keep previous steps until two pointers meet.</p>
+<p><strong>Stack</strong></p>
 <h2 id="code">Code</h2>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Use two pointers as left start pointer and right start pointer.
-</span><span style="color:#75715e"> * Move pointer toward center in iteration and add valid value to result.
+</span><span style="color:#75715e"> * Two pointers solution. Starts at the beginning and the end of given array.
+</span><span style="color:#75715e"> * First, find the correct start position for two pointers: find first decreasing/increasing element.
+</span><span style="color:#75715e"> * From left to right, only decreasing subarray will be possible to trap water, and same as right to left.
+</span><span style="color:#75715e"> * Then, there must be some place trapping water, since for both left and right, a decreasing subarray is found.
+</span><span style="color:#75715e"> * Find the amount of trapping water by calculate the difference in decreasing subarray.
+</span><span style="color:#75715e"> * If current decreasing subarray ends, keep previous steps until two pointers meet.
 </span><span style="color:#75715e"> *
 </span><span style="color:#75715e"> * @param height int array of elevation map
 </span><span style="color:#75715e"> * @return trap space
@@ -303,18 +312,13 @@ Output: 6
         <span style="color:#66d9ef">return</span> 0<span style="color:#f92672">;</span>
     <span style="color:#f92672">}</span>
 
-    <span style="color:#66d9ef">int</span> res <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">int</span> left <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">int</span> right <span style="color:#f92672">=</span> height<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">int</span> max <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> left <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> right <span style="color:#f92672">=</span> height<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">;</span>
 
-    <span style="color:#75715e">/* Find correct start and end bound
-</span><span style="color:#75715e">     * From left to right, find end of increasing order.
-</span><span style="color:#75715e">     * From right to left, find the end of decreasing order. */</span>
-    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>left <span style="color:#f92672">&lt;</span> right <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> height<span style="color:#f92672">[</span>left<span style="color:#f92672">]</span> <span style="color:#f92672">&lt;</span> height<span style="color:#f92672">[</span>left <span style="color:#f92672">+</span> 1<span style="color:#f92672">]</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        left<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>left <span style="color:#f92672">&lt;</span> right <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> height<span style="color:#f92672">[</span>left<span style="color:#f92672">]</span> <span style="color:#f92672">&lt;</span><span style="color:#f92672">=</span> height<span style="color:#f92672">[</span>left <span style="color:#f92672">+</span> 1<span style="color:#f92672">]</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>       <span style="color:#75715e">// find first non-increasing element
+</span><span style="color:#75715e"></span>        left<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">;</span>
     <span style="color:#f92672">}</span>
-    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>left <span style="color:#f92672">&lt;</span> right <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> height<span style="color:#f92672">[</span>right<span style="color:#f92672">]</span> <span style="color:#f92672">&lt;</span> height<span style="color:#f92672">[</span>right <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        right<span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>left <span style="color:#f92672">&lt;</span> right <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> height<span style="color:#f92672">[</span>right<span style="color:#f92672">]</span> <span style="color:#f92672">&lt;</span><span style="color:#f92672">=</span> height<span style="color:#f92672">[</span>right <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>    <span style="color:#75715e">// find first non-decreasing element
+</span><span style="color:#75715e"></span>        right<span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">;</span>
     <span style="color:#f92672">}</span>
 
     <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>left <span style="color:#f92672">&gt;</span><span style="color:#f92672">=</span> right<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>        <span style="color:#75715e">// if no valid &#34;pit&#34; can be found
@@ -323,33 +327,68 @@ Output: 6
 
     <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>left <span style="color:#f92672">&lt;</span> right<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-        <span style="color:#75715e">/* Obtain each value in array.
-</span><span style="color:#75715e">         * If valid, add to result. */</span>
-        <span style="color:#66d9ef">int</span> leftValue <span style="color:#f92672">=</span> height<span style="color:#f92672">[</span>left<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">int</span> rightValue <span style="color:#f92672">=</span> height<span style="color:#f92672">[</span>right<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">int</span> leftHeight <span style="color:#f92672">=</span> height<span style="color:#f92672">[</span>left<span style="color:#f92672">]</span><span style="color:#f92672">,</span> rightHeight <span style="color:#f92672">=</span> height<span style="color:#f92672">[</span>right<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
 
-        <span style="color:#75715e">/* If left is smaller than right, then move left pointer.
-</span><span style="color:#75715e">         * Container is depended by smaller height */</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>leftValue <span style="color:#f92672">&lt;</span> rightValue<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#75715e">/*
+</span><span style="color:#75715e">         * The previous stop condition assure that there must be water within left and right.
+</span><span style="color:#75715e">         * And also, height[left + 1] will surely be smaller than height[left], and so to right.
+</span><span style="color:#75715e">         * Therefore, the decreasing subarray next to left can trap water, and so to right.
+</span><span style="color:#75715e">         * Once the end of decreasing subarray is found, restart to find decreasing subarray. */</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>leftHeight <span style="color:#f92672">&lt;</span> rightHeight<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-            <span style="color:#75715e">/* Note: height[indexLeft + 1] can be replaced as height[++indexLeft].
-</span><span style="color:#75715e">             * And the indexLeft++ needs to be removed.
-</span><span style="color:#75715e">             * But only ++left rather than anything else.
-</span><span style="color:#75715e">             * The reason is that ++indexLeft increments the number before the current expression is evaluated */</span>
-            <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>left <span style="color:#f92672">&lt;</span> right <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> leftValue <span style="color:#f92672">&gt;</span> height<span style="color:#f92672">[</span>left <span style="color:#f92672">+</span> 1<span style="color:#f92672">]</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                res <span style="color:#f92672">+</span><span style="color:#f92672">=</span> leftValue <span style="color:#f92672">-</span> height<span style="color:#f92672">[</span>left <span style="color:#f92672">+</span> 1<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
-                left<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">;</span>
+            <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>left <span style="color:#f92672">&lt;</span> right <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> leftHeight <span style="color:#f92672">&gt;</span> height<span style="color:#f92672">[</span>left <span style="color:#f92672">+</span> 1<span style="color:#f92672">]</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                max <span style="color:#f92672">+</span><span style="color:#f92672">=</span> leftHeight <span style="color:#f92672">-</span> height<span style="color:#f92672">[</span>left<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">]</span><span style="color:#f92672">;</span>
             <span style="color:#f92672">}</span>
             left<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">;</span>
         <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>left <span style="color:#f92672">&lt;</span> right <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> rightValue <span style="color:#f92672">&gt;</span> height<span style="color:#f92672">[</span>right <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                res <span style="color:#f92672">+</span><span style="color:#f92672">=</span> rightValue <span style="color:#f92672">-</span> height<span style="color:#f92672">[</span>right <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
-                right<span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">;</span>
+
+            <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>left <span style="color:#f92672">&lt;</span> right <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> rightHeight <span style="color:#f92672">&gt;</span> height<span style="color:#f92672">[</span>right <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                max <span style="color:#f92672">+</span><span style="color:#f92672">=</span> rightHeight <span style="color:#f92672">-</span> height<span style="color:#f92672">[</span>right<span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">]</span><span style="color:#f92672">;</span>
             <span style="color:#f92672">}</span>
             right<span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">;</span>
         <span style="color:#f92672">}</span>
     <span style="color:#f92672">}</span>
-    <span style="color:#66d9ef">return</span> res<span style="color:#f92672">;</span>
+
+    <span style="color:#66d9ef">return</span> max<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Use a stack to store the decreasing subarray index.
+</span><span style="color:#75715e"> * The idea of this solution is to calculate area level by level vertically.
+</span><span style="color:#75715e"> * The width of water trapped depends on distance from left to right, so stack save index rather than height.
+</span><span style="color:#75715e"> * If the decreasing subarray ends, find each area based on end of decreasing array.
+</span><span style="color:#75715e"> * Each decreasing element can trap width * height amount of water.
+</span><span style="color:#75715e"> * Width is the distance from bottom to stack pop out element (and that&#39;s the reason stack stores index).
+</span><span style="color:#75715e"> * Height is the difference from left bound to bottom.
+</span><span style="color:#75715e"> * Bottom will update at each level, to avoid duplicated calculation.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param height int array of elevation map
+</span><span style="color:#75715e"> * @return max trap space
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">stack</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> height<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+
+    <span style="color:#75715e">/* Corner case */</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>height <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">|</span><span style="color:#f92672">|</span> height<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">&lt;</span> 2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> 0<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+    Stack<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> stack <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Stack<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">int</span> max <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> left<span style="color:#f92672">,</span> bottom<span style="color:#f92672">;</span>
+
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> height<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+
+        <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span><span style="color:#f92672">!</span>stack<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> height<span style="color:#f92672">[</span>stack<span style="color:#f92672">.</span><span style="color:#a6e22e">peek</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">]</span> <span style="color:#f92672">&lt;</span> height<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>      <span style="color:#75715e">// find each &#34;level&#34; trapped water
+</span><span style="color:#75715e"></span>            bottom <span style="color:#f92672">=</span> stack<span style="color:#f92672">.</span><span style="color:#a6e22e">pop</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>       <span style="color:#75715e">// update bottom to calculate new &#34;level&#34;
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>stack<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                <span style="color:#66d9ef">break</span><span style="color:#f92672">;</span>
+            <span style="color:#f92672">}</span>
+            left <span style="color:#f92672">=</span> stack<span style="color:#f92672">.</span><span style="color:#a6e22e">peek</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            max <span style="color:#f92672">+</span><span style="color:#f92672">=</span> <span style="color:#f92672">(</span>Math<span style="color:#f92672">.</span><span style="color:#a6e22e">min</span><span style="color:#f92672">(</span>height<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">,</span> height<span style="color:#f92672">[</span>left<span style="color:#f92672">]</span><span style="color:#f92672">)</span> <span style="color:#f92672">-</span> height<span style="color:#f92672">[</span>bottom<span style="color:#f92672">]</span><span style="color:#f92672">)</span> <span style="color:#f92672">*</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">-</span> left <span style="color:#f92672">-</span> 1<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+
+        stack<span style="color:#f92672">.</span><span style="color:#a6e22e">push</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span><span style="color:#f92672">;</span>      <span style="color:#75715e">// push non-increasing or first element index (next height is unknown) into stack
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">return</span> max<span style="color:#f92672">;</span>
 <span style="color:#f92672">}</span>
 </code></pre></div>
               
