@@ -294,13 +294,16 @@
 
 Output: 4
 </code></pre><h2 id="method">Method</h2>
-<p>The basic idea is that, if left sub tree and right sub tree are all univalue tree, and their value are all the same, then current tree/subtree is univalue tree. Therefore, to count the total number of univalue tree in given tree, use DFS to traversal left sub tree and right sub tree. If right sub tree,  left sub tree and root meet the condition, a global counter plus one.</p>
-<p>Note that all leaf nodes are counted as univalue tree.</p>
+<p>The basic idea is that, if left sub tree and right sub tree are all univalue tree, and their value are all the same, then current tree/subtree is univalue tree. Therefore, to count the total number of univalue tree in given tree, use DFS to traversal left sub tree and right sub tree. If right sub tree, left sub tree and root meet the condition, a global counter plus one.</p>
+<p>Notes:</p>
+<ol>
+<li>All leaf nodes are counted as univalue tree.</li>
+<li>Avoid to use global variable, there may be multi-threading problem when using global variable.</li>
+</ol>
 <h2 id="code">Code</h2>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> max <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>        <span style="color:#75715e">// global variant
-</span><span style="color:#75715e"></span>
-<span style="color:#75715e">/**
-</span><span style="color:#75715e"> * DFS to iterate the tree and find every univalue tree.
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * DFS bottom-up to iterate the tree and find every univalue tree.
+</span><span style="color:#75715e"> * Avoid to use global variable, there may be multi-threading problem when using global variable.
 </span><span style="color:#75715e"> *
 </span><span style="color:#75715e"> * @param root root node
 </span><span style="color:#75715e"> * @return number of uni-value subtrees
@@ -312,8 +315,10 @@ Output: 4
         <span style="color:#66d9ef">return</span> 0<span style="color:#f92672">;</span>
     <span style="color:#f92672">}</span>
 
-    isUnivalue<span style="color:#f92672">(</span>root<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">return</span> max<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> max <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>1<span style="color:#f92672">]</span><span style="color:#f92672">;</span>     <span style="color:#75715e">// avoid multi-threading problem by using local variable
+</span><span style="color:#75715e"></span>    helper<span style="color:#f92672">(</span>root<span style="color:#f92672">,</span> max<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+
+    <span style="color:#66d9ef">return</span> max<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
 <span style="color:#f92672">}</span>
 
 <span style="color:#75715e">/**
@@ -322,23 +327,24 @@ Output: 4
 </span><span style="color:#75715e"> * @param r root
 </span><span style="color:#75715e"> * @return number of uni-value subtrees
 </span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">isUnivalue</span><span style="color:#f92672">(</span>TreeNode r<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">helper</span><span style="color:#f92672">(</span>TreeNode r<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> max<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-    <span style="color:#75715e">/* End point */</span>
     <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>r <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>        <span style="color:#75715e">// leaf is counted as univalue tree
-</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">boolean</span> left <span style="color:#f92672">=</span> isUnivalue<span style="color:#f92672">(</span>r<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">boolean</span> right <span style="color:#f92672">=</span> isUnivalue<span style="color:#f92672">(</span>r<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>left <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> right<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#f92672">(</span>r<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span> <span style="color:#f92672">!</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> r<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">.</span><span style="color:#a6e22e">val</span> <span style="color:#f92672">!</span><span style="color:#f92672">=</span> r<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span><span style="color:#f92672">)</span> <span style="color:#f92672">|</span><span style="color:#f92672">|</span> <span style="color:#f92672">(</span>r<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span> <span style="color:#f92672">!</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> r<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span><span style="color:#f92672">.</span><span style="color:#a6e22e">val</span> <span style="color:#f92672">!</span><span style="color:#f92672">=</span> r<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span>
-        max<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">;</span>
         <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
     <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">boolean</span> left <span style="color:#f92672">=</span> helper<span style="color:#f92672">(</span>r<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">,</span> max<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">boolean</span> right <span style="color:#f92672">=</span> helper<span style="color:#f92672">(</span>r<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span><span style="color:#f92672">,</span> max<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+
+    <span style="color:#75715e">/*
+</span><span style="color:#75715e">     * Conditions: (match all conditions)
+</span><span style="color:#75715e">     * 1. Left and right subtree are both univalue (null is counted as univalue).
+</span><span style="color:#75715e">     * 2. Left subtree root value equals to root value, and right subtree root is same as root value.  */</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>left <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> right <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> <span style="color:#f92672">(</span>r<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">|</span><span style="color:#f92672">|</span> r<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">.</span><span style="color:#a6e22e">val</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> r<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span><span style="color:#f92672">)</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> <span style="color:#f92672">(</span>r<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">|</span><span style="color:#f92672">|</span> r<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span><span style="color:#f92672">.</span><span style="color:#a6e22e">val</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> r<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        max<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span><span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+
     <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
 <span style="color:#f92672">}</span>
 </code></pre></div>
