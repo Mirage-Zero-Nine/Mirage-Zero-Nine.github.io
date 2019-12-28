@@ -13,20 +13,20 @@
 
 <meta property="og:description" content="">
 <meta property="og:type" content="article">
-<meta property="og:title" content="LC 1/167/1099/15/259/16/18 - Two/Three/Four Sum">
-<meta name="twitter:title" content="LC 1/167/1099/15/259/16/18 - Two/Three/Four Sum">
-<meta property="og:url" content="https://yy-zhou.github.io/2019/08/lc-1/167/1099/15/259/16/18-two/three/four-sum/">
-<meta property="twitter:url" content="https://yy-zhou.github.io/2019/08/lc-1/167/1099/15/259/16/18-two/three/four-sum/">
+<meta property="og:title" content="LC 1/167/1099/15/259/16/18 - Two/Three/Four/K Sum">
+<meta name="twitter:title" content="LC 1/167/1099/15/259/16/18 - Two/Three/Four/K Sum">
+<meta property="og:url" content="https://yy-zhou.github.io/2019/12/lc-1/167/1099/15/259/16/18-two/three/four/k-sum/">
+<meta property="twitter:url" content="https://yy-zhou.github.io/2019/12/lc-1/167/1099/15/259/16/18-two/three/four/k-sum/">
 <meta property="og:site_name" content="Bingo!">
 <meta property="og:description" content="">
 <meta name="twitter:description" content="">
 <meta property="og:locale" content="en-us">
 
   
-    <meta property="article:published_time" content="2019-08-09T00:00:00">
+    <meta property="article:published_time" content="2019-12-28T00:00:00">
   
   
-    <meta property="article:modified_time" content="2019-08-09T00:00:00">
+    <meta property="article:modified_time" content="2019-12-28T00:00:00">
   
   
   
@@ -59,14 +59,14 @@
   <meta property="twitter:image" content="https://yy-zhou.github.io/img/avatar.jpg">
 
 
-    <title>LC 1/167/1099/15/259/16/18 - Two/Three/Four Sum</title>
+    <title>LC 1/167/1099/15/259/16/18 - Two/Three/Four/K Sum</title>
 
     <link rel="icon" href="https://yy-zhou.github.io/favicon.png">
     
 
     
 
-    <link rel="canonical" href="https://yy-zhou.github.io/2019/08/lc-1/167/1099/15/259/16/18-two/three/four-sum/">
+    <link rel="canonical" href="https://yy-zhou.github.io/2019/12/lc-1/167/1099/15/259/16/18-two/three/four/k-sum/">
 
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
@@ -250,15 +250,15 @@
             <div class="post-header main-content-wrap text-left">
   
     <h1 class="post-title" itemprop="headline">
-      LC 1/167/1099/15/259/16/18 - Two/Three/Four Sum
+      LC 1/167/1099/15/259/16/18 - Two/Three/Four/K Sum
     </h1>
   
   
   <div class="postShorten-meta post-meta">
     
-      <time itemprop="datePublished" datetime="2019-08-09T00:00:00Z">
+      <time itemprop="datePublished" datetime="2019-12-28T00:00:00Z">
         
-  August 9, 2019
+  December 28, 2019
 
       </time>
     
@@ -677,7 +677,70 @@ A solution set is:
     <span style="color:#f92672">}</span>
     <span style="color:#66d9ef">return</span> out<span style="color:#f92672">;</span>
 <span style="color:#f92672">}</span>
-</code></pre></div>
+</code></pre></div><h1 id="k-sum">K Sum</h1>
+<p>This problem is not listed in LeetCode. However, it can be a follow up for problems above.</p>
+<h2 id="problem-description-7">Problem description</h2>
+<p>Find all sub array that contains k elements, and their sum is exactly given target.</p>
+<h2 id="method-7">Method</h2>
+<p>Recursively remove one element in array until all k elements has been selected. When k elements are selected, check if target equals to 0.</p>
+<h2 id="code-7">Code</h2>
+<pre><code>/**
+ * Recursively remove one element in array until all k elements has been selected.
+ * When k elements are selected, check if target equals to 0.
+ *
+ * @param nums   an integer array.
+ * @param k      a positive integer (k &lt;= length(A))
+ * @param target a integer
+ * @return a list of lists of integer
+ */
+public List&lt;List&lt;Integer&gt;&gt; kSum(int[] nums, int k, int target) {
+
+    List&lt;List&lt;Integer&gt;&gt; out = new ArrayList&lt;&gt;();
+
+    /* Corner case */
+    if (nums == null || nums.length == 0 || k == 0) {
+        return out;
+    }
+
+    Arrays.sort(nums);
+    backtracking(out, new ArrayList&lt;&gt;(), nums, k, target, 0);
+
+    return out;
+}
+
+/**
+ * Recursion.
+ * Each round, remove one element in array and target is subtracted by this element.
+ * If all k elements have been selected, check if current target equals to 0.
+ * One optimize: if target is smaller than current element, it can not be the answer.
+ *
+ * @param out      final result
+ * @param tmp      temporary list
+ * @param arr      given array
+ * @param k        k elements required
+ * @param target   target number
+ * @param position start position
+ */
+private void backtracking(List&lt;List&lt;Integer&gt;&gt; out, List&lt;Integer&gt; tmp, int[] arr, int k, int target, int position) {
+
+    if (k == 0 &amp;&amp; target == 0) {
+        out.add(new ArrayList&lt;&gt;(tmp));
+        return;
+    }
+
+    if (k &gt; 0 &amp;&amp; target &gt; 0) {
+        for (int i = position; i &lt; arr.length; i++) {
+            if (arr[i] &gt; target) {
+                return;
+            }
+
+            tmp.add(arr[i]);
+            backtracking(out, tmp, arr, k - 1, target - arr[i], i + 1);
+            tmp.remove(tmp.size() - 1);
+        }
+    }
+}
+</code></pre>
               
             </div>
           </div>
@@ -704,7 +767,7 @@ A solution set is:
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2019/08/lc-424/1156-sliding-window-by-counting-character/" data-tooltip="LC 424/1156 - Sliding Window by Counting Character">
+                <a class="post-action-btn btn btn--disabled">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -712,7 +775,7 @@ A solution set is:
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2019/08/lc-1032-stream-of-characters/" data-tooltip="LC 1032 - Stream of Characters">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2019/12/lc-369-plus-one-linked-list/" data-tooltip="LC 369 - Plus One Linked List">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
@@ -762,7 +825,7 @@ A solution set is:
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2019/08/lc-424/1156-sliding-window-by-counting-character/" data-tooltip="LC 424/1156 - Sliding Window by Counting Character">
+                <a class="post-action-btn btn btn--disabled">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -770,7 +833,7 @@ A solution set is:
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2019/08/lc-1032-stream-of-characters/" data-tooltip="LC 1032 - Stream of Characters">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2019/12/lc-369-plus-one-linked-list/" data-tooltip="LC 369 - Plus One Linked List">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
