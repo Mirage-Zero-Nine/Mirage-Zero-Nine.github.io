@@ -290,7 +290,7 @@ Explanation: The longest valid parentheses substring is &quot;()&quot;
 <pre><code>Input: &quot;)()())&quot;
 Output: 4
 Explanation: The longest valid parentheses substring is &quot;()()&quot;
-</code></pre><h2 id="method">Method</h2>
+</code></pre><h2 id="method--code">Method &amp; Code</h2>
 <p>This problem can be solved by 3 ways:</p>
 <ol>
 <li>Traverse</li>
@@ -302,22 +302,6 @@ Explanation: The longest valid parentheses substring is &quot;()()&quot;
 <p>Then traverse from right to left and do the same thing. The reason for second reversed traverse is that, if only scan from left to right and count the left part of parenthesis, then if given string contains more right parentheses compare to left, such as <code>)))))()()</code>, then the max counter will never be triggered. Note that the second traverse from right to left, the &ldquo;left parenthesis&rdquo; should be <code>(</code> instead of <code>)</code> in first traverse.</p>
 <p>Time complexity: <code>O(n)</code></p>
 <p>Space complexity: <code>O(1)</code></p>
-<p><strong>Stack</strong></p>
-<p>Another solution of this problem that uses stack to store left parentheses&rsquo; position.</p>
-<p>If encounter right parenthesis, pop stack's top index and compare i - index to max length. If stack is empty and encounter right parenthesis, push current index into stack as next valid length's start.</p>
-<p>This approach is almost the same as checking whether a string is a valid parentheses pair. It only requires one time of traversal, but consuming O(n) memory. The time complexity is O(n) as well, but only half of the traverse solution, as it only traverse once.</p>
-<p><strong>Dynamic programming</strong></p>
-<p>Dynamic programming can solve this problem as well. The idea is to use a 1D table to save the previous condition of valid parentheses. And the statement transition is as following:</p>
-<pre><code>if s.charAt(i) == ')':
-	1. s.charAt(i - 1) == '(' 
-		arr[i] = arr[i - 2] + 2, i &gt; 1
-		arr[i] = 2 i == 1
-  2. i &gt; arr[i - 1] &amp;&amp; s.charAt(i - arr[i - 1] - 1) == '('
-  	arr[i] = arr[i - 1] + arr[i - arr[i - 1] - 2] + 2, i - arr[i - 1] &gt; 1
-  	arr[i] = arr[i - 1] + 2, otherwise
-</code></pre><p>The first condition is simple, add a new pair to max length if previous char is <code>(</code>. The second condition is a little complex. The purpose of this statement is to find first <code>(</code> under current situation. If current pair is immediately to a previous one, such as <code>(())()</code>, then the length should count it and add it to result.</p>
-<p><code>i &gt; arr[i - 1]</code> is to assure this value has possibility to become max.</p>
-<h2 id="code">Code</h2>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
 </span><span style="color:#75715e"> * Traverse given string for two times, set two counter &#34;left&#34; and &#34;right&#34; to count &#34;(&#34;, &#34;)&#34; respectively.
 </span><span style="color:#75715e"> * First from left to right, if left equals to right and none of them are 0, then one valid length is found.
@@ -375,8 +359,11 @@ Explanation: The longest valid parentheses substring is &quot;()()&quot;
 
     <span style="color:#66d9ef">return</span> max<span style="color:#f92672">;</span>
 <span style="color:#f92672">}</span>
-
-<span style="color:#75715e">/**
+</code></pre></div><p><strong>Stack</strong></p>
+<p>Another solution of this problem that uses stack to store left parentheses&rsquo; position.</p>
+<p>If encounter right parenthesis, pop stack's top index and compare i - index to max length. If stack is empty and encounter right parenthesis, push current index into stack as next valid length's start.</p>
+<p>This approach is almost the same as checking whether a string is a valid parentheses pair. It only requires one time of traversal, but consuming O(n) memory. The time complexity is O(n) as well, but only half of the traverse solution, as it only traverse once.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
 </span><span style="color:#75715e"> * Another solution of this problem that uses stack to store left parentheses&#39; position.
 </span><span style="color:#75715e"> * If encounter right parenthesis, pop stack&#39;s top index and compare i - index to max length.
 </span><span style="color:#75715e"> * If stack is empty and encounter right parenthesis, push current index into stack as next valid length&#39;s start.
@@ -415,10 +402,28 @@ Explanation: The longest valid parentheses substring is &quot;()()&quot;
 
     <span style="color:#66d9ef">return</span> maxLength<span style="color:#f92672">;</span>
 <span style="color:#f92672">}</span>
-
-<span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Using dynamic programming to solve this problem.
-</span><span style="color:#75715e"> * This approach is faster than previous one.
+</code></pre></div><p><strong>Dynamic programming</strong></p>
+<p>Dynamic programming can solve this problem as well. The idea is to use a 1D table to save the previous condition of valid parentheses. And the state transition is as following:</p>
+<p>If <code>s.charAt(i) == ')'</code>, then there may be possible valid pair.</p>
+<ul>
+<li>If <code>s.charAt(i - 1) == '('</code>, then <code>dp[i] = dp[i - 2] + 2</code> (required to check if <code>i - 2</code> is out of boundary).</li>
+<li>Otherwise, if <code>s.charAt(i - dp[i - 1] - 1) == '('</code>, which shows current <code>)</code> matches a <code>(</code>, <code>dp[i] = dp[i - 1] + dp[i - dp[i - 1] - 2] + 2</code>. If <code>i - dp[i - 1] &lt;= 1</code>, then start position of current pair is start of string, <code>dp[i] = dp[i - 1] + 2</code>.</li>
+</ul>
+<p>Analysis:</p>
+<ul>
+<li>Time complexity: <code>O(n)</code>. Single traversal of string to fill dp array is done.</li>
+<li>Space complexity: <code>O(n)</code>. dp array of size n is used.</li>
+</ul>
+<p>The first condition is simple, add a new pair to max length if previous char is <code>(</code>. The second condition is a little complex. The purpose of this statement is to find first <code>(</code> under current situation. If current pair is immediately to a previous one, such as <code>(())()</code>, then the length should count it and add it to result.</p>
+<p><code>i &gt; arr[i - 1]</code> is to assure this value has possibility to become max.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * DP solution.
+</span><span style="color:#75715e"> * State transition:
+</span><span style="color:#75715e"> * If s.charAt(i) == &#39;)&#39;, then there may be possible valid pair.
+</span><span style="color:#75715e"> * If s.charAt(i - 1) == &#39;(&#39;, then dp[i] = dp[i - 2] + 2 (required to check if i - 2 is out of boundary).
+</span><span style="color:#75715e"> * Otherwise, if s.charAt(i - dp[i - 1] - 1) == &#39;(&#39;, which shows current &#39;)&#39; matches a &#39;(&#39;.
+</span><span style="color:#75715e"> * dp[i] = dp[i - 1] + dp[i - dp[i - 1] - 2] + 2
+</span><span style="color:#75715e"> * If i - dp[i - 1] &lt;= 1, then start position of current pair is start of string, dp[i] = dp[i - 1] + 2.
 </span><span style="color:#75715e"> * Analysis:
 </span><span style="color:#75715e"> * Time complexity: O(n). Single traversal of string to fill dp array is done.
 </span><span style="color:#75715e"> * Space complexity: O(n). dp array of size n is used.
@@ -426,94 +431,15 @@ Explanation: The longest valid parentheses substring is &quot;()()&quot;
 </span><span style="color:#75715e"> * @param s input string
 </span><span style="color:#75715e"> * @return longest valid parentheses length
 </span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">longestValidParenthesesDP</span><span style="color:#f92672">(</span>String s<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">dp</span><span style="color:#f92672">(</span>String s<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
     <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> dp <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">]</span><span style="color:#f92672">;</span>        <span style="color:#75715e">// save temp max
 </span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> maxParentheses <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
 
     <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-        <span style="color:#75715e">/* If current char is &#39;)&#39;, then find previous state */</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;)&#39;</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;(&#39;</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>       <span style="color:#75715e">// add a new pair
-</span><span style="color:#75715e"></span>
-                dp<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">&gt;</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">?</span> dp<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 2<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> 2 <span style="color:#f92672">:</span> 2<span style="color:#f92672">;</span>
-
-            <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">&gt;</span> dp<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i <span style="color:#f92672">-</span> dp<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;(&#39;</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-
-                <span style="color:#75715e">/*
-</span><span style="color:#75715e">                 * i - dp[i - 1] - 1: find first &#39;(&#39;.
-</span><span style="color:#75715e">                 * If i - dp[i - 1] - 1 &gt; 0, then there may be previous valid pair. Add to dp[i].
-</span><span style="color:#75715e">                 * Otherwise, if i - dp[i - 1] - 1 == 0, then the valid pair starts from start.
-</span><span style="color:#75715e">                 * Under this condition, dp[i - 1] + 2 will include all valid pair from start. */</span>
-                dp<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">-</span> dp<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span> <span style="color:#f92672">&gt;</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">?</span> dp<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> dp<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> dp<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span> <span style="color:#f92672">-</span> 2<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> 2 <span style="color:#f92672">:</span> dp<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> 2<span style="color:#f92672">;</span>
-            <span style="color:#f92672">}</span>
-            maxParentheses <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>maxParentheses<span style="color:#f92672">,</span> dp<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-    <span style="color:#66d9ef">return</span> maxParentheses<span style="color:#f92672">;</span>
-<span style="color:#f92672">}</span>
-
-<span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Another solution of this problem that uses stack to store left parentheses&#39; position.
-</span><span style="color:#75715e"> * If encounter right parenthesis, pop stack&#39;s top index and compare i - index to max length.
-</span><span style="color:#75715e"> * If stack is empty and encounter right parenthesis, push current index into stack as next valid length&#39;s start.
-</span><span style="color:#75715e"> * Analysis:
-</span><span style="color:#75715e"> * Time complexity: O(n). Single traversal of string to fill dp array is done.
-</span><span style="color:#75715e"> * Space complexity: O(n). Stack at most store string&#39;s length
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param s input parentheses string
-</span><span style="color:#75715e"> * @return longest valid parentheses length
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">longestValidParenthesesStack</span><span style="color:#f92672">(</span>String s<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-
-    <span style="color:#75715e">/* Corner case */</span>
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">&lt;</span> 2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">return</span> 0<span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-
-    Stack<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> leftStack <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Stack<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>       <span style="color:#75715e">// stack that store left parentheses
-</span><span style="color:#75715e"></span>
-    leftStack<span style="color:#f92672">.</span><span style="color:#a6e22e">push</span><span style="color:#f92672">(</span><span style="color:#f92672">-</span>1<span style="color:#f92672">)</span><span style="color:#f92672">;</span>     <span style="color:#75715e">// -1 can be regarded as “extended” start position
-</span><span style="color:#75715e"></span>
-    <span style="color:#66d9ef">int</span> maxLength <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
-
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;(&#39;</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            leftStack<span style="color:#f92672">.</span><span style="color:#a6e22e">push</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
-            leftStack<span style="color:#f92672">.</span><span style="color:#a6e22e">pop</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>leftStack<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                leftStack<span style="color:#f92672">.</span><span style="color:#a6e22e">push</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span><span style="color:#f92672">;</span>      <span style="color:#75715e">// start position for next valid parentheses length counting
-</span><span style="color:#75715e"></span>            <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
-                maxLength <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>maxLength<span style="color:#f92672">,</span> i <span style="color:#f92672">-</span> leftStack<span style="color:#f92672">.</span><span style="color:#a6e22e">peek</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-            <span style="color:#f92672">}</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">return</span> maxLength<span style="color:#f92672">;</span>
-<span style="color:#f92672">}</span>
-
-<span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Using dynamic programming to solve this problem.
-</span><span style="color:#75715e"> * This approach is faster than previous one.
-</span><span style="color:#75715e"> * Analysis:
-</span><span style="color:#75715e"> * Time complexity: O(n). Single traversal of string to fill dp array is done.
-</span><span style="color:#75715e"> * Space complexity: O(n). dp array of size n is used.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param s input string
-</span><span style="color:#75715e"> * @return longest valid parentheses length
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">longestValidParenthesesDP</span><span style="color:#f92672">(</span>String s<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-
-    <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> dp <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">]</span><span style="color:#f92672">;</span>        <span style="color:#75715e">// save temp max
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> maxParentheses <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
-
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-
-        <span style="color:#75715e">/* If current char is &#39;)&#39;, then find previous state */</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;)&#39;</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;(&#39;</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>       <span style="color:#75715e">// add a new pair
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;)&#39;</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>       <span style="color:#75715e">// if current char is &#39;)&#39;, then there may be valid pair
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;(&#39;</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>       <span style="color:#75715e">// add a new pair
 </span><span style="color:#75715e"></span>
                 dp<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">&gt;</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">?</span> dp<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 2<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> 2 <span style="color:#f92672">:</span> 2<span style="color:#f92672">;</span>
 
