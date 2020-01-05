@@ -15,18 +15,18 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="LC 32 - Longest Valid Parentheses">
 <meta name="twitter:title" content="LC 32 - Longest Valid Parentheses">
-<meta property="og:url" content="https://yy-zhou.github.io/2019/06/lc-32-longest-valid-parentheses/">
-<meta property="twitter:url" content="https://yy-zhou.github.io/2019/06/lc-32-longest-valid-parentheses/">
+<meta property="og:url" content="https://yy-zhou.github.io/2020/01/lc-32-longest-valid-parentheses/">
+<meta property="twitter:url" content="https://yy-zhou.github.io/2020/01/lc-32-longest-valid-parentheses/">
 <meta property="og:site_name" content="Bingo!">
 <meta property="og:description" content="">
 <meta name="twitter:description" content="">
 <meta property="og:locale" content="en-us">
 
   
-    <meta property="article:published_time" content="2019-06-08T00:00:00">
+    <meta property="article:published_time" content="2020-01-05T00:00:00">
   
   
-    <meta property="article:modified_time" content="2019-06-08T00:00:00">
+    <meta property="article:modified_time" content="2020-01-05T00:00:00">
   
   
   
@@ -66,7 +66,7 @@
 
     
 
-    <link rel="canonical" href="https://yy-zhou.github.io/2019/06/lc-32-longest-valid-parentheses/">
+    <link rel="canonical" href="https://yy-zhou.github.io/2020/01/lc-32-longest-valid-parentheses/">
 
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
@@ -256,9 +256,9 @@
   
   <div class="postShorten-meta post-meta">
     
-      <time itemprop="datePublished" datetime="2019-06-08T00:00:00Z">
+      <time itemprop="datePublished" datetime="2020-01-05T00:00:00Z">
         
-  June 8, 2019
+  January 5, 2020
 
       </time>
     
@@ -298,7 +298,10 @@ Explanation: The longest valid parentheses substring is &quot;()()&quot;
 <li>Dynamic programming</li>
 </ol>
 <p><strong>Traverse</strong></p>
-<p>This is the simplest way and takes least memory consumption. The idea is that traverse from left to right. Find all valid parentheses and filter out max one. Then traverse from left to right and do the same thing. This traverse is to avoid the situation that left parenthesis is more than right parenthesis. Under this circumstances, if only one traverse is done, the function will only return 0, as no valid condition is triggered.</p>
+<p>The idea is that traverse from left to right from right to left to find all valid parentheses length by using a counter to count left parenthesis and right parenthesis. If <code>left == right</code>, then one valid pair is found. If <code>right &gt; left</code>, then current parentheses pair is invalid and two counters should be reset. After the scan, find the longest length among them.</p>
+<p>Then traverse from right to left and do the same thing. The reason for second reversed traverse is that, if only scan from left to right and count the left part of parenthesis, then if given string contains more right parentheses compare to left, such as <code>)))))()()</code>, then the max counter will never be triggered. Note that the second traverse from right to left, the &ldquo;left parenthesis&rdquo; should be <code>(</code> instead of <code>)</code> in first traverse.</p>
+<p>Time complexity: <code>O(n)</code></p>
+<p>Space complexity: <code>O(1)</code></p>
 <p><strong>Stack</strong></p>
 <p>Another solution of this problem that uses stack to store left parentheses&rsquo; position.</p>
 <p>If encounter right parenthesis, pop stack's top index and compare i - index to max length. If stack is empty and encounter right parenthesis, push current index into stack as next valid length's start.</p>
@@ -320,6 +323,8 @@ Explanation: The longest valid parentheses substring is &quot;()()&quot;
 </span><span style="color:#75715e"> * First from left to right, if left equals to right and none of them are 0, then one valid length is found.
 </span><span style="color:#75715e"> * Compare current length to max length. If larger then switch it. Then reset both counters.
 </span><span style="color:#75715e"> * When first traverse completed, traverse string from right to left with same process.
+</span><span style="color:#75715e"> * The second traverse is to avoid that right parenthesis is more than left parenthesis in given string.
+</span><span style="color:#75715e"> * For example, when string is )))))()(), then the max counter will never be triggered.
 </span><span style="color:#75715e"> * Final max length is the result.
 </span><span style="color:#75715e"> * Analysis:
 </span><span style="color:#75715e"> * Time complexity: O(n). Single traversal of string to fill dp array is done.
@@ -335,33 +340,34 @@ Explanation: The longest valid parentheses substring is &quot;()()&quot;
         <span style="color:#66d9ef">return</span> 0<span style="color:#f92672">;</span>
     <span style="color:#f92672">}</span>
 
+    <span style="color:#66d9ef">return</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>helper<span style="color:#f92672">(</span>s<span style="color:#f92672">,</span> 0<span style="color:#f92672">,</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#39;(&#39;</span><span style="color:#f92672">)</span><span style="color:#f92672">,</span> helper<span style="color:#f92672">(</span>s<span style="color:#f92672">,</span> <span style="color:#f92672">-</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">+</span> 1<span style="color:#f92672">,</span> 0<span style="color:#f92672">,</span> <span style="color:#e6db74">&#39;)&#39;</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Find length of longest valid parentheses substring by traversing given string.
+</span><span style="color:#75715e"> * Use a for loop to traverse string.
+</span><span style="color:#75715e"> * Therefore, if starts from left to right, start index is 0, end index is string&#39;s length.
+</span><span style="color:#75715e"> * If traverse from right to left, start index is -(string&#39;s length + 1), since for loop is fixed.
+</span><span style="color:#75715e"> * End index under this situation is 0.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param s     given string
+</span><span style="color:#75715e"> * @param start start index of string
+</span><span style="color:#75715e"> * @param end   end index of string
+</span><span style="color:#75715e"> * @param c     left parenthesis
+</span><span style="color:#75715e"> * @return length of longest valid parentheses substring
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">helper</span><span style="color:#f92672">(</span>String s<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> start<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> end<span style="color:#f92672">,</span> <span style="color:#66d9ef">char</span> c<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
     <span style="color:#66d9ef">int</span> left <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> right <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> max <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>      <span style="color:#75715e">// traverse from left to right
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;(&#39;</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> start<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> end<span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>Math<span style="color:#f92672">.</span><span style="color:#a6e22e">abs</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> c<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
             left<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">;</span>
         <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
             right<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">;</span>
         <span style="color:#f92672">}</span>
         <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>left <span style="color:#f92672">=</span><span style="color:#f92672">=</span> right<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            max <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>max<span style="color:#f92672">,</span> left <span style="color:#f92672">+</span> right<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            max <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>left <span style="color:#f92672">+</span> right<span style="color:#f92672">,</span> max<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
         <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>right <span style="color:#f92672">&gt;</span> left<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            left <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
-            right <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-
-    left <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
-    right <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
-
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">;</span> i <span style="color:#f92672">&gt;</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">;</span> i<span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>     <span style="color:#75715e">// traverse from right to left
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;)&#39;</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            right<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
-            left<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>left <span style="color:#f92672">=</span><span style="color:#f92672">=</span> right<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            max <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>max<span style="color:#f92672">,</span> left <span style="color:#f92672">+</span> right<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>right <span style="color:#f92672">&lt;</span> left<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
             left <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
             right <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
         <span style="color:#f92672">}</span>
@@ -388,12 +394,10 @@ Explanation: The longest valid parentheses substring is &quot;()()&quot;
         <span style="color:#66d9ef">return</span> 0<span style="color:#f92672">;</span>
     <span style="color:#f92672">}</span>
 
-    <span style="color:#75715e">/* Stack that store left parentheses */</span>
-    Stack<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> leftStack <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Stack<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-
-    <span style="color:#75715e">/* -1 can be regarded as “extended” start position */</span>
-    leftStack<span style="color:#f92672">.</span><span style="color:#a6e22e">push</span><span style="color:#f92672">(</span><span style="color:#f92672">-</span>1<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-
+    Stack<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> leftStack <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Stack<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>       <span style="color:#75715e">// stack that store left parentheses
+</span><span style="color:#75715e"></span>
+    leftStack<span style="color:#f92672">.</span><span style="color:#a6e22e">push</span><span style="color:#f92672">(</span><span style="color:#f92672">-</span>1<span style="color:#f92672">)</span><span style="color:#f92672">;</span>     <span style="color:#75715e">// -1 can be regarded as “extended” start position
+</span><span style="color:#75715e"></span>
     <span style="color:#66d9ef">int</span> maxLength <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
 
     <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
@@ -402,14 +406,91 @@ Explanation: The longest valid parentheses substring is &quot;()()&quot;
         <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
             leftStack<span style="color:#f92672">.</span><span style="color:#a6e22e">pop</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
             <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>leftStack<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-
-                <span style="color:#75715e">/* Start position for next valid parentheses length counting */</span>
-                leftStack<span style="color:#f92672">.</span><span style="color:#a6e22e">push</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-            <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+                leftStack<span style="color:#f92672">.</span><span style="color:#a6e22e">push</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span><span style="color:#f92672">;</span>      <span style="color:#75715e">// start position for next valid parentheses length counting
+</span><span style="color:#75715e"></span>            <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
                 maxLength <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>maxLength<span style="color:#f92672">,</span> i <span style="color:#f92672">-</span> leftStack<span style="color:#f92672">.</span><span style="color:#a6e22e">peek</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
             <span style="color:#f92672">}</span>
         <span style="color:#f92672">}</span>
     <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">return</span> maxLength<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Using dynamic programming to solve this problem.
+</span><span style="color:#75715e"> * This approach is faster than previous one.
+</span><span style="color:#75715e"> * Analysis:
+</span><span style="color:#75715e"> * Time complexity: O(n). Single traversal of string to fill dp array is done.
+</span><span style="color:#75715e"> * Space complexity: O(n). dp array of size n is used.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param s input string
+</span><span style="color:#75715e"> * @return longest valid parentheses length
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">longestValidParenthesesDP</span><span style="color:#f92672">(</span>String s<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+
+    <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> dp <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">]</span><span style="color:#f92672">;</span>        <span style="color:#75715e">// save temp max
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> maxParentheses <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+
+        <span style="color:#75715e">/* If current char is &#39;)&#39;, then find previous state */</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;)&#39;</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;(&#39;</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>       <span style="color:#75715e">// add a new pair
+</span><span style="color:#75715e"></span>
+                dp<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">&gt;</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">?</span> dp<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 2<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> 2 <span style="color:#f92672">:</span> 2<span style="color:#f92672">;</span>
+
+            <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">&gt;</span> dp<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i <span style="color:#f92672">-</span> dp<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;(&#39;</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+
+                <span style="color:#75715e">/*
+</span><span style="color:#75715e">                 * i - dp[i - 1] - 1: find first &#39;(&#39;.
+</span><span style="color:#75715e">                 * If i - dp[i - 1] - 1 &gt; 0, then there may be previous valid pair. Add to dp[i].
+</span><span style="color:#75715e">                 * Otherwise, if i - dp[i - 1] - 1 == 0, then the valid pair starts from start.
+</span><span style="color:#75715e">                 * Under this condition, dp[i - 1] + 2 will include all valid pair from start. */</span>
+                dp<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">-</span> dp<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span> <span style="color:#f92672">&gt;</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">?</span> dp<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> dp<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> dp<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span> <span style="color:#f92672">-</span> 2<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> 2 <span style="color:#f92672">:</span> dp<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> 2<span style="color:#f92672">;</span>
+            <span style="color:#f92672">}</span>
+            maxParentheses <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>maxParentheses<span style="color:#f92672">,</span> dp<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">return</span> maxParentheses<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Another solution of this problem that uses stack to store left parentheses&#39; position.
+</span><span style="color:#75715e"> * If encounter right parenthesis, pop stack&#39;s top index and compare i - index to max length.
+</span><span style="color:#75715e"> * If stack is empty and encounter right parenthesis, push current index into stack as next valid length&#39;s start.
+</span><span style="color:#75715e"> * Analysis:
+</span><span style="color:#75715e"> * Time complexity: O(n). Single traversal of string to fill dp array is done.
+</span><span style="color:#75715e"> * Space complexity: O(n). Stack at most store string&#39;s length
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param s input parentheses string
+</span><span style="color:#75715e"> * @return longest valid parentheses length
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">longestValidParenthesesStack</span><span style="color:#f92672">(</span>String s<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+
+    <span style="color:#75715e">/* Corner case */</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">&lt;</span> 2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> 0<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+
+    Stack<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> leftStack <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Stack<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>       <span style="color:#75715e">// stack that store left parentheses
+</span><span style="color:#75715e"></span>
+    leftStack<span style="color:#f92672">.</span><span style="color:#a6e22e">push</span><span style="color:#f92672">(</span><span style="color:#f92672">-</span>1<span style="color:#f92672">)</span><span style="color:#f92672">;</span>     <span style="color:#75715e">// -1 can be regarded as “extended” start position
+</span><span style="color:#75715e"></span>
+    <span style="color:#66d9ef">int</span> maxLength <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;(&#39;</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            leftStack<span style="color:#f92672">.</span><span style="color:#a6e22e">push</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+            leftStack<span style="color:#f92672">.</span><span style="color:#a6e22e">pop</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>leftStack<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                leftStack<span style="color:#f92672">.</span><span style="color:#a6e22e">push</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span><span style="color:#f92672">;</span>      <span style="color:#75715e">// start position for next valid parentheses length counting
+</span><span style="color:#75715e"></span>            <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+                maxLength <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>maxLength<span style="color:#f92672">,</span> i <span style="color:#f92672">-</span> leftStack<span style="color:#f92672">.</span><span style="color:#a6e22e">peek</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+
     <span style="color:#66d9ef">return</span> maxLength<span style="color:#f92672">;</span>
 <span style="color:#f92672">}</span>
 
@@ -477,7 +558,7 @@ Explanation: The longest valid parentheses substring is &quot;()()&quot;
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2019/06/lc-120-triangle/" data-tooltip="LC 120 - Triangle">
+                <a class="post-action-btn btn btn--disabled">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -485,7 +566,7 @@ Explanation: The longest valid parentheses substring is &quot;()()&quot;
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2019/06/lc-329-longest-increasing-path-in-a-matrix/" data-tooltip="LC 329 - Longest Increasing Path in a Matrix">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2020/01/lc-10/44/72/139/472/1223-dfs-with-memorization/" data-tooltip="LC 10/44/72/139/472/1223 - DFS with Memorization">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
@@ -535,7 +616,7 @@ Explanation: The longest valid parentheses substring is &quot;()()&quot;
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2019/06/lc-120-triangle/" data-tooltip="LC 120 - Triangle">
+                <a class="post-action-btn btn btn--disabled">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -543,7 +624,7 @@ Explanation: The longest valid parentheses substring is &quot;()()&quot;
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2019/06/lc-329-longest-increasing-path-in-a-matrix/" data-tooltip="LC 329 - Longest Increasing Path in a Matrix">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2020/01/lc-10/44/72/139/472/1223-dfs-with-memorization/" data-tooltip="LC 10/44/72/139/472/1223 - DFS with Memorization">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
