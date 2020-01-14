@@ -23,10 +23,10 @@
 <meta property="og:locale" content="en-us">
 
   
-    <meta property="article:published_time" content="2020-01-13T00:00:00">
+    <meta property="article:published_time" content="2020-01-14T00:00:00">
   
   
-    <meta property="article:modified_time" content="2020-01-13T00:00:00">
+    <meta property="article:modified_time" content="2020-01-14T00:00:00">
   
   
   
@@ -256,9 +256,9 @@
   
   <div class="postShorten-meta post-meta">
     
-      <time itemprop="datePublished" datetime="2020-01-13T00:00:00Z">
+      <time itemprop="datePublished" datetime="2020-01-14T00:00:00Z">
         
-  January 13, 2020
+  January 14, 2020
 
       </time>
     
@@ -307,16 +307,30 @@ Output: [0]
 <li><code>1 &lt;= n &lt;= 1000</code></li>
 </ul>
 <h2 id="method">Method</h2>
-<p>Math solution: <code>out[i] = i * 2 - n + 1</code>.</p>
-<p>The sequence sum should be 0, which is <code>(a[0] + a[n-1]) * n / 2 = 0</code>. This means <code>a[0] + a[n-1] = 0</code>. Note that <code>a[n-1] - a[0] = (n-1) * delta</code>, which is <code>-2 * a[0]</code>.</p>
-<p>Therefore, simply set <code>delta = 2</code>, <code>a[0] = 1 - n</code>, and this is a sum calculating problem.</p>
+<p>Math solution: <code>out[i] = n - 1 - 2 * i</code></p>
+<p>The target is to find a array with n unique numbers, and its sum is 0. This is to find a arithmetic sequence that its sum is 0.</p>
+<ul>
+<li>Arithmetic sequence sum: <code>(a[0] + a[n - 1]) * n / 2 = 0 =&gt; a[0] + a[n-1] = 0</code>.</li>
+<li>Delta in arithmetic sequence is <code>d = (a[m] - a[n]) / (m - n)</code>.</li>
+<li>Set <code>m</code> and <code>n</code> to <code>n - 1</code> and <code>0</code>, it will be <code>(n - 1) * d = a[n - 1] - a[0]</code>, and <code>a[n - 1]  = -a[0]</code>.</li>
+<li>It can be found that <code>d * (n - 1) = -2 * a[0]</code>. <code>n</code> is the given number, therefore, to satisfied this equation, simply set <code>d</code> to <code>-2</code>, and <code>a[0]</code> to <code>n - 1</code>.</li>
+<li>Each item in this arithmetic sequence can be constructed by <code>a[i] = a[0] - 2 * i</code>, note that arithmetic sequence starts from <code>0</code>.</li>
+<li>Finally, <code>out[i]</code> can be derived that <code>out[i] = n - 1 - 2 * i</code>.</li>
+</ul>
+<p>Note that <code>d</code> can be set to <code>2</code> and <code>a[0]</code> can be set to <code>n - 1</code> as well.</p>
 <h2 id="code">Code</h2>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Math solution:
-</span><span style="color:#75715e"> * out[i] = i * 2 - n + 1
-</span><span style="color:#75715e"> * The sequence sum should be 0, which is (a[0] + a[n-1]) * n / 2 = 0. This means a[0] + a[n-1] = 0.
-</span><span style="color:#75715e"> * Note that a[n-1] - a[0] = (n-1) * delta, which is -2 * a[0].
-</span><span style="color:#75715e"> * Therefore, simply set delta = 2, a[0] = 1 - n, and this is a sum calculating problem.
+</span><span style="color:#75715e"> * Math solution: out[i] = n - 1 - 2 * i
+</span><span style="color:#75715e"> * The target is to find a array with n unique numbers, and its sum is 0.
+</span><span style="color:#75715e"> * This is to find a arithmetic sequence that its sum is 0.
+</span><span style="color:#75715e"> * Arithmetic sequence sum: (a[0] + a[n - 1]) * n / 2 = 0 =&gt; a[0] + a[n-1] = 0.
+</span><span style="color:#75715e"> * Delta in arithmetic sequence is d = (a[m] - a[n]) / (m - n)
+</span><span style="color:#75715e"> * Set m and n to n - 1 and 0, it will be (n - 1) * d = a[n - 1] - a[0], and a[n - 1]  = -a[0]
+</span><span style="color:#75715e"> * It can be found that d * (n - 1) = -2 * a[0].
+</span><span style="color:#75715e"> * n is the given number, therefore, to satisfied this equation, simply set d to -2, and a[0] to n - 1.
+</span><span style="color:#75715e"> * Each item in arithmetic sequence can be constructed by a[i] = a[0] - 2 * i, note that sequence starts from 0.
+</span><span style="color:#75715e"> * Finally, out[i] can be derived that out[i] = n - 1 - 2 * i.
+</span><span style="color:#75715e"> * Note that d can be set to 2 and a[0] can be set to n - 1 as well.
 </span><span style="color:#75715e"> *
 </span><span style="color:#75715e"> * @param n n unique integers
 </span><span style="color:#75715e"> * @return any array containing n unique integers such that they add up to 0
@@ -330,8 +344,9 @@ Output: [0]
     <span style="color:#f92672">}</span>
 
     <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> out<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        out<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> i <span style="color:#f92672">*</span> 2 <span style="color:#f92672">-</span> n <span style="color:#f92672">+</span> 1<span style="color:#f92672">;</span>
+        out<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> n <span style="color:#f92672">-</span> 1 <span style="color:#f92672">-</span> 2 <span style="color:#f92672">*</span> i<span style="color:#f92672">;</span>
     <span style="color:#f92672">}</span>
+
     <span style="color:#66d9ef">return</span> out<span style="color:#f92672">;</span>
 <span style="color:#f92672">}</span>
 </code></pre></div>
