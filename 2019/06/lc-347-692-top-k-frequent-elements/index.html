@@ -38,9 +38,9 @@
   
   
     
-      <meta property="article:tag" content="Find Kth Element">
-    
       <meta property="article:tag" content="Bucket Sort">
+    
+      <meta property="article:tag" content="Heap">
     
   
 
@@ -274,7 +274,7 @@
               <h1 id="top-k-frequent-elements">Top K Frequent Elements</h1>
 <p>Link: <a href="https://leetcode.com/problems/top-k-frequent-elements/">Top K Frequent Elements</a></p>
 <h2 id="problem-description">Problem description</h2>
-<p>Given a non-empty array of integers, return the *<strong>k*</strong> most frequent elements.</p>
+<p>Given a non-empty array of integers, return the <strong>k</strong> most frequent elements.</p>
 <p><strong>Example 1:</strong></p>
 <pre><code>Input: nums = [1,1,1,2,2,3], k = 2
 Output: [1,2]
@@ -287,48 +287,11 @@ Output: [1]
 <li>Your algorithm&rsquo;s time complexity <strong>must be</strong> better than O(<em>n</em> log <em>n</em>), where <em>n</em> is the array&rsquo;s size.</li>
 </ul>
 <h2 id="method">Method</h2>
-<p>Bucket sorting. The bucket is the frequency of each element.</p>
-<p>After adding all elements with their frequency into hash map, iterate the map and add all frequency to list. Iterate the bucket list, find k elements that are most frequent.</p>
-<p>This problem can also be solved by min heap with size limit.</p>
+<p>Three approaches.</p>
+<p>First one, use a min heap and override the comparator to make the heap sorting by value. The key of entry in heap is distinct element in array, value in entry is the frequency.</p>
+<p>Second one is bucket sort, use an array as bucket, the index in bucket array is the frequency. Therefore, to avoid out of boundary exception, the number of bucket should be the length of array.</p>
 <h2 id="code">Code</h2>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Bucket sorting.
-</span><span style="color:#75715e"> * The bucket is the frequency of each element.
-</span><span style="color:#75715e"> * After adding all elements with their frequency into hash map, iterate the map and add all frequency to list.
-</span><span style="color:#75715e"> * Iterate the bucket list, find k elements that are most frequent.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param nums given array
-</span><span style="color:#75715e"> * @param k    k most frequent elements
-</span><span style="color:#75715e"> * @return k most frequent elements
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">public</span> List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">topKFrequent</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> nums<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> k<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-
-    Map<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">,</span> Integer<span style="color:#f92672">&gt;</span> hm <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashMap<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-    List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> bucket <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> List<span style="color:#f92672">[</span>nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">+</span> 1<span style="color:#f92672">]</span><span style="color:#f92672">;</span>     <span style="color:#75715e">// index is the frequency, value is elements with this frequency
-</span><span style="color:#75715e"></span>    List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> out <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> num <span style="color:#f92672">:</span> nums<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        hm<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>num<span style="color:#f92672">,</span> hm<span style="color:#f92672">.</span><span style="color:#a6e22e">getOrDefault</span><span style="color:#f92672">(</span>num<span style="color:#f92672">,</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">+</span> 1<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> key <span style="color:#f92672">:</span> hm<span style="color:#f92672">.</span><span style="color:#a6e22e">keySet</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">int</span> frequency <span style="color:#f92672">=</span> hm<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>key<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>bucket<span style="color:#f92672">[</span>frequency<span style="color:#f92672">]</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            bucket<span style="color:#f92672">[</span>frequency<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span>
-        bucket<span style="color:#f92672">[</span>frequency<span style="color:#f92672">]</span><span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>key<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> pos <span style="color:#f92672">=</span> bucket<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">;</span> pos <span style="color:#f92672">&gt;</span><span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> pos<span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>bucket<span style="color:#f92672">[</span>pos<span style="color:#f92672">]</span> <span style="color:#f92672">!</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> bucket<span style="color:#f92672">[</span>pos<span style="color:#f92672">]</span><span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> out<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">&lt;</span> k<span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                out<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>bucket<span style="color:#f92672">[</span>pos<span style="color:#f92672">]</span><span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-            <span style="color:#f92672">}</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-    <span style="color:#66d9ef">return</span> out<span style="color:#f92672">;</span>
-<span style="color:#f92672">}</span>
-
-<span style="color:#75715e">/**
 </span><span style="color:#75715e"> * Use min heap to find top k frequent elements. Note that the heap size should be kept to less than k.
 </span><span style="color:#75715e"> * Time complexity: O(nlogk).
 </span><span style="color:#75715e"> *
@@ -365,8 +328,46 @@ Output: [1]
 <span style="color:#f92672">}</span>
 
 <span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Direct approach by two hash map. One hash map save each element in array with its frequency.
-</span><span style="color:#75715e"> * The other hash map store the frequency and its elements.
+</span><span style="color:#75715e"> * Bucket sorting. The bucket index is the frequency of each element.
+</span><span style="color:#75715e"> * Number of bucket should be the length of array to avoid out of boundary exception.
+</span><span style="color:#75715e"> * After adding all elements with their frequency into hash map, iterate the map and add all frequency to list.
+</span><span style="color:#75715e"> * Iterate the bucket list, find k elements that are most frequent.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param nums given array
+</span><span style="color:#75715e"> * @param k    k most frequent elements
+</span><span style="color:#75715e"> * @return k most frequent elements
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">topKFrequent</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> nums<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> k<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+
+    Map<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">,</span> Integer<span style="color:#f92672">&gt;</span> m <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashMap<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> bucket <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> List<span style="color:#f92672">[</span>nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">+</span> 1<span style="color:#f92672">]</span><span style="color:#f92672">;</span>     <span style="color:#75715e">// index is the frequency, value is elements with this frequency
+</span><span style="color:#75715e"></span>    List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> out <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> n <span style="color:#f92672">:</span> nums<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        m<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>n<span style="color:#f92672">,</span> m<span style="color:#f92672">.</span><span style="color:#a6e22e">getOrDefault</span><span style="color:#f92672">(</span>n<span style="color:#f92672">,</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">+</span> 1<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> key <span style="color:#f92672">:</span> m<span style="color:#f92672">.</span><span style="color:#a6e22e">keySet</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">int</span> frequency <span style="color:#f92672">=</span> m<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>key<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>bucket<span style="color:#f92672">[</span>frequency<span style="color:#f92672">]</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            bucket<span style="color:#f92672">[</span>frequency<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+        bucket<span style="color:#f92672">[</span>frequency<span style="color:#f92672">]</span><span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>key<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> pos <span style="color:#f92672">=</span> bucket<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">;</span> pos <span style="color:#f92672">&gt;</span><span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> pos<span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>bucket<span style="color:#f92672">[</span>pos<span style="color:#f92672">]</span> <span style="color:#f92672">!</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> bucket<span style="color:#f92672">[</span>pos<span style="color:#f92672">]</span><span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> out<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">&lt;</span> k<span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                out<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>bucket<span style="color:#f92672">[</span>pos<span style="color:#f92672">]</span><span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">return</span> out<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Direct approach.
+</span><span style="color:#75715e"> * Use a hash map to count the element frequency. Sort the map by value after the traverse.
 </span><span style="color:#75715e"> *
 </span><span style="color:#75715e"> * @param nums given array
 </span><span style="color:#75715e"> * @param k    k most frequent elements
@@ -377,12 +378,12 @@ Output: [1]
 
     HashMap<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">,</span> Integer<span style="color:#f92672">&gt;</span> m <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashMap<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>     <span style="color:#75715e">// save the key - frequency pair
 </span><span style="color:#75715e"></span>
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        m<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>nums<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">,</span> m<span style="color:#f92672">.</span><span style="color:#a6e22e">getOrDefault</span><span style="color:#f92672">(</span>nums<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">,</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> num <span style="color:#f92672">:</span> nums<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        m<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>num<span style="color:#f92672">,</span> m<span style="color:#f92672">.</span><span style="color:#a6e22e">getOrDefault</span><span style="color:#f92672">(</span>num<span style="color:#f92672">,</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
     <span style="color:#f92672">}</span>
 
     List<span style="color:#f92672">&lt;</span>Map<span style="color:#f92672">.</span><span style="color:#a6e22e">Entry</span><span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">,</span> Integer<span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span> list <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span>m<span style="color:#f92672">.</span><span style="color:#a6e22e">entrySet</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-    list<span style="color:#f92672">.</span><span style="color:#a6e22e">sort</span><span style="color:#f92672">(</span>Comparator<span style="color:#f92672">.</span><span style="color:#a6e22e">comparing</span><span style="color:#f92672">(</span>Map<span style="color:#f92672">.</span><span style="color:#a6e22e">Entry</span><span style="color:#f92672">:</span><span style="color:#f92672">:</span>getValue<span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>       <span style="color:#75715e">// sort map based on value instead of key
+    list<span style="color:#f92672">.</span><span style="color:#a6e22e">sort</span><span style="color:#f92672">(</span>Map<span style="color:#f92672">.</span><span style="color:#a6e22e">Entry</span><span style="color:#f92672">.</span><span style="color:#a6e22e">comparingByValue</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>       <span style="color:#75715e">// sort map based on value instead of key
 </span><span style="color:#75715e"></span>
     <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> k<span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
         out<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>list<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span><span style="color:#f92672">.</span><span style="color:#a6e22e">getKey</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
@@ -391,105 +392,71 @@ Output: [1]
     <span style="color:#66d9ef">return</span> out<span style="color:#f92672">;</span>
 <span style="color:#f92672">}</span>
 </code></pre></div><h1 id="top-k-frequent-elements-1">Top K Frequent Elements</h1>
-<p>Link: <a href="https://leetcode.com/problems/top-k-frequent-elements">Top K Frequent Elements</a></p>
+<p>Link: <a href="https://leetcode.com/problems/top-k-frequent-words/">Top K Frequent Words</a></p>
 <h2 id="problem-description-1">Problem description</h2>
-<p>Given a non-empty array of integers, return the <strong>k</strong> most frequent elements.</p>
+<p>Given a non-empty list of words, return the <em>k</em> most frequent elements.</p>
+<p>Your answer should be sorted by frequency from highest to lowest. If two words have the same frequency, then the word with the lower alphabetical order comes first.</p>
 <p><strong>Example 1:</strong></p>
-<pre><code>Input: nums = [1,1,1,2,2,3], k = 2
-Output: [1,2]
+<pre><code>Input: [&quot;i&quot;, &quot;love&quot;, &quot;leetcode&quot;, &quot;i&quot;, &quot;love&quot;, &quot;coding&quot;], k = 2
+Output: [&quot;i&quot;, &quot;love&quot;]
+Explanation: &quot;i&quot; and &quot;love&quot; are the two most frequent words.
+    Note that &quot;i&quot; comes before &quot;love&quot; due to a lower alphabetical order.
 </code></pre><p><strong>Example 2:</strong></p>
-<pre><code>Input: nums = [1], k = 1
-Output: [1]
+<pre><code>Input: [&quot;the&quot;, &quot;day&quot;, &quot;is&quot;, &quot;sunny&quot;, &quot;the&quot;, &quot;the&quot;, &quot;the&quot;, &quot;sunny&quot;, &quot;is&quot;, &quot;is&quot;], k = 4
+Output: [&quot;the&quot;, &quot;is&quot;, &quot;sunny&quot;, &quot;day&quot;]
+Explanation: &quot;the&quot;, &quot;is&quot;, &quot;sunny&quot; and &quot;day&quot; are the four most frequent words,
+    with the number of occurrence being 4, 3, 2 and 1 respectively.
 </code></pre><p><strong>Note:</strong></p>
-<ul>
+<ol>
 <li>You may assume <em>k</em> is always valid, 1 ≤ <em>k</em> ≤ number of unique elements.</li>
-<li>Your algorithm&rsquo;s time complexity <strong>must be</strong> better than O(<em>n</em> log <em>n</em>), where <em>n</em> is the array&rsquo;s size.</li>
-</ul>
+<li>Input words contain only lowercase letters.</li>
+</ol>
+<p><strong>Follow up:</strong></p>
+<ol>
+<li>Try to solve it in <em>O</em>(<em>n</em> log <em>k</em>) time and <em>O</em>(<em>n</em>) extra space.</li>
+</ol>
 <h2 id="method-1">Method</h2>
-<p>Bucket sorting.</p>
-<p>The bucket is the frequency of each element. After adding all elements with their frequency into hash map, iterate the map and add all frequency to list. Iterate the bucket list, find k elements that are most frequent.</p>
+<p>Save words with its frequency, and then use a heap to sort entry.</p>
+<p>Keep size of heap be at most k. Finally, add heap to output.</p>
 <h2 id="code-1">Code</h2>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Bucket sorting.
-</span><span style="color:#75715e"> * The bucket is the frequency of each element.
-</span><span style="color:#75715e"> * After adding all elements with their frequency into hash map, iterate the map and add all frequency to list.
-</span><span style="color:#75715e"> * Iterate the bucket list, find k elements that are most frequent.
+</span><span style="color:#75715e"> * Save words with its frequency, and then use a heap to sort entry.
+</span><span style="color:#75715e"> * Keep size of heap be at most k. Finally, add heap to output.
 </span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param nums given array
-</span><span style="color:#75715e"> * @param k    k most frequent elements
+</span><span style="color:#75715e"> * @param words words array
+</span><span style="color:#75715e"> * @param k     kth most frequent
 </span><span style="color:#75715e"> * @return k most frequent elements
 </span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">public</span> List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">topKFrequent</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> nums<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> k<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+<span style="color:#66d9ef">public</span> List<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">topKFrequent</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[</span><span style="color:#f92672">]</span> words<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> k<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-    Map<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">,</span> Integer<span style="color:#f92672">&gt;</span> hm <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashMap<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-    List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> bucket <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> List<span style="color:#f92672">[</span>nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">+</span> 1<span style="color:#f92672">]</span><span style="color:#f92672">;</span>     <span style="color:#75715e">// index is the frequency, value is elements with this frequency
-</span><span style="color:#75715e"></span>    List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> res <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    LinkedList<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> out <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    HashMap<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">,</span> Integer<span style="color:#f92672">&gt;</span> m <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashMap<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> num <span style="color:#f92672">:</span> nums<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        hm<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>num<span style="color:#f92672">,</span> hm<span style="color:#f92672">.</span><span style="color:#a6e22e">getOrDefault</span><span style="color:#f92672">(</span>num<span style="color:#f92672">,</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">+</span> 1<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>String w <span style="color:#f92672">:</span> words<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        m<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>w<span style="color:#f92672">,</span> m<span style="color:#f92672">.</span><span style="color:#a6e22e">getOrDefault</span><span style="color:#f92672">(</span>w<span style="color:#f92672">,</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">+</span> 1<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
     <span style="color:#f92672">}</span>
 
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> key <span style="color:#f92672">:</span> hm<span style="color:#f92672">.</span><span style="color:#a6e22e">keySet</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">int</span> frequency <span style="color:#f92672">=</span> hm<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>key<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>bucket<span style="color:#f92672">[</span>frequency<span style="color:#f92672">]</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span>
-            bucket<span style="color:#f92672">[</span>frequency<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        bucket<span style="color:#f92672">[</span>frequency<span style="color:#f92672">]</span><span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>key<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> pos <span style="color:#f92672">=</span> bucket<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">;</span> pos <span style="color:#f92672">&gt;</span><span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> pos<span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>bucket<span style="color:#f92672">[</span>pos<span style="color:#f92672">]</span> <span style="color:#f92672">!</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> bucket<span style="color:#f92672">[</span>pos<span style="color:#f92672">]</span><span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> res<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">&lt;</span> k<span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span>
-                res<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>bucket<span style="color:#f92672">[</span>pos<span style="color:#f92672">]</span><span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-    <span style="color:#66d9ef">return</span> res<span style="color:#f92672">;</span>
-<span style="color:#f92672">}</span>
+    PriorityQueue<span style="color:#f92672">&lt;</span>Map<span style="color:#f92672">.</span><span style="color:#a6e22e">Entry</span><span style="color:#f92672">&lt;</span>String<span style="color:#f92672">,</span> Integer<span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span> q <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> PriorityQueue<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> Comparator<span style="color:#f92672">&lt;</span>Map<span style="color:#f92672">.</span><span style="color:#a6e22e">Entry</span><span style="color:#f92672">&lt;</span>String<span style="color:#f92672">,</span> Integer<span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#a6e22e">@Override</span>
+        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">compare</span><span style="color:#f92672">(</span>Map<span style="color:#f92672">.</span><span style="color:#a6e22e">Entry</span><span style="color:#f92672">&lt;</span>String<span style="color:#f92672">,</span> Integer<span style="color:#f92672">&gt;</span> o1<span style="color:#f92672">,</span> Map<span style="color:#f92672">.</span><span style="color:#a6e22e">Entry</span><span style="color:#f92672">&lt;</span>String<span style="color:#f92672">,</span> Integer<span style="color:#f92672">&gt;</span> o2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>      <span style="color:#75715e">// poll smaller one
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>o1<span style="color:#f92672">.</span><span style="color:#a6e22e">getValue</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">.</span><span style="color:#a6e22e">equals</span><span style="color:#f92672">(</span>o2<span style="color:#f92672">.</span><span style="color:#a6e22e">getValue</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                <span style="color:#66d9ef">return</span> <span style="color:#f92672">(</span>o2<span style="color:#f92672">.</span><span style="color:#a6e22e">getKey</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">.</span><span style="color:#a6e22e">compareTo</span><span style="color:#f92672">(</span>o1<span style="color:#f92672">.</span><span style="color:#a6e22e">getKey</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>        <span style="color:#75715e">// alphabet sort, larger order first
+</span><span style="color:#75715e"></span>            <span style="color:#f92672">}</span>
+            <span style="color:#66d9ef">return</span> o1<span style="color:#f92672">.</span><span style="color:#a6e22e">getValue</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">-</span> o2<span style="color:#f92672">.</span><span style="color:#a6e22e">getValue</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>       <span style="color:#75715e">// smaller frequency should be polled
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
-<span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Direct approach by two hash map. One hash map save each element in array with its frequency.
-</span><span style="color:#75715e"> * The other hash map store the frequency and its elements.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param nums given array
-</span><span style="color:#75715e"> * @param k    k most frequent elements
-</span><span style="color:#75715e"> * @return k most frequent elements
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">public</span> List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">twoHashMap</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> nums<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> k<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-    List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> out <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-
-    HashMap<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">,</span> Integer<span style="color:#f92672">&gt;</span> m1 <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashMap<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>     <span style="color:#75715e">// save the key - frequency pair
-</span><span style="color:#75715e"></span>    TreeMap<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">,</span> HashSet<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span><span style="color:#f92672">&gt;</span> m2 <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> TreeMap<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>        <span style="color:#75715e">// save the frequency - key set pair
-</span><span style="color:#75715e"></span>
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        m1<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>nums<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">,</span> m1<span style="color:#f92672">.</span><span style="color:#a6e22e">getOrDefault</span><span style="color:#f92672">(</span>nums<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">,</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">)</span><span style="color:#f92672">;</span>       <span style="color:#75715e">// update frequency in key - frequency pair
-</span><span style="color:#75715e"></span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>m1<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>nums<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">)</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>        <span style="color:#75715e">// init the map
-</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>m2<span style="color:#f92672">.</span><span style="color:#a6e22e">containsKey</span><span style="color:#f92672">(</span><span style="color:#f92672">-</span>1<span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                m2<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span><span style="color:#f92672">-</span>1<span style="color:#f92672">)</span><span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>nums<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-            <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
-                HashSet<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> temp <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashSet<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-                temp<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>nums<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-                m2<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span><span style="color:#f92672">-</span>1<span style="color:#f92672">,</span> temp<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-            <span style="color:#f92672">}</span>
-        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
-            m2<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>m1<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>nums<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">)</span> <span style="color:#f92672">+</span> 1<span style="color:#f92672">)</span><span style="color:#f92672">.</span><span style="color:#a6e22e">remove</span><span style="color:#f92672">(</span>nums<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>m2<span style="color:#f92672">.</span><span style="color:#a6e22e">containsKey</span><span style="color:#f92672">(</span>m1<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>nums<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                m2<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>m1<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>nums<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>nums<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-            <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
-                HashSet<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> temp <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashSet<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-                temp<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>nums<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-                m2<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>m1<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>nums<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">)</span><span style="color:#f92672">,</span> temp<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-            <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>Map<span style="color:#f92672">.</span><span style="color:#a6e22e">Entry</span><span style="color:#f92672">&lt;</span>String<span style="color:#f92672">,</span> Integer<span style="color:#f92672">&gt;</span> entry <span style="color:#f92672">:</span> m<span style="color:#f92672">.</span><span style="color:#a6e22e">entrySet</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        q<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>entry<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>q<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">&gt;</span> k<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            q<span style="color:#f92672">.</span><span style="color:#a6e22e">poll</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
         <span style="color:#f92672">}</span>
     <span style="color:#f92672">}</span>
 
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>Integer i <span style="color:#f92672">:</span> m2<span style="color:#f92672">.</span><span style="color:#a6e22e">keySet</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>out<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">&lt;</span> k<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            HashSet<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> temp <span style="color:#f92672">=</span> m2<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-            out<span style="color:#f92672">.</span><span style="color:#a6e22e">addAll</span><span style="color:#f92672">(</span>temp<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span><span style="color:#f92672">!</span>q<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        out<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>0<span style="color:#f92672">,</span> q<span style="color:#f92672">.</span><span style="color:#a6e22e">poll</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">.</span><span style="color:#a6e22e">getKey</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
     <span style="color:#f92672">}</span>
-    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>out<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">&gt;</span> k<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        out<span style="color:#f92672">.</span><span style="color:#a6e22e">remove</span><span style="color:#f92672">(</span>out<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
+
     <span style="color:#66d9ef">return</span> out<span style="color:#f92672">;</span>
 <span style="color:#f92672">}</span>
 </code></pre></div>
@@ -504,9 +471,9 @@ Output: [1]
                   <div class="post-footer-tags">
                     <span class="text-color-light text-small">TAGGED IN</span><br/>
                     
-  <a class="tag tag--primary tag--small" href="https://yy-zhou.github.io/tags/find-kth-element/">Find Kth Element</a>
-
   <a class="tag tag--primary tag--small" href="https://yy-zhou.github.io/tags/bucket-sort/">Bucket Sort</a>
+
+  <a class="tag tag--primary tag--small" href="https://yy-zhou.github.io/tags/heap/">Heap</a>
 
                   </div>
                 
