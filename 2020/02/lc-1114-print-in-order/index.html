@@ -13,10 +13,10 @@
 
 <meta property="og:description" content="">
 <meta property="og:type" content="article">
-<meta property="og:title" content="LC 129 - Sum Root to Leaf Numbers">
-<meta name="twitter:title" content="LC 129 - Sum Root to Leaf Numbers">
-<meta property="og:url" content="https://yy-zhou.github.io/2020/02/lc-129-sum-root-to-leaf-numbers/">
-<meta property="twitter:url" content="https://yy-zhou.github.io/2020/02/lc-129-sum-root-to-leaf-numbers/">
+<meta property="og:title" content="LC 1114 - Print in Order">
+<meta name="twitter:title" content="LC 1114 - Print in Order">
+<meta property="og:url" content="https://yy-zhou.github.io/2020/02/lc-1114-print-in-order/">
+<meta property="twitter:url" content="https://yy-zhou.github.io/2020/02/lc-1114-print-in-order/">
 <meta property="og:site_name" content="Bingo!">
 <meta property="og:description" content="">
 <meta name="twitter:description" content="">
@@ -33,10 +33,12 @@
     
       <meta property="article:section" content="Algorithm">
     
+      <meta property="article:section" content="Concurrency">
+    
   
   
     
-      <meta property="article:tag" content="">
+      <meta property="article:tag" content="Semaphore">
     
   
 
@@ -57,14 +59,14 @@
   <meta property="twitter:image" content="https://yy-zhou.github.io/img/avatar.jpg">
 
 
-    <title>LC 129 - Sum Root to Leaf Numbers</title>
+    <title>LC 1114 - Print in Order</title>
 
     <link rel="icon" href="https://yy-zhou.github.io/favicon.png">
     
 
     
 
-    <link rel="canonical" href="https://yy-zhou.github.io/2020/02/lc-129-sum-root-to-leaf-numbers/">
+    <link rel="canonical" href="https://yy-zhou.github.io/2020/02/lc-1114-print-in-order/">
 
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
@@ -238,7 +240,7 @@
             <div class="post-header main-content-wrap text-left">
   
     <h1 class="post-title" itemprop="headline">
-      LC 129 - Sum Root to Leaf Numbers
+      LC 1114 - Print in Order
     </h1>
   
   
@@ -255,7 +257,9 @@
   
     <span>in</span>
     
-      <a class="category-link" href="https://yy-zhou.github.io/categories/algorithm">Algorithm</a>
+      <a class="category-link" href="https://yy-zhou.github.io/categories/algorithm">Algorithm</a>, 
+    
+      <a class="category-link" href="https://yy-zhou.github.io/categories/concurrency">Concurrency</a>
     
   
 
@@ -267,7 +271,7 @@
             <div class="main-content-wrap">
               <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
   <ul>
-    <li><a href="#sum-root-to-leaf-numbers">Sum Root to Leaf Numbers</a>
+    <li><a href="#print-in-order">Print in Order</a>
       <ul>
         <li><a href="#problem-description">Problem description</a></li>
         <li><a href="#method">Method</a></li>
@@ -276,68 +280,76 @@
     </li>
   </ul>
 </nav>
-<h1 id="sum-root-to-leaf-numbers">Sum Root to Leaf Numbers</h1>
-<p>Link: <a href="https://leetcode.com/problems/sum-root-to-leaf-numbers/">Sum Root to Leaf Numbers</a></p>
+<h1 id="print-in-order">Print in Order</h1>
+<p>Link: <a href="https://leetcode.com/problems/print-in-order/">Print in Order</a></p>
 <h2 id="problem-description">Problem description</h2>
-<p>Given a binary tree containing digits from <code>0-9</code> only, each root-to-leaf path could represent a number.</p>
-<p>An example is the root-to-leaf path <code>1-&gt;2-&gt;3</code> which represents the number <code>123</code>.</p>
-<p>Find the total sum of all root-to-leaf numbers.</p>
-<p><strong>Note:</strong> A leaf is a node with no children.</p>
-<p><strong>Example:</strong></p>
+<p>Suppose we have a class:</p>
+<pre><code>public class Foo {
+  public void first() { print(&quot;first&quot;); }
+  public void second() { print(&quot;second&quot;); }
+  public void third() { print(&quot;third&quot;); }
+}
+</code></pre><p>The same instance of <code>Foo</code> will be passed to three different threads. Thread A will call <code>first()</code>, thread B will call <code>second()</code>, and thread C will call <code>third()</code>. Design a mechanism and modify the program to ensure that <code>second()</code> is executed after <code>first()</code>, and <code>third()</code> is executed after <code>second()</code>.</p>
+<p><strong>Example 1:</strong></p>
 <pre><code>Input: [1,2,3]
-    1
-   / \
-  2   3
-Output: 25
-Explanation:
-The root-to-leaf path 1-&gt;2 represents the number 12.
-The root-to-leaf path 1-&gt;3 represents the number 13.
-Therefore, sum = 12 + 13 = 25.
+Output: &quot;firstsecondthird&quot;
+Explanation: There are three threads being fired asynchronously. The input [1,2,3] means thread A calls first(), thread B calls second(), and thread C calls third(). &quot;firstsecondthird&quot; is the correct output.
 </code></pre><p><strong>Example 2:</strong></p>
-<pre><code>Input: [4,9,0,5,1]
-    4
-   / \
-  9   0
- / \
-5   1
-Output: 1026
-Explanation:
-The root-to-leaf path 4-&gt;9-&gt;5 represents the number 495.
-The root-to-leaf path 4-&gt;9-&gt;1 represents the number 491.
-The root-to-leaf path 4-&gt;0 represents the number 40.
-Therefore, sum = 495 + 491 + 40 = 1026.
-</code></pre><h2 id="method">Method</h2>
-<p>DFS traverse all nodes in tree from top to bottom, and then from bottom to top. Each time add total value to final result with power of 10.</p>
+<pre><code>Input: [1,3,2]
+Output: &quot;firstsecondthird&quot;
+Explanation: The input [1,3,2] means thread A calls first(), thread B calls third(), and thread C calls second(). &quot;firstsecondthird&quot; is the correct output.
+</code></pre><p><strong>Note:</strong></p>
+<p>We do not know how the threads will be scheduled in the operating system, even though the numbers in the input seems to imply the ordering. The input format you see is mainly to ensure our tests&rsquo; comprehensiveness.</p>
+<h2 id="method">Method</h2>
+<p>Basic concurrency problem. Use two semaphores for task 2 and 3, since they have dependency. Task 1 has no requirement. Therefore, no semaphore assigned to task 1.</p>
 <h2 id="code">Code</h2>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
-</span><span style="color:#75715e"> * DFS.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param root root node
-</span><span style="color:#75715e"> * @return total sum of all root-to-leaf numbers
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">sumNumbers</span><span style="color:#f92672">(</span>TreeNode root<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-    <span style="color:#66d9ef">return</span> dfs<span style="color:#f92672">(</span>root<span style="color:#f92672">,</span> 0<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-<span style="color:#f92672">}</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Foo</span> <span style="color:#f92672">{</span>
+    Semaphore run2<span style="color:#f92672">,</span> run3<span style="color:#f92672">;</span>
 
-<span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Add each node&#39;s value with 10^n
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param r root node
-</span><span style="color:#75715e"> * @param n power
-</span><span style="color:#75715e"> * @return total sum of all root-to-leaf numbers
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">dfs</span><span style="color:#f92672">(</span>TreeNode r<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> n<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * Two semaphores for task 2 and 3. Task 1 has no concurrency problem, therefore, no semaphore required for task 1.
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">Foo_1114</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        run2 <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Semaphore<span style="color:#f92672">(</span>0<span style="color:#f92672">)</span><span style="color:#f92672">;</span>        <span style="color:#75715e">// semaphore for task 2
+</span><span style="color:#75715e"></span>        run3 <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Semaphore<span style="color:#f92672">(</span>0<span style="color:#f92672">)</span><span style="color:#f92672">;</span>        <span style="color:#75715e">// semaphore for task 3
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
 
-    <span style="color:#75715e">/* End point */</span>
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>r <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">return</span> 0<span style="color:#f92672">;</span>
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * Run the first task.
+</span><span style="color:#75715e">     *
+</span><span style="color:#75715e">     * @param printFirst task 1
+</span><span style="color:#75715e">     * @throws InterruptedException thread interrupted
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">first</span><span style="color:#f92672">(</span>Runnable printFirst<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> InterruptedException <span style="color:#f92672">{</span>
+
+        printFirst<span style="color:#f92672">.</span><span style="color:#a6e22e">run</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>       <span style="color:#75715e">// printFirst.run() outputs &#34;first&#34;
+</span><span style="color:#75715e"></span>        run2<span style="color:#f92672">.</span><span style="color:#a6e22e">release</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
     <span style="color:#f92672">}</span>
 
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>r<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> r<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">return</span> n <span style="color:#f92672">*</span> 10 <span style="color:#f92672">+</span> r<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span><span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * Run the second task after first task.
+</span><span style="color:#75715e">     *
+</span><span style="color:#75715e">     * @param printSecond task 2
+</span><span style="color:#75715e">     * @throws InterruptedException thread interrupted
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">second</span><span style="color:#f92672">(</span>Runnable printSecond<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> InterruptedException <span style="color:#f92672">{</span>
 
-    <span style="color:#66d9ef">return</span> dfs<span style="color:#f92672">(</span>r<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">,</span> n <span style="color:#f92672">*</span> 10 <span style="color:#f92672">+</span> r<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span><span style="color:#f92672">)</span> <span style="color:#f92672">+</span> dfs<span style="color:#f92672">(</span>r<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span><span style="color:#f92672">,</span> n <span style="color:#f92672">*</span> 10 <span style="color:#f92672">+</span> r<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        run2<span style="color:#f92672">.</span><span style="color:#a6e22e">acquire</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>         <span style="color:#75715e">// check if first task is completed
+</span><span style="color:#75715e"></span>        printSecond<span style="color:#f92672">.</span><span style="color:#a6e22e">run</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>      <span style="color:#75715e">// printSecond.run() outputs &#34;second&#34;
+</span><span style="color:#75715e"></span>        run3<span style="color:#f92672">.</span><span style="color:#a6e22e">release</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>         <span style="color:#75715e">// task 2 is completed, release semaphore
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * Run the third task after second task.
+</span><span style="color:#75715e">     *
+</span><span style="color:#75715e">     * @param printThird task 3
+</span><span style="color:#75715e">     * @throws InterruptedException thread interrupted
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">third</span><span style="color:#f92672">(</span>Runnable printThird<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> InterruptedException <span style="color:#f92672">{</span>
+        run3<span style="color:#f92672">.</span><span style="color:#a6e22e">acquire</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>         <span style="color:#75715e">// check if second task is completed
+</span><span style="color:#75715e"></span>        printThird<span style="color:#f92672">.</span><span style="color:#a6e22e">run</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>       <span style="color:#75715e">// printThird.run() outputs &#34;third&#34;.
+</span><span style="color:#75715e"></span>        run3<span style="color:#f92672">.</span><span style="color:#a6e22e">release</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
 <span style="color:#f92672">}</span>
 </code></pre></div>
               
@@ -351,7 +363,7 @@ Therefore, sum = 495 + 491 + 40 = 1026.
                   <div class="post-footer-tags">
                     <span class="text-color-light text-small">TAGGED IN</span><br/>
                     
-  <a class="tag tag--primary tag--small" href="https://yy-zhou.github.io/tags//"></a>
+  <a class="tag tag--primary tag--small" href="https://yy-zhou.github.io/tags/semaphore/">Semaphore</a>
 
                   </div>
                 
@@ -364,7 +376,7 @@ Therefore, sum = 495 + 491 + 40 = 1026.
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2020/02/lc-1114-print-in-order/" data-tooltip="LC 1114 - Print in Order">
+                <a class="post-action-btn btn btn--disabled">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -372,7 +384,7 @@ Therefore, sum = 495 + 491 + 40 = 1026.
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2020/02/lc-164-392-bucket-sort/" data-tooltip="LC 164 392 - Bucket Sort">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2020/02/lc-129-sum-root-to-leaf-numbers/" data-tooltip="LC 129 - Sum Root to Leaf Numbers">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
@@ -422,7 +434,7 @@ Therefore, sum = 495 + 491 + 40 = 1026.
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2020/02/lc-1114-print-in-order/" data-tooltip="LC 1114 - Print in Order">
+                <a class="post-action-btn btn btn--disabled">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -430,7 +442,7 @@ Therefore, sum = 495 + 491 + 40 = 1026.
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2020/02/lc-164-392-bucket-sort/" data-tooltip="LC 164 392 - Bucket Sort">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2020/02/lc-129-sum-root-to-leaf-numbers/" data-tooltip="LC 129 - Sum Root to Leaf Numbers">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
