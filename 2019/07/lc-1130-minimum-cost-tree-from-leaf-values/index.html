@@ -13,32 +13,32 @@
 
 <meta property="og:description" content="">
 <meta property="og:type" content="article">
-<meta property="og:title" content="LC 1114 - Print in Order">
-<meta name="twitter:title" content="LC 1114 - Print in Order">
-<meta property="og:url" content="https://yy-zhou.github.io/2020/02/lc-1114-print-in-order/">
-<meta property="twitter:url" content="https://yy-zhou.github.io/2020/02/lc-1114-print-in-order/">
+<meta property="og:title" content="LC 1130 - Minimum Cost Tree From Leaf Values">
+<meta name="twitter:title" content="LC 1130 - Minimum Cost Tree From Leaf Values">
+<meta property="og:url" content="https://yy-zhou.github.io/2019/07/lc-1130-minimum-cost-tree-from-leaf-values/">
+<meta property="twitter:url" content="https://yy-zhou.github.io/2019/07/lc-1130-minimum-cost-tree-from-leaf-values/">
 <meta property="og:site_name" content="Bingo!">
 <meta property="og:description" content="">
 <meta name="twitter:description" content="">
 <meta property="og:locale" content="en-us">
 
   
-    <meta property="article:published_time" content="2020-02-03T00:00:00">
+    <meta property="article:published_time" content="2019-07-27T00:00:00">
   
   
-    <meta property="article:modified_time" content="2020-02-03T00:00:00">
+    <meta property="article:modified_time" content="2019-07-27T00:00:00">
   
   
   
     
       <meta property="article:section" content="Algorithm">
     
-      <meta property="article:section" content="Concurrency">
-    
   
   
     
-      <meta property="article:tag" content="Semaphore">
+      <meta property="article:tag" content="Stack">
+    
+      <meta property="article:tag" content="Tree">
     
   
 
@@ -59,14 +59,14 @@
   <meta property="twitter:image" content="https://yy-zhou.github.io/img/avatar.jpg">
 
 
-    <title>LC 1114 - Print in Order</title>
+    <title>LC 1130 - Minimum Cost Tree From Leaf Values</title>
 
     <link rel="icon" href="https://yy-zhou.github.io/favicon.png">
     
 
     
 
-    <link rel="canonical" href="https://yy-zhou.github.io/2020/02/lc-1114-print-in-order/">
+    <link rel="canonical" href="https://yy-zhou.github.io/2019/07/lc-1130-minimum-cost-tree-from-leaf-values/">
 
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
@@ -240,15 +240,15 @@
             <div class="post-header main-content-wrap text-left">
   
     <h1 class="post-title" itemprop="headline">
-      LC 1114 - Print in Order
+      LC 1130 - Minimum Cost Tree From Leaf Values
     </h1>
   
   
   <div class="postShorten-meta post-meta">
     
-      <time itemprop="datePublished" datetime="2020-02-03T00:00:00Z">
+      <time itemprop="datePublished" datetime="2019-07-27T00:00:00Z">
         
-  February 3, 2020
+  July 27, 2019
 
       </time>
     
@@ -257,9 +257,7 @@
   
     <span>in</span>
     
-      <a class="category-link" href="https://yy-zhou.github.io/categories/algorithm">Algorithm</a>, 
-    
-      <a class="category-link" href="https://yy-zhou.github.io/categories/concurrency">Concurrency</a>
+      <a class="category-link" href="https://yy-zhou.github.io/categories/algorithm">Algorithm</a>
     
   
 
@@ -271,7 +269,7 @@
             <div class="main-content-wrap">
               <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
   <ul>
-    <li><a href="#print-in-order">Print in Order</a>
+    <li><a href="#minimum-cost-tree-from-leaf-values">Minimum Cost Tree From Leaf Values</a>
       <ul>
         <li><a href="#problem-description">Problem description</a></li>
         <li><a href="#method">Method</a></li>
@@ -280,76 +278,61 @@
     </li>
   </ul>
 </nav>
-<h1 id="print-in-order">Print in Order</h1>
-<p>Link: <a href="https://leetcode.com/problems/print-in-order/">Print in Order</a></p>
+<h1 id="minimum-cost-tree-from-leaf-values">Minimum Cost Tree From Leaf Values</h1>
+<p>Link: <a href="https://leetcode.com/problems/minimum-cost-tree-from-leaf-values/">Minimum Cost Tree From Leaf Values</a></p>
 <h2 id="problem-description">Problem description</h2>
-<p>Suppose we have a class:</p>
-<pre><code>public class Foo {
-  public void first() { print(&quot;first&quot;); }
-  public void second() { print(&quot;second&quot;); }
-  public void third() { print(&quot;third&quot;); }
-}
-</code></pre><p>The same instance of <code>Foo</code> will be passed to three different threads. Thread A will call <code>first()</code>, thread B will call <code>second()</code>, and thread C will call <code>third()</code>. Design a mechanism and modify the program to ensure that <code>second()</code> is executed after <code>first()</code>, and <code>third()</code> is executed after <code>second()</code>.</p>
+<p>Given an array <code>arr</code> of positive integers, consider all binary trees such that:</p>
+<ul>
+<li>Each node has either 0 or 2 children;</li>
+<li>The values of <code>arr</code> correspond to the values of each <strong>leaf</strong> in an in-order traversal of the tree.  <em>(Recall that a node is a leaf if and only if it has 0 children.)</em></li>
+<li>The value of each non-leaf node is equal to the product of the largest leaf value in its left and right subtree respectively.</li>
+</ul>
+<p>Among all possible binary trees considered, return the smallest possible sum of the values of each non-leaf node.  It is guaranteed this sum fits into a 32-bit integer.</p>
 <p><strong>Example 1:</strong></p>
-<pre><code>Input: [1,2,3]
-Output: &quot;firstsecondthird&quot;
-Explanation: There are three threads being fired asynchronously. The input [1,2,3] means thread A calls first(), thread B calls second(), and thread C calls third(). &quot;firstsecondthird&quot; is the correct output.
-</code></pre><p><strong>Example 2:</strong></p>
-<pre><code>Input: [1,3,2]
-Output: &quot;firstsecondthird&quot;
-Explanation: The input [1,3,2] means thread A calls first(), thread B calls third(), and thread C calls second(). &quot;firstsecondthird&quot; is the correct output.
-</code></pre><p><strong>Note:</strong></p>
-<p>We do not know how the threads will be scheduled in the operating system, even though the numbers in the input seems to imply the ordering. The input format you see is mainly to ensure our tests&rsquo; comprehensiveness.</p>
+<pre><code>Input: arr = [6,2,4]
+Output: 32
+Explanation:
+There are two possible trees.  The first has non-leaf node sum 36, and the second has non-leaf node sum 32.
+
+    24            24
+   /  \          /  \
+  12   4        6    8
+ /  \               / \
+6    2             2   4
+</code></pre><p><strong>Constraints:</strong></p>
+<ul>
+<li><code>2 &lt;= arr.length &lt;= 40</code></li>
+<li><code>1 &lt;= arr[i] &lt;= 15</code></li>
+<li>It is guaranteed that the answer fits into a 32-bit signed integer (ie. it is less than <code>2^31</code>).</li>
+</ul>
 <h2 id="method">Method</h2>
-<p>Basic concurrency problem. Use two semaphores for task 2 and 3, since they have dependency. Task 1 has no requirement. Therefore, no semaphore assigned to task 1.</p>
+<p>Larger value should be calculated last. Hence, combine small value first for each node.</p>
+<p>The combine process is same as find next greater value in array.</p>
 <h2 id="code">Code</h2>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Foo</span> <span style="color:#f92672">{</span>
-    Semaphore run2<span style="color:#f92672">,</span> run3<span style="color:#f92672">;</span>
-
-    <span style="color:#75715e">/**
-</span><span style="color:#75715e">     * Two semaphores for task 2 and 3. Task 1 has no concurrency problem, therefore, no semaphore required for task 1.
-</span><span style="color:#75715e">     */</span>
-    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">Foo_1114</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        run2 <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Semaphore<span style="color:#f92672">(</span>0<span style="color:#f92672">)</span><span style="color:#f92672">;</span>        <span style="color:#75715e">// semaphore for task 2
-</span><span style="color:#75715e"></span>        run3 <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Semaphore<span style="color:#f92672">(</span>0<span style="color:#f92672">)</span><span style="color:#f92672">;</span>        <span style="color:#75715e">// semaphore for task 3
-</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
-
-    <span style="color:#75715e">/**
-</span><span style="color:#75715e">     * Run the first task.
-</span><span style="color:#75715e">     *
-</span><span style="color:#75715e">     * @param printFirst task 1
-</span><span style="color:#75715e">     * @throws InterruptedException thread interrupted
-</span><span style="color:#75715e">     */</span>
-    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">first</span><span style="color:#f92672">(</span>Runnable printFirst<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> InterruptedException <span style="color:#f92672">{</span>
-
-        printFirst<span style="color:#f92672">.</span><span style="color:#a6e22e">run</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>       <span style="color:#75715e">// printFirst.run() outputs &#34;first&#34;
-</span><span style="color:#75715e"></span>        run2<span style="color:#f92672">.</span><span style="color:#a6e22e">release</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Larger value should be calculated last. Hence, combine small value first for each node.
+</span><span style="color:#75715e"> * The combine process is same as find next greater value in array.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param arr given array with leaves in in-order traversal of the tree
+</span><span style="color:#75715e"> * @return smallest possible sum of the values of each non-leaf node
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">mctFromLeafValues</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> arr<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    Stack<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> s <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Stack<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    s<span style="color:#f92672">.</span><span style="color:#a6e22e">push</span><span style="color:#f92672">(</span>Integer<span style="color:#f92672">.</span><span style="color:#a6e22e">MAX_VALUE</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">int</span> total <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> value <span style="color:#f92672">:</span> arr<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">peek</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">&lt;</span> value<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">int</span> mid <span style="color:#f92672">=</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">pop</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            total <span style="color:#f92672">+</span><span style="color:#f92672">=</span> mid <span style="color:#f92672">*</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">min</span><span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">peek</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">,</span> value<span style="color:#f92672">)</span><span style="color:#f92672">;</span>       <span style="color:#75715e">// combine smaller value for min tree sum
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
+        s<span style="color:#f92672">.</span><span style="color:#a6e22e">push</span><span style="color:#f92672">(</span>value<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
     <span style="color:#f92672">}</span>
 
-    <span style="color:#75715e">/**
-</span><span style="color:#75715e">     * Run the second task after first task.
-</span><span style="color:#75715e">     *
-</span><span style="color:#75715e">     * @param printSecond task 2
-</span><span style="color:#75715e">     * @throws InterruptedException thread interrupted
-</span><span style="color:#75715e">     */</span>
-    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">second</span><span style="color:#f92672">(</span>Runnable printSecond<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> InterruptedException <span style="color:#f92672">{</span>
-
-        run2<span style="color:#f92672">.</span><span style="color:#a6e22e">acquire</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>         <span style="color:#75715e">// check if first task is completed
-</span><span style="color:#75715e"></span>        printSecond<span style="color:#f92672">.</span><span style="color:#a6e22e">run</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>      <span style="color:#75715e">// printSecond.run() outputs &#34;second&#34;
-</span><span style="color:#75715e"></span>        run3<span style="color:#f92672">.</span><span style="color:#a6e22e">release</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>         <span style="color:#75715e">// task 2 is completed, release semaphore
+    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">&gt;</span> 2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        total <span style="color:#f92672">+</span><span style="color:#f92672">=</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">pop</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">*</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">peek</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>        <span style="color:#75715e">// cleaning rest of nodes
 </span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
 
-    <span style="color:#75715e">/**
-</span><span style="color:#75715e">     * Run the third task after second task.
-</span><span style="color:#75715e">     *
-</span><span style="color:#75715e">     * @param printThird task 3
-</span><span style="color:#75715e">     * @throws InterruptedException thread interrupted
-</span><span style="color:#75715e">     */</span>
-    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">third</span><span style="color:#f92672">(</span>Runnable printThird<span style="color:#f92672">)</span> <span style="color:#66d9ef">throws</span> InterruptedException <span style="color:#f92672">{</span>
-        run3<span style="color:#f92672">.</span><span style="color:#a6e22e">acquire</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>         <span style="color:#75715e">// check if second task is completed
-</span><span style="color:#75715e"></span>        printThird<span style="color:#f92672">.</span><span style="color:#a6e22e">run</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>       <span style="color:#75715e">// printThird.run() outputs &#34;third&#34;.
-</span><span style="color:#75715e"></span>        run3<span style="color:#f92672">.</span><span style="color:#a6e22e">release</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">return</span> total<span style="color:#f92672">;</span>
 <span style="color:#f92672">}</span>
 </code></pre></div>
               
@@ -363,7 +346,9 @@ Explanation: The input [1,3,2] means thread A calls first(), thread B calls thir
                   <div class="post-footer-tags">
                     <span class="text-color-light text-small">TAGGED IN</span><br/>
                     
-  <a class="tag tag--primary tag--small" href="https://yy-zhou.github.io/tags/semaphore/">Semaphore</a>
+  <a class="tag tag--primary tag--small" href="https://yy-zhou.github.io/tags/stack/">Stack</a>
+
+  <a class="tag tag--primary tag--small" href="https://yy-zhou.github.io/tags/tree/">Tree</a>
 
                   </div>
                 
@@ -376,7 +361,7 @@ Explanation: The input [1,3,2] means thread A calls first(), thread B calls thir
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2020/02/lc-84-739-1019-monotone-stack/" data-tooltip="LC 84 739 1019 - Monotone Stack">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2019/07/lc-1109-corporate-flight-bookings/" data-tooltip="LC 1109 - Corporate Flight Bookings">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -384,7 +369,7 @@ Explanation: The input [1,3,2] means thread A calls first(), thread B calls thir
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2020/02/lc-129-sum-root-to-leaf-numbers/" data-tooltip="LC 129 - Sum Root to Leaf Numbers">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2019/07/lc-1137-n-th-tribonacci-number/" data-tooltip="LC 1137 - N-th Tribonacci Number">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
@@ -434,7 +419,7 @@ Explanation: The input [1,3,2] means thread A calls first(), thread B calls thir
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2020/02/lc-84-739-1019-monotone-stack/" data-tooltip="LC 84 739 1019 - Monotone Stack">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2019/07/lc-1109-corporate-flight-bookings/" data-tooltip="LC 1109 - Corporate Flight Bookings">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -442,7 +427,7 @@ Explanation: The input [1,3,2] means thread A calls first(), thread B calls thir
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2020/02/lc-129-sum-root-to-leaf-numbers/" data-tooltip="LC 129 - Sum Root to Leaf Numbers">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2019/07/lc-1137-n-th-tribonacci-number/" data-tooltip="LC 1137 - N-th Tribonacci Number">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
