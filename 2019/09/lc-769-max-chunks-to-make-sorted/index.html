@@ -299,34 +299,39 @@ However, splitting into [1, 0], [2], [3], [4] is the highest number of chunks po
 <li><code>arr[i]</code>will be a permutation of <code>[0, 1, ..., arr.length - 1]</code>.</li>
 </ul>
 <h2 id="method">Method</h2>
-<p>The basic idea is to use <code>max[]</code> array to keep track of the max value until the current position. Compare it to the sorted array (indexes from <code>0</code> to <code>arr.length - 1</code>).</p>
-<p>If the <code>max[i]</code> equals the element at index <code>i</code> in the sorted array, then the final <code>count + 1</code>.</p>
-<p>Note that the numbers range from <code>0</code> to <code>arr.length - 1</code>. Hence, there is no need to sort the arr, simply use the index for comparison, which will finally be <code>O(n)</code>.</p>
+<p>Note that in this problem:</p>
+<ol>
+<li>The concatenation of sorted subarray should be a sorted array.</li>
+<li>The array only contains a permutation of [0, 1, &hellip;, arr.length - 1].</li>
+</ol>
+<p>Hence, it is to find the # of subarray that max value in subarray is smaller than the largest index. i.e., find all subarray that max[0, i] = i. Each subarray is a chunk.</p>
 <h2 id="code">Code</h2>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
-</span><span style="color:#75715e"> * The basic idea is to use max[] array to keep track of the max value until the current position.
-</span><span style="color:#75715e"> * Compare it to the sorted array (indexes from 0 to arr.length - 1).
-</span><span style="color:#75715e"> * If the max[i] equals the element at index i in the sorted array, then the final count + 1.
-</span><span style="color:#75715e"> * Note that the numbers range from 0 to arr.length - 1.
-</span><span style="color:#75715e"> * So there is no need to sort the arr, simply use the index for comparison, which will finally be O(n).
+</span><span style="color:#75715e"> * Note that in this problem:
+</span><span style="color:#75715e"> * 1. The concatenation of sorted subarray should be a sorted array.
+</span><span style="color:#75715e"> * 2. The array only contains a permutation of [0, 1, ..., arr.length - 1].
+</span><span style="color:#75715e"> * Hence, it is to find the # of subarray that max value in subarray is smaller than the largest index.
+</span><span style="color:#75715e"> * i.e., find all subarray that max[0, i] = i.
+</span><span style="color:#75715e"> * Each subarray is a chunk.
 </span><span style="color:#75715e"> *
 </span><span style="color:#75715e"> * @param arr given array
 </span><span style="color:#75715e"> * @return most number of chunks could have made
 </span><span style="color:#75715e"> */</span>
 <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">maxChunksToSorted</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> arr<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">int</span> n <span style="color:#f92672">=</span> arr<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span>
 
     <span style="color:#75715e">/* Corner case */</span>
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>arr<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">return</span> 0<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>n <span style="color:#f92672">&lt;</span> 2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> n<span style="color:#f92672">;</span>
     <span style="color:#f92672">}</span>
-
     <span style="color:#66d9ef">int</span> max <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> count <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
 
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> arr<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        max <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>arr<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">,</span> max<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>max <span style="color:#f92672">=</span><span style="color:#f92672">=</span> i<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            count<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> n<span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        max <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>max<span style="color:#f92672">,</span> arr<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>max <span style="color:#f92672">=</span><span style="color:#f92672">=</span> i<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>     <span style="color:#75715e">// array is the permutation of [0, 1, ..., arr.length - 1]
+</span><span style="color:#75715e"></span>            count<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">;</span>        <span style="color:#75715e">// find a new chunk that max[0, i] = i
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
     <span style="color:#f92672">}</span>
 
     <span style="color:#66d9ef">return</span> count<span style="color:#f92672">;</span>
