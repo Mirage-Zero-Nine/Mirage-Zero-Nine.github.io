@@ -287,12 +287,18 @@
         <li><a href="#problem-description-1">Problem description</a></li>
         <li><a href="#method-1">Method</a>
           <ul>
-            <li><a href="#pre-order-traversal">Pre-order traversal</a></li>
+            <li><a href="#pre-order-traverse">Pre-order traverse</a></li>
             <li><a href="#stack">Stack</a></li>
             <li><a href="#degree">Degree</a></li>
           </ul>
         </li>
-        <li><a href="#code-1">Code</a></li>
+        <li><a href="#code-1">Code</a>
+          <ul>
+            <li><a href="#pre-order-traverse-1">Pre-order traverse</a></li>
+            <li><a href="#stack-1">Stack</a></li>
+            <li><a href="#degree-1">Degree</a></li>
+          </ul>
+        </li>
       </ul>
     </li>
   </ul>
@@ -403,7 +409,7 @@ Output: false
 Output: false
 </code></pre><h2 id="method-1">Method</h2>
 <p>Three approaches.</p>
-<h3 id="pre-order-traversal">Pre-order traversal</h3>
+<h3 id="pre-order-traverse">Pre-order traverse</h3>
 <p>First approach is use a counter to count how many slot left for nodes. It&rsquo;s like to use pre order traversal to &ldquo;build&rdquo; the tree.</p>
 <p>The basic rule is, each non-empty node creates two slots for null node (left, right child). Each non-empty node requires one slot, and null node consume one slot of node. Therefore, use &ldquo;,&rdquo; as one slot is used.</p>
 <ul>
@@ -413,24 +419,26 @@ Output: false
 </ul>
 <p>Finally, check if slot is exactly 0.</p>
 <h3 id="stack">Stack</h3>
-<p>Using stack to store nodes including &ldquo;#&quot;.</p>
+<p>Using stack to store nodes including <code>#</code>.</p>
 <ul>
 <li>Case 1: number -&gt; push it to the stack.</li>
-<li>Case 2: # -&gt; check if the top of stack is also #.</li>
+<li>Case 2: <code>#</code> -&gt; check if the top of stack is also #.</li>
 </ul>
-<p>If so, pop until top of stack is not #.</p>
+<p>If so, pop until top of stack is not <code>#</code>.</p>
 <p>Finally, check if stack size is 1, and stack top is #.</p>
 <h3 id="degree">Degree</h3>
-<p>All non-null node provides 2 outdegree and 1 indegree (2 children and 1 parent), except root. All null node provides 0 outdegree and 1 indegree (0 child and 1 parent).</p>
-<p>Difference between out degree and in degree: <code>outdegree - indegree</code>.</p>
-<p>If the node is not null, increase diff by 2, because it provides two out degrees.</p>
-<p>If a serialization is correct, <code>outdegree - indegree</code> should never be negative and diff will be zero when finished.</p>
+<p>All non-null node provides 2 outdegree and 1 indegree (2 children and 1 parent), except root. All null node provides 0 outdegree and 1 indegree (0 child and 1 parent). Difference between out degree and in degree: <code>outdegree - indegree</code>.</p>
+<ul>
+<li>If the node is not null, increase diff by 2, because it provides two out degrees.</li>
+<li>If a serialization is correct, <code>outdegree - indegree</code> should never be negative and diff will be zero when finished.</li>
+</ul>
 <h2 id="code-1">Code</h2>
+<h3 id="pre-order-traverse-1">Pre-order traverse</h3>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Pre order traversal to &#34;build&#34; the tree.
-</span><span style="color:#75715e"> * The basic rule is, each non-empty node creates two slots for null node (left, right child).
-</span><span style="color:#75715e"> * Each non-empty node requires one slot, and null node consume one slot of node.
-</span><span style="color:#75715e"> * Therefore, use &#34;,&#34; as one slot is used.
+</span><span style="color:#75715e"> * Follow pre order traverse rule to &#34;build&#34; the tree. 
+</span><span style="color:#75715e"> * 1. Each non-empty node creates two slots for null node (left, right child).
+</span><span style="color:#75715e"> * 2. Each non-empty node requires one slot, and null node consume one slot of node.
+</span><span style="color:#75715e"> * Therefore, use &#34;,&#34; as the mark that one slot is used.
 </span><span style="color:#75715e"> * If one non-empty node is found, slot + 2.
 </span><span style="color:#75715e"> * If one null node is found, slot remains unchanged.
 </span><span style="color:#75715e"> * If meet a &#34;,&#34;, regraded as one node is used, slot - 1.
@@ -439,7 +447,7 @@ Output: false
 </span><span style="color:#75715e"> * @return whether it is a correct preorder traversal serialization of a binary tree
 </span><span style="color:#75715e"> */</span>
 <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">isValidSerialization</span><span style="color:#f92672">(</span>String preorder<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-    <span style="color:#66d9ef">int</span> count <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">int</span> slot <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span>
     <span style="color:#66d9ef">int</span> n <span style="color:#f92672">=</span> preorder<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 
     <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> n<span style="color:#f92672">;</span> <span style="color:#f92672">+</span><span style="color:#f92672">+</span>i<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
@@ -450,15 +458,13 @@ Output: false
 </span><span style="color:#75715e">         * &#34;#&#34;: null node does not take node, combine with &#34;,&#34; to use one slot. */</span>
         <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>preorder<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;,&#39;</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-            count<span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">;</span>        <span style="color:#75715e">// one node takes one slot
-</span><span style="color:#75715e"></span>
-            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>count <span style="color:#f92672">&lt;</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>        <span style="color:#75715e">// no more slots available
+            slot<span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">;</span>        <span style="color:#75715e">// one node takes one slot
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>slot <span style="color:#f92672">&lt;</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>        <span style="color:#75715e">// no more slots available
 </span><span style="color:#75715e"></span>                <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
             <span style="color:#f92672">}</span>
 
-
             <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>preorder<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">!</span><span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;#&#39;</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>         <span style="color:#75715e">// non-empty node creates two children slots
-</span><span style="color:#75715e"></span>                count <span style="color:#f92672">+</span><span style="color:#f92672">=</span> 2<span style="color:#f92672">;</span>
+</span><span style="color:#75715e"></span>                slot <span style="color:#f92672">+</span><span style="color:#f92672">=</span> 2<span style="color:#f92672">;</span>
             <span style="color:#f92672">}</span>
         <span style="color:#f92672">}</span>
     <span style="color:#f92672">}</span>
@@ -466,12 +472,12 @@ Output: false
     <span style="color:#75715e">/*
 </span><span style="color:#75715e">     * Check the last node.
 </span><span style="color:#75715e">     * Since last node does not have &#34;,&#34;, it requires extra check. */</span>
-    count <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>preorder<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>n <span style="color:#f92672">-</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;#&#39;</span><span style="color:#f92672">)</span> <span style="color:#f92672">?</span> count <span style="color:#f92672">-</span> 1 <span style="color:#f92672">:</span> count <span style="color:#f92672">+</span> 1<span style="color:#f92672">;</span>
+    slot <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>preorder<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>n <span style="color:#f92672">-</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#e6db74">&#39;#&#39;</span><span style="color:#f92672">)</span> <span style="color:#f92672">?</span> slot <span style="color:#f92672">-</span> 1 <span style="color:#f92672">:</span> slot <span style="color:#f92672">+</span> 1<span style="color:#f92672">;</span>
 
-    <span style="color:#66d9ef">return</span> count <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>      <span style="color:#75715e">// all slots should be used up
+    <span style="color:#66d9ef">return</span> slot <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>      <span style="color:#75715e">// all slots should be used up
 </span><span style="color:#75715e"></span><span style="color:#f92672">}</span>
-
-<span style="color:#75715e">/**
+</code></pre></div><h3 id="stack-1">Stack</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
 </span><span style="color:#75715e"> * Using stack to store nodes including &#34;#&#34;.
 </span><span style="color:#75715e"> * Case 1: number -&gt; push it to the stack.
 </span><span style="color:#75715e"> * Case 2: # -&gt; check if the top of stack is also #.
@@ -505,8 +511,8 @@ Output: false
     System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>s<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
     <span style="color:#66d9ef">return</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 1 <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">peek</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">.</span><span style="color:#a6e22e">equals</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;#&#34;</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 <span style="color:#f92672">}</span>
-
-<span style="color:#75715e">/**
+</code></pre></div><h3 id="degree-1">Degree</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
 </span><span style="color:#75715e"> * All non-null node provides 2 outdegree and 1 indegree (2 children and 1 parent), except root.
 </span><span style="color:#75715e"> * All null node provides 0 outdegree and 1 indegree (0 child and 1 parent).
 </span><span style="color:#75715e"> * Difference between out degree and in degree: outdegree - indegree
