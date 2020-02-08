@@ -38,6 +38,8 @@
     
       <meta property="article:tag" content="Find Kth Element">
     
+      <meta property="article:tag" content="Matrix">
+    
   
 
 
@@ -295,9 +297,53 @@ Explanation: Given three people living at (0,0), (0,4), and (2,2):
              The point (0,2) is an ideal meeting point, as the total travel distance 
              of 2+2+2=6 is minimal. So return 6.
 </code></pre><h2 id="method">Method</h2>
+<p>The travel distance is Manhattan distance. Therefore, to find the min distance, collect all position&rsquo;s row and column #. To reach the min best meeting point, both people has to travel the Manhattan distance. Hence, calculate the Manhattan distance by calculating the Manhattan distance in row and column after sorting.</p>
 <h2 id="code">Code</h2>
-<pre><code>
-</code></pre>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * The travel distance is Manhattan distance.
+</span><span style="color:#75715e"> * Therefore, to find the min distance, collect all position&#39;s row and column #.
+</span><span style="color:#75715e"> * To reach the min best meeting point, both people has to travel the Manhattan distance.
+</span><span style="color:#75715e"> * Hence, calculate the Manhattan distance by calculating the Manhattan distance in row and column after sorting.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param grid given grid
+</span><span style="color:#75715e"> * @return minimize Manhattan distance
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">minTotalDistance</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> grid<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">int</span> r <span style="color:#f92672">=</span> grid<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">,</span> c <span style="color:#f92672">=</span> grid<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span><span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span>
+
+    List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> row <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>      <span style="color:#75715e">// total value in each row
+</span><span style="color:#75715e"></span>    List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> col <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>      <span style="color:#75715e">// total value in each column
+</span><span style="color:#75715e"></span>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> r<span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> j <span style="color:#f92672">&lt;</span> c<span style="color:#f92672">;</span> j<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>grid<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">[</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                row<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+                col<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>j<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">return</span> minSum<span style="color:#f92672">(</span>row<span style="color:#f92672">)</span> <span style="color:#f92672">+</span> minSum<span style="color:#f92672">(</span>col<span style="color:#f92672">)</span><span style="color:#f92672">;</span>       <span style="color:#75715e">// convert 2D to 1D
+</span><span style="color:#75715e"></span><span style="color:#f92672">}</span>
+
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Calculate the min Manhattan distance based on row # and column #.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param list list
+</span><span style="color:#75715e"> * @return minimize sum of given list
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">minSum</span><span style="color:#f92672">(</span>List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> list<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+
+    <span style="color:#66d9ef">int</span> sum <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> left <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> right <span style="color:#f92672">=</span> list<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">;</span>
+    Collections<span style="color:#f92672">.</span><span style="color:#a6e22e">sort</span><span style="color:#f92672">(</span>list<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+
+    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>left <span style="color:#f92672">&lt;</span> right<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        sum <span style="color:#f92672">=</span> sum <span style="color:#f92672">+</span> list<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>right<span style="color:#f92672">-</span><span style="color:#f92672">-</span><span style="color:#f92672">)</span> <span style="color:#f92672">-</span> list<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>left<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">return</span> sum<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div>
               
             </div>
           </div>
@@ -310,6 +356,8 @@ Explanation: Given three people living at (0,0), (0,4), and (2,2):
                     <span class="text-color-light text-small">TAGGED IN</span><br/>
                     
   <a class="tag tag--primary tag--small" href="https://yy-zhou.github.io/tags/find-kth-element/">Find Kth Element</a>
+
+  <a class="tag tag--primary tag--small" href="https://yy-zhou.github.io/tags/matrix/">Matrix</a>
 
                   </div>
                 
