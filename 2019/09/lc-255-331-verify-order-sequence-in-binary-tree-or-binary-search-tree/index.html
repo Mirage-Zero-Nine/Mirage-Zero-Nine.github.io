@@ -285,18 +285,11 @@
     <li><a href="#verify-preorder-serialization-of-a-binary-tree">Verify Preorder Serialization of a Binary Tree</a>
       <ul>
         <li><a href="#problem-description-1">Problem description</a></li>
-        <li><a href="#method-1">Method</a>
+        <li><a href="#method--code">Method & Code</a>
           <ul>
             <li><a href="#pre-order-traverse">Pre-order traverse</a></li>
             <li><a href="#stack">Stack</a></li>
             <li><a href="#degree">Degree</a></li>
-          </ul>
-        </li>
-        <li><a href="#code-1">Code</a>
-          <ul>
-            <li><a href="#pre-order-traverse-1">Pre-order traverse</a></li>
-            <li><a href="#stack-1">Stack</a></li>
-            <li><a href="#degree-1">Degree</a></li>
           </ul>
         </li>
       </ul>
@@ -320,20 +313,23 @@ Output: false
 </code></pre><p><strong>Example 2:</strong></p>
 <pre><code>Input: [5,2,1,3,6]
 Output: true
-</code></pre><p><strong>Follow up:</strong>
-Could you do it using only constant space complexity?</p>
+</code></pre><p><strong>Follow up:</strong> Could you do it using only constant space complexity?</p>
 <h2 id="method">Method</h2>
-<p>If current element is smaller than top of stack, it is left subtree of all stack nodes, push the it into stack.</p>
-<p>Update min value to current subtree&rsquo;s root when traverse to right subtree.</p>
+<p>Follow the pre-order traversal rule. In BST, left children is always smaller than root node.</p>
+<ul>
+<li>If current element is smaller than top of stack, current node is still in left sub tree.</li>
+<li>Otherwise, current node is previous node&rsquo;s right child. Update min value to current subtree&rsquo;s root when traverse to right subtree.</li>
+</ul>
+<p>Each time, check if current node is smaller than current tree&rsquo;s root node. Since the traversal process is to find left child in BST, if current node is smaller than root, return <code>false</code>.</p>
+<p>The space complexity can be optimized to <code>O(1)</code> by using a pointer to point at the root of current subtree, instead of using a stack.</p>
 <h2 id="code">Code</h2>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Follow the pre-order traversal rule.
+</span><span style="color:#75715e"> * Follow the pre-order traversal rule. In BST, left children is always smaller than root node.
 </span><span style="color:#75715e"> * If current element is smaller than top of stack, current node is still in left sub tree.
 </span><span style="color:#75715e"> * Otherwise, current node is previous node&#39;s right child.
 </span><span style="color:#75715e"> * Update min value to current subtree&#39;s root when traverse to right subtree.
 </span><span style="color:#75715e"> * Each time, check if current node is smaller than current tree&#39;s root node.
 </span><span style="color:#75715e"> * Since the traversal process is to find left child in BST, if current node is smaller than root, return false.
-</span><span style="color:#75715e"> * In BST, left children is always smaller than root node.
 </span><span style="color:#75715e"> *
 </span><span style="color:#75715e"> * @param preorder given array
 </span><span style="color:#75715e"> * @return whether it is the correct preorder traversal sequence of a binary search tree
@@ -349,8 +345,9 @@ Could you do it using only constant space complexity?</p>
         <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span><span style="color:#f92672">!</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">empty</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> i <span style="color:#f92672">&gt;</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">peek</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>        <span style="color:#75715e">// if i &gt; s.peek(), then i is in right subtree
 </span><span style="color:#75715e"></span>            min <span style="color:#f92672">=</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">pop</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>      <span style="color:#75715e">// update min value to current subtree&#39;s root when traverse to right subtree
 </span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
-        s<span style="color:#f92672">.</span><span style="color:#a6e22e">push</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
+
+        s<span style="color:#f92672">.</span><span style="color:#a6e22e">push</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span><span style="color:#f92672">;</span>      <span style="color:#75715e">// current root value in subtree
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
     <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
 <span style="color:#f92672">}</span>
 
@@ -407,33 +404,22 @@ Output: false
 </code></pre><p><strong>Example 3:</strong></p>
 <pre><code>Input: &quot;9,#,#,1&quot;
 Output: false
-</code></pre><h2 id="method-1">Method</h2>
+</code></pre><h2 id="method--code">Method &amp; Code</h2>
 <p>Three approaches.</p>
 <h3 id="pre-order-traverse">Pre-order traverse</h3>
 <p>First approach is use a counter to count how many slot left for nodes. It&rsquo;s like to use pre order traversal to &ldquo;build&rdquo; the tree.</p>
-<p>The basic rule is, each non-empty node creates two slots for null node (left, right child). Each non-empty node requires one slot, and null node consume one slot of node. Therefore, use &ldquo;,&rdquo; as one slot is used.</p>
+<p>Follow pre order traverse rule to &ldquo;build&rdquo; the tree.</p>
+<ol>
+<li>Each non-empty node creates two slots for null node (left, right child).</li>
+<li>Each non-empty node requires one slot, and null node consume one slot of node.</li>
+</ol>
+<p>Therefore, use &ldquo;,&rdquo; as the mark that one slot is used.</p>
 <ul>
 <li>If one non-empty node is found, slot + 2.</li>
 <li>If one null node is found, slot remains unchanged.</li>
 <li>If meet a &ldquo;,&quot;, regraded as one node is used, slot - 1.</li>
 </ul>
 <p>Finally, check if slot is exactly 0.</p>
-<h3 id="stack">Stack</h3>
-<p>Using stack to store nodes including <code>#</code>.</p>
-<ul>
-<li>Case 1: number -&gt; push it to the stack.</li>
-<li>Case 2: <code>#</code> -&gt; check if the top of stack is also #.</li>
-</ul>
-<p>If so, pop until top of stack is not <code>#</code>.</p>
-<p>Finally, check if stack size is 1, and stack top is #.</p>
-<h3 id="degree">Degree</h3>
-<p>All non-null node provides 2 outdegree and 1 indegree (2 children and 1 parent), except root. All null node provides 0 outdegree and 1 indegree (0 child and 1 parent). Difference between out degree and in degree: <code>outdegree - indegree</code>.</p>
-<ul>
-<li>If the node is not null, increase diff by 2, because it provides two out degrees.</li>
-<li>If a serialization is correct, <code>outdegree - indegree</code> should never be negative and diff will be zero when finished.</li>
-</ul>
-<h2 id="code-1">Code</h2>
-<h3 id="pre-order-traverse-1">Pre-order traverse</h3>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
 </span><span style="color:#75715e"> * Follow pre order traverse rule to &#34;build&#34; the tree. 
 </span><span style="color:#75715e"> * 1. Each non-empty node creates two slots for null node (left, right child).
@@ -476,7 +462,14 @@ Output: false
 
     <span style="color:#66d9ef">return</span> slot <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>      <span style="color:#75715e">// all slots should be used up
 </span><span style="color:#75715e"></span><span style="color:#f92672">}</span>
-</code></pre></div><h3 id="stack-1">Stack</h3>
+</code></pre></div><h3 id="stack">Stack</h3>
+<p>Using stack to store nodes including <code>#</code>.</p>
+<ul>
+<li>Case 1: number -&gt; push it to the stack.</li>
+<li>Case 2: <code>#</code> -&gt; check if the top of stack is also #.</li>
+</ul>
+<p>If so, pop until top of stack is not <code>#</code>.</p>
+<p>Finally, check if stack size is 1, and stack top is #.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
 </span><span style="color:#75715e"> * Using stack to store nodes including &#34;#&#34;.
 </span><span style="color:#75715e"> * Case 1: number -&gt; push it to the stack.
@@ -511,7 +504,12 @@ Output: false
     System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>s<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
     <span style="color:#66d9ef">return</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 1 <span style="color:#f92672">&amp;</span><span style="color:#f92672">&amp;</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">peek</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">.</span><span style="color:#a6e22e">equals</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;#&#34;</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 <span style="color:#f92672">}</span>
-</code></pre></div><h3 id="degree-1">Degree</h3>
+</code></pre></div><h3 id="degree">Degree</h3>
+<p>All non-null node provides 2 outdegree and 1 indegree (2 children and 1 parent), except root. All null node provides 0 outdegree and 1 indegree (0 child and 1 parent). Difference between out degree and in degree: <code>outdegree - indegree</code>.</p>
+<ul>
+<li>If the node is not null, increase diff by 2, because it provides two out degrees.</li>
+<li>If a serialization is correct, <code>outdegree - indegree</code> should never be negative and diff will be zero when finished.</li>
+</ul>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
 </span><span style="color:#75715e"> * All non-null node provides 2 outdegree and 1 indegree (2 children and 1 parent), except root.
 </span><span style="color:#75715e"> * All null node provides 0 outdegree and 1 indegree (0 child and 1 parent).
