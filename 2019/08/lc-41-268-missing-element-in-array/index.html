@@ -280,7 +280,14 @@
     <li><a href="#missing-number">Missing Number</a>
       <ul>
         <li><a href="#problem-description-1">Problem description</a></li>
-        <li><a href="#method--code-1">Method & Code</a></li>
+        <li><a href="#method--code-1">Method & Code</a>
+          <ul>
+            <li><a href="#bit-manipulation">Bit manipulation</a></li>
+            <li><a href="#binary-search">Binary search</a></li>
+            <li><a href="#index-mapping">Index mapping</a></li>
+            <li><a href="#naive-solution">Naive Solution</a></li>
+          </ul>
+        </li>
       </ul>
     </li>
   </ul>
@@ -355,17 +362,10 @@ Output: 8
 </code></pre><p><strong>Note</strong>:
 Your algorithm should run in linear runtime complexity. Could you implement it using only constant extra space complexity?</p>
 <h2 id="method--code-1">Method &amp; Code</h2>
-<p><strong>Bit manipulation.</strong></p>
+<h3 id="bit-manipulation">Bit manipulation</h3>
 <p>Only one element is missing in 0, 1, 2, &hellip;, n. And XOR operation has a principle a ^ b ^ b = a.</p>
 <p>Hence, if array has all elements from 0 to n-1, then the XOR operation will finally back to initial value itself. i.e, <code>res ^ 1 ^ 1 ^ 2 ^ 2 ... ^ (n - 1) ^ (n - 1) = res</code>.</p>
 <p>If the missing int is in range <code>[0, n]</code>, then <code>res = res ^ missingIndex ^ n</code>. Since res initially is equal to n, finally res will be missing index, which is missing number.</p>
-<p><strong>Binary search</strong></p>
-<p>Use the binary search to find the missing one. Sorting is required.</p>
-<p><strong>Index mapping</strong></p>
-<p>Use index mapping to mapping each occurred element from 0 to n by mark each element into negative. To avoid 0, the mapping should minus 1 to assure each element in array after mapping is negative.</p>
-<p>Then check which element in array is not mapped.</p>
-<p><strong>Naive Solution</strong></p>
-<p>Use a hash set to count occurrence.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
 </span><span style="color:#75715e"> * Bit manipulation.
 </span><span style="color:#75715e"> * Only one element is missing in 0, 1, 2, ..., n. And XOR operation has a principle a ^ b ^ b = a.
@@ -385,57 +385,36 @@ Your algorithm should run in linear runtime complexity. Could you implement it u
     <span style="color:#f92672">}</span>
     <span style="color:#66d9ef">return</span> res<span style="color:#f92672">;</span>
 <span style="color:#f92672">}</span>
+</code></pre></div><h3 id="binary-search">Binary search</h3>
+<p>Use the binary search to find the missing one. Sorting is required.</p>
+<pre><code>
+/**
+ * Use the binary search to find the missing one.
+ *
+ * @param nums input int array
+ * @return missing number
+ */
+public int binarySearch(int[] nums) {
+    Arrays.sort(nums);
 
-<span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Put elements into set and traverse from 0 to n to find missing number.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param nums input int array
-</span><span style="color:#75715e"> * @return missing number
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">naiveSolution</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> nums<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    int left = 0, right = nums.length, mid;
 
-    <span style="color:#75715e">/* Corner case */</span>
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">return</span> 0<span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
+    while (left &lt; right) {
+        mid = (left + right) / 2;
 
-    Set<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> numSet <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashSet<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> num <span style="color:#f92672">:</span> nums<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        numSet<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>num<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#f92672">!</span>numSet<span style="color:#f92672">.</span><span style="color:#a6e22e">contains</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">return</span> i<span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-    <span style="color:#66d9ef">return</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span>
-<span style="color:#f92672">}</span>
+        if (nums[mid] &gt; mid) {
+            right = mid;
+        } else {
+            left = mid + 1;
+        }
+    }
 
-<span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Use the binary search to find the missing one.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param nums input int array
-</span><span style="color:#75715e"> * @return missing number
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">binarySearch</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> nums<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-    Arrays<span style="color:#f92672">.</span><span style="color:#a6e22e">sort</span><span style="color:#f92672">(</span>nums<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
-
-    <span style="color:#66d9ef">int</span> left <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> right <span style="color:#f92672">=</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">,</span> mid<span style="color:#f92672">;</span>
-
-    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>left <span style="color:#f92672">&lt;</span> right<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        mid <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>left <span style="color:#f92672">+</span> right<span style="color:#f92672">)</span> <span style="color:#f92672">/</span> 2<span style="color:#f92672">;</span>
-
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>nums<span style="color:#f92672">[</span>mid<span style="color:#f92672">]</span> <span style="color:#f92672">&gt;</span> mid<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            right <span style="color:#f92672">=</span> mid<span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
-            left <span style="color:#f92672">=</span> mid <span style="color:#f92672">+</span> 1<span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">return</span> left<span style="color:#f92672">;</span>
-<span style="color:#f92672">}</span>
-
-<span style="color:#75715e">/**
+    return left;
+}
+</code></pre><h3 id="index-mapping">Index mapping</h3>
+<p>Use index mapping to mapping each occurred element from 0 to n by mark each element into negative. To avoid 0, the mapping should minus 1 to assure each element in array after mapping is negative.</p>
+<p>Then check which element in array is not mapped.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
 </span><span style="color:#75715e"> * Use index mapping to mapping each occurred element from 0 to n.
 </span><span style="color:#75715e"> *
 </span><span style="color:#75715e"> * @param nums input int array
@@ -465,6 +444,32 @@ Your algorithm should run in linear runtime complexity. Could you implement it u
         <span style="color:#f92672">}</span>
     <span style="color:#f92672">}</span>
 
+    <span style="color:#66d9ef">return</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h3 id="naive-solution">Naive Solution</h3>
+<p>Use a hash set to count occurrence.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Put elements into set and traverse from 0 to n to find missing number.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param nums input int array
+</span><span style="color:#75715e"> * @return missing number
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">naiveSolution</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> nums<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+
+    <span style="color:#75715e">/* Corner case */</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> 0<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+
+    Set<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> numSet <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashSet<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> num <span style="color:#f92672">:</span> nums<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        numSet<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>num<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#f92672">!</span>numSet<span style="color:#f92672">.</span><span style="color:#a6e22e">contains</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">return</span> i<span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
     <span style="color:#66d9ef">return</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span>
 <span style="color:#f92672">}</span>
 </code></pre></div>
