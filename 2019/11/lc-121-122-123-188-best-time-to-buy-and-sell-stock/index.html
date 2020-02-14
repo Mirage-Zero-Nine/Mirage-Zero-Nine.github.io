@@ -284,13 +284,23 @@
     <li><a href="#best-time-to-buy-and-sell-stock-iii">Best Time to Buy and Sell Stock III</a>
       <ul>
         <li><a href="#problem-description-2">Problem description</a></li>
-        <li><a href="#method--code-2">Method & Code</a></li>
+        <li><a href="#method--code-2">Method & Code</a>
+          <ul>
+            <li><a href="#dynamic-programming">Dynamic Programming</a></li>
+            <li><a href="#state-machine">State Machine</a></li>
+          </ul>
+        </li>
       </ul>
     </li>
     <li><a href="#best-time-to-buy-and-sell-stock-iv">Best Time to Buy and Sell Stock IV</a>
       <ul>
         <li><a href="#problem-description-3">Problem description</a></li>
-        <li><a href="#method--code-3">Method & Code</a></li>
+        <li><a href="#method--code-3">Method & Code</a>
+          <ul>
+            <li><a href="#dynamic-programming-1">Dynamic programming</a></li>
+            <li><a href="#state-machine-1">State machine</a></li>
+          </ul>
+        </li>
       </ul>
     </li>
   </ul>
@@ -350,7 +360,7 @@ Explanation: Buy on day 1 (price = 1) and sell on day 5 (price = 5), profit = 5-
 Output: 0
 Explanation: In this case, no transaction is done, i.e. max profit = 0.
 </code></pre><h2 id="method--code-1">Method &amp; Code</h2>
-<p>This problem can be solved by greedy approach. However, the description is somehow vague and therefore, the directly solution is extremely straightforward: add all positive difference to profit. That’s it.</p>
+<p>This problem can be solved by greedy. However, the description is somehow vague and therefore, the directly solution is extremely straightforward: add all positive difference to profit. That’s it.</p>
 <p>The difference between this problem and previous problem is that in the previous problem, one “transaction” can be done, which suggests that the purpose is to find largest gap between two numbers in array. And in this problem, since no limits of “transaction”, the purpose turns to simply find each positive gap between adjacent numbers.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
 </span><span style="color:#75715e"> * Ignore this problem.
@@ -388,14 +398,7 @@ Output: 0
 Explanation: In this case, no transaction is done, i.e. max profit = 0.
 </code></pre><h2 id="method--code-2">Method &amp; Code</h2>
 <p>The dynamic programming solution is same as Best Time to Buy and Sell Stock IV, check the method in next problem. There is another understanding of this problem: state machine.</p>
-<p><img src="../../../static/img/state-machine.png" alt="state-machine"></p>
-<ul>
-<li>State 0: do nothing or buy stock</li>
-<li>State 1: sell stock or hold purchased stock</li>
-<li>State 2: do nothing or buy stock again</li>
-<li>State 3: sell stock again or do nothing</li>
-</ul>
-<p>Finally, it returns the final state <code>s3</code>. If no purchase happened (no profit), then the state machine will directly return -price[0]. Compare the state machine result and return 0 if state machine returns a negative value.</p>
+<h3 id="dynamic-programming">Dynamic Programming</h3>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
 </span><span style="color:#75715e"> * Dynamic programming.
 </span><span style="color:#75715e"> * The general state transition to solve this kind of problem is as following:
@@ -431,8 +434,16 @@ Explanation: In this case, no transaction is done, i.e. max profit = 0.
 
     <span style="color:#66d9ef">return</span> dp<span style="color:#f92672">[</span>2<span style="color:#f92672">]</span><span style="color:#f92672">[</span>n <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
 <span style="color:#f92672">}</span>
-
-<span style="color:#75715e">/**
+</code></pre></div><h3 id="state-machine">State Machine</h3>
+<p><img src="../../../static/img/state-machine.png" alt="state-machine"></p>
+<ul>
+<li>State 0: do nothing or buy stock</li>
+<li>State 1: sell stock or hold purchased stock</li>
+<li>State 2: do nothing or buy stock again</li>
+<li>State 3: sell stock again or do nothing</li>
+</ul>
+<p>Finally, it returns the final state <code>s3</code>. If no purchase happened (no profit), then the state machine will directly return -price[0]. Compare the state machine result and return 0 if state machine returns a negative value.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
 </span><span style="color:#75715e"> * Use a state machine to describes the problem statement.
 </span><span style="color:#75715e"> * State 0: do nothing or buy stock
 </span><span style="color:#75715e"> * State 1: sell stock or hold purchased stock
@@ -479,7 +490,7 @@ Explanation: Buy on day 2 (price = 2) and sell on day 3 (price = 6), profit = 6-
 </code></pre><h2 id="method--code-3">Method &amp; Code</h2>
 <p>There are two approaches to solve this problem (actually they are same): Dynamic programming and State machine. The choice is up to which one is understandable.</p>
 <p>However, to avoid MLE (happens when k and array are extremely large), some corner cases should be fixed first. If <code>k &gt; prices.length * 2</code>, then the problem can be converted to Best Time to Buy and Sell Stock II. The reason is that in given array, it can at most complete <code>2 * k </code> operations since only one action can be done at one time.</p>
-<p><strong>Dynamic programming</strong></p>
+<h3 id="dynamic-programming-1">Dynamic programming</h3>
 <p>State transition:</p>
 <pre><code>dp[i, j] = max(dp[i, j - 1], prices[j] - prices[j'] + [i - 1, j'])
 </code></pre><ul>
@@ -505,8 +516,6 @@ dp[i, 0] = 0
 }
 </code></pre><p>The optimized code is in the code part.</p>
 <p>The idea is to find out max profit from previous transaction and compare to current operation (buy/sell, or do nothing). This is actually same as state machine.</p>
-<p><strong>State machine</strong></p>
-<p>It is same as previous problem, which is actually k=2 if use condition in this problem. The state machine has <code>k * 2</code> states, and to store them, use a <code>int[]</code> to store the states and update it.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
 </span><span style="color:#75715e"> * Dynamic programming with 2D table.
 </span><span style="color:#75715e"> * dp[i, j] = max(dp[i, j - 1], prices[j] - prices[m] + dp[i - 1, m])
@@ -553,8 +562,8 @@ dp[i, 0] = 0
 
     <span style="color:#66d9ef">return</span> dp<span style="color:#f92672">[</span>k<span style="color:#f92672">]</span><span style="color:#f92672">[</span>n <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
 <span style="color:#f92672">}</span>
-
-<span style="color:#75715e">/**
+</code></pre></div><p>Solution with better space performance.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
 </span><span style="color:#75715e"> * DP solution with space optimized.
 </span><span style="color:#75715e"> *
 </span><span style="color:#75715e"> * @param k      k times transaction limit
@@ -597,8 +606,9 @@ dp[i, 0] = 0
 
     <span style="color:#66d9ef">return</span> r1<span style="color:#f92672">[</span>prices<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
 <span style="color:#f92672">}</span>
-
-<span style="color:#75715e">/**
+</code></pre></div><h3 id="state-machine-1">State machine</h3>
+<p>It is same as previous problem, which is actually k=2 if use condition in this problem. The state machine has <code>k * 2</code> states, and to store them, use a <code>int[]</code> to store the states and update it.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
 </span><span style="color:#75715e"> * Use a state machine to save state.
 </span><span style="color:#75715e"> * The length of state is 2 * k, since each k representing a buy and sell state.
 </span><span style="color:#75715e"> *
