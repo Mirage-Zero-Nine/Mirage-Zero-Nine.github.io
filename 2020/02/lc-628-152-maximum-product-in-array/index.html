@@ -332,9 +332,53 @@ Output: 24
     <span style="color:#66d9ef">return</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>max1 <span style="color:#f92672">*</span> max2 <span style="color:#f92672">*</span> max3<span style="color:#f92672">,</span> min1 <span style="color:#f92672">*</span> min2 <span style="color:#f92672">*</span> max3<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
 <span style="color:#f92672">}</span>
 </code></pre></div><h1 id="maximum-product-subarray">Maximum Product Subarray</h1>
-<p>Link:</p>
+<p>Link: <a href="https://leetcode.com/problems/maximum-product-subarray/">Maximum Product Subarray</a></p>
 <h2 id="problem-description-1">Problem description</h2>
-<h2 id="method--code-1">Method &amp; Code</h2>
+<p>Given an integer array <code>nums</code>, find the contiguous subarray within an array (containing at least one number) which has the largest product.</p>
+<p><strong>Example 1:</strong></p>
+<pre><code>Input: [2,3,-2,4]
+Output: 6
+Explanation: [2,3] has the largest product 6.
+</code></pre><p><strong>Example 2:</strong></p>
+<pre><code>Input: [-2,0,-1]
+Output: 0
+Explanation: The result cannot be 2, because [-2,-1] is not a subarray.
+</code></pre><h2 id="method--code-1">Method &amp; Code</h2>
+<p>Find max subarray, and find max min subarray, in case next int is negative and min becomes max.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Find max subarray, and find max min subarray, in case next int is negative and min becomes max.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param nums given array
+</span><span style="color:#75715e"> * @return max subarray product
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">maxProduct</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> nums<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+
+    <span style="color:#75715e">/* Corner case */</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> 0<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#75715e">/*
+</span><span style="color:#75715e">     * Store the previous max and previous min.
+</span><span style="color:#75715e">     * Max value is product of both positive number or both negative number.
+</span><span style="color:#75715e">     * Min value is the product of one positive number and one negative number.
+</span><span style="color:#75715e">     * During the traverse, next value in array may turn max into min, and min into max. */</span>
+    <span style="color:#66d9ef">int</span> preMax <span style="color:#f92672">=</span> nums<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span><span style="color:#f92672">,</span> preMin <span style="color:#f92672">=</span> nums<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span><span style="color:#f92672">,</span> max <span style="color:#f92672">=</span> nums<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">int</span> tempMax<span style="color:#f92672">,</span> tempMin<span style="color:#f92672">;</span>       <span style="color:#75715e">// max value and min value
+</span><span style="color:#75715e"></span>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+
+        tempMax <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>preMax <span style="color:#f92672">*</span> nums<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">,</span> preMin <span style="color:#f92672">*</span> nums<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">)</span><span style="color:#f92672">,</span> nums<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>      <span style="color:#75715e">// find current max value
+</span><span style="color:#75715e"></span>        tempMin <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">min</span><span style="color:#f92672">(</span>Math<span style="color:#f92672">.</span><span style="color:#a6e22e">min</span><span style="color:#f92672">(</span>preMax <span style="color:#f92672">*</span> nums<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">,</span> preMin <span style="color:#f92672">*</span> nums<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">)</span><span style="color:#f92672">,</span> nums<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>      <span style="color:#75715e">// find min subarray
+</span><span style="color:#75715e"></span>
+        max <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>tempMax<span style="color:#f92672">,</span> max<span style="color:#f92672">)</span><span style="color:#f92672">;</span>       <span style="color:#75715e">// previous min value may become max
+</span><span style="color:#75715e"></span>        preMax <span style="color:#f92672">=</span> tempMax<span style="color:#f92672">;</span>
+        preMin <span style="color:#f92672">=</span> tempMin<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">return</span> max<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div>
               
             </div>
           </div>
