@@ -340,13 +340,12 @@
 <p>You may assume that each input would have <strong>exactly</strong> one solution, and you may not use the <em>same</em> element twice.</p>
 <p><strong>Example:</strong></p>
 <pre><code>Given nums = [2, 7, 11, 15], target = 9,
-
 Because nums[0] + nums[1] = 2 + 7 = 9,
 return [0, 1].
 </code></pre><h2 id="method--code">Method &amp; Code</h2>
 <p>Use a hash map to store the element in array, and value in hash map is the index of array.</p>
-<p>Iterate the array, if found an element that is equals to target - nums[i], then return the i and map value. Otherwise, put the nums[i] and i into hash map.</p>
-<p>This problem can be solved by using two pointers, but the given array has to be sorted first, and therefore the time complexity is O(n). But space complexity can be O(1) depends on the sorting algorithm.</p>
+<p>Iterate the array, if found an element that is equals to <code>target - nums[i]</code>, then return the i and map value. Otherwise, put the <code>nums[i]</code> and i into hash map.</p>
+<p>This problem can be solved by using two pointers, but the given array has to be sorted first, and therefore the time complexity is <code>O(n)</code>. But space complexity can be <code>O(1)</code> depends on the sorting algorithm.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
 </span><span style="color:#75715e"> * Use a hash map to store the element in array, and value in hash map is the index of array.
 </span><span style="color:#75715e"> * Iterate the array, if found an element that is equals to target - nums[i], then return the i and map value.
@@ -459,7 +458,6 @@ In this case it's not possible to get a pair sum less that 15.
 
     <span style="color:#66d9ef">return</span> <span style="color:#f92672">(</span>out <span style="color:#f92672">=</span><span style="color:#f92672">=</span> Integer<span style="color:#f92672">.</span><span style="color:#a6e22e">MIN_VALUE</span><span style="color:#f92672">)</span> <span style="color:#f92672">?</span> <span style="color:#f92672">-</span>1 <span style="color:#f92672">:</span> out<span style="color:#f92672">;</span>
 <span style="color:#f92672">}</span>
-
 </code></pre></div><h1 id="3sum">3Sum</h1>
 <p>Link: <a href="https://leetcode.com/problems/3sum">3Sum</a></p>
 <h2 id="problem-description-3">Problem description</h2>
@@ -639,7 +637,7 @@ The sum that is closest to the target is 2. (-1 + 2 + 1 = 2).
     <span style="color:#66d9ef">return</span> closet<span style="color:#f92672">;</span>
 <span style="color:#f92672">}</span>
 </code></pre></div><h1 id="4sum">4Sum</h1>
-<p>Link: <a href="https://leetcode.com/problems/3sum-closest">4Sum</a></p>
+<p>Link: <a href="https://leetcode.com/problems/4sum/">4Sum</a></p>
 <h2 id="problem-description-6">Problem description</h2>
 <p>Given an array <code>nums</code> of <em>n</em> integers and an integer <code>target</code>, are there elements <em>a</em>, <em>b</em>, <em>c</em>, and <em>d</em> in <code>nums</code> such that <em>a</em> + <em>b</em> + <em>c</em> + <em>d</em> = <code>target</code>? Find all unique quadruplets in the array which gives the sum of <code>target</code>.</p>
 <p><strong>Note:</strong></p>
@@ -756,7 +754,7 @@ public List&lt;List&lt;Integer&gt;&gt; kSum(int[] nums, int k, int target) {
 }
 
 /**
- * Recursion.
+ * Backtracking.
  * Each round, remove one element in array and target is subtracted by this element.
  * If all k elements have been selected, check if current target equals to 0.
  * One optimize: if target is smaller than current element, it can not be the answer.
@@ -770,17 +768,15 @@ public List&lt;List&lt;Integer&gt;&gt; kSum(int[] nums, int k, int target) {
  */
 private void backtracking(List&lt;List&lt;Integer&gt;&gt; out, List&lt;Integer&gt; tmp, int[] arr, int k, int target, int position) {
 
-    if (k == 0 &amp;&amp; target == 0) {
-        out.add(new ArrayList&lt;&gt;(tmp));
+    if (k &lt;= 0) {
+        if (k == 0 &amp;&amp; target == 0) {
+            out.add(new ArrayList&lt;&gt;(tmp));
+        }
         return;
     }
 
-    if (k &gt; 0 &amp;&amp; target &gt; 0) {
-        for (int i = position; i &lt; arr.length; i++) {
-            if (arr[i] &gt; target) {
-                return;
-            }
-
+    for (int i = position; i &lt; arr.length &amp;&amp; (arr[i] &lt; 0 || arr[i] &lt;= target); i++) {
+        if (i == position || arr[i] != arr[i - 1]) {
             tmp.add(arr[i]);
             backtracking(out, tmp, arr, k - 1, target - arr[i], i + 1);
             tmp.remove(tmp.size() - 1);
