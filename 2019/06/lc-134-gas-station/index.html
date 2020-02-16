@@ -317,11 +317,12 @@ Travel to station 1. Your tank = 3 - 3 + 3 = 3
 You cannot travel back to station 2, as it requires 4 unit of gas but you only have 3.
 Therefore, you can't travel around the circuit once no matter where you start.
 </code></pre><h2 id="method--code">Method &amp; Code</h2>
-<p>First of all, if total gas is less than total cost, then it can not traverse all points in array whatever start position is.</p>
-<p>Use a pointer to save the start position. If tank is less than 0 (total gas &lt; total cost), then reset the location at next position.</p>
+<p>If total gas can cover all cost of gas, then there will be a available start location.</p>
+<p>Traverse array, if current tank can not cover the cost at current station, set start location at next location. Finally, if total gas can not cover total cost, then return -1. Otherwise, return start location.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Use pointer to store the start position.
-</span><span style="color:#75715e"> * If current tank can not cover the cost at current station, set start location at next point.
+</span><span style="color:#75715e"> * If total gas can cover all cost of gas, then there will be a available start location.
+</span><span style="color:#75715e"> * Traverse array, if current tank can not cover the cost at current station, set start location at next location.
+</span><span style="color:#75715e"> * Finally, if total gas can not cover total cost, then return -1. Otherwise, return start location.
 </span><span style="color:#75715e"> *
 </span><span style="color:#75715e"> * @param gas  amount of gas
 </span><span style="color:#75715e"> * @param cost cost of gas
@@ -330,36 +331,24 @@ Therefore, you can't travel around the circuit once no matter where you start.
 <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">canCompleteCircuit</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> gas<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span><span style="color:#f92672">]</span> cost<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
     <span style="color:#75715e">/* Corner case */</span>
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>gas<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">return</span> <span style="color:#f92672">(</span>gas<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span> <span style="color:#f92672">&gt;</span><span style="color:#f92672">=</span> cost<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span><span style="color:#f92672">)</span> <span style="color:#f92672">?</span> 0 <span style="color:#f92672">:</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>gas <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">|</span><span style="color:#f92672">|</span> cost <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">|</span><span style="color:#f92672">|</span> gas<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 0 <span style="color:#f92672">|</span><span style="color:#f92672">|</span> cost<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">=</span><span style="color:#f92672">=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">;</span>
     <span style="color:#f92672">}</span>
 
-    <span style="color:#66d9ef">int</span> tank <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">int</span> size <span style="color:#f92672">=</span> gas<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">,</span> sum <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> count <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> total <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
 
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> gas<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        tank <span style="color:#f92672">=</span> tank <span style="color:#f92672">+</span> gas<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">-</span> cost<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>tank <span style="color:#f92672">&lt;</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">;</span>      <span style="color:#75715e">// total gas can not cover total cost
-</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
-
-    <span style="color:#75715e">/* There will be a solution, try from beginning */</span>
-    <span style="color:#66d9ef">int</span> start <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
-    tank <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
-
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> gas<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">+</span><span style="color:#f92672">+</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-
-        tank <span style="color:#f92672">=</span> tank <span style="color:#f92672">+</span> gas<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">-</span> cost<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
-
-        <span style="color:#75715e">/* Reset location and tank */</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>tank <span style="color:#f92672">&lt;</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            tank <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
-            start <span style="color:#f92672">=</span> i <span style="color:#f92672">+</span> 1<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> size<span style="color:#f92672">;</span> <span style="color:#f92672">+</span><span style="color:#f92672">+</span>i<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        sum <span style="color:#f92672">+</span><span style="color:#f92672">=</span> gas<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">-</span> cost<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>sum <span style="color:#f92672">&lt;</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            total <span style="color:#f92672">+</span><span style="color:#f92672">=</span> sum<span style="color:#f92672">;</span>
+            sum <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+            count <span style="color:#f92672">=</span> i <span style="color:#f92672">+</span> 1<span style="color:#f92672">;</span>
         <span style="color:#f92672">}</span>
     <span style="color:#f92672">}</span>
 
-    <span style="color:#66d9ef">return</span> start<span style="color:#f92672">;</span>
+    total <span style="color:#f92672">+</span><span style="color:#f92672">=</span> sum<span style="color:#f92672">;</span>
+
+    <span style="color:#66d9ef">return</span> total <span style="color:#f92672">&lt;</span> 0 <span style="color:#f92672">?</span> <span style="color:#f92672">-</span>1 <span style="color:#f92672">:</span> count<span style="color:#f92672">;</span>
 <span style="color:#f92672">}</span>
 </code></pre></div>
               
