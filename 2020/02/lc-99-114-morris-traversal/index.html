@@ -13,36 +13,34 @@
 
 <meta property="og:description" content="">
 <meta property="og:type" content="article">
-<meta property="og:title" content="LC 99 - Recover Binary Search Tree">
-<meta name="twitter:title" content="LC 99 - Recover Binary Search Tree">
-<meta property="og:url" content="https://yy-zhou.github.io/2019/08/lc-99-recover-binary-search-tree/">
-<meta property="twitter:url" content="https://yy-zhou.github.io/2019/08/lc-99-recover-binary-search-tree/">
+<meta property="og:title" content="LC 99 114 - Morris Traversal">
+<meta name="twitter:title" content="LC 99 114 - Morris Traversal">
+<meta property="og:url" content="https://yy-zhou.github.io/2020/02/lc-99-114-morris-traversal/">
+<meta property="twitter:url" content="https://yy-zhou.github.io/2020/02/lc-99-114-morris-traversal/">
 <meta property="og:site_name" content="Bingo!">
 <meta property="og:description" content="">
 <meta name="twitter:description" content="">
 <meta property="og:locale" content="en-us">
 
   
-    <meta property="article:published_time" content="2019-08-07T00:00:00">
+    <meta property="article:published_time" content="2020-02-17T00:00:00">
   
   
-    <meta property="article:modified_time" content="2019-08-07T00:00:00">
+    <meta property="article:modified_time" content="2020-02-17T00:00:00">
   
   
   
     
       <meta property="article:section" content="Algorithm">
     
-      <meta property="article:section" content="Favorite">
-    
   
   
-    
-      <meta property="article:tag" content="DFS">
     
       <meta property="article:tag" content="Tree">
     
-      <meta property="article:tag" content="Binary Search Tree">
+      <meta property="article:tag" content="Stack">
+    
+      <meta property="article:tag" content="DFS">
     
   
 
@@ -63,14 +61,14 @@
   <meta property="twitter:image" content="https://yy-zhou.github.io/img/avatar.jpg">
 
 
-    <title>LC 99 - Recover Binary Search Tree</title>
+    <title>LC 99 114 - Morris Traversal</title>
 
     <link rel="icon" href="https://yy-zhou.github.io/favicon.png">
     
 
     
 
-    <link rel="canonical" href="https://yy-zhou.github.io/2019/08/lc-99-recover-binary-search-tree/">
+    <link rel="canonical" href="https://yy-zhou.github.io/2020/02/lc-99-114-morris-traversal/">
 
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
@@ -244,15 +242,15 @@
             <div class="post-header main-content-wrap text-left">
   
     <h1 class="post-title" itemprop="headline">
-      LC 99 - Recover Binary Search Tree
+      LC 99 114 - Morris Traversal
     </h1>
   
   
   <div class="postShorten-meta post-meta">
     
-      <time itemprop="datePublished" datetime="2019-08-07T00:00:00Z">
+      <time itemprop="datePublished" datetime="2020-02-17T00:00:00Z">
         
-  August 7, 2019
+  February 17, 2020
 
       </time>
     
@@ -261,9 +259,7 @@
   
     <span>in</span>
     
-      <a class="category-link" href="https://yy-zhou.github.io/categories/algorithm">Algorithm</a>, 
-    
-      <a class="category-link" href="https://yy-zhou.github.io/categories/favorite">Favorite</a>
+      <a class="category-link" href="https://yy-zhou.github.io/categories/algorithm">Algorithm</a>
     
   
 
@@ -279,6 +275,17 @@
       <ul>
         <li><a href="#problem-description">Problem description</a></li>
         <li><a href="#method--code">Method & Code</a></li>
+      </ul>
+    </li>
+    <li><a href="#flatten-binary-tree-to-linked-list">Flatten Binary Tree to Linked List</a>
+      <ul>
+        <li><a href="#problem-description-1">Problem description</a></li>
+        <li><a href="#method--code-1">Method & Code</a>
+          <ul>
+            <li><a href="#pre-order-traversal">Pre-order Traversal</a></li>
+            <li><a href="#morris-traversal">Morris Traversal</a></li>
+          </ul>
+        </li>
       </ul>
     </li>
   </ul>
@@ -385,6 +392,100 @@ Output: [2,1,4,null,null,3]
         t2<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span> <span style="color:#f92672">=</span> t<span style="color:#f92672">;</span>
     <span style="color:#f92672">}</span>
 <span style="color:#f92672">}</span>
+</code></pre></div><h1 id="flatten-binary-tree-to-linked-list">Flatten Binary Tree to Linked List</h1>
+<p>Link: <a href="https://leetcode.com/problems/flatten-binary-tree-to-linked-list">Flatten Binary Tree to Linked List</a></p>
+<h2 id="problem-description-1">Problem description</h2>
+<p>Given a binary tree, flatten it to a linked list in-place.</p>
+<p>For example, given the following tree:</p>
+<pre><code>    1
+   / \
+  2   5
+ / \   \
+3   4   6
+</code></pre><p>The flattened tree should look like:</p>
+<pre><code>1
+ \
+  2
+   \
+    3
+     \
+      4
+       \
+        5
+         \
+          6
+</code></pre><h2 id="method--code-1">Method &amp; Code</h2>
+<p>Two solutions: iterative preorder traversal with stack, or Morris traversal.</p>
+<h3 id="pre-order-traversal">Pre-order Traversal</h3>
+<p>Use a stack to store nodes. Each time push right subtree to stack, then push left subtree. In this way to keep left subtree at top of stack.</p>
+<p>Flatten Binary Tree to Linked List implement the preorder traversal. Simply push the subtree in preorder traversal order and point the right subtree to current node’s right child will be enough. Do not forget to set <code>null</code> to left subtree.</p>
+<p>Analysis:</p>
+<ul>
+<li>Time omplexity: <code>O(n)</code>.</li>
+<li>Space complexity: <code>O(n)</code>.</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Preorder traversal.
+</span><span style="color:#75715e"> * Use a stack to store the left subtree and right subtree for later traversal.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param root root node of tree
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">flatten</span><span style="color:#f92672">(</span>TreeNode root<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>root <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+    Stack<span style="color:#f92672">&lt;</span>TreeNode<span style="color:#f92672">&gt;</span> s <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Stack<span style="color:#f92672">&lt;</span><span style="color:#f92672">&gt;</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    s<span style="color:#f92672">.</span><span style="color:#a6e22e">push</span><span style="color:#f92672">(</span>root<span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span><span style="color:#f92672">!</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        TreeNode current <span style="color:#f92672">=</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">pop</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>current<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span> <span style="color:#f92672">!</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            s<span style="color:#f92672">.</span><span style="color:#a6e22e">push</span><span style="color:#f92672">(</span>current<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>current<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span> <span style="color:#f92672">!</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            s<span style="color:#f92672">.</span><span style="color:#a6e22e">push</span><span style="color:#f92672">(</span>current<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>       <span style="color:#75715e">// keep left at top of stack
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
+        current<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span> <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">)</span> <span style="color:#f92672">?</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">:</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">peek</span><span style="color:#f92672">(</span><span style="color:#f92672">)</span><span style="color:#f92672">;</span>        <span style="color:#75715e">// point left subtree to flatten right subtree.
+</span><span style="color:#75715e"></span>        current<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h3 id="morris-traversal">Morris Traversal</h3>
+<p>Find the right most node in left sub tree. Its child is the parent of the right child of current node. Link these two nodes. Then link current node&rsquo;s left child to current node&rsquo;s right child.</p>
+<p>Analysis:</p>
+<ul>
+<li>Time omplexity: <code>O(n)</code>.</li>
+<li>Space complexity: <code>O(1)</code>.</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Morris traversal.
+</span><span style="color:#75715e"> * Find the right most node in left sub tree. Its child is the parent of the right child of current node.
+</span><span style="color:#75715e"> * Link these two nodes. Then link current node&#39;s left child to current node&#39;s right child.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param root root of tree
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">flatten</span><span style="color:#f92672">(</span>TreeNode root<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+
+    <span style="color:#75715e">/* Corner case */</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>root <span style="color:#f92672">=</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+
+    TreeNode tmp <span style="color:#f92672">=</span> root<span style="color:#f92672">;</span>
+
+    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>tmp <span style="color:#f92672">!</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>tmp<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span> <span style="color:#f92672">!</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            TreeNode rightMost <span style="color:#f92672">=</span> tmp<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">;</span>
+            <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>rightMost<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span> <span style="color:#f92672">!</span><span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+                rightMost <span style="color:#f92672">=</span> rightMost<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span><span style="color:#f92672">;</span>
+            <span style="color:#f92672">}</span>
+            rightMost<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span> <span style="color:#f92672">=</span> tmp<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span><span style="color:#f92672">;</span>
+            tmp<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span> <span style="color:#f92672">=</span> tmp<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">;</span>
+            tmp<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+        tmp <span style="color:#f92672">=</span> tmp<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
 </code></pre></div>
               
             </div>
@@ -397,11 +498,11 @@ Output: [2,1,4,null,null,3]
                   <div class="post-footer-tags">
                     <span class="text-color-light text-small">TAGGED IN</span><br/>
                     
-  <a class="tag tag--primary tag--small" href="https://yy-zhou.github.io/tags/dfs/">DFS</a>
-
   <a class="tag tag--primary tag--small" href="https://yy-zhou.github.io/tags/tree/">Tree</a>
 
-  <a class="tag tag--primary tag--small" href="https://yy-zhou.github.io/tags/binary-search-tree/">Binary Search Tree</a>
+  <a class="tag tag--primary tag--small" href="https://yy-zhou.github.io/tags/stack/">Stack</a>
+
+  <a class="tag tag--primary tag--small" href="https://yy-zhou.github.io/tags/dfs/">DFS</a>
 
                   </div>
                 
@@ -414,7 +515,7 @@ Output: [2,1,4,null,null,3]
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2019/08/lc-568-maximum-vacation-days/" data-tooltip="LC 568 - Maximum Vacation Days">
+                <a class="post-action-btn btn btn--disabled">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -422,7 +523,7 @@ Output: [2,1,4,null,null,3]
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2019/08/oh-my-zsh-config/" data-tooltip="oh-my-zsh config">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2020/02/lc-1-167-1099-15-259-16-18-805-k-sum-problems/" data-tooltip="LC 1 167 1099 15 259 16 18 805 - K Sum Problems">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
@@ -472,7 +573,7 @@ Output: [2,1,4,null,null,3]
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2019/08/lc-568-maximum-vacation-days/" data-tooltip="LC 568 - Maximum Vacation Days">
+                <a class="post-action-btn btn btn--disabled">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -480,7 +581,7 @@ Output: [2,1,4,null,null,3]
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2019/08/oh-my-zsh-config/" data-tooltip="oh-my-zsh config">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2020/02/lc-1-167-1099-15-259-16-18-805-k-sum-problems/" data-tooltip="LC 1 167 1099 15 259 16 18 805 - K Sum Problems">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
