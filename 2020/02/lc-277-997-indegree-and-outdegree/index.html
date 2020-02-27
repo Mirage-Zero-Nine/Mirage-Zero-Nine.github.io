@@ -13,10 +13,10 @@
 
 <meta property="og:description" content="">
 <meta property="og:type" content="article">
-<meta property="og:title" content="LC 316 - Remove Duplicate Letters">
-<meta name="twitter:title" content="LC 316 - Remove Duplicate Letters">
-<meta property="og:url" content="https://yy-zhou.github.io/2020/02/lc-316-remove-duplicate-letters/">
-<meta property="twitter:url" content="https://yy-zhou.github.io/2020/02/lc-316-remove-duplicate-letters/">
+<meta property="og:title" content="LC 277 997 - Indegree And Outdegree">
+<meta name="twitter:title" content="LC 277 997 - Indegree And Outdegree">
+<meta property="og:url" content="https://yy-zhou.github.io/2020/02/lc-277-997-indegree-and-outdegree/">
+<meta property="twitter:url" content="https://yy-zhou.github.io/2020/02/lc-277-997-indegree-and-outdegree/">
 <meta property="og:site_name" content="Bingo!">
 <meta property="og:description" content="">
 <meta name="twitter:description" content="">
@@ -31,13 +31,15 @@
   
   
     
-      <meta property="article:section" content="Remove Elements">
+      <meta property="article:section" content="Graph">
     
-      <meta property="article:section" content="String">
-    
-      <meta property="article:section" content="Stack">
+      <meta property="article:section" content="Directed Graph">
     
   
+  
+    
+      <meta property="article:tag" content="Topological Sort">
+    
   
 
 
@@ -57,14 +59,14 @@
   <meta property="twitter:image" content="https://yy-zhou.github.io/img/avatar.jpg">
 
 
-    <title>LC 316 - Remove Duplicate Letters</title>
+    <title>LC 277 997 - Indegree And Outdegree</title>
 
     <link rel="icon" href="https://yy-zhou.github.io/favicon.png">
     
 
     
 
-    <link rel="canonical" href="https://yy-zhou.github.io/2020/02/lc-316-remove-duplicate-letters/">
+    <link rel="canonical" href="https://yy-zhou.github.io/2020/02/lc-277-997-indegree-and-outdegree/">
 
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
@@ -228,7 +230,7 @@
             <div class="post-header main-content-wrap text-left">
   
     <h1 class="post-title" itemprop="headline">
-      LC 316 - Remove Duplicate Letters
+      LC 277 997 - Indegree And Outdegree
     </h1>
   
   
@@ -245,11 +247,9 @@
   
     <span>in</span>
     
-      <a class="category-link" href="https://yy-zhou.github.io/categories/remove-elements">Remove Elements</a>, 
+      <a class="category-link" href="https://yy-zhou.github.io/categories/graph">Graph</a>, 
     
-      <a class="category-link" href="https://yy-zhou.github.io/categories/string">String</a>, 
-    
-      <a class="category-link" href="https://yy-zhou.github.io/categories/stack">Stack</a>
+      <a class="category-link" href="https://yy-zhou.github.io/categories/directed-graph">Directed Graph</a>
     
   
 
@@ -261,94 +261,128 @@
             <div class="main-content-wrap">
               <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
   <ul>
-    <li><a href="#remove-duplicate-letters">Remove Duplicate Letters</a>
+    <li><a href="#find-the-celebrity">Find the Celebrity</a>
       <ul>
         <li><a href="#problem-description">Problem description</a></li>
         <li><a href="#method--code">Method &amp; Code</a></li>
       </ul>
     </li>
+    <li><a href="#find-the-town-judge">Find the Town Judge</a>
+      <ul>
+        <li><a href="#problem-description-1">Problem description</a></li>
+        <li><a href="#method--code-1">Method &amp; Code</a></li>
+      </ul>
+    </li>
   </ul>
 </nav>
-<div class="alert info ">
-  <p>Although this post is tagged with stack, deque is preferred. The idea is same with stack and deque, but deque can poll out elements from the head which saves time when forming the final output string. Stack has to pop up all characters and reverse them to form the output.</p>
-</div>
-<h1 id="remove-duplicate-letters">Remove Duplicate Letters</h1>
-<p>Link: <a href="https://leetcode.com/problems/remove-duplicate-letters/">Remove Duplicate Letters</a></p>
+<h1 id="find-the-celebrity">Find the Celebrity</h1>
+<p>Link: <a href="https://leetcode.com/problems/find-the-celebrity/">Find the Celebrity</a></p>
 <h2 id="problem-description">Problem description</h2>
-<p>Given a string which contains only lowercase letters, remove duplicate letters so that every letter appear once and only once. You must make sure your result is the smallest in lexicographical order among all possible results.</p>
+<p>Suppose you are at a party with <code>n</code> people (labeled from <code>0</code> to <code>n - 1</code>) and among them, there may exist one celebrity. The definition of a celebrity is that all the other <code>n - 1</code> people know him/her but he/she does not know any of them.</p>
+<p>Now you want to find out who the celebrity is or verify that there is not one. The only thing you are allowed to do is to ask questions like: &ldquo;Hi, A. Do you know B?&rdquo; to get information of whether A knows B. You need to find out the celebrity (or verify there is not one) by asking as few questions as possible (in the asymptotic sense).</p>
+<p>You are given a helper function <code>bool knows(a, b)</code> which tells you whether A knows B. Implement a function <code>int findCelebrity(n)</code>. There will be exactly one celebrity if he/she is in the party. Return the celebrity&rsquo;s label if there is a celebrity in the party. If there is no celebrity, return <code>-1</code>.</p>
 <p><strong>Example 1:</strong></p>
-<pre><code>Input: &quot;bcabc&quot;
-Output: &quot;abc&quot;
-</code></pre><p><strong>Example 2:</strong></p>
-<pre><code>Input: &quot;cbacdcbc&quot;
-Output: &quot;acdb&quot;
-</code></pre><h2 id="method--code">Method &amp; Code</h2>
-<p>The output string should follow these two rules:</p>
+<p><img src="../../../static/img/277_example_1_bold.PNG" alt="img"></p>
+<p><strong>Example 2:</strong></p>
+<p><img src="../../../static/img/277_example_2.PNG" alt="img"></p>
+<p><strong>Note:</strong></p>
 <ol>
-<li>No duplicated character.</li>
-<li>The smaller character in lexicographical order should be removed later, if it contains duplicated.</li>
+<li>The directed graph is represented as an adjacency matrix, which is an <code>n x n</code> matrix where <code>a[i][j] = 1</code> means person <code>i</code> knows person <code>j</code> while <code>a[i][j] = 0</code> means the contrary.</li>
+<li>Remember that you won&rsquo;t have direct access to the adjacency matrix.</li>
 </ol>
-<p>The solution is using stack or deque. First, iterate the array to count each char&rsquo;s appearance. Then iterate this array again.</p>
-<ul>
-<li>If found a char in stack, pass this char, and in this way to remove all duplicated character.</li>
-<li>Otherwise, pop out all characters that is larger than current character AND contains duplicate.</li>
-</ul>
-<p>Use a boolean array to record duplicated character. When pop out character, mark popped character as unvisited. Add current character to stack and continue this process until the whole string is traversed.</p>
+<h2 id="method--code">Method &amp; Code</h2>
+<p>Celebrity has no out degree and n indegree.</p>
+<p>Traverse from 0 to n - 1, if current celebrity knows anyone, then this one is a possible celebrity. After this traverse, the only possible celebrity can be found. Traverse again to confirm if this celebrity has any out degree, or if exists anyone this celebrity does not know.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
-</span><span style="color:#75715e"> * The output string should follow these two rules:
-</span><span style="color:#75715e"> * 1. No duplicated character.
-</span><span style="color:#75715e"> * 2. The smaller character in lexicographical order should be removed later, if it contains duplicated.
-</span><span style="color:#75715e"> * The solution is using stack or deque.
-</span><span style="color:#75715e"> * First, iterate the array to count each char&#39;s appearance. Then iterate this array again.
-</span><span style="color:#75715e"> * If found a char in stack, pass this char, and in this way to remove all duplicated character.
-</span><span style="color:#75715e"> * Otherwise, pop out all characters that is larger than current character AND contains duplicate.
-</span><span style="color:#75715e"> * Use a boolean array to record duplicated character. When pop out character, mark popped character as unvisited.
-</span><span style="color:#75715e"> * Add current character to stack and continue this process until the whole string is traversed.
+</span><span style="color:#75715e"> * Celebrity has no out degree and n indegree.
+</span><span style="color:#75715e"> * Traverse from 0 to n - 1, if current celebrity knows anyone, then this one is a possible celebrity.
+</span><span style="color:#75715e"> * After this traverse, the only possible celebrity can be found.
+</span><span style="color:#75715e"> * Traverse again to confirm if this celebrity has any out degree, or if exists anyone this celebrity does not know.
 </span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param s given string
-</span><span style="color:#75715e"> * @return string without duplicated letter and be smallest in lexicographical order
+</span><span style="color:#75715e"> * @param n n guests
+</span><span style="color:#75715e"> * @return celebrity&#39;s label if there is a celebrity in the party, if there is no celebrity, return -1
 </span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">public</span> String <span style="color:#a6e22e">removeDuplicateLetters</span><span style="color:#f92672">(</span>String s<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-
-    <span style="color:#75715e">/* Corner case */</span>
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">()</span> <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;&#34;</span><span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-
-    Deque<span style="color:#f92672">&lt;</span>Character<span style="color:#f92672">&gt;</span> dq <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">&lt;&gt;();</span>       <span style="color:#75715e">// use deque instead of stack for better string forming
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">boolean</span><span style="color:#f92672">[]</span> isVisited <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">boolean</span><span style="color:#f92672">[</span>26<span style="color:#f92672">];</span>
-    <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> count <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>26<span style="color:#f92672">];</span>                      <span style="color:#75715e">// count char appearance
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">char</span><span style="color:#f92672">[]</span> arr <span style="color:#f92672">=</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">toCharArray</span><span style="color:#f92672">();</span>
-
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">char</span> c <span style="color:#f92672">:</span> arr<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        count<span style="color:#f92672">[</span>c <span style="color:#f92672">-</span> <span style="color:#e6db74">&#39;a&#39;</span><span style="color:#f92672">]++;</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">char</span> c <span style="color:#f92672">:</span> arr<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        count<span style="color:#f92672">[</span>c <span style="color:#f92672">-</span> <span style="color:#e6db74">&#39;a&#39;</span><span style="color:#f92672">]--;</span>
-
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>isVisited<span style="color:#f92672">[</span>c <span style="color:#f92672">-</span> <span style="color:#e6db74">&#39;a&#39;</span><span style="color:#f92672">])</span> <span style="color:#f92672">{</span>      <span style="color:#75715e">// pass chars already in stack and delete duplicated char
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">findCelebrity</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> n<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">int</span> celebrity <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>      <span style="color:#75715e">// starts at 0
 </span><span style="color:#75715e"></span>
-            <span style="color:#75715e">/*
-</span><span style="color:#75715e">             * Pop out elements that:
-</span><span style="color:#75715e">             * 1. Larger than current char (to assure result smallest lexicographical order)
-</span><span style="color:#75715e">             * 2. This popped char will be found in later of string (count[c] &gt; 0)
-</span><span style="color:#75715e">             * Both conditions should be met.
-</span><span style="color:#75715e">             * Pop out all characters that meet conditions above. They will be added in to stack later. */</span>
-            <span style="color:#66d9ef">while</span> <span style="color:#f92672">(!</span>dq<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">()</span> <span style="color:#f92672">&amp;&amp;</span> dq<span style="color:#f92672">.</span><span style="color:#a6e22e">peekLast</span><span style="color:#f92672">()</span> <span style="color:#f92672">&gt;</span> c <span style="color:#f92672">&amp;&amp;</span> count<span style="color:#f92672">[</span>dq<span style="color:#f92672">.</span><span style="color:#a6e22e">peekLast</span><span style="color:#f92672">()</span> <span style="color:#f92672">-</span> <span style="color:#e6db74">&#39;a&#39;</span><span style="color:#f92672">]</span> <span style="color:#f92672">&gt;</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                isVisited<span style="color:#f92672">[</span>dq<span style="color:#f92672">.</span><span style="color:#a6e22e">pollLast</span><span style="color:#f92672">()</span> <span style="color:#f92672">-</span> <span style="color:#e6db74">&#39;a&#39;</span><span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>     <span style="color:#75715e">// reset visited mark, so that they will be added later
-</span><span style="color:#75715e"></span>            <span style="color:#f92672">}</span>
-            dq<span style="color:#f92672">.</span><span style="color:#a6e22e">addLast</span><span style="color:#f92672">(</span>c<span style="color:#f92672">);</span>
-            isVisited<span style="color:#f92672">[</span>c <span style="color:#f92672">-</span> <span style="color:#e6db74">&#39;a&#39;</span><span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> n<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>knows<span style="color:#f92672">(</span>celebrity<span style="color:#f92672">,</span> i<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+            celebrity <span style="color:#f92672">=</span> i<span style="color:#f92672">;</span>
         <span style="color:#f92672">}</span>
     <span style="color:#f92672">}</span>
 
-    StringBuilder sb <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> StringBuilder<span style="color:#f92672">();</span>
-    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(!</span>dq<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
-        sb<span style="color:#f92672">.</span><span style="color:#a6e22e">append</span><span style="color:#f92672">(</span>dq<span style="color:#f92672">.</span><span style="color:#a6e22e">pollFirst</span><span style="color:#f92672">());</span>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> n<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">((</span>i <span style="color:#f92672">!=</span> celebrity<span style="color:#f92672">)</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">(</span>knows<span style="color:#f92672">(</span>celebrity<span style="color:#f92672">,</span> i<span style="color:#f92672">)</span> <span style="color:#f92672">||</span> <span style="color:#f92672">!</span>knows<span style="color:#f92672">(</span>i<span style="color:#f92672">,</span> celebrity<span style="color:#f92672">)))</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
     <span style="color:#f92672">}</span>
 
-    <span style="color:#66d9ef">return</span> sb<span style="color:#f92672">.</span><span style="color:#a6e22e">toString</span><span style="color:#f92672">();</span>
+    <span style="color:#66d9ef">return</span> celebrity<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h1 id="find-the-town-judge">Find the Town Judge</h1>
+<p>Link: <a href="https://leetcode.com/problems/find-the-town-judge/">Find the Town Judge</a></p>
+<h2 id="problem-description-1">Problem description</h2>
+<p>In a town, there are <code>N</code> people labelled from <code>1</code> to <code>N</code>. There is a rumor that one of these people is secretly the town judge.</p>
+<p>If the town judge exists, then:</p>
+<ol>
+<li>The town judge trusts nobody.</li>
+<li>Everybody (except for the town judge) trusts the town judge.</li>
+<li>There is exactly one person that satisfies properties 1 and 2.</li>
+</ol>
+<p>You are given <code>trust</code>, an array of pairs <code>trust[i] = [a, b]</code> representing that the person labelled <code>a</code>trusts the person labelled <code>b</code>.</p>
+<p>If the town judge exists and can be identified, return the label of the town judge. Otherwise, return <code>-1</code>.</p>
+<p><strong>Example 1:</strong></p>
+<pre><code>Input: N = 2, trust = [[1,2]]
+Output: 2
+</code></pre><p><strong>Example 2:</strong></p>
+<pre><code>Input: N = 3, trust = [[1,3],[2,3]]
+Output: 3
+</code></pre><p><strong>Example 3:</strong></p>
+<pre><code>Input: N = 3, trust = [[1,3],[2,3],[3,1]]
+Output: -1
+</code></pre><p><strong>Example 4:</strong></p>
+<pre><code>Input: N = 3, trust = [[1,2],[2,3]]
+Output: -1
+</code></pre><p><strong>Example 5:</strong></p>
+<pre><code>Input: N = 4, trust = [[1,3],[1,4],[2,3],[2,4],[4,3]]
+Output: 3
+</code></pre><p><strong>Note:</strong></p>
+<ol>
+<li><code>1 &lt;= N &lt;= 1000</code></li>
+<li><code>trust.length &lt;= 10000</code></li>
+<li><code>trust[i]</code> are all different</li>
+<li><code>trust[i][0] != trust[i][1]</code></li>
+<li><code>1 &lt;= trust[i][0], trust[i][1] &lt;= N</code></li>
+</ol>
+<h2 id="method--code-1">Method &amp; Code</h2>
+<ol>
+<li>Judge has no outdegree.</li>
+<li>Judge has N - 1 indegree</li>
+</ol>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * 1. Judge has no outdegree.
+</span><span style="color:#75715e"> * 2. Judge has N - 1 indegree
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param N     number of total people
+</span><span style="color:#75715e"> * @param trust trust map, trust[i] = [a, b] representing that the person a trusts the person b
+</span><span style="color:#75715e"> * @return return the label of the town judge, or return -1 otherwise
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">findJudge</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> N<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[][]</span> trust<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> degree <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>N <span style="color:#f92672">+</span> 1<span style="color:#f92672">];</span>
+
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> t <span style="color:#f92672">:</span> trust<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        degree<span style="color:#f92672">[</span>t<span style="color:#f92672">[</span>0<span style="color:#f92672">]]--;</span>     <span style="color:#75715e">// judge should have no outdegree
+</span><span style="color:#75715e"></span>        degree<span style="color:#f92672">[</span>t<span style="color:#f92672">[</span>1<span style="color:#f92672">]]++;</span>     <span style="color:#75715e">// judge should have N - 1 indegree
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;=</span> N<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>degree<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">==</span> N <span style="color:#f92672">-</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">return</span> i<span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">;</span>
 <span style="color:#f92672">}</span>
 </code></pre></div>
               
@@ -356,6 +390,16 @@ Output: &quot;acdb&quot;
           </div>
           <div id="post-footer" class="post-footer main-content-wrap">
             
+              
+                
+                
+                  <div class="post-footer-tags">
+                    <span class="text-color-light text-small">TAGGED IN</span><br/>
+                    
+  <a class="tag tag--primary tag--small" href="https://yy-zhou.github.io/tags/topological-sort/">Topological Sort</a>
+
+                  </div>
+                
               
             
             <div class="post-actions-wrap">
@@ -365,7 +409,7 @@ Output: &quot;acdb&quot;
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2020/02/lc-277-997-indegree-and-outdegree/" data-tooltip="LC 277 997 - Indegree And Outdegree">
+                <a class="post-action-btn btn btn--disabled">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -373,7 +417,7 @@ Output: &quot;acdb&quot;
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2020/02/lc-55-45-jump-game/" data-tooltip="LC 55 45 - Jump Game">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2020/02/lc-316-remove-duplicate-letters/" data-tooltip="LC 316 - Remove Duplicate Letters">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
@@ -423,7 +467,7 @@ Output: &quot;acdb&quot;
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2020/02/lc-277-997-indegree-and-outdegree/" data-tooltip="LC 277 997 - Indegree And Outdegree">
+                <a class="post-action-btn btn btn--disabled">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -431,7 +475,7 @@ Output: &quot;acdb&quot;
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2020/02/lc-55-45-jump-game/" data-tooltip="LC 55 45 - Jump Game">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2020/02/lc-316-remove-duplicate-letters/" data-tooltip="LC 316 - Remove Duplicate Letters">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
