@@ -15,18 +15,18 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="LC 55 45 - Jump Game">
 <meta name="twitter:title" content="LC 55 45 - Jump Game">
-<meta property="og:url" content="https://yy-zhou.github.io/2019/10/lc-55-45-jump-game/">
-<meta property="twitter:url" content="https://yy-zhou.github.io/2019/10/lc-55-45-jump-game/">
+<meta property="og:url" content="https://yy-zhou.github.io/2020/02/lc-55-45-jump-game/">
+<meta property="twitter:url" content="https://yy-zhou.github.io/2020/02/lc-55-45-jump-game/">
 <meta property="og:site_name" content="Bingo!">
 <meta property="og:description" content="">
 <meta name="twitter:description" content="">
 <meta property="og:locale" content="en-us">
 
   
-    <meta property="article:published_time" content="2019-10-22T00:00:00">
+    <meta property="article:published_time" content="2020-02-27T00:00:00">
   
   
-    <meta property="article:modified_time" content="2019-10-22T00:00:00">
+    <meta property="article:modified_time" content="2020-02-27T00:00:00">
   
   
   
@@ -64,7 +64,7 @@
 
     
 
-    <link rel="canonical" href="https://yy-zhou.github.io/2019/10/lc-55-45-jump-game/">
+    <link rel="canonical" href="https://yy-zhou.github.io/2020/02/lc-55-45-jump-game/">
 
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
@@ -234,9 +234,9 @@
   
   <div class="postShorten-meta post-meta">
     
-      <time itemprop="datePublished" datetime="2019-10-22T00:00:00Z">
+      <time itemprop="datePublished" datetime="2020-02-27T00:00:00Z">
         
-  October 22, 2019
+  February 27, 2020
 
       </time>
     
@@ -260,7 +260,12 @@
     <li><a href="#jump-game">Jump Game</a>
       <ul>
         <li><a href="#problem-description">Problem description</a></li>
-        <li><a href="#method--code">Method &amp; Code</a></li>
+        <li><a href="#method--code">Method &amp; Code</a>
+          <ul>
+            <li><a href="#from-beginning-to-end">From Beginning to End</a></li>
+            <li><a href="#from-end-to-beginning">From End to Beginning</a></li>
+          </ul>
+        </li>
       </ul>
     </li>
     <li><a href="#jump-game-ii">Jump Game II</a>
@@ -287,18 +292,51 @@ Output: false
 Explanation: You will always arrive at index 3 no matter what. Its maximum
              jump length is 0, which makes it impossible to reach the last index.
 </code></pre><h2 id="method--code">Method &amp; Code</h2>
-<p>Greedy. Start from last to trace back if first can be reached.</p>
+<p>Greedy. Searching can starts at the end of array or at the beginning of array.</p>
+<h3 id="from-beginning-to-end">From Beginning to End</h3>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Start from last to trace back if first can be reached.
+</span><span style="color:#75715e"> * Starts at beginning to check if it can reaches the end.
+</span><span style="color:#75715e"> * Each time, find the max movement among current reachable cells.
+</span><span style="color:#75715e"> * Finally, check if it can reaches the end.
 </span><span style="color:#75715e"> *
 </span><span style="color:#75715e"> * @param nums given int array that only contains non-negative int
 </span><span style="color:#75715e"> * @return if last index can be reached
 </span><span style="color:#75715e"> */</span>
 <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">canJump</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> nums<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
+    <span style="color:#75715e">/* Corner case */</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>nums <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">||</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">int</span> max <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>max <span style="color:#f92672">&lt;</span> i<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>      <span style="color:#75715e">// exist cell that is out of current maximum reachable cell
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+        max <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>max<span style="color:#f92672">,</span> nums<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> i<span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>max <span style="color:#f92672">&gt;=</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h3 id="from-end-to-beginning">From End to Beginning</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Start from last to trace back if first can be reached.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param nums given int array that only contains non-negative int
+</span><span style="color:#75715e"> * @return if last index can be reached
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">canJumpFromEnd</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> nums<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
     <span style="color:#66d9ef">int</span> last <span style="color:#f92672">=</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">;</span>
+
     <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">-</span> 2<span style="color:#f92672">;</span> i <span style="color:#f92672">&gt;=</span> 0<span style="color:#f92672">;</span> i<span style="color:#f92672">--)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">+</span> nums<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">&gt;=</span> last<span style="color:#f92672">)</span> last <span style="color:#f92672">=</span> i<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">+</span> nums<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">&gt;=</span> last<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            last <span style="color:#f92672">=</span> i<span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
     <span style="color:#f92672">}</span>
 
     <span style="color:#66d9ef">return</span> last <span style="color:#f92672">&lt;=</span> 0<span style="color:#f92672">;</span>
@@ -370,7 +408,7 @@ Explanation: The minimum number of jumps to reach the last index is 2.
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2019/10/lc-485-487-1004-max-consecutive-ones/" data-tooltip="LC 485 487 1004 - Max Consecutive Ones">
+                <a class="post-action-btn btn btn--disabled">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -378,7 +416,7 @@ Explanation: The minimum number of jumps to reach the last index is 2.
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2019/10/lc-161-one-edit-distance/" data-tooltip="LC 161 - One Edit Distance">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2020/02/lc-1248-358-930-sliding-window-find-all-substring-or-subarray-containing-certain-elements/" data-tooltip="LC 1248 358 930 - Sliding Window: Find All SubString or Subarray Containing Certain Elements">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
@@ -428,7 +466,7 @@ Explanation: The minimum number of jumps to reach the last index is 2.
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2019/10/lc-485-487-1004-max-consecutive-ones/" data-tooltip="LC 485 487 1004 - Max Consecutive Ones">
+                <a class="post-action-btn btn btn--disabled">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -436,7 +474,7 @@ Explanation: The minimum number of jumps to reach the last index is 2.
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2019/10/lc-161-one-edit-distance/" data-tooltip="LC 161 - One Edit Distance">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2020/02/lc-1248-358-930-sliding-window-find-all-substring-or-subarray-containing-certain-elements/" data-tooltip="LC 1248 358 930 - Sliding Window: Find All SubString or Subarray Containing Certain Elements">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>

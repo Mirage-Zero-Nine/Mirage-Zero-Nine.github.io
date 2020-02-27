@@ -306,8 +306,12 @@
     <li><a href="#partition-list">Partition List</a>
       <ul>
         <li><a href="#problem-description-7">Problem description</a></li>
-        <li><a href="#method--code-7">Method &amp; Code</a></li>
-        <li><a href="#partition-list-1">Partition List</a></li>
+        <li><a href="#method--code-7">Method &amp; Code</a>
+          <ul>
+            <li><a href="#two-pointers">Two Pointers</a></li>
+            <li><a href="#partition-list-1">Partition List</a></li>
+          </ul>
+        </li>
       </ul>
     </li>
   </ul>
@@ -627,7 +631,57 @@ rotate 4 steps to the right: 2-&gt;0-&gt;1-&gt;NULL
 <pre><code>Given 1-&gt;2-&gt;3-&gt;4-&gt;5, reorder it to 1-&gt;5-&gt;2-&gt;4-&gt;3.
 </code></pre><h2 id="method--code-6">Method &amp; Code</h2>
 <p>Reverse the second half of list, then insert every element into first half.</p>
-<h1 id="partition-list">Partition List</h1>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Reverse the second half of list, then insert every element into first half.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param head head node
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">reorderList</span><span style="color:#f92672">(</span>ListNode head<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+
+    <span style="color:#75715e">/* Corner case */</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>head <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>head<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">||</span> head<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">.</span><span style="color:#a6e22e">next</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+
+    ListNode slow <span style="color:#f92672">=</span> head<span style="color:#f92672">,</span> fast <span style="color:#f92672">=</span> head<span style="color:#f92672">;</span>
+
+
+    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>fast<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;&amp;</span> fast<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">.</span><span style="color:#a6e22e">next</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>       <span style="color:#75715e">// find the middle of list
+</span><span style="color:#75715e"></span>        slow <span style="color:#f92672">=</span> slow<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">;</span>
+        fast <span style="color:#f92672">=</span> fast<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+
+    ListNode middle <span style="color:#f92672">=</span> slow<span style="color:#f92672">;</span>
+    ListNode current <span style="color:#f92672">=</span> slow<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">;</span>
+
+    <span style="color:#75715e">/*
+</span><span style="color:#75715e">     * Reverse the second half of list in-place.
+</span><span style="color:#75715e">     * Each time, move pointer of current node into next node&#39;s next node.
+</span><span style="color:#75715e">     * This pointer will be the reference of next round.
+</span><span style="color:#75715e">     * Then move pointer of next node&#39;s next node to current node, as reverse operation.
+</span><span style="color:#75715e">     * Finally, move head node&#39;s next node to next node in this round. */</span>
+    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>current <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;&amp;</span> current<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        ListNode next <span style="color:#f92672">=</span> current<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">;</span>       <span style="color:#75715e">// temporary store next node
+</span><span style="color:#75715e"></span>        current<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span> <span style="color:#f92672">=</span> next<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">;</span>           <span style="color:#75715e">// current node&#39;s next node is next of next node
+</span><span style="color:#75715e"></span>        next<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span> <span style="color:#f92672">=</span> middle<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">;</span>            <span style="color:#75715e">// next node&#39;s next now revert to middle&#39;s next node (reverse)
+</span><span style="color:#75715e"></span>        middle<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span> <span style="color:#f92672">=</span> next<span style="color:#f92672">;</span>                 <span style="color:#75715e">// middle node&#39;s next now move to next node, as previous node
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+
+    slow <span style="color:#f92672">=</span> head<span style="color:#f92672">;</span>
+    fast <span style="color:#f92672">=</span> middle<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">;</span>
+
+    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>slow <span style="color:#f92672">!=</span> middle<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>        <span style="color:#75715e">// insert each node in first half of list into second half
+</span><span style="color:#75715e"></span>        middle<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span> <span style="color:#f92672">=</span> fast<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">;</span>
+        fast<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span> <span style="color:#f92672">=</span> slow<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">;</span>
+        slow<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span> <span style="color:#f92672">=</span> fast<span style="color:#f92672">;</span>
+        slow <span style="color:#f92672">=</span> fast<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">;</span>
+        fast <span style="color:#f92672">=</span> middle<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h1 id="partition-list">Partition List</h1>
 <p>Link: <a href="https://leetcode.com/problems/partition-list">Partition List</a></p>
 <h2 id="problem-description-7">Problem description</h2>
 <p>Given a linked list and a value <em>x</em>, partition it such that all nodes less than <em>x</em> come before nodes greater than or equal to <em>x</em>.</p>
@@ -636,6 +690,7 @@ rotate 4 steps to the right: 2-&gt;0-&gt;1-&gt;NULL
 <pre><code>Input: head = 1-&gt;4-&gt;3-&gt;2-&gt;5-&gt;2, x = 3
 Output: 1-&gt;2-&gt;2-&gt;4-&gt;3-&gt;5
 </code></pre><h2 id="method--code-7">Method &amp; Code</h2>
+<h3 id="two-pointers">Two Pointers</h3>
 <p>Use two pointers, one connect to small part, and the other one connect to larger part (including equal).</p>
 <p>Another two pointers connect each <code>ListNode</code> during partition.</p>
 <p>For each ListNode, connect them to respective pointer and finally link small and large list.</p>
@@ -689,7 +744,7 @@ Output: 1-&gt;2-&gt;2-&gt;4-&gt;3-&gt;5
         fast <span style="color:#f92672">=</span> middle<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">;</span>
     <span style="color:#f92672">}</span>
 <span style="color:#f92672">}</span>
-</code></pre></div><h2 id="partition-list-1">Partition List</h2>
+</code></pre></div><h3 id="partition-list-1">Partition List</h3>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
 </span><span style="color:#75715e"> * Use two pointers, one connect to small part, and the other one connect to larger part (including equal).
 </span><span style="color:#75715e"> * Another two pointers connect each ListNode during partition.
