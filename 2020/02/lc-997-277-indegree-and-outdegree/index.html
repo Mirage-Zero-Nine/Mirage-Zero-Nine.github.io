@@ -13,10 +13,10 @@
 
 <meta property="og:description" content="">
 <meta property="og:type" content="article">
-<meta property="og:title" content="LC 55 45 - Jump Game">
-<meta name="twitter:title" content="LC 55 45 - Jump Game">
-<meta property="og:url" content="https://yy-zhou.github.io/2020/02/lc-55-45-jump-game/">
-<meta property="twitter:url" content="https://yy-zhou.github.io/2020/02/lc-55-45-jump-game/">
+<meta property="og:title" content="LC 997 277 - Indegree And Outdegree">
+<meta name="twitter:title" content="LC 997 277 - Indegree And Outdegree">
+<meta property="og:url" content="https://yy-zhou.github.io/2020/02/lc-997-277-indegree-and-outdegree/">
+<meta property="twitter:url" content="https://yy-zhou.github.io/2020/02/lc-997-277-indegree-and-outdegree/">
 <meta property="og:site_name" content="Bingo!">
 <meta property="og:description" content="">
 <meta name="twitter:description" content="">
@@ -31,12 +31,14 @@
   
   
     
-      <meta property="article:section" content="Array">
+      <meta property="article:section" content="Graph">
+    
+      <meta property="article:section" content="Directed Graph">
     
   
   
     
-      <meta property="article:tag" content="Greedy">
+      <meta property="article:tag" content="Topological Sort">
     
   
 
@@ -57,14 +59,14 @@
   <meta property="twitter:image" content="https://yy-zhou.github.io/img/avatar.jpg">
 
 
-    <title>LC 55 45 - Jump Game</title>
+    <title>LC 997 277 - Indegree And Outdegree</title>
 
     <link rel="icon" href="https://yy-zhou.github.io/favicon.png">
     
 
     
 
-    <link rel="canonical" href="https://yy-zhou.github.io/2020/02/lc-55-45-jump-game/">
+    <link rel="canonical" href="https://yy-zhou.github.io/2020/02/lc-997-277-indegree-and-outdegree/">
 
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
@@ -228,7 +230,7 @@
             <div class="post-header main-content-wrap text-left">
   
     <h1 class="post-title" itemprop="headline">
-      LC 55 45 - Jump Game
+      LC 997 277 - Indegree And Outdegree
     </h1>
   
   
@@ -245,7 +247,9 @@
   
     <span>in</span>
     
-      <a class="category-link" href="https://yy-zhou.github.io/categories/array">Array</a>
+      <a class="category-link" href="https://yy-zhou.github.io/categories/graph">Graph</a>, 
+    
+      <a class="category-link" href="https://yy-zhou.github.io/categories/directed-graph">Directed Graph</a>
     
   
 
@@ -257,18 +261,13 @@
             <div class="main-content-wrap">
               <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
   <ul>
-    <li><a href="#jump-game">Jump Game</a>
+    <li><a href="#find-the-town-judge">Find the Town Judge</a>
       <ul>
         <li><a href="#problem-description">Problem description</a></li>
-        <li><a href="#method--code">Method &amp; Code</a>
-          <ul>
-            <li><a href="#from-beginning-to-end">From Beginning to End</a></li>
-            <li><a href="#from-end-to-beginning">From End to Beginning</a></li>
-          </ul>
-        </li>
+        <li><a href="#method--code">Method &amp; Code</a></li>
       </ul>
     </li>
-    <li><a href="#jump-game-ii">Jump Game II</a>
+    <li><a href="#find-the-celebrity">Find the Celebrity</a>
       <ul>
         <li><a href="#problem-description-1">Problem description</a></li>
         <li><a href="#method--code-1">Method &amp; Code</a></li>
@@ -276,112 +275,114 @@
     </li>
   </ul>
 </nav>
-<h1 id="jump-game">Jump Game</h1>
-<p>Link: <a href="https://leetcode.com/problems/jump-game">Jump Game</a></p>
+<h1 id="find-the-town-judge">Find the Town Judge</h1>
+<p>Link: <a href="https://leetcode.com/problems/find-the-town-judge/">Find the Town Judge</a></p>
 <h2 id="problem-description">Problem description</h2>
-<p>Given an array of non-negative integers, you are initially positioned at the first index of the array.</p>
-<p>Each element in the array represents your maximum jump length at that position.</p>
-<p>Determine if you are able to reach the last index.</p>
+<p>In a town, there are <code>N</code> people labelled from <code>1</code> to <code>N</code>. There is a rumor that one of these people is secretly the town judge.</p>
+<p>If the town judge exists, then:</p>
+<ol>
+<li>The town judge trusts nobody.</li>
+<li>Everybody (except for the town judge) trusts the town judge.</li>
+<li>There is exactly one person that satisfies properties 1 and 2.</li>
+</ol>
+<p>You are given <code>trust</code>, an array of pairs <code>trust[i] = [a, b]</code> representing that the person labelled <code>a</code>trusts the person labelled <code>b</code>.</p>
+<p>If the town judge exists and can be identified, return the label of the town judge. Otherwise, return <code>-1</code>.</p>
 <p><strong>Example 1:</strong></p>
-<pre><code>Input: [2,3,1,1,4]
-Output: true
-Explanation: Jump 1 step from index 0 to 1, then 3 steps to the last index.
-</code></pre><p><strong>Example 2:</strong></p>
-<pre><code>Input: [3,2,1,0,4]
-Output: false
-Explanation: You will always arrive at index 3 no matter what. Its maximum
-             jump length is 0, which makes it impossible to reach the last index.
-</code></pre><h2 id="method--code">Method &amp; Code</h2>
-<p>Greedy. Searching can starts at the end of array or at the beginning of array.</p>
-<h3 id="from-beginning-to-end">From Beginning to End</h3>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Starts at beginning to check if it can reaches the end.
-</span><span style="color:#75715e"> * Each time, find the max movement among current reachable cells.
-</span><span style="color:#75715e"> * Finally, check if it can reaches the end.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param nums given int array that only contains non-negative int
-</span><span style="color:#75715e"> * @return if last index can be reached
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">canJump</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> nums<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-
-    <span style="color:#75715e">/* Corner case */</span>
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>nums <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">||</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">int</span> max <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
-
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>max <span style="color:#f92672">&lt;</span> i<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>      <span style="color:#75715e">// exist cell that is out of current maximum reachable cell
-</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span>
-        max <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>max<span style="color:#f92672">,</span> nums<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> i<span style="color:#f92672">);</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>max <span style="color:#f92672">&gt;=</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
-<span style="color:#f92672">}</span>
-</code></pre></div><h3 id="from-end-to-beginning">From End to Beginning</h3>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Start from last to trace back if first can be reached.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param nums given int array that only contains non-negative int
-</span><span style="color:#75715e"> * @return if last index can be reached
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">canJumpFromEnd</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> nums<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-    <span style="color:#66d9ef">int</span> last <span style="color:#f92672">=</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">;</span>
-
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">-</span> 2<span style="color:#f92672">;</span> i <span style="color:#f92672">&gt;=</span> 0<span style="color:#f92672">;</span> i<span style="color:#f92672">--)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">+</span> nums<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">&gt;=</span> last<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            last <span style="color:#f92672">=</span> i<span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">return</span> last <span style="color:#f92672">&lt;=</span> 0<span style="color:#f92672">;</span>
-<span style="color:#f92672">}</span>
-</code></pre></div><h1 id="jump-game-ii">Jump Game II</h1>
-<p>Link: <a href="https://leetcode.com/problems/jump-game-ii">Jump Game II</a></p>
-<h2 id="problem-description-1">Problem description</h2>
-<p>Given an array of non-negative integers, you are initially positioned at the first index of the array.</p>
-<p>Each element in the array represents your maximum jump length at that position.</p>
-<p>Your goal is to reach the last index in the minimum number of jumps.</p>
-<p><strong>Example:</strong></p>
-<pre><code>Input: [2,3,1,1,4]
+<pre><code>Input: N = 2, trust = [[1,2]]
 Output: 2
-Explanation: The minimum number of jumps to reach the last index is 2.
-    Jump 1 step from index 0 to 1, then 3 steps to the last index.
+</code></pre><p><strong>Example 2:</strong></p>
+<pre><code>Input: N = 3, trust = [[1,3],[2,3]]
+Output: 3
+</code></pre><p><strong>Example 3:</strong></p>
+<pre><code>Input: N = 3, trust = [[1,3],[2,3],[3,1]]
+Output: -1
+</code></pre><p><strong>Example 4:</strong></p>
+<pre><code>Input: N = 3, trust = [[1,2],[2,3]]
+Output: -1
+</code></pre><p><strong>Example 5:</strong></p>
+<pre><code>Input: N = 4, trust = [[1,3],[1,4],[2,3],[2,4],[4,3]]
+Output: 3
 </code></pre><p><strong>Note:</strong></p>
-<p>You can assume that you can always reach the last index.</p>
-<h2 id="method--code-1">Method &amp; Code</h2>
-<p>Greedy, before each jump, find max next length in current available range.</p>
+<ol>
+<li><code>1 &lt;= N &lt;= 1000</code></li>
+<li><code>trust.length &lt;= 10000</code></li>
+<li><code>trust[i]</code> are all different</li>
+<li><code>trust[i][0] != trust[i][1]</code></li>
+<li><code>1 &lt;= trust[i][0], trust[i][1] &lt;= N</code></li>
+</ol>
+<h2 id="method--code">Method &amp; Code</h2>
+<ol>
+<li>Judge has no outdegree.</li>
+<li>Judge has N - 1 indegree</li>
+</ol>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Greedy, before each jump, find max next length in current available range.
-</span><span style="color:#75715e"> * Then move to the next longest jumped position, until reaches (or over) the end point.
+</span><span style="color:#75715e"> * 1. Judge has no outdegree.
+</span><span style="color:#75715e"> * 2. Judge has N - 1 indegree
 </span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param nums input int array
-</span><span style="color:#75715e"> * @return minimum number of jumps
+</span><span style="color:#75715e"> * @param N     number of total people
+</span><span style="color:#75715e"> * @param trust trust map, trust[i] = [a, b] representing that the person a trusts the person b
+</span><span style="color:#75715e"> * @return return the label of the town judge, or return -1 otherwise
 </span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">jump</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> nums<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">findJudge</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> N<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[][]</span> trust<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> degree <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>N <span style="color:#f92672">+</span> 1<span style="color:#f92672">];</span>
 
-    <span style="color:#75715e">/* Corner case */</span>
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">==</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">return</span> 0<span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> t <span style="color:#f92672">:</span> trust<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        degree<span style="color:#f92672">[</span>t<span style="color:#f92672">[</span>0<span style="color:#f92672">]]--;</span>     <span style="color:#75715e">// judge should have no outdegree
+</span><span style="color:#75715e"></span>        degree<span style="color:#f92672">[</span>t<span style="color:#f92672">[</span>1<span style="color:#f92672">]]++;</span>     <span style="color:#75715e">// judge should have N - 1 indegree
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
 
-    <span style="color:#66d9ef">int</span> step <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> maxJump <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> end <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
-
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>     <span style="color:#75715e">// end condition is length - 1, avoid standing at last index
-</span><span style="color:#75715e"></span>        maxJump <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>maxJump<span style="color:#f92672">,</span> nums<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> i<span style="color:#f92672">);</span>
-
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">==</span> end<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>     <span style="color:#75715e">// if reaches the current max step jump
-</span><span style="color:#75715e"></span>            step<span style="color:#f92672">++;</span>
-            end <span style="color:#f92672">=</span> maxJump<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;=</span> N<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>degree<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">==</span> N <span style="color:#f92672">-</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">return</span> i<span style="color:#f92672">;</span>
         <span style="color:#f92672">}</span>
     <span style="color:#f92672">}</span>
 
-    <span style="color:#66d9ef">return</span> step<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h1 id="find-the-celebrity">Find the Celebrity</h1>
+<p>Link: <a href="https://leetcode.com/problems/find-the-celebrity/">Find the Celebrity</a></p>
+<h2 id="problem-description-1">Problem description</h2>
+<p>Suppose you are at a party with <code>n</code> people (labeled from <code>0</code> to <code>n - 1</code>) and among them, there may exist one celebrity. The definition of a celebrity is that all the other <code>n - 1</code> people know him/her but he/she does not know any of them.</p>
+<p>Now you want to find out who the celebrity is or verify that there is not one. The only thing you are allowed to do is to ask questions like: &ldquo;Hi, A. Do you know B?&rdquo; to get information of whether A knows B. You need to find out the celebrity (or verify there is not one) by asking as few questions as possible (in the asymptotic sense).</p>
+<p>You are given a helper function <code>bool knows(a, b)</code> which tells you whether A knows B. Implement a function <code>int findCelebrity(n)</code>. There will be exactly one celebrity if he/she is in the party. Return the celebrity&rsquo;s label if there is a celebrity in the party. If there is no celebrity, return <code>-1</code>.</p>
+<p><strong>Example 1:</strong></p>
+<p><img src="../../../static/img/277_example_1_bold.PNG" alt="img"></p>
+<p><strong>Example 2:</strong></p>
+<p><img src="../../../static/img/277_example_2.PNG" alt="img"></p>
+<p><strong>Note:</strong></p>
+<ol>
+<li>The directed graph is represented as an adjacency matrix, which is an <code>n x n</code> matrix where <code>a[i][j] = 1</code> means person <code>i</code> knows person <code>j</code> while <code>a[i][j] = 0</code> means the contrary.</li>
+<li>Remember that you won&rsquo;t have direct access to the adjacency matrix.</li>
+</ol>
+<h2 id="method--code-1">Method &amp; Code</h2>
+<p>Celebrity has no out degree and n indegree.</p>
+<p>Traverse from 0 to n - 1, if current celebrity knows anyone, then this one is a possible celebrity. After this traverse, the only possible celebrity can be found. Traverse again to confirm if this celebrity has any out degree, or if exists anyone this celebrity does not know.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Celebrity has no out degree and n indegree.
+</span><span style="color:#75715e"> * Traverse from 0 to n - 1, if current celebrity knows anyone, then this one is a possible celebrity.
+</span><span style="color:#75715e"> * After this traverse, the only possible celebrity can be found.
+</span><span style="color:#75715e"> * Traverse again to confirm if this celebrity has any out degree, or if exists anyone this celebrity does not know.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param n n guests
+</span><span style="color:#75715e"> * @return celebrity&#39;s label if there is a celebrity in the party, if there is no celebrity, return -1
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">findCelebrity</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> n<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">int</span> celebrity <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>      <span style="color:#75715e">// starts at 0
+</span><span style="color:#75715e"></span>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> n<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>knows<span style="color:#f92672">(</span>celebrity<span style="color:#f92672">,</span> i<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+            celebrity <span style="color:#f92672">=</span> i<span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> n<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">((</span>i <span style="color:#f92672">!=</span> celebrity<span style="color:#f92672">)</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">(</span>knows<span style="color:#f92672">(</span>celebrity<span style="color:#f92672">,</span> i<span style="color:#f92672">)</span> <span style="color:#f92672">||</span> <span style="color:#f92672">!</span>knows<span style="color:#f92672">(</span>i<span style="color:#f92672">,</span> celebrity<span style="color:#f92672">)))</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">return</span> celebrity<span style="color:#f92672">;</span>
 <span style="color:#f92672">}</span>
 </code></pre></div>
               
@@ -395,7 +396,7 @@ Explanation: The minimum number of jumps to reach the last index is 2.
                   <div class="post-footer-tags">
                     <span class="text-color-light text-small">TAGGED IN</span><br/>
                     
-  <a class="tag tag--primary tag--small" href="https://yy-zhou.github.io/tags/greedy/">Greedy</a>
+  <a class="tag tag--primary tag--small" href="https://yy-zhou.github.io/tags/topological-sort/">Topological Sort</a>
 
                   </div>
                 
@@ -408,7 +409,7 @@ Explanation: The minimum number of jumps to reach the last index is 2.
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2020/02/lc-316-remove-duplicate-letters/" data-tooltip="LC 316 - Remove Duplicate Letters">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2020/02/lc-55-45-jump-game/" data-tooltip="LC 55 45 - Jump Game">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -416,7 +417,7 @@ Explanation: The minimum number of jumps to reach the last index is 2.
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2020/02/lc-997-277-indegree-and-outdegree/" data-tooltip="LC 997 277 - Indegree And Outdegree">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2020/02/lc-1248-358-930-sliding-window-find-all-substring-or-subarray-containing-certain-elements/" data-tooltip="LC 1248 358 930 - Sliding Window: Find All SubString or Subarray Containing Certain Elements">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
@@ -466,7 +467,7 @@ Explanation: The minimum number of jumps to reach the last index is 2.
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2020/02/lc-316-remove-duplicate-letters/" data-tooltip="LC 316 - Remove Duplicate Letters">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2020/02/lc-55-45-jump-game/" data-tooltip="LC 55 45 - Jump Game">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -474,7 +475,7 @@ Explanation: The minimum number of jumps to reach the last index is 2.
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2020/02/lc-997-277-indegree-and-outdegree/" data-tooltip="LC 997 277 - Indegree And Outdegree">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2020/02/lc-1248-358-930-sliding-window-find-all-substring-or-subarray-containing-certain-elements/" data-tooltip="LC 1248 358 930 - Sliding Window: Find All SubString or Subarray Containing Certain Elements">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
