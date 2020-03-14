@@ -15,18 +15,18 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="LC 123 188 - Best Time to Buy and Sell Stock">
 <meta name="twitter:title" content="LC 123 188 - Best Time to Buy and Sell Stock">
-<meta property="og:url" content="https://yy-zhou.github.io/2019/11/lc-123-188-best-time-to-buy-and-sell-stock/">
-<meta property="twitter:url" content="https://yy-zhou.github.io/2019/11/lc-123-188-best-time-to-buy-and-sell-stock/">
+<meta property="og:url" content="https://yy-zhou.github.io/2020/03/lc-123-188-best-time-to-buy-and-sell-stock/">
+<meta property="twitter:url" content="https://yy-zhou.github.io/2020/03/lc-123-188-best-time-to-buy-and-sell-stock/">
 <meta property="og:site_name" content="Bingo!">
 <meta property="og:description" content="">
 <meta name="twitter:description" content="">
 <meta property="og:locale" content="en-us">
 
   
-    <meta property="article:published_time" content="2019-11-10T00:00:00">
+    <meta property="article:published_time" content="2020-03-14T00:00:00">
   
   
-    <meta property="article:modified_time" content="2019-11-10T00:00:00">
+    <meta property="article:modified_time" content="2020-03-14T00:00:00">
   
   
   
@@ -62,7 +62,7 @@
 
     
 
-    <link rel="canonical" href="https://yy-zhou.github.io/2019/11/lc-123-188-best-time-to-buy-and-sell-stock/">
+    <link rel="canonical" href="https://yy-zhou.github.io/2020/03/lc-123-188-best-time-to-buy-and-sell-stock/">
 
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
@@ -232,9 +232,9 @@
   
   <div class="postShorten-meta post-meta">
     
-      <time itemprop="datePublished" datetime="2019-11-10T00:00:00Z">
+      <time itemprop="datePublished" datetime="2020-03-14T00:00:00Z">
         
-  November 10, 2019
+  March 14, 2020
 
       </time>
     
@@ -263,7 +263,8 @@
         <li><a href="#problem-description-1">Problem description</a></li>
         <li><a href="#method--code-1">Method &amp; Code</a>
           <ul>
-            <li><a href="#dynamic-programming-1">Dynamic programming</a></li>
+            <li><a href="#dynamic-programming-1">Dynamic Programming</a></li>
+            <li><a href="#dp-solution-with-space-optimization">DP Solution with Space Optimization</a></li>
             <li><a href="#state-machine-1">State machine</a></li>
           </ul>
         </li>
@@ -384,9 +385,9 @@ Output: 7
 Explanation: Buy on day 2 (price = 2) and sell on day 3 (price = 6), profit = 6-2 = 4.
              Then buy on day 5 (price = 0) and sell on day 6 (price = 3), profit = 3-0 = 3.
 </code></pre><h2 id="method--code-1">Method &amp; Code</h2>
-<p>There are two approaches to solve this problem (actually they are same): Dynamic programming and State machine. The choice is up to which one is understandable.</p>
+<p>There are two approaches to solve this problem (actually they are same): dynamic programming and state machine. The choice is up to which one is understandable.</p>
 <p>However, to avoid MLE (happens when k and array are extremely large), some corner cases should be fixed first. If <code>k &gt; prices.length * 2</code>, then the problem can be converted to Best Time to Buy and Sell Stock II. The reason is that in given array, it can at most complete <code>2 * k </code> operations since only one action can be done at one time.</p>
-<h3 id="dynamic-programming-1">Dynamic programming</h3>
+<h3 id="dynamic-programming-1">Dynamic Programming</h3>
 <p>State transition:</p>
 <pre><code>dp[i, j] = max(dp[i, j - 1], prices[j] - prices[j'] + [i - 1, j'])
 </code></pre><ul>
@@ -412,16 +413,22 @@ dp[i, 0] = 0
 }
 </code></pre><p>The optimized code is in the code part.</p>
 <p>The idea is to find out max profit from previous transaction and compare to current operation (buy/sell, or do nothing). This is actually same as state machine.</p>
+<p>Note that in <code>dp[i][j]</code>, only <code>dp[i - 1][t - 1] - price[t]</code> is relating to <code>t</code>, where <code>t</code> is from <code>0</code> to <code>j</code>. Hence, <code>dp[i][j] = price[j] + max(dp[i - 1][t - 1] - price[t])</code>. <code>max(dp[i - 1][t - 1] - price[t])</code> can be found by using a int to store during the loop from <code>0</code> to <code>j</code>.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Dynamic programming with 2D table.
-</span><span style="color:#75715e"> * dp[i, j] = max(dp[i, j - 1], prices[j] - prices[m] + dp[i - 1, m])
+</span><span style="color:#75715e"> * Dynamic programming with 2D table, optimized from O(n^3) to O(n^2).
+</span><span style="color:#75715e"> * The original state transition should be:
+</span><span style="color:#75715e"> * dp[i, j] = max(dp[i - 1][t - 1] + price[j] - price[t])
+</span><span style="color:#75715e"> * dp[i, j]: maximum profit from at most i transactions using prices 0 to j.
 </span><span style="color:#75715e"> * i: ith transaction
-</span><span style="color:#75715e"> * j: prices[j], index in int array price
-</span><span style="color:#75715e"> * m: in range of [0, j-1]
-</span><span style="color:#75715e"> * =&gt; [i, j] = max([i, j - 1], prices[j] + max([i - 1, m] - prices[m]))  (efficient for looping)
+</span><span style="color:#75715e"> * j: sell at price[j]
+</span><span style="color:#75715e"> * t: buy at price[t]
+</span><span style="color:#75715e"> * The time complexity will be O(n^2 * k) (three level looping).
+</span><span style="color:#75715e"> * To optimize it, note that in dp[i][j], only dp[i - 1][t - 1] - price[t] is relating to t.
+</span><span style="color:#75715e"> * Hence, dp[i][j] = price[j] + max(dp[i - 1][t - 1] - price[t]).
+</span><span style="color:#75715e"> * max(dp[i - 1][t - 1] - price[t]) can be found by using a int to store during the loop from 0 to j.
 </span><span style="color:#75715e"> * Base case:
-</span><span style="color:#75715e"> * dp[0, j] = 0
-</span><span style="color:#75715e"> * dp[i, 0] = 0
+</span><span style="color:#75715e"> * dp[i, 0] = 0, 0 &lt;= i &lt;= k
+</span><span style="color:#75715e"> * dp[0, j] = 0, 0 &lt;= j &lt; n
 </span><span style="color:#75715e"> *
 </span><span style="color:#75715e"> * @param k      at most k transactions
 </span><span style="color:#75715e"> * @param prices int array
@@ -445,22 +452,28 @@ dp[i, 0] = 0
         <span style="color:#66d9ef">return</span> max<span style="color:#f92672">;</span>
     <span style="color:#f92672">}</span>
 
-    <span style="color:#66d9ef">int</span><span style="color:#f92672">[][]</span> dp <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>k <span style="color:#f92672">+</span> 1<span style="color:#f92672">][</span>n<span style="color:#f92672">];</span>
-
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;=</span> k<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>        <span style="color:#75715e">// buy and sell
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">int</span> max <span style="color:#f92672">=</span> <span style="color:#f92672">-</span>prices<span style="color:#f92672">[</span>0<span style="color:#f92672">];</span>
-        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> j <span style="color:#f92672">&lt;</span> n<span style="color:#f92672">;</span> j<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>     <span style="color:#75715e">// stock prices
+    <span style="color:#66d9ef">int</span><span style="color:#f92672">[][]</span> dp <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>k <span style="color:#f92672">+</span> 1<span style="color:#f92672">][</span>n<span style="color:#f92672">];</span>     <span style="color:#75715e">// dp[i][j]: maximum profit from at most i transactions using prices 0 to j
 </span><span style="color:#75715e"></span>
-            dp<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>prices<span style="color:#f92672">[</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> max<span style="color:#f92672">,</span> dp<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>j <span style="color:#f92672">-</span> 1<span style="color:#f92672">]);</span>     <span style="color:#75715e">// sell with highest price
-</span><span style="color:#75715e"></span>            max <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>dp<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">][</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">-</span> prices<span style="color:#f92672">[</span>j<span style="color:#f92672">],</span> max<span style="color:#f92672">);</span>          <span style="color:#75715e">// buy with lowest price
-</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;=</span> k<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">int</span> maxTemp <span style="color:#f92672">=</span> <span style="color:#f92672">-</span>prices<span style="color:#f92672">[</span>0<span style="color:#f92672">];</span>     <span style="color:#75715e">// max profit from previous round
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> j <span style="color:#f92672">&lt;</span> n<span style="color:#f92672">;</span> j<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>           <span style="color:#75715e">// each row is one more buying taken based on previous max profit
+</span><span style="color:#75715e"></span>
+            <span style="color:#75715e">/*
+</span><span style="color:#75715e">             * dp[i, j] = max(dp[i - 1][t - 1] + price[j] - price[t]), where t is from 0 to j
+</span><span style="color:#75715e">             * dp[i][j - 1]: do nothing (or buy) which doesn&#39;t change the acquired profit
+</span><span style="color:#75715e">             * prices[j] - buyPrice: sell at current price
+</span><span style="color:#75715e">             * maxTemp is to find max(dp[i - 1][t - 1] - price[t])
+</span><span style="color:#75715e">             * t is from 0 to j. */</span>
+            dp<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>dp<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>j <span style="color:#f92672">-</span> 1<span style="color:#f92672">],</span> prices<span style="color:#f92672">[</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">-</span> maxTemp<span style="color:#f92672">);</span>
+            maxTemp <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>maxTemp<span style="color:#f92672">,</span> dp<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">][</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">-</span> prices<span style="color:#f92672">[</span>j<span style="color:#f92672">]);</span>
+        <span style="color:#f92672">}</span>
     <span style="color:#f92672">}</span>
 
     <span style="color:#66d9ef">return</span> dp<span style="color:#f92672">[</span>k<span style="color:#f92672">][</span>n <span style="color:#f92672">-</span> 1<span style="color:#f92672">];</span>
 <span style="color:#f92672">}</span>
-</code></pre></div><p>Solution with better space performance.</p>
+</code></pre></div><h3 id="dp-solution-with-space-optimization">DP Solution with Space Optimization</h3>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
-</span><span style="color:#75715e"> * DP solution with space optimized.
+</span><span style="color:#75715e"> * DP solution with space optimized by rolling array.
 </span><span style="color:#75715e"> *
 </span><span style="color:#75715e"> * @param k      k times transaction limit
 </span><span style="color:#75715e"> * @param prices prices array
@@ -494,7 +507,7 @@ dp[i, 0] = 0
             base <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>base<span style="color:#f92672">,</span> r1<span style="color:#f92672">[</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">-</span> prices<span style="color:#f92672">[</span>j<span style="color:#f92672">]);</span>
         <span style="color:#f92672">}</span>
 
-        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> j <span style="color:#f92672">&lt;</span> prices<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> j<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>       <span style="color:#75715e">// mem compress
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> j <span style="color:#f92672">&lt;</span> prices<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> j<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>       <span style="color:#75715e">// memory compress
 </span><span style="color:#75715e"></span>            r1<span style="color:#f92672">[</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> r2<span style="color:#f92672">[</span>j<span style="color:#f92672">];</span>
             r2<span style="color:#f92672">[</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
         <span style="color:#f92672">}</span>
@@ -576,7 +589,7 @@ dp[i, 0] = 0
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2019/11/lc-272-closest-binary-search-tree-value-ii/" data-tooltip="LC 272 - Closest Binary Search Tree Value II">
+                <a class="post-action-btn btn btn--disabled">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -584,7 +597,7 @@ dp[i, 0] = 0
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2019/11/lc-279-perfect-squares/" data-tooltip="LC 279 - Perfect Squares">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2020/03/lc-347-692-819-703-1337-1338-top-k-frequent-elements/" data-tooltip="LC 347 692 819 703 1337 1338 - Top K Frequent Elements">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
@@ -634,7 +647,7 @@ dp[i, 0] = 0
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2019/11/lc-272-closest-binary-search-tree-value-ii/" data-tooltip="LC 272 - Closest Binary Search Tree Value II">
+                <a class="post-action-btn btn btn--disabled">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -642,7 +655,7 @@ dp[i, 0] = 0
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2019/11/lc-279-perfect-squares/" data-tooltip="LC 279 - Perfect Squares">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2020/03/lc-347-692-819-703-1337-1338-top-k-frequent-elements/" data-tooltip="LC 347 692 819 703 1337 1338 - Top K Frequent Elements">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
