@@ -262,7 +262,12 @@
     <li><a href="#two-city-scheduling">Two City Scheduling</a>
       <ul>
         <li><a href="#problem-description">Problem description</a></li>
-        <li><a href="#method--code">Method &amp; Code</a></li>
+        <li><a href="#method--code">Method &amp; Code</a>
+          <ul>
+            <li><a href="#greedy">Greedy</a></li>
+            <li><a href="#dynamic-programming">Dynamic programming</a></li>
+          </ul>
+        </li>
       </ul>
     </li>
   </ul>
@@ -290,17 +295,9 @@ The total minimum cost is 10 + 30 + 50 + 20 = 110 to have half the people interv
 </ol>
 <h2 id="method--code">Method &amp; Code</h2>
 <p>Greedy or dynamic programming.</p>
-<p><strong>Greedy</strong></p>
+<h3 id="greedy">Greedy</h3>
 <p>Sort the array by difference for person fly a or fly to b by <code>(a[0] - a[1]) - (b[0] - b[1])</code>.</p>
 <p>The higher priority has less total cost send to city A, and less priority has less total cost send to city B.</p>
-<p><strong>Dynamic programming</strong></p>
-<p>For <code>(i+j)th</code> people, he can be assigned either to A city or B city.
-The min cost if assigned to A city: <code>dp[i-1][j]+costs[i+j-1][0]</code>.
-The min cost if assigned to B city: <code>dp[i][j-1]+costs[i+j-1][1]</code>.
-Hence, <code>dp[i][j] = Math.min(dp[i-1][j]+costs[i+j-1][0] , dp[i][j-1]+costs[i+j-1][1])</code></p>
-<p>Another way to represent the equation is: <code>dp[totalPerson][personToA]</code>, <code>toatalPerson</code> is the number of people have been assigned, and <code>personToA</code> of them are assigned to city A, so the the equation:
-<code>dp[totalPerson][personToA]= Math.min(dp[totalPerson-1][personToA]+costs[totalPerson-1][1]</code>.
-<code>dp[totalPerson-1][personToA-1]+costs[totalPerson-1][0])</code>.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
 </span><span style="color:#75715e"> * Greedy.
 </span><span style="color:#75715e"> * Sort the array by difference for person fly a or fly to b by (a[0] - a[1]) - (b[0] - b[1]).
@@ -328,9 +325,19 @@ Hence, <code>dp[i][j] = Math.min(dp[i-1][j]+costs[i+j-1][0] , dp[i][j-1]+costs[i
 
     <span style="color:#66d9ef">return</span> total<span style="color:#f92672">;</span>
 <span style="color:#f92672">}</span>
-
-<span style="color:#75715e">/**
-</span><span style="color:#75715e"> * For (i+j)th people, it can be assigned either to A city or B city.
+</code></pre></div><h3 id="dynamic-programming">Dynamic programming</h3>
+<p>For <code>(i + j)th</code> people, he can be assigned either to A city or B city.</p>
+<ul>
+<li>The min cost if assigned to A city: <code>dp[i - 1][j] + costs[i + j - 1][0]</code>.</li>
+<li>The min cost if assigned to B city: <code>dp[i][j - 1] + costs[i + j - 1][1]</code>.</li>
+</ul>
+<p>Hence, <code>dp[i][j] = Math.min(dp[i - 1][j] + costs[i + j - 1][0] , dp[i][j - 1] + costs[i + j - 1][1])</code></p>
+<p>Another way to represent the equation is: <code>dp[totalPerson][personToA]</code>, where <code>toatalPerson</code> is the number of people have been assigned, and <code>personToA</code> of them are assigned to city A, so the the state transition will be:</p>
+<ul>
+<li><code>dp[totalPerson][personToA] = Math.min(dp[totalPerson - 1][personToA] + costs[totalPerson - 1][1], dp[totalPerson - 1][personToA - 1] + costs[totalPerson - 1][0])</code>.</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * For (i + j)th people, it can be assigned either to A city or B city.
 </span><span style="color:#75715e"> * The min cost if assigned to A city: dp[i-1][j]+costs[i+j-1][0]. (Fly to A, so use i-1)
 </span><span style="color:#75715e"> * The min cost if assigned to B city: dp[i][j-1]+costs[i+j-1][1]; (Fly to B, so use j-1)
 </span><span style="color:#75715e"> * dp[i][j] = Math.min(dp[i-1][j]+costs[i+j-1][0] , dp[i][j-1]+costs[i+j-1][1])
