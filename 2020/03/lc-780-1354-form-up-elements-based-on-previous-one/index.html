@@ -267,6 +267,12 @@
         <li><a href="#method--code">Method &amp; Code</a></li>
       </ul>
     </li>
+    <li><a href="#1354-construct-target-array-with-multiple-sums">1354. Construct Target Array With Multiple Sums</a>
+      <ul>
+        <li><a href="#problem-description-1">Problem description</a></li>
+        <li><a href="#method--code-1">Method &amp; Code</a></li>
+      </ul>
+    </li>
   </ul>
 </nav>
 <h1 id="780-reaching-points">780. Reaching Points</h1>
@@ -334,6 +340,84 @@ Output: True
 </span><span style="color:#75715e">     * 2. sy == ty, same situation, tx = sx + k * sy, and (tx - sx) % sy == 0.
 </span><span style="color:#75715e">     * If sx != tx &amp;&amp; sy != ty, then target point can not be reached. */</span>
     <span style="color:#66d9ef">return</span> sx <span style="color:#f92672">==</span> tx <span style="color:#f92672">&amp;&amp;</span> sy <span style="color:#f92672">&lt;=</span> ty <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">(</span>ty <span style="color:#f92672">-</span> sy<span style="color:#f92672">)</span> <span style="color:#f92672">%</span> sx <span style="color:#f92672">==</span> 0 <span style="color:#f92672">||</span> sy <span style="color:#f92672">==</span> ty <span style="color:#f92672">&amp;&amp;</span> sx <span style="color:#f92672">&lt;=</span> tx <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">(</span>tx <span style="color:#f92672">-</span> sx<span style="color:#f92672">)</span> <span style="color:#f92672">%</span> sy <span style="color:#f92672">==</span> 0<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h1 id="1354-construct-target-array-with-multiple-sums">1354. Construct Target Array With Multiple Sums</h1>
+<p>Link: <a href="https://leetcode.com/problems/construct-target-array-with-multiple-sums/">Construct Target Array With Multiple Sums</a></p>
+<h2 id="problem-description-1">Problem description</h2>
+<p>Given an array of integers <code>target</code>. From a starting array, <code>A</code> consisting of all 1&rsquo;s, you may perform the following procedure :</p>
+<ul>
+<li>let <code>x</code> be the sum of all elements currently in your array.</li>
+<li>choose index <code>i</code>, such that <code>0 &lt;= i &lt; target.size</code> and set the value of <code>A</code> at index <code>i</code> to <code>x</code>.</li>
+<li>You may repeat this procedure as many times as needed.</li>
+</ul>
+<p>Return True if it is possible to construct the <code>target</code> array from <code>A</code> otherwise return False.</p>
+<p><strong>Example 1:</strong></p>
+<pre><code>Input: target = [9,3,5]
+Output: true
+Explanation: Start with [1, 1, 1] 
+[1, 1, 1], sum = 3 choose index 1
+[1, 3, 1], sum = 5 choose index 2
+[1, 3, 5], sum = 9 choose index 0
+[9, 3, 5] Done
+</code></pre><p><strong>Example 2:</strong></p>
+<pre><code>Input: target = [1,1,1,2]
+Output: false
+Explanation: Impossible to create target array from [1,1,1,1].
+</code></pre><p><strong>Example 3:</strong></p>
+<pre><code>Input: target = [8,5]
+Output: true
+</code></pre><p><strong>Constraints:</strong></p>
+<ul>
+<li><code>N == target.length</code></li>
+<li><code>1 &lt;= target.length &lt;= 5 * 10^4</code></li>
+<li><code>1 &lt;= target[i] &lt;= 10^9</code></li>
+</ul>
+<h2 id="method--code-1">Method &amp; Code</h2>
+<p>Greedy with heap.</p>
+<p>Trace back from largest element in array. This element is added by other elements and the replaced element. Array with all 1s and <code>[1, n]</code> will always be true.</p>
+<p>Hence, two conditions will be true.</p>
+<ol>
+<li>The total sum is always bigger than all other elements. If current max value in heap is 1, then all elements are 1.</li>
+<li>If <code>sum - current max == 1</code> , then the array is <code>[1, n]</code>, which is correct.</li>
+</ol>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Greedy with heap.
+</span><span style="color:#75715e"> * Trace back from largest element in array. This element is added by other elements and the replaced element.
+</span><span style="color:#75715e"> * Array with all 1s and [1, i] will always be true.
+</span><span style="color:#75715e"> * Hence, two conditions will be true.
+</span><span style="color:#75715e"> * 1. The total sum is always bigger than all other elements. If current max in heap is 1, then all elements are 1.
+</span><span style="color:#75715e"> * 2. If sum - current max is 1, then the array is [1, i], which is correct.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param target given array that should be formed up
+</span><span style="color:#75715e"> * @return true if it is possible to construct the target array from A, otherwise return false
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">isPossible</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> target<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    PriorityQueue<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> pq <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> PriorityQueue<span style="color:#f92672">&lt;&gt;((</span>a<span style="color:#f92672">,</span> b<span style="color:#f92672">)</span> <span style="color:#f92672">-&gt;</span> <span style="color:#f92672">(</span>b <span style="color:#f92672">-</span> a<span style="color:#f92672">));</span>     <span style="color:#75715e">// max heap
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">long</span> sum <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> n <span style="color:#f92672">:</span> target<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        pq<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>n<span style="color:#f92672">);</span>
+        sum <span style="color:#f92672">+=</span> n<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">int</span> currentMax <span style="color:#f92672">=</span> pq<span style="color:#f92672">.</span><span style="color:#a6e22e">poll</span><span style="color:#f92672">();</span>       <span style="color:#75715e">// current max value in array
+</span><span style="color:#75715e"></span>        sum <span style="color:#f92672">-=</span> currentMax<span style="color:#f92672">;</span>                <span style="color:#75715e">// sum of remaining element in array
+</span><span style="color:#75715e"></span>
+        <span style="color:#75715e">/*
+</span><span style="color:#75715e">         * All 1s in array and [1, i] will always be true.
+</span><span style="color:#75715e">         * The total sum is always bigger than all other elements.
+</span><span style="color:#75715e">         * If current max in heap is 1, then all elements in array is 1.
+</span><span style="color:#75715e">         * If sum - current max is 1, then the array is [1, i], which is correct. */</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>sum <span style="color:#f92672">==</span> 1 <span style="color:#f92672">||</span> currentMax <span style="color:#f92672">==</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>currentMax <span style="color:#f92672">&lt;</span> sum <span style="color:#f92672">||</span> sum <span style="color:#f92672">==</span> 0 <span style="color:#f92672">||</span> currentMax <span style="color:#f92672">%</span> sum <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+        currentMax <span style="color:#f92672">%=</span> sum<span style="color:#f92672">;</span>      <span style="color:#75715e">// current = sum * k, reduce k extra operation to avoid TLE
+</span><span style="color:#75715e"></span>        sum <span style="color:#f92672">+=</span> currentMax<span style="color:#f92672">;</span>      <span style="color:#75715e">// next round value will selected element i in array converted to i + (sum - i) * k
+</span><span style="color:#75715e"></span>        pq<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>currentMax<span style="color:#f92672">);</span>     <span style="color:#75715e">// add next round value back to heap
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
 <span style="color:#f92672">}</span>
 </code></pre></div>
               
