@@ -306,27 +306,32 @@ inorder = [9,3,15,20,7]
 <span style="color:#66d9ef">public</span> TreeNode <span style="color:#a6e22e">buildTree</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> preorder<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> inorder<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
     <span style="color:#75715e">/* Corner case */</span>
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>preorder<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>preorder <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">||</span> inorder <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">||</span> inorder<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">==</span> 0 <span style="color:#f92672">||</span> inorder<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">!=</span> preorder<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
         <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
     <span style="color:#f92672">}</span>
     <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>preorder<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">==</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
         <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> TreeNode<span style="color:#f92672">(</span>preorder<span style="color:#f92672">[</span>0<span style="color:#f92672">]);</span>
     <span style="color:#f92672">}</span>
 
-    <span style="color:#75715e">/* Use a hash map to store node value and node index for quicker searching */</span>
-    HashMap<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">,</span> Integer<span style="color:#f92672">&gt;</span> m <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashMap<span style="color:#f92672">&lt;&gt;();</span>
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> inorder<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+    HashMap<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">,</span> Integer<span style="color:#f92672">&gt;</span> m <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashMap<span style="color:#f92672">&lt;&gt;();</span>      <span style="color:#75715e">// pair: node and its index in inorder array
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> inorder<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
         m<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>inorder<span style="color:#f92672">[</span>i<span style="color:#f92672">],</span> i<span style="color:#f92672">);</span>
     <span style="color:#f92672">}</span>
-
 
     <span style="color:#66d9ef">return</span> traverse<span style="color:#f92672">(</span>preorder<span style="color:#f92672">,</span> 0<span style="color:#f92672">,</span> preorder<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">,</span> 0<span style="color:#f92672">,</span> inorder<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">,</span> m<span style="color:#f92672">);</span>
 <span style="color:#f92672">}</span>
 
 <span style="color:#75715e">/**
 </span><span style="color:#75715e"> * Find root of children in inorder array and in this way to find their left and right children.
+</span><span style="color:#75715e"> * The start position of preorder array is the root of current tree.
+</span><span style="color:#75715e"> * Find the position of current root in inorder array.
+</span><span style="color:#75715e"> * Then the size of left subtree can be found, which is the left part of inorder array.
+</span><span style="color:#75715e"> * And the root of left subtree is the next value in preorder array.
+</span><span style="color:#75715e"> * The size of right subtree can be found as well, which is the right part of inorder array.
+</span><span style="color:#75715e"> * Based on size of left subtree, the root of right subtree can be found.
+</span><span style="color:#75715e"> * Pass the parameter into the recursion, until start position is larger than end position.
 </span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param preorder pre order traversal array
+</span><span style="color:#75715e"> * @param preorder preorder traversal array
 </span><span style="color:#75715e"> * @param preStart root in preorder traverse array
 </span><span style="color:#75715e"> * @param preEnd   end of tree in preorder array
 </span><span style="color:#75715e"> * @param inStart  start of left children
@@ -340,8 +345,8 @@ inorder = [9,3,15,20,7]
         <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>        <span style="color:#75715e">// end point
 </span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
 
-    TreeNode root <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> TreeNode<span style="color:#f92672">(</span>preorder<span style="color:#f92672">[</span>preStart<span style="color:#f92672">]);</span>       <span style="color:#75715e">// first element in preorder array is root of current tree
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> inRoot <span style="color:#f92672">=</span> m<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>preorder<span style="color:#f92672">[</span>preStart<span style="color:#f92672">]);</span>     <span style="color:#75715e">// find index of root in inorder array
+    TreeNode root <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> TreeNode<span style="color:#f92672">(</span>preorder<span style="color:#f92672">[</span>preStart<span style="color:#f92672">]);</span>       <span style="color:#75715e">// first element in preorder is the root of current tree
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> inRoot <span style="color:#f92672">=</span> m<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>preorder<span style="color:#f92672">[</span>preStart<span style="color:#f92672">]);</span>                 <span style="color:#75715e">// find index of root in inorder array
 </span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> leftChild <span style="color:#f92672">=</span> inRoot <span style="color:#f92672">-</span> inStart<span style="color:#f92672">;</span>       <span style="color:#75715e">// left part of root in inorder array is left child of current root node
 </span><span style="color:#75715e"></span>
     root<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span> <span style="color:#f92672">=</span> traverse<span style="color:#f92672">(</span>preorder<span style="color:#f92672">,</span> preStart <span style="color:#f92672">+</span> 1<span style="color:#f92672">,</span> preStart <span style="color:#f92672">+</span> leftChild<span style="color:#f92672">,</span> inStart<span style="color:#f92672">,</span> inRoot <span style="color:#f92672">-</span> 1<span style="color:#f92672">,</span> m<span style="color:#f92672">);</span>
@@ -388,7 +393,8 @@ postorder = [9,15,7,20,3]
     <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> inorder<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
         m<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>inorder<span style="color:#f92672">[</span>i<span style="color:#f92672">],</span> i<span style="color:#f92672">);</span>
     <span style="color:#f92672">}</span>
-    <span style="color:#66d9ef">return</span> rebuild<span style="color:#f92672">(</span>postorder<span style="color:#f92672">,</span> postorder<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">,</span> 0<span style="color:#f92672">,</span> 0<span style="color:#f92672">,</span> inorder<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">,</span> m<span style="color:#f92672">);</span>
+
+    <span style="color:#66d9ef">return</span> buildTree<span style="color:#f92672">(</span>postorder<span style="color:#f92672">,</span> postorder<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">,</span> 0<span style="color:#f92672">,</span> 0<span style="color:#f92672">,</span> inorder<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">,</span> m<span style="color:#f92672">);</span>
 <span style="color:#f92672">}</span>
 
 <span style="color:#75715e">/**
@@ -396,26 +402,25 @@ postorder = [9,15,7,20,3]
 </span><span style="color:#75715e"> * For better understanding, pStart is the last element in postorder, therefore pStart &gt; pEnd.
 </span><span style="color:#75715e"> *
 </span><span style="color:#75715e"> * @param postorder postorder array
-</span><span style="color:#75715e"> * @param pStart    postorder start position in current recursion (pStart &gt; pEnd)
-</span><span style="color:#75715e"> * @param pEnd      postorder end position in current recursion (pStart &gt; pEnd)
-</span><span style="color:#75715e"> * @param inStart   inorder start position in current recursion
-</span><span style="color:#75715e"> * @param inEnd     inorder end position in current recursion
+</span><span style="color:#75715e"> * @param pStart    postorder start position in current tree (pStart &gt; pEnd)
+</span><span style="color:#75715e"> * @param pEnd      postorder end position in current tree (pStart &gt; pEnd)
+</span><span style="color:#75715e"> * @param inStart   inorder start position in current tree
+</span><span style="color:#75715e"> * @param inEnd     inorder end position in current tree
 </span><span style="color:#75715e"> * @param m         hash map
 </span><span style="color:#75715e"> * @return root node of current tree
 </span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">private</span> TreeNode <span style="color:#a6e22e">rebuild</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> postorder<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> pStart<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> pEnd<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> inStart<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> inEnd<span style="color:#f92672">,</span> HashMap<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">,</span> Integer<span style="color:#f92672">&gt;</span> m<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+<span style="color:#66d9ef">private</span> TreeNode <span style="color:#a6e22e">buildTree</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> postorder<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> pStart<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> pEnd<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> inStart<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> inEnd<span style="color:#f92672">,</span> HashMap<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">,</span> Integer<span style="color:#f92672">&gt;</span> m<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-    <span style="color:#75715e">/* End point */</span>
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>inStart <span style="color:#f92672">&gt;</span> inEnd <span style="color:#f92672">||</span> pEnd <span style="color:#f92672">&gt;</span> pStart<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>inStart <span style="color:#f92672">&gt;</span> inEnd <span style="color:#f92672">||</span> pEnd <span style="color:#f92672">&gt;</span> pStart<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>     <span style="color:#75715e">// end point
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
     <span style="color:#f92672">}</span>
 
     TreeNode root <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> TreeNode<span style="color:#f92672">(</span>postorder<span style="color:#f92672">[</span>pStart<span style="color:#f92672">]);</span>
     <span style="color:#66d9ef">int</span> inRoot <span style="color:#f92672">=</span> m<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>postorder<span style="color:#f92672">[</span>pStart<span style="color:#f92672">]);</span>
-    <span style="color:#66d9ef">int</span> leftChild <span style="color:#f92672">=</span> inRoot <span style="color:#f92672">-</span> inStart<span style="color:#f92672">;</span>
-
-    root<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span> <span style="color:#f92672">=</span> rebuild<span style="color:#f92672">(</span>postorder<span style="color:#f92672">,</span> pStart <span style="color:#f92672">-</span> 1<span style="color:#f92672">,</span> pEnd <span style="color:#f92672">+</span> inRoot <span style="color:#f92672">-</span> inStart<span style="color:#f92672">,</span> inRoot <span style="color:#f92672">+</span> 1<span style="color:#f92672">,</span> inEnd<span style="color:#f92672">,</span> m<span style="color:#f92672">);</span>
-    root<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span> <span style="color:#f92672">=</span> rebuild<span style="color:#f92672">(</span>postorder<span style="color:#f92672">,</span> pEnd <span style="color:#f92672">+</span> leftChild <span style="color:#f92672">-</span> 1<span style="color:#f92672">,</span> pEnd<span style="color:#f92672">,</span> inStart<span style="color:#f92672">,</span> inRoot <span style="color:#f92672">-</span> 1<span style="color:#f92672">,</span> m<span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">int</span> leftChild <span style="color:#f92672">=</span> inRoot <span style="color:#f92672">-</span> inStart<span style="color:#f92672">;</span>       <span style="color:#75715e">// size of left subtree
+</span><span style="color:#75715e"></span>
+    root<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span> <span style="color:#f92672">=</span> buildTree<span style="color:#f92672">(</span>postorder<span style="color:#f92672">,</span> pStart <span style="color:#f92672">-</span> 1<span style="color:#f92672">,</span> pEnd <span style="color:#f92672">+</span> inRoot <span style="color:#f92672">-</span> inStart<span style="color:#f92672">,</span> inRoot <span style="color:#f92672">+</span> 1<span style="color:#f92672">,</span> inEnd<span style="color:#f92672">,</span> m<span style="color:#f92672">);</span>
+    root<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span> <span style="color:#f92672">=</span> buildTree<span style="color:#f92672">(</span>postorder<span style="color:#f92672">,</span> pEnd <span style="color:#f92672">+</span> leftChild <span style="color:#f92672">-</span> 1<span style="color:#f92672">,</span> pEnd<span style="color:#f92672">,</span> inStart<span style="color:#f92672">,</span> inRoot <span style="color:#f92672">-</span> 1<span style="color:#f92672">,</span> m<span style="color:#f92672">);</span>
 
     <span style="color:#66d9ef">return</span> root<span style="color:#f92672">;</span>
 <span style="color:#f92672">}</span>
