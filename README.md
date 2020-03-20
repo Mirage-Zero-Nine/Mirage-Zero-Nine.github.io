@@ -2,7 +2,7 @@
 
 ## Link
 
-Home page: [My Blog](https://yyzhou95.github.io)
+Home page: [My Blog](https://yy-zhou.github.io)
 
 ## What's inside this repository?
 
