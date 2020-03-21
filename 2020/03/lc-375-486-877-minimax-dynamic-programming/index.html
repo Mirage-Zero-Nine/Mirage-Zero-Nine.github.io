@@ -23,10 +23,10 @@
 <meta property="og:locale" content="en-us">
 
   
-    <meta property="article:published_time" content="2020-03-19T00:00:00">
+    <meta property="article:published_time" content="2020-03-21T00:00:00">
   
   
-    <meta property="article:modified_time" content="2020-03-19T00:00:00">
+    <meta property="article:modified_time" content="2020-03-21T00:00:00">
   
   
   
@@ -236,9 +236,9 @@
   
   <div class="postShorten-meta post-meta">
     
-      <time itemprop="datePublished" datetime="2020-03-19T00:00:00Z">
+      <time itemprop="datePublished" datetime="2020-03-21T00:00:00Z">
         
-  March 19, 2020
+  March 21, 2020
 
       </time>
     
@@ -271,6 +271,7 @@
         <li><a href="#method--code-1">Method &amp; Code</a>
           <ul>
             <li><a href="#dynamic-programming">Dynamic Programming</a></li>
+            <li><a href="#dfs-with-pruning">DFS With Pruning</a></li>
             <li><a href="#naive-dfs">Naive DFS</a></li>
           </ul>
         </li>
@@ -377,7 +378,7 @@ Finally, player 1 has more score (234) than player 2 (12), so you need to return
 <p>State transition:</p>
 <ul>
 <li><code>dp[i][j]</code>: how much more scores that the first-in-action player will get from <code>i</code> to <code>j</code> than the second player.</li>
-<li><code>dp[i][j] = max(nums[i] - dp[i + 1][j], nums[j] - dp[i][j - 1]</code>, where <code>0 &lt;= i &lt; j &lt; n</code> and <code>i + j &lt; n</code>.</li>
+<li><code>dp[i][j] = max(nums[i] - dp[i + 1][j], nums[j] - dp[i][j - 1])</code>, where <code>0 &lt;= i &lt; j &lt; n</code> and <code>i + j &lt; n</code>.</li>
 </ul>
 <p>Base case:</p>
 <ul>
@@ -389,7 +390,7 @@ Finally, player 1 has more score (234) than player 2 (12), so you need to return
 </span><span style="color:#75715e"> * The key of this problem is to correctly define dp[i][j].
 </span><span style="color:#75715e"> * State transition:
 </span><span style="color:#75715e"> * dp[i][j]: how much more scores that the first-in-action player will get from i to j than the second player.
-</span><span style="color:#75715e"> * dp[i][j] = max(nums[i] - dp[i + 1][j], nums[j] - dp[i][j - 1], where 0 &lt;= i &lt; j &lt; n and i + j &lt; n.
+</span><span style="color:#75715e"> * dp[i][j] = max(nums[i] - dp[i + 1][j], nums[j] - dp[i][j - 1]), where 0 &lt;= i &lt; j &lt; n and i + j &lt; n.
 </span><span style="color:#75715e"> * Base case:
 </span><span style="color:#75715e"> * dp[i][i] = i
 </span><span style="color:#75715e"> * At each dp[i][j], the max dp[i][j] is actually to find the max result that last player can get.
@@ -421,6 +422,57 @@ Finally, player 1 has more score (234) than player 2 (12), so you need to return
     <span style="color:#f92672">}</span>
 
     <span style="color:#66d9ef">return</span> dp<span style="color:#f92672">[</span>0<span style="color:#f92672">][</span>n <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span> <span style="color:#f92672">&gt;=</span> 0<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h3 id="dfs-with-pruning">DFS With Pruning</h3>
+<p>DFS with pruning. Find max sum of player from range <code>[i, j]</code>. Use a 2D array to store max score that current player can get as pruning.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * DFS with pruning.
+</span><span style="color:#75715e"> * Find max sum of player from range [i, j].
+</span><span style="color:#75715e"> * Use a 2D array to store max score that current player can get as pruning.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param nums given int array
+</span><span style="color:#75715e"> * @return predict whether player 1 is the winner
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">predictTheWinnerDFSWithPruning</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> nums<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">int</span> n <span style="color:#f92672">=</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">,</span> sum <span style="color:#f92672">=</span> Arrays<span style="color:#f92672">.</span><span style="color:#a6e22e">stream</span><span style="color:#f92672">(</span>nums<span style="color:#f92672">).</span><span style="color:#a6e22e">sum</span><span style="color:#f92672">();</span>
+    <span style="color:#66d9ef">int</span><span style="color:#f92672">[][]</span> memorization <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>n<span style="color:#f92672">][</span>n<span style="color:#f92672">];</span>
+    <span style="color:#66d9ef">int</span> first <span style="color:#f92672">=</span> dfsPruning<span style="color:#f92672">(</span>memorization<span style="color:#f92672">,</span> nums<span style="color:#f92672">,</span> 0<span style="color:#f92672">,</span> n <span style="color:#f92672">-</span> 1<span style="color:#f92672">);</span>       <span style="color:#75715e">// most score first player can get
+</span><span style="color:#75715e"></span>
+    <span style="color:#66d9ef">return</span> sum <span style="color:#f92672">-</span> first <span style="color:#f92672">&lt;=</span> first<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * DFS with pruning.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param mem   memorization
+</span><span style="color:#75715e"> * @param nums  given array
+</span><span style="color:#75715e"> * @param left  left bound
+</span><span style="color:#75715e"> * @param right right bound
+</span><span style="color:#75715e"> * @return max score current player can get
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">dfsPruning</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[][]</span> mem<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> nums<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> left<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> right<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+
+    <span style="color:#75715e">/* Base cases */</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>left <span style="color:#f92672">==</span> right<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> nums<span style="color:#f92672">[</span>left<span style="color:#f92672">];</span>     <span style="color:#75715e">// if only one element left, then current player always win
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>left <span style="color:#f92672">&gt;</span> right<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>          <span style="color:#75715e">// no available element
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">return</span> 0<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>mem<span style="color:#f92672">[</span>left<span style="color:#f92672">][</span>right<span style="color:#f92672">]</span> <span style="color:#f92672">!=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> mem<span style="color:#f92672">[</span>left<span style="color:#f92672">][</span>right<span style="color:#f92672">];</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#75715e">/*
+</span><span style="color:#75715e">     * Current player can select left or right.
+</span><span style="color:#75715e">     * The max score is based on next round, select min score of next player. */</span>
+    <span style="color:#66d9ef">int</span> selectLeft <span style="color:#f92672">=</span> nums<span style="color:#f92672">[</span>left<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">min</span><span style="color:#f92672">(</span>dfsPruning<span style="color:#f92672">(</span>mem<span style="color:#f92672">,</span> nums<span style="color:#f92672">,</span> left <span style="color:#f92672">+</span> 2<span style="color:#f92672">,</span> right<span style="color:#f92672">),</span> dfsPruning<span style="color:#f92672">(</span>mem<span style="color:#f92672">,</span> nums<span style="color:#f92672">,</span> left <span style="color:#f92672">+</span> 1<span style="color:#f92672">,</span> right <span style="color:#f92672">-</span> 1<span style="color:#f92672">));</span>
+    <span style="color:#66d9ef">int</span> selectRight <span style="color:#f92672">=</span> nums<span style="color:#f92672">[</span>right<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">min</span><span style="color:#f92672">(</span>dfsPruning<span style="color:#f92672">(</span>mem<span style="color:#f92672">,</span> nums<span style="color:#f92672">,</span> left <span style="color:#f92672">+</span> 1<span style="color:#f92672">,</span> right <span style="color:#f92672">-</span> 1<span style="color:#f92672">),</span> dfsPruning<span style="color:#f92672">(</span>mem<span style="color:#f92672">,</span> nums<span style="color:#f92672">,</span> left<span style="color:#f92672">,</span> right <span style="color:#f92672">-</span> 2<span style="color:#f92672">));</span>
+
+    mem<span style="color:#f92672">[</span>left<span style="color:#f92672">][</span>right<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>selectLeft<span style="color:#f92672">,</span> selectRight<span style="color:#f92672">);</span>
+
+    <span style="color:#66d9ef">return</span> mem<span style="color:#f92672">[</span>left<span style="color:#f92672">][</span>right<span style="color:#f92672">];</span>
 <span style="color:#f92672">}</span>
 </code></pre></div><h3 id="naive-dfs">Naive DFS</h3>
 <p>Naive DFS to find if first player can win.</p>
@@ -471,10 +523,6 @@ Finally, player 1 has more score (234) than player 2 (12), so you need to return
     <span style="color:#f92672">}</span>
 
     <span style="color:#66d9ef">return</span> <span style="color:#f92672">!</span>first<span style="color:#f92672">(</span>nums<span style="color:#f92672">,</span> sum1<span style="color:#f92672">,</span> sum2 <span style="color:#f92672">+</span> nums<span style="color:#f92672">[</span>left<span style="color:#f92672">],</span> left <span style="color:#f92672">+</span> 1<span style="color:#f92672">,</span> right<span style="color:#f92672">)</span> <span style="color:#f92672">||</span> <span style="color:#f92672">!</span>first<span style="color:#f92672">(</span>nums<span style="color:#f92672">,</span> sum1<span style="color:#f92672">,</span> sum2 <span style="color:#f92672">+</span> nums<span style="color:#f92672">[</span>right<span style="color:#f92672">],</span> left<span style="color:#f92672">,</span> right <span style="color:#f92672">-</span> 1<span style="color:#f92672">);</span>
-<span style="color:#f92672">}</span>
-
-<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[]</span> args<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-    System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> PredictTheWinner_486<span style="color:#f92672">().</span><span style="color:#a6e22e">predictTheWinnerDFS</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]{</span>1<span style="color:#f92672">}));</span>
 <span style="color:#f92672">}</span>
 </code></pre></div><h1 id="877-stone-game">877. Stone Game</h1>
 <p>Link: <a href="https://leetcode.com/problems/stone-game/">Stone Game</a></p>
@@ -571,7 +619,7 @@ This demonstrated that taking the first 5 was a winning move for Alex, so we ret
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2020/03/lc-144-257-100-101-104-111-337-1367-tree-traversal-preorder/" data-tooltip="LC 144 257 100 101 104 111 337 1367 - Tree Traversal: Preorder">
+                <a class="post-action-btn btn btn--disabled">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -579,7 +627,7 @@ This demonstrated that taking the first 5 was a winning move for Alex, so we ret
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2020/03/lc-694-695-number-of-islands-variation/" data-tooltip="LC 694 695 - Number of Islands Variation">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2020/03/lc-1114-1188-semaphore/" data-tooltip="LC 1114 1188 - Semaphore">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
@@ -629,7 +677,7 @@ This demonstrated that taking the first 5 was a winning move for Alex, so we ret
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2020/03/lc-144-257-100-101-104-111-337-1367-tree-traversal-preorder/" data-tooltip="LC 144 257 100 101 104 111 337 1367 - Tree Traversal: Preorder">
+                <a class="post-action-btn btn btn--disabled">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -637,7 +685,7 @@ This demonstrated that taking the first 5 was a winning move for Alex, so we ret
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2020/03/lc-694-695-number-of-islands-variation/" data-tooltip="LC 694 695 - Number of Islands Variation">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2020/03/lc-1114-1188-semaphore/" data-tooltip="LC 1114 1188 - Semaphore">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
