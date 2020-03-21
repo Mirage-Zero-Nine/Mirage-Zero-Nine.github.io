@@ -281,12 +281,23 @@
         </li>
       </ul>
     </li>
-    <li><a href="#309-best-time-to-buy-and-sell-stock-with-cooldown">309. Best Time to Buy and Sell Stock with Cooldown</a>
+    <li><a href="#122-best-time-to-buy-and-sell-stock-ii">122. Best Time to Buy and Sell Stock II</a>
       <ul>
         <li><a href="#problem-description-3">Problem description</a></li>
         <li><a href="#method--code-3">Method &amp; Code</a>
           <ul>
             <li><a href="#dynamic-programming-3">Dynamic Programming</a></li>
+            <li><a href="#greedy-1">Greedy</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+    <li><a href="#309-best-time-to-buy-and-sell-stock-with-cooldown">309. Best Time to Buy and Sell Stock with Cooldown</a>
+      <ul>
+        <li><a href="#problem-description-4">Problem description</a></li>
+        <li><a href="#method--code-4">Method &amp; Code</a>
+          <ul>
+            <li><a href="#dynamic-programming-4">Dynamic Programming</a></li>
             <li><a href="#optimized-dynamic-programming">Optimized Dynamic Programming</a></li>
           </ul>
         </li>
@@ -294,8 +305,8 @@
     </li>
     <li><a href="#714-best-time-to-buy-and-sell-stock-with-transaction-fee">714. Best Time to Buy and Sell Stock with Transaction Fee</a>
       <ul>
-        <li><a href="#problem-description-4">Problem description</a></li>
-        <li><a href="#method--code-4">Method &amp; Code</a>
+        <li><a href="#problem-description-5">Problem description</a></li>
+        <li><a href="#method--code-5">Method &amp; Code</a>
           <ul>
             <li><a href="#optimized-dynamic-programming-1">Optimized Dynamic Programming</a></li>
           </ul>
@@ -652,9 +663,91 @@ dp[i, 0] = 0
 
     <span style="color:#66d9ef">return</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>0<span style="color:#f92672">,</span> state<span style="color:#f92672">[</span>state<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">]);</span>
 <span style="color:#f92672">}</span>
+</code></pre></div><h1 id="122-best-time-to-buy-and-sell-stock-ii">122. Best Time to Buy and Sell Stock II</h1>
+<p>Link: <a href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock-ii">Best Time to Buy and Sell Stock II</a></p>
+<h2 id="problem-description-3">Problem description</h2>
+<p>Say you have an array for which the <em>i</em>th element is the price of a given stock on day <em>i</em>.</p>
+<p>Design an algorithm to find the maximum profit. You may complete as many transactions as you like (i.e., buy one and sell one share of the stock multiple times).</p>
+<p><strong>Note:</strong> You may not engage in multiple transactions at the same time (i.e., you must sell the stock before you buy again).</p>
+<p><strong>Example 1:</strong></p>
+<pre><code>Input: [7,1,5,3,6,4]
+Output: 7
+Explanation: Buy on day 2 (price = 1) and sell on day 3 (price = 5), profit = 5-1 = 4.
+             Then buy on day 4 (price = 3) and sell on day 5 (price = 6), profit = 6-3 = 3.
+</code></pre><p><strong>Example 2:</strong></p>
+<pre><code>Input: [1,2,3,4,5]
+Output: 4
+Explanation: Buy on day 1 (price = 1) and sell on day 5 (price = 5), profit = 5-1 = 4.
+             Note that you cannot buy on day 1, buy on day 2 and sell them later, as you are
+             engaging multiple transactions at the same time. You must sell before buying again.
+</code></pre><p><strong>Example 3:</strong></p>
+<pre><code>Input: [7,6,4,3,1]
+Output: 0
+Explanation: In this case, no transaction is done, i.e. max profit = 0.
+</code></pre><h2 id="method--code-3">Method &amp; Code</h2>
+<p>This problem can be solved by dynamic programming. However, the description is somehow vague. Therefore, the directly solution is extremely straightforward: add all positive difference to profit. That’s it.</p>
+<p>The difference between this problem and <a href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock/">previous problem</a> is that in the previous problem, one “transaction” can be done, which suggests that the purpose is to find largest gap between two numbers in array. And in this problem, since no limits of “transaction”, the purpose turns to simply find each positive gap between adjacent numbers.</p>
+<h3 id="dynamic-programming-3">Dynamic Programming</h3>
+<p>State transition:</p>
+<ul>
+<li><code>buy[i] = max(sell[i - 1] - price[i], buy[i - 1])</code></li>
+<li><code>sell[i]= max(sell[i - 1], buy[i] + price[i])</code></li>
+</ul>
+<p>Base case:</p>
+<ul>
+<li><code>buy[0] = -prices[0]</code></li>
+<li><code>sell[0] = 0</code></li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Dynamic programming.
+</span><span style="color:#75715e"> * State transition:
+</span><span style="color:#75715e"> * buy[i] = max(sell[i - 1] - price[i], buy[i - 1])
+</span><span style="color:#75715e"> * sell[i]= max(sell[i - 1], buy[i] + price[i])
+</span><span style="color:#75715e"> * Base case:
+</span><span style="color:#75715e"> * buy[0] = -prices[0];
+</span><span style="color:#75715e"> * sell[0] = 0;
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param prices given array
+</span><span style="color:#75715e"> * @return max profit
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">maxProfit</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> prices<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+
+    <span style="color:#75715e">/* Corner case */</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>prices <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">||</span> prices<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">&lt;</span> 2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> 0<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">int</span> n <span style="color:#f92672">=</span> prices<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> buy <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>n<span style="color:#f92672">];</span>
+    <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> sell <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>n<span style="color:#f92672">];</span>
+    buy<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#f92672">-</span>prices<span style="color:#f92672">[</span>0<span style="color:#f92672">];</span>
+    sell<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> n<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+        buy<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>sell<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span> <span style="color:#f92672">-</span> prices<span style="color:#f92672">[</span>i<span style="color:#f92672">],</span> buy<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">]);</span>
+        sell<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>sell<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">],</span> buy<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> prices<span style="color:#f92672">[</span>i<span style="color:#f92672">]);</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">return</span> sell<span style="color:#f92672">[</span>n <span style="color:#f92672">-</span> 1<span style="color:#f92672">];</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h3 id="greedy-1">Greedy</h3>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Greedy.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param prices given array
+</span><span style="color:#75715e"> * @return max profit
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">maxProfitGreedy</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> prices<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">int</span> max <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> prices<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+        max <span style="color:#f92672">=</span> prices<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">&gt;</span> prices<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span> <span style="color:#f92672">?</span> max <span style="color:#f92672">+</span> prices<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">-</span> prices<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span> <span style="color:#f92672">:</span> max<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+    
+    <span style="color:#66d9ef">return</span> max<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
 </code></pre></div><h1 id="309-best-time-to-buy-and-sell-stock-with-cooldown">309. Best Time to Buy and Sell Stock with Cooldown</h1>
 <p>Link: <a href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock-with-cooldown/">Best Time to Buy and Sell Stock with Cooldown</a></p>
-<h2 id="problem-description-3">Problem description</h2>
+<h2 id="problem-description-4">Problem description</h2>
 <p>Say you have an array for which the <code>ith</code> element is the price of a given stock on day <em>i</em>.</p>
 <p>Design an algorithm to find the maximum profit. You may complete as many transactions as you like (ie, buy one and sell one share of the stock multiple times) with the following restrictions:</p>
 <ul>
@@ -665,8 +758,8 @@ dp[i, 0] = 0
 <pre><code>Input: [1,2,3,0,2]
 Output: 3 
 Explanation: transactions = [buy, sell, cooldown, buy, sell]
-</code></pre><h2 id="method--code-3">Method &amp; Code</h2>
-<h3 id="dynamic-programming-3">Dynamic Programming</h3>
+</code></pre><h2 id="method--code-4">Method &amp; Code</h2>
+<h3 id="dynamic-programming-4">Dynamic Programming</h3>
 <p>State transition:</p>
 <ul>
 <li><code>buy[i] = max(sell[i - 2] - price, buy[i - 1])</code>, maximum profit end with buying on day i or end with buying on a day before i.</li>
@@ -745,7 +838,7 @@ Explanation: transactions = [buy, sell, cooldown, buy, sell]
 <span style="color:#f92672">}</span>
 </code></pre></div><h1 id="714-best-time-to-buy-and-sell-stock-with-transaction-fee">714. Best Time to Buy and Sell Stock with Transaction Fee</h1>
 <p>Link: <a href="https://leetcode.com/problems/best-time-to-buy-and-sell-stock-with-transaction-fee/">Best Time to Buy and Sell Stock with Transaction Fee</a></p>
-<h2 id="problem-description-4">Problem description</h2>
+<h2 id="problem-description-5">Problem description</h2>
 <p>Your are given an array of integers <code>prices</code>, for which the <code>i</code>-th element is the price of a given stock on day <code>i</code>; and a non-negative integer <code>fee</code> representing a transaction fee.</p>
 <p>You may complete as many transactions as you like, but you need to pay the transaction fee for each transaction. You may not buy more than 1 share of a stock at a time (ie. you must sell the stock share before you buy again.)</p>
 <p>Return the maximum profit you can make.</p>
@@ -758,7 +851,7 @@ Buying at prices[0] = 1Selling at prices[3] = 8Buying at prices[4] = 4Selling at
 <p><code>0 &lt; prices.length &lt;= 50000</code>.</p>
 <p><code>0 &lt; prices[i] &lt; 50000</code>.</p>
 <p><code>0 &lt;= fee &lt; 50000</code>.</p>
-<h2 id="method--code-4">Method &amp; Code</h2>
+<h2 id="method--code-5">Method &amp; Code</h2>
 <p>State transition:</p>
 <ul>
 <li><code>buy[i] = max(sell[i - 1] - price[i], buy[i - 1])</code>, maximum profit end with buying on day i or end with buying on a day before i.</li>
