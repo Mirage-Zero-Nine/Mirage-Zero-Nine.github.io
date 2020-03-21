@@ -331,7 +331,11 @@ Explanation: Buy on day 2 (price = 1) and sell on day 5 (price = 6), profit = 6-
 Output: 0
 Explanation: In this case, no transaction is done, i.e. max profit = 0.
 </code></pre><h2 id="method--code">Method &amp; Code</h2>
-<p>Ignore about the concept of “buy” and “sell”. This question is actually asking about finding each increasing subarray. The solution is very simple in this way.</p>
+<p>Dynamic programming.</p>
+<p>State transition:</p>
+<ul>
+<li><code>dp[i] = Math.max(dp[i - 1], prices[i] + min)</code>, where <code>min</code> is the min value from <code>[0, i]</code>.</li>
+</ul>
 <h3 id="dynamic-programming">Dynamic Programming</h3>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
 </span><span style="color:#75715e"> * Dynamic programming.
@@ -347,19 +351,19 @@ Explanation: In this case, no transaction is done, i.e. max profit = 0.
         <span style="color:#66d9ef">return</span> 0<span style="color:#f92672">;</span>
     <span style="color:#f92672">}</span>
 
-    <span style="color:#66d9ef">int</span> min <span style="color:#f92672">=</span> prices<span style="color:#f92672">[</span>0<span style="color:#f92672">],</span> n <span style="color:#f92672">=</span> prices<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> dp <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>n<span style="color:#f92672">];</span>
+    <span style="color:#66d9ef">int</span> n <span style="color:#f92672">=</span> prices<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">,</span> minBuy <span style="color:#f92672">=</span> prices<span style="color:#f92672">[</span>0<span style="color:#f92672">];</span>     <span style="color:#75715e">// min buy price
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> dp <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>n<span style="color:#f92672">];</span>
 
     <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> n<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
-        min <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">min</span><span style="color:#f92672">(</span>min<span style="color:#f92672">,</span> prices<span style="color:#f92672">[</span>i<span style="color:#f92672">]);</span>                 <span style="color:#75715e">// min buying price
-</span><span style="color:#75715e"></span>        dp<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>dp<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">],</span> prices<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> min<span style="color:#f92672">);</span>
-    <span style="color:#f92672">}</span>
+        minBuy <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">min</span><span style="color:#f92672">(</span>minBuy<span style="color:#f92672">,</span> prices<span style="color:#f92672">[</span>i<span style="color:#f92672">]);</span>
+        dp<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>dp<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">],</span> prices<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">-</span> minBuy<span style="color:#f92672">);</span>       <span style="color:#75715e">// min buy price and max sell price
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
 
     <span style="color:#66d9ef">return</span> dp<span style="color:#f92672">[</span>n <span style="color:#f92672">-</span> 1<span style="color:#f92672">];</span>
 <span style="color:#f92672">}</span>
 </code></pre></div><h3 id="greedy">Greedy</h3>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Greedy.
+</span><span style="color:#75715e"> * Greedy, actually idea is same as dynamic programming solution.
 </span><span style="color:#75715e"> *
 </span><span style="color:#75715e"> * @param prices int array
 </span><span style="color:#75715e"> * @return max &#34;profit&#34;
