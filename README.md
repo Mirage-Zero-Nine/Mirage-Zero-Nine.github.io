@@ -1,4 +1,4 @@
-# yy-zhou.github.io
+# Static Pages of My Blog
 
 ## Link
 
