@@ -264,7 +264,12 @@
     <li><a href="#recover-binary-search-tree">Recover Binary Search Tree</a>
       <ul>
         <li><a href="#problem-description">Problem description</a></li>
-        <li><a href="#method--code">Method &amp; Code</a></li>
+        <li><a href="#method--code">Method &amp; Code</a>
+          <ul>
+            <li><a href="#morris-traversal">Morris Traversal</a></li>
+            <li><a href="#normal-inorder-traversal">Normal Inorder Traversal</a></li>
+          </ul>
+        </li>
       </ul>
     </li>
     <li><a href="#flatten-binary-tree-to-linked-list">Flatten Binary Tree to Linked List</a>
@@ -273,7 +278,7 @@
         <li><a href="#method--code-1">Method &amp; Code</a>
           <ul>
             <li><a href="#pre-order-traversal">Pre-order Traversal</a></li>
-            <li><a href="#morris-traversal">Morris Traversal</a></li>
+            <li><a href="#morris-traversal-1">Morris Traversal</a></li>
           </ul>
         </li>
       </ul>
@@ -323,7 +328,7 @@ Output: [2,1,4,null,null,3]
 <li>Could you devise a constant space solution?</li>
 </ul>
 <h2 id="method--code">Method &amp; Code</h2>
-<p>Morris Traversal.</p>
+<h3 id="morris-traversal">Morris Traversal</h3>
 <p>To complete the traversal without <code>O(n)</code> space, use the null in leaf node to store root of current sub tree. Each time, set the right child of right leaf of current tree to point to root of current tree.</p>
 <p>When in-order traversal is completed, the right child of last node is the root of current tree. In this way, the right child of leaf (<code>null</code>) can be used as stack and to save space.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
@@ -382,6 +387,52 @@ Output: [2,1,4,null,null,3]
         t2<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span> <span style="color:#f92672">=</span> t<span style="color:#f92672">;</span>
     <span style="color:#f92672">}</span>
 <span style="color:#f92672">}</span>
+</code></pre></div><h3 id="normal-inorder-traversal">Normal Inorder Traversal</h3>
+<p>Normal in-order traversal approach. This method takes <code>O(n)</code> space.</p>
+<p>The factor is to find two &ldquo;root&rdquo; nodes to swap. Therefore, use in order traversal would found the incorrect left node and then incorrect right node. This equals to add a &ldquo;check&rdquo; operation between two sub nodes.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">private</span> TreeNode wrong1 <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+<span style="color:#66d9ef">private</span> TreeNode wrong2 <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+<span style="color:#66d9ef">private</span> TreeNode previous <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> TreeNode<span style="color:#f92672">(</span>Integer<span style="color:#f92672">.</span><span style="color:#a6e22e">MIN_VALUE</span><span style="color:#f92672">);</span>        <span style="color:#75715e">// avoid null when root is the deepest left node
+</span><span style="color:#75715e"></span>
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Normal in-order traversal approach. This method takes O(n) space.
+</span><span style="color:#75715e"> * The factor is to find two &#34;root&#34; nodes to swap.
+</span><span style="color:#75715e"> * Therefore, use in order traversal would found the incorrect left node and then incorrect right node.
+</span><span style="color:#75715e"> * This equals to add a &#34;check&#34; operation between two sub nodes.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param root root node of tree
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">normalInorderTraversal</span><span style="color:#f92672">(</span>TreeNode root<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    traverse<span style="color:#f92672">(</span>root<span style="color:#f92672">);</span>
+
+    <span style="color:#75715e">/* Swap incorrect value */</span>
+    wrong1<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span> <span style="color:#f92672">=</span> wrong1<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span> <span style="color:#f92672">+</span> wrong2<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span><span style="color:#f92672">;</span>
+    wrong2<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span> <span style="color:#f92672">=</span> wrong1<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span> <span style="color:#f92672">-</span> wrong2<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span><span style="color:#f92672">;</span>
+    wrong1<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span> <span style="color:#f92672">=</span> wrong1<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span> <span style="color:#f92672">-</span> wrong2<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * In order traversal.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param r temp root node
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">traverse</span><span style="color:#f92672">(</span>TreeNode r<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>r <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+
+    traverse<span style="color:#f92672">(</span>r<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">);</span>
+
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>wrong1 <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;&amp;</span> previous<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span> <span style="color:#f92672">&gt;=</span> r<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        wrong1 <span style="color:#f92672">=</span> previous<span style="color:#f92672">;</span>      <span style="color:#75715e">// left incorrect node, based on in order traversal (left -&gt; root -&gt; right)
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>wrong1 <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;&amp;</span> previous<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span> <span style="color:#f92672">&gt;=</span> r<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        wrong2 <span style="color:#f92672">=</span> r<span style="color:#f92672">;</span>      <span style="color:#75715e">// right incorrect node, based on in order traversal (left -&gt; root -&gt; right)
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+
+    previous <span style="color:#f92672">=</span> r<span style="color:#f92672">;</span>
+    traverse<span style="color:#f92672">(</span>r<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span><span style="color:#f92672">);</span>
+<span style="color:#f92672">}</span>
 </code></pre></div><h1 id="flatten-binary-tree-to-linked-list">Flatten Binary Tree to Linked List</h1>
 <p>Link: <a href="https://leetcode.com/problems/flatten-binary-tree-to-linked-list">Flatten Binary Tree to Linked List</a></p>
 <h2 id="problem-description-1">Problem description</h2>
@@ -439,7 +490,7 @@ Output: [2,1,4,null,null,3]
 </span><span style="color:#75715e"></span>        current<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
     <span style="color:#f92672">}</span>
 <span style="color:#f92672">}</span>
-</code></pre></div><h3 id="morris-traversal">Morris Traversal</h3>
+</code></pre></div><h3 id="morris-traversal-1">Morris Traversal</h3>
 <p>Find the right most node in left sub tree. Its child is the parent of the right child of current node. Link these two nodes. Then link current node&rsquo;s left child to current node&rsquo;s right child.</p>
 <p>Analysis:</p>
 <ul>
