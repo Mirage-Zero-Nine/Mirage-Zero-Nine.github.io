@@ -270,7 +270,12 @@
     <li><a href="#is-subsequence">Is Subsequence</a>
       <ul>
         <li><a href="#problem-description-1">Problem description</a></li>
-        <li><a href="#method--code-1">Method &amp; Code</a></li>
+        <li><a href="#method--code-1">Method &amp; Code</a>
+          <ul>
+            <li><a href="#greedy">Greedy</a></li>
+            <li><a href="#binary-search">Binary search</a></li>
+          </ul>
+        </li>
       </ul>
     </li>
   </ul>
@@ -372,10 +377,8 @@ Explanation: The array contains less than 2 elements, therefore return 0.
 <p><strong>Follow up:</strong>
 If there are lots of incoming S, say S1, S2, &hellip; , Sk where k &gt;= 1B, and you want to check one by one to see if T has its subsequence. In this scenario, how would you change your code?</p>
 <h2 id="method--code-1">Method &amp; Code</h2>
-<p><strong>Greedy approach</strong></p>
+<h3 id="greedy">Greedy</h3>
 <p>Greedy. Each time check if current char is char in string s (in order). If t contains all char in s and in s&rsquo;s order, then return true.</p>
-<p><strong>Binary search</strong></p>
-<p>If <code>s[i]</code> matches <code>t[j]</code>, then <code>s[i+1]</code> should match a character in <code>t</code> with index bigger than <code>j</code>. This can be reduced to find the first element larger than a value in an sorted array (find upper bound) and can be done by binary search.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
 </span><span style="color:#75715e"> * Greedy. Each time check if current char is char in string s (in order).
 </span><span style="color:#75715e"> * If t contains all char in s and in s&#39;s order, then return true.
@@ -406,8 +409,9 @@ If there are lots of incoming S, say S1, S2, &hellip; , Sk where k &gt;= 1B, and
     <span style="color:#f92672">}</span>
     <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
 <span style="color:#f92672">}</span>
-
-<span style="color:#75715e">/**
+</code></pre></div><h3 id="binary-search">Binary search</h3>
+<p>If <code>s[i]</code> matches <code>t[j]</code>, then <code>s[i+1]</code> should match a character in <code>t</code> with index bigger than <code>j</code>. This can be reduced to find the first element larger than a value in a sorted array (find upper bound) and can be done by binary search.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
 </span><span style="color:#75715e"> * Use buckets to store the index and for later checking.
 </span><span style="color:#75715e"> * If s[i] matches t[j], then s[i+1] should match a character in t with index bigger than j.
 </span><span style="color:#75715e"> * This can be reduced to find the first element larger than a value in an sorted array (find upper bound).
@@ -419,24 +423,27 @@ If there are lots of incoming S, say S1, S2, &hellip; , Sk where k &gt;= 1B, and
 </span><span style="color:#75715e"> */</span>
 <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">bucket</span><span style="color:#f92672">(</span>String s<span style="color:#f92672">,</span> String t<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-    List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;[]</span> idx <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> List<span style="color:#f92672">[</span>256<span style="color:#f92672">];</span>
+    List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;[]</span> index <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> List<span style="color:#f92672">[</span>256<span style="color:#f92672">];</span>
     <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> t<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">();</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>idx<span style="color:#f92672">[</span>t<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)]</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span>
-            idx<span style="color:#f92672">[</span>t<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;&gt;();</span>
-        idx<span style="color:#f92672">[</span>t<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)].</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>i<span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>index<span style="color:#f92672">[</span>t<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)]</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            index<span style="color:#f92672">[</span>t<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;&gt;();</span>
+        <span style="color:#f92672">}</span>
+        index<span style="color:#f92672">[</span>t<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)].</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>i<span style="color:#f92672">);</span>
     <span style="color:#f92672">}</span>
 
-    <span style="color:#66d9ef">int</span> prev <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">int</span> previous <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
     <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">();</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>idx<span style="color:#f92672">[</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)]</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>index<span style="color:#f92672">[</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)]</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
             <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
         <span style="color:#f92672">}</span>
-        <span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> Collections<span style="color:#f92672">.</span><span style="color:#a6e22e">binarySearch</span><span style="color:#f92672">(</span>idx<span style="color:#f92672">[</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)],</span> prev<span style="color:#f92672">);</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>j <span style="color:#f92672">&lt;</span> 0<span style="color:#f92672">)</span> j <span style="color:#f92672">=</span> <span style="color:#f92672">-</span>j <span style="color:#f92672">-</span> 1<span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>j <span style="color:#f92672">==</span> idx<span style="color:#f92672">[</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)].</span><span style="color:#a6e22e">size</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> Collections<span style="color:#f92672">.</span><span style="color:#a6e22e">binarySearch</span><span style="color:#f92672">(</span>index<span style="color:#f92672">[</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)],</span> previous<span style="color:#f92672">);</span>     <span style="color:#75715e">// binary search to find insert position
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>j <span style="color:#f92672">&lt;</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            j <span style="color:#f92672">=</span> <span style="color:#f92672">-</span>j <span style="color:#f92672">-</span> 1<span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>j <span style="color:#f92672">==</span> index<span style="color:#f92672">[</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)].</span><span style="color:#a6e22e">size</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
             <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
         <span style="color:#f92672">}</span>
-        prev <span style="color:#f92672">=</span> idx<span style="color:#f92672">[</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)].</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>j<span style="color:#f92672">)</span> <span style="color:#f92672">+</span> 1<span style="color:#f92672">;</span>
+        previous <span style="color:#f92672">=</span> index<span style="color:#f92672">[</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)].</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>j<span style="color:#f92672">)</span> <span style="color:#f92672">+</span> 1<span style="color:#f92672">;</span>
     <span style="color:#f92672">}</span>
 
     <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
