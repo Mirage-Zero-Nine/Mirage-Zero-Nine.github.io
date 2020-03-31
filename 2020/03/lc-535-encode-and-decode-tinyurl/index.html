@@ -340,28 +340,28 @@
 <h3 id="calculation">Calculation</h3>
 <h4 id="traffic-estimates">Traffic estimates</h4>
 <p>Assuming there will be 500M new URL shortenings per month, with 100:1 read/write ratio, we can expect 50B redirections during the same period:</p>
-<p>$100 * 500M =&gt; 50B$</p>
+<p><code>100 * 500M =&gt; 50B</code></p>
 <p>Queries Per Second (QPS) for the service:</p>
 <p>New URLs shortenings per second:</p>
-<p>$`500 million / (30 days * 24 hours * 3600 seconds) = ~200 URLs/s$</p>
+<p>``500 million / (30 days * 24 hours * 3600 seconds) = ~200 URLs/s`</p>
 <p>Considering 100:1 read/write ratio, URLs redirections per second will be:</p>
-<p>$100 * 200 URLs/s = 20K/s$</p>
+<p><code>100 * 200 URLs/s = 20K/s</code></p>
 <h4 id="storage-estimates">Storage estimates</h4>
 <p>Assume the service store every URL shortening request (and associated shortened link) for 5 years. Since it is expected to have 500M new URLs every month, the total number of objects to store will be 30 billion:</p>
-<p>$500 million * 5 years * 12 months = 30 billion$</p>
+<p><code>500 million * 5 years * 12 months = 30 billion</code></p>
 <p>Assuming each stored object will be approximately 500 bytes. 15TB of total storage are required:</p>
-<p>$30 billion * 500 bytes = 15 TB$</p>
+<p><code>30 billion * 500 bytes = 15 TB</code></p>
 <h4 id="bandwidth-estimates">Bandwidth estimates</h4>
 <p>For write requests, since 200 new URLs are expected in every second, total incoming data for the service will be 100KB per second:</p>
-<p>$200 * 500 bytes = 100 KB/s$</p>
+<p><code>200 * 500 bytes = 100 KB/s</code></p>
 <p>For read requests, since every second the service expecting ~20K URLs redirections, total outgoing data for the service would be 10MB per second:</p>
-<p>$20K * 500 bytes = ~10 MB/s$</p>
+<p><code>20K * 500 bytes = ~10 MB/s</code></p>
 <h4 id="memory-estimates">Memory estimates</h4>
 <p>To build a cache for the service that caches the hottest URL, the memory size should be considered. Follow the 80-20 rule, 20% of URLs generate 80% of traffic. The top 20% URL can be cached.</p>
 <p>Since the service will have 20K requests per second, we will be getting 1.7 billion requests per day:</p>
-<p>$20K * 3600 seconds * 24 hours = ~1.7 billion$</p>
+<p><code>20K * 3600 seconds * 24 hours = ~1.7 billion</code></p>
 <p>To cache 20% of these requests, the total memory size should be 170GB.</p>
-<p>$0.2 * 1.7 billion * 500 bytes = ~170GB$</p>
+<p><code>0.2 * 1.7 billion * 500 bytes = ~170GB</code></p>
 <p>One thing to note here is that since there will be a lot of duplicate requests (of the same URL), therefore, the actual memory usage will be less than 170GB.</p>
 <h3 id="system-apis">System APIs</h3>
 <h4 id="create">Create</h4>
@@ -408,7 +408,7 @@
 <p>Servers can use KGS to read/mark keys in the database. KGS can use two tables to store keys: one for keys that are not used yet, and one for all the used keys. As soon as KGS gives keys to one of the servers, it can move them to the used keys table. KGS can always keep some keys in memory so that it can quickly provide them whenever a server needs them.</p>
 <p>KGS also has to make sure not to give the same key to multiple servers. For that, it must synchronize (or get a lock on) the data structure holding the keys before removing keys from it and giving them to a server.</p>
 <p>Database size:</p>
-<p>$6 (characters per key) * 68.7B (unique keys) = 412 GB$</p>
+<p><code>6 (characters per key) * 68.7B (unique keys) = 412 GB</code></p>
 <p>Single failure of KGS:</p>
 <p>Having a standby replica of KGS. Whenever the primary server dies, the standby server can take over to generate and provide keys.</p>
 <h3 id="data-partitioning-and-replication">Data Partitioning and Replication</h3>
