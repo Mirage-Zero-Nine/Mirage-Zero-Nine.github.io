@@ -15,18 +15,18 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="LC 535 - Encode and Decode TinyURL">
 <meta name="twitter:title" content="LC 535 - Encode and Decode TinyURL">
-<meta property="og:url" content="https://yy-zhou.github.io/2020/02/lc-535-encode-and-decode-tinyurl/">
-<meta property="twitter:url" content="https://yy-zhou.github.io/2020/02/lc-535-encode-and-decode-tinyurl/">
+<meta property="og:url" content="https://yy-zhou.github.io/2020/03/lc-535-encode-and-decode-tinyurl/">
+<meta property="twitter:url" content="https://yy-zhou.github.io/2020/03/lc-535-encode-and-decode-tinyurl/">
 <meta property="og:site_name" content="Bingo!">
 <meta property="og:description" content="">
 <meta name="twitter:description" content="">
 <meta property="og:locale" content="en-us">
 
   
-    <meta property="article:published_time" content="2020-02-03T00:00:00">
+    <meta property="article:published_time" content="2020-03-31T00:00:00">
   
   
-    <meta property="article:modified_time" content="2020-02-03T00:00:00">
+    <meta property="article:modified_time" content="2020-03-31T00:00:00">
   
   
   
@@ -66,7 +66,7 @@
 
     
 
-    <link rel="canonical" href="https://yy-zhou.github.io/2020/02/lc-535-encode-and-decode-tinyurl/">
+    <link rel="canonical" href="https://yy-zhou.github.io/2020/03/lc-535-encode-and-decode-tinyurl/">
 
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
@@ -236,9 +236,9 @@
   
   <div class="postShorten-meta post-meta">
     
-      <time itemprop="datePublished" datetime="2020-02-03T00:00:00Z">
+      <time itemprop="datePublished" datetime="2020-03-31T00:00:00Z">
         
-  February 3, 2020
+  March 31, 2020
 
       </time>
     
@@ -269,7 +269,19 @@
       <ul>
         <li><a href="#problem-description">Problem description</a></li>
         <li><a href="#method--code">Method &amp; Code</a></li>
-        <li><a href="#follow-up">Follow Up</a></li>
+        <li><a href="#follow-up">Follow Up</a>
+          <ul>
+            <li><a href="#service-clarification">Service clarification</a></li>
+            <li><a href="#calculation">Calculation</a></li>
+            <li><a href="#system-apis">System APIs</a></li>
+            <li><a href="#database-design">Database Design</a></li>
+            <li><a href="#basic-system-design-and-algorithm">Basic System Design and Algorithm</a></li>
+            <li><a href="#data-partitioning-and-replication">Data Partitioning and Replication</a></li>
+            <li><a href="#cache--load-balancer">Cache &amp; Load Balancer</a></li>
+            <li><a href="#optimization">Optimization</a></li>
+            <li><a href="#security-and-permissions">Security and Permissions</a></li>
+          </ul>
+        </li>
       </ul>
     </li>
   </ul>
@@ -317,15 +329,128 @@
     <span style="color:#f92672">}</span>
 <span style="color:#f92672">}</span>
 </code></pre></div><h2 id="follow-up">Follow Up</h2>
-<p>This is also a system design problem. Situations can be considered in this problem are:</p>
+<p>This could be a common system design problem. The basic system design flow is as following:</p>
+<h3 id="service-clarification">Service clarification</h3>
+<p>What is the purpose of system? What kind of function should be considered during the design?</p>
 <ol>
-<li>Data amount.</li>
-<li>QPS.</li>
-<li>Improvement.</li>
+<li>Generate shorten URL.</li>
+<li>Redirect shorten URL to the original URL.</li>
+<li>Customizable expiration time.</li>
 </ol>
-<p>First of all, if the total data amount is quite large, then database sharding is expected, since one single database may not be able to handle this amount of data. But the cost of data consistency and sharding complexity should be considered as well.</p>
-<p>Second, if the QPS is too large, then the load balance should be considered, since one machine may not be able to handle the amount of QPS, and will lead to timeout at client, which is not a good user experience. Also, the disadvantage of load balance is the data consistency, especially if the replication is used. And the system complexity should be considered as well.</p>
-<p>Finally, some improvement can be used if distributed architecture is used. First is cache. Store the previous result in cache will significantly increase system performance. The evict policy depends on the type of request. If the request is time-related, like real-time trending, then the LRU cache can be considered. If the request is content-relating, depend on previous frequency, then LFU cache can be considered. Second is the bloom filter, it will filter out request that requesting data not existing in database. Bloom filter will not only improve performance, but also protect system by reducing invalid request.</p>
+<h3 id="calculation">Calculation</h3>
+<h4 id="traffic-estimates">Traffic estimates</h4>
+<p>Assuming there will be 500M new URL shortenings per month, with 100:1 read/write ratio, we can expect 50B redirections during the same period:</p>
+<p>$100 * 500M =&gt; 50B$</p>
+<p>Queries Per Second (QPS) for the service:</p>
+<p>New URLs shortenings per second:</p>
+<p>$`500 million / (30 days * 24 hours * 3600 seconds) = ~200 URLs/s$</p>
+<p>Considering 100:1 read/write ratio, URLs redirections per second will be:</p>
+<p>$100 * 200 URLs/s = 20K/s$</p>
+<h4 id="storage-estimates">Storage estimates</h4>
+<p>Assume the service store every URL shortening request (and associated shortened link) for 5 years. Since it is expected to have 500M new URLs every month, the total number of objects to store will be 30 billion:</p>
+<p>$500 million * 5 years * 12 months = 30 billion$</p>
+<p>Assuming each stored object will be approximately 500 bytes. 15TB of total storage are required:</p>
+<p>$30 billion * 500 bytes = 15 TB$</p>
+<h4 id="bandwidth-estimates">Bandwidth estimates</h4>
+<p>For write requests, since 200 new URLs are expected in every second, total incoming data for the service will be 100KB per second:</p>
+<p>$200 * 500 bytes = 100 KB/s$</p>
+<p>For read requests, since every second the service expecting ~20K URLs redirections, total outgoing data for the service would be 10MB per second:</p>
+<p>$20K * 500 bytes = ~10 MB/s$</p>
+<h4 id="memory-estimates">Memory estimates</h4>
+<p>To build a cache for the service that caches the hottest URL, the memory size should be considered. Follow the 80-20 rule, 20% of URLs generate 80% of traffic. The top 20% URL can be cached.</p>
+<p>Since the service will have 20K requests per second, we will be getting 1.7 billion requests per day:</p>
+<p>$20K * 3600 seconds * 24 hours = ~1.7 billion$</p>
+<p>To cache 20% of these requests, the total memory size should be 170GB.</p>
+<p>$0.2 * 1.7 billion * 500 bytes = ~170GB$</p>
+<p>One thing to note here is that since there will be a lot of duplicate requests (of the same URL), therefore, the actual memory usage will be less than 170GB.</p>
+<h3 id="system-apis">System APIs</h3>
+<h4 id="create">Create</h4>
+<pre><code>createURL(api_dev_key, original_url, custom_alias=None, user _name=None, expire_date=None)
+</code></pre><p>Parameters:</p>
+<p><code>api_dev_key (string)</code>: The API developer key of a registered account. This will be used to, among other things, throttle users based on their allocated quota.</p>
+<p><code>original_url (string)</code>: Original URL to be shortened.</p>
+<p><code>custom_alias (string)</code>: Optional custom key for the URL.</p>
+<p><code>user_name (string)</code>: Optional user name to be used in the encoding. expire_date (string): Optional expiration date for the shortened URL.</p>
+<p>Returns: (string)</p>
+<p>A successful insertion returns the shortened URL; otherwise, it returns an error code.</p>
+<h4 id="delete">Delete</h4>
+<pre><code>deleteURL(api_dev_key, url_key)
+</code></pre><p>Where “url_key” is a string representing the shortened URL to be retrieved. A successful deletion returns ‘URL Removed’.</p>
+<h3 id="database-design">Database Design</h3>
+<p>A few observations about the nature of the data storage:</p>
+<ol>
+<li>billions of records will be stored.</li>
+<li>Each object stored is small (less than 1K).</li>
+<li>There are no relationships between records—other than storing which user created a URL.</li>
+<li>The service is read-heavy.</li>
+</ol>
+<p>Database Schema:</p>
+<p><img src="../../../img/image-20200331110023688.png" alt="image-20200331110023688"></p>
+<p>Since it is anticipated of storing billions of rows, and the objects have no relationship, a NoSQL key-value store like DynamoDB or MongoDB can be applied.</p>
+<h3 id="basic-system-design-and-algorithm">Basic System Design and Algorithm</h3>
+<h4 id="encoding-actual-url">Encoding actual URL</h4>
+<p>Function: MD5 or SHA256</p>
+<p>Issue:</p>
+<ol>
+<li>If multiple users enter the same URL, they can get the same shortened URL, which is not acceptable.</li>
+<li>What if parts of the URL are URL-encoded?</li>
+</ol>
+<p>Workaround:</p>
+<p>Append an increasing sequence number to each input URL to make it unique, and then generate a hash of it.</p>
+<p>Problem for the workaround:</p>
+<ol>
+<li>Overflow.</li>
+<li>Appending an increasing sequence number will also impact the performance of the service.</li>
+</ol>
+<h4 id="generating-keys-offline">Generating keys offline</h4>
+<p>Use a standalone Key Generation Service (KGS) to generate key for user. Whenever the service want to shorten a URL, it will just take one of the already-generated keys and use it. KGS will make sure all the keys inserted into key-DB are unique.</p>
+<p>Concurrency problem:</p>
+<p>Servers can use KGS to read/mark keys in the database. KGS can use two tables to store keys: one for keys that are not used yet, and one for all the used keys. As soon as KGS gives keys to one of the servers, it can move them to the used keys table. KGS can always keep some keys in memory so that it can quickly provide them whenever a server needs them.</p>
+<p>KGS also has to make sure not to give the same key to multiple servers. For that, it must synchronize (or get a lock on) the data structure holding the keys before removing keys from it and giving them to a server.</p>
+<p>Database size:</p>
+<p>$6 (characters per key) * 68.7B (unique keys) = 412 GB$</p>
+<p>Single failure of KGS:</p>
+<p>Having a standby replica of KGS. Whenever the primary server dies, the standby server can take over to generate and provide keys.</p>
+<h3 id="data-partitioning-and-replication">Data Partitioning and Replication</h3>
+<ol>
+<li>Range Based Partitioning: unbalanced DB server.</li>
+<li>Hash-Based Partitioning: still lead to overhead problem. Solution: consistent hashing.</li>
+</ol>
+<h3 id="cache--load-balancer">Cache &amp; Load Balancer</h3>
+<p>Cache evict policy: LRU.</p>
+<p>Add a Load balancing layer at three places in system:</p>
+<ol>
+<li>
+<p>Between Clients and Application servers</p>
+</li>
+<li>
+<p>Between Application Servers and database servers</p>
+</li>
+<li>
+<p>Between Application Servers and Cache servers</p>
+</li>
+</ol>
+<p>The service could use a simple Round Robin approach that distributes incoming requests equally among backend servers. This LB is simple to implement and does not introduce any overhead. Another benefit of this approach is that if a server is dead, LB will take it out of the rotation and will stop sending any traffic to it.</p>
+<p>A problem with Round Robin LB is that we don’t take the server load into consideration. If a server is overloaded or slow, the LB will not stop sending new requests to that server. To handle this, a more intelligent LB solution can be placed that periodically queries the backend server about its load and adjusts traffic based on that.</p>
+<h3 id="optimization">Optimization</h3>
+<h4 id="purging-or-db-cleanup">Purging or DB cleanup</h4>
+<ol>
+<li>Whenever a user tries to access an expired link, the service can delete the link and return an error to the user.</li>
+<li>A separate Cleanup service can run periodically to remove expired links from our storage and cache. This service should be very lightweight and can be scheduled to run only when the user traffic is expected to be low.</li>
+<li>The service can have a default expiration time for each link (e.g., two years).</li>
+<li>After removing an expired link, the service can put the key back in the key-DB to be reused.</li>
+<li>Should the system remove links that haven’t been visited in some length of time, such as six months? This could be tricky. Since storage is getting cheap, the links can be kept forever.</li>
+</ol>
+<h4 id="statistics">Statistics</h4>
+<ol>
+<li>Country of the visitor.</li>
+<li>Date and time of access.</li>
+<li>Web page that refers the click.</li>
+<li>Browser, or platform from where the page was accessed.</li>
+</ol>
+<h3 id="security-and-permissions">Security and Permissions</h3>
+<p>Can users create private URLs or allow a particular set of users to access a URL?</p>
+<p>The service can store the permission level (public/private) with each URL in the database. It can also create a separate table to store UserIDs that have permission to see a specific URL. If a user does not have permission and tries to access a URL, the service can send an error (HTTP 401) back. Given that the service storing our data in a NoSQL wide-column database like Cassandra, the key for the table storing permissions would be the ‘Hash’ (or the KGS generated ‘key’). The columns will store the UserIDs of those users that have the permission to see the URL.</p>
               
             </div>
           </div>
@@ -340,7 +465,7 @@
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2020/02/lc-164-392-bucket-sort/" data-tooltip="LC 164 392 - Bucket Sort">
+                <a class="post-action-btn btn btn--disabled">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -348,7 +473,7 @@
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2020/02/lc-189-1260-rotate-1d-2d-array/" data-tooltip="LC 189 1260 - Rotate 1D, 2D Array">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2020/03/lc-11-88-125-151-186-283-344-345-977-1023-1221-1332-basic-two-pointers-problems/" data-tooltip="LC 11 88 125 151 186 283 344 345 977 1023 1221 1332 - Basic Two Pointers Problems">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
@@ -398,7 +523,7 @@
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2020/02/lc-164-392-bucket-sort/" data-tooltip="LC 164 392 - Bucket Sort">
+                <a class="post-action-btn btn btn--disabled">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -406,7 +531,7 @@
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2020/02/lc-189-1260-rotate-1d-2d-array/" data-tooltip="LC 189 1260 - Rotate 1D, 2D Array">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2020/03/lc-11-88-125-151-186-283-344-345-977-1023-1221-1332-basic-two-pointers-problems/" data-tooltip="LC 11 88 125 151 186 283 344 345 977 1023 1221 1332 - Basic Two Pointers Problems">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
