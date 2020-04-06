@@ -1,8 +1,6 @@
-# Static Pages of My Blog
+# Static Files of Blog
 
-## Link
-
-Home page: [My Blog](https://yy-zhou.github.io)
+[Home page](https://yy-zhou.github.io)
 
 ## What's inside this repository?
 
