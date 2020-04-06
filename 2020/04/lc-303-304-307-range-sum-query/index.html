@@ -13,20 +13,20 @@
 
 <meta property="og:description" content="">
 <meta property="og:type" content="article">
-<meta property="og:title" content="LC 307 - Range Sum Query - Mutable">
-<meta name="twitter:title" content="LC 307 - Range Sum Query - Mutable">
-<meta property="og:url" content="https://yy-zhou.github.io/2019/06/lc-307-range-sum-query-mutable/">
-<meta property="twitter:url" content="https://yy-zhou.github.io/2019/06/lc-307-range-sum-query-mutable/">
+<meta property="og:title" content="LC 303 304 307 - Range Sum Query">
+<meta name="twitter:title" content="LC 303 304 307 - Range Sum Query">
+<meta property="og:url" content="https://yy-zhou.github.io/2020/04/lc-303-304-307-range-sum-query/">
+<meta property="twitter:url" content="https://yy-zhou.github.io/2020/04/lc-303-304-307-range-sum-query/">
 <meta property="og:site_name" content="Bingo!">
 <meta property="og:description" content="">
 <meta name="twitter:description" content="">
 <meta property="og:locale" content="en-us">
 
   
-    <meta property="article:published_time" content="2019-06-14T00:00:00">
+    <meta property="article:published_time" content="2020-04-05T00:00:00">
   
   
-    <meta property="article:modified_time" content="2019-06-14T00:00:00">
+    <meta property="article:modified_time" content="2020-04-05T00:00:00">
   
   
   
@@ -37,6 +37,10 @@
   
     
       <meta property="article:tag" content="Segment Tree">
+    
+      <meta property="article:tag" content="Prefix Sum">
+    
+      <meta property="article:tag" content="Dynamic Programming">
     
   
 
@@ -57,14 +61,14 @@
   <meta property="twitter:image" content="https://yy-zhou.github.io/img/avatar.jpg">
 
 
-    <title>LC 307 - Range Sum Query - Mutable</title>
+    <title>LC 303 304 307 - Range Sum Query</title>
 
     <link rel="icon" href="https://yy-zhou.github.io/favicon.png">
     
 
     
 
-    <link rel="canonical" href="https://yy-zhou.github.io/2019/06/lc-307-range-sum-query-mutable/">
+    <link rel="canonical" href="https://yy-zhou.github.io/2020/04/lc-303-304-307-range-sum-query/">
 
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
@@ -228,15 +232,15 @@
             <div class="post-header main-content-wrap text-left">
   
     <h1 class="post-title" itemprop="headline">
-      LC 307 - Range Sum Query - Mutable
+      LC 303 304 307 - Range Sum Query
     </h1>
   
   
   <div class="postShorten-meta post-meta">
     
-      <time itemprop="datePublished" datetime="2019-06-14T00:00:00Z">
+      <time itemprop="datePublished" datetime="2020-04-05T00:00:00Z">
         
-  June 14, 2019
+  April 5, 2020
 
       </time>
     
@@ -257,17 +261,150 @@
             <div class="main-content-wrap">
               <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
   <ul>
-    <li><a href="#range-sum-query---mutable">Range Sum Query - Mutable</a>
+    <li><a href="#303-range-sum-query---immutable">303. Range Sum Query - Immutable</a>
       <ul>
         <li><a href="#problem-description">Problem description</a></li>
         <li><a href="#method--code">Method &amp; Code</a></li>
       </ul>
     </li>
+    <li><a href="#304-range-sum-query-2d---immutable">304. Range Sum Query 2D - Immutable</a>
+      <ul>
+        <li><a href="#problem-description-1">Problem description</a></li>
+        <li><a href="#method--code-1">Method &amp; Code</a></li>
+      </ul>
+    </li>
+    <li><a href="#307-range-sum-query---mutable">307. Range Sum Query - Mutable</a>
+      <ul>
+        <li><a href="#problem-description-2">Problem description</a></li>
+        <li><a href="#method--code-2">Method &amp; Code</a></li>
+      </ul>
+    </li>
   </ul>
 </nav>
-<h1 id="range-sum-query---mutable">Range Sum Query - Mutable</h1>
-<p>Link: <a href="https://leetcode.com/problems/range-sum-query-mutable">Range Sum Query - Mutable</a></p>
+<h1 id="303-range-sum-query---immutable">303. Range Sum Query - Immutable</h1>
+<p>Link: <a href="https://leetcode.com/problems/range-sum-query-immutable/">Range Sum Query - Immutable</a></p>
 <h2 id="problem-description">Problem description</h2>
+<p>Given an integer array <em>nums</em>, find the sum of the elements between indices <em>i</em> and <em>j</em> (<em>i</em> ≤ <em>j</em>), inclusive.</p>
+<p><strong>Example:</strong></p>
+<pre><code>Given nums = [-2, 0, 3, -5, 2, -1]
+
+sumRange(0, 2) -&gt; 1
+sumRange(2, 5) -&gt; -1
+sumRange(0, 5) -&gt; -3
+</code></pre><p><strong>Note:</strong></p>
+<ol>
+<li>You may assume that the array does not change.</li>
+<li>There are many calls to <em>sumRange</em> function.</li>
+</ol>
+<h2 id="method--code">Method &amp; Code</h2>
+<p>Prefix sum.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">NumArray</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">private</span> HashMap<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">,</span> Integer<span style="color:#f92672">&gt;</span> m<span style="color:#f92672">;</span>
+
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * Prefix sum.
+</span><span style="color:#75715e">     *
+</span><span style="color:#75715e">     * @param nums given array
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">NumArray</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> nums<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        m <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashMap<span style="color:#f92672">&lt;&gt;();</span>
+        <span style="color:#66d9ef">int</span> end <span style="color:#f92672">=</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">,</span> prefix <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+        m<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(-</span>1<span style="color:#f92672">,</span> 0<span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> end<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+            prefix <span style="color:#f92672">+=</span> nums<span style="color:#f92672">[</span>i<span style="color:#f92672">];</span>
+            m<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>i<span style="color:#f92672">,</span> prefix<span style="color:#f92672">);</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * Find the sum of the elements between indices i and j (i ≤ j), inclusive.
+</span><span style="color:#75715e">     *
+</span><span style="color:#75715e">     * @param i start index
+</span><span style="color:#75715e">     * @param j end index
+</span><span style="color:#75715e">     * @return sum of the elements between indices i and j (i ≤ j), inclusive
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">sumRange</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> j<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+
+        <span style="color:#66d9ef">return</span> m<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>j<span style="color:#f92672">)</span> <span style="color:#f92672">-</span> m<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h1 id="304-range-sum-query-2d---immutable">304. Range Sum Query 2D - Immutable</h1>
+<p>Link: <a href="https://leetcode.com/problems/range-sum-query-2d-immutable/">Range Sum Query 2D - Immutable</a></p>
+<h2 id="problem-description-1">Problem description</h2>
+<p>Given a 2D matrix <em>matrix</em>, find the sum of the elements inside the rectangle defined by its upper left corner (<em>row</em>1, <em>col</em>1) and lower right corner (<em>row</em>2, <em>col</em>2).</p>
+<p><img src="../../../img/range_sum_query_2d.png" alt="Range Sum Query 2D">
+The above rectangle (with the red border) is defined by (row1, col1) = <strong>(2, 1)</strong> and (row2, col2) = <strong>(4, 3)</strong>, which contains sum = <strong>8</strong>.</p>
+<p><strong>Example:</strong></p>
+<pre><code>Given matrix = [
+  [3, 0, 1, 4, 2],
+  [5, 6, 3, 2, 1],
+  [1, 2, 0, 1, 5],
+  [4, 1, 0, 1, 7],
+  [1, 0, 3, 0, 5]
+]
+
+sumRegion(2, 1, 4, 3) -&gt; 8
+sumRegion(1, 1, 2, 2) -&gt; 11
+sumRegion(1, 2, 2, 4) -&gt; 12
+</code></pre><p><strong>Note:</strong></p>
+<ol>
+<li>You may assume that the matrix does not change.</li>
+<li>There are many calls to <em>sumRegion</em> function.</li>
+<li>You may assume that <em>row</em>1 ≤ <em>row</em>2 and <em>col</em>1 ≤ <em>col</em>2.</li>
+</ol>
+<h2 id="method--code-1">Method &amp; Code</h2>
+<p>For each cell <code>matrix[i][j]</code>, the sum cover all cells from <code>matrix[0][0]</code> to <code>matrix[i][j]</code> is as follows:</p>
+<pre><code>sum[i][j] = sum[i - 1][j] + sum[i][j - 1] - sum[i - 1][j - 1] + matrix[i][j]
+</code></pre><ul>
+<li><code>sum[i][j]</code> is the sum cover all cells from <code>matrix[0][0]</code> to <code>matrix[i][j]</code>.</li>
+<li><code>sum[i - 1][j] + sum[i][j - 1]</code> will calculate the area of <code>sum[i - 1][j - 1]</code> twice, which should be reduced.</li>
+</ul>
+<p>Finally, add value at <code>matrix[i][j]</code>. This is the sum of all cells from <code>matrix[0][0]</code> to <code>matrix[i][j]</code> (<code>i * j</code> elements).</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">NumMatrix</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[][]</span> sum<span style="color:#f92672">;</span>
+
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * For each cell matrix[i][j], the sum cover all cells from matrix[0][0] to matrix[i][j] is as follows:
+</span><span style="color:#75715e">     * sum[i][j] = sum[i - 1][j] + sum[i][j - 1] - sum[i - 1][j - 1] + matrix[i][j]
+</span><span style="color:#75715e">     * sum[i][j] is the sum cover all cells from matrix[0][0] to matrix[i][j].
+</span><span style="color:#75715e">     * sum[i - 1][j] + sum[i][j - 1] will calculate the area of sum[i - 1][j - 1] twice, which should be reduced.
+</span><span style="color:#75715e">     * Finally, add value at matrix[i][j].
+</span><span style="color:#75715e">     *
+</span><span style="color:#75715e">     * @param matrix given matrix
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">NumMatrix</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[][]</span> matrix<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+
+        <span style="color:#75715e">/* Corner case */</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>matrix <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">||</span> matrix<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">==</span> 0 <span style="color:#f92672">||</span> matrix<span style="color:#f92672">[</span>0<span style="color:#f92672">].</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+
+        <span style="color:#66d9ef">int</span> m <span style="color:#f92672">=</span> matrix<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">,</span> n <span style="color:#f92672">=</span> matrix<span style="color:#f92672">[</span>0<span style="color:#f92672">].</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span>
+        sum <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>m <span style="color:#f92672">+</span> 1<span style="color:#f92672">][</span>n <span style="color:#f92672">+</span> 1<span style="color:#f92672">];</span>
+
+        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;=</span> m<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> j <span style="color:#f92672">&lt;=</span> n<span style="color:#f92672">;</span> j<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+                sum<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> sum<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">][</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> sum<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>j <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span> <span style="color:#f92672">-</span> sum<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">][</span>j <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> matrix<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">][</span>j <span style="color:#f92672">-</span> 1<span style="color:#f92672">];</span>
+            <span style="color:#f92672">}</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * Return the range sum (row1, col1), (row2, col2).
+</span><span style="color:#75715e">     *
+</span><span style="color:#75715e">     * @param row1 (row1, col1)
+</span><span style="color:#75715e">     * @param col1 (row1, col1)
+</span><span style="color:#75715e">     * @param row2 (row2, col2)
+</span><span style="color:#75715e">     * @param col2 (row2, col2)
+</span><span style="color:#75715e">     * @return sum in the range (row1, col1), (row2, col2)
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">sumRegion</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> row1<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> col1<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> row2<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> col2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> sum<span style="color:#f92672">[</span>row2 <span style="color:#f92672">+</span> 1<span style="color:#f92672">][</span>col2 <span style="color:#f92672">+</span> 1<span style="color:#f92672">]</span> <span style="color:#f92672">-</span> sum<span style="color:#f92672">[</span>row1<span style="color:#f92672">][</span>col2 <span style="color:#f92672">+</span> 1<span style="color:#f92672">]</span> <span style="color:#f92672">-</span> sum<span style="color:#f92672">[</span>row2 <span style="color:#f92672">+</span> 1<span style="color:#f92672">][</span>col1<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> sum<span style="color:#f92672">[</span>row1<span style="color:#f92672">][</span>col1<span style="color:#f92672">];</span>
+    <span style="color:#f92672">}</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h1 id="307-range-sum-query---mutable">307. Range Sum Query - Mutable</h1>
+<p>Link: <a href="https://leetcode.com/problems/range-sum-query-mutable">Range Sum Query - Mutable</a></p>
+<h2 id="problem-description-2">Problem description</h2>
 <p>Given an integer array <em>nums</em>, find the sum of the elements between indices <em>i</em> and <em>j</em> (<em>i</em> ≤ <em>j</em>), inclusive.</p>
 <p>The <em>update(i, val)</em> function modifies <em>nums</em> by updating the element at index <em>i</em> to <em>val</em>.</p>
 <p><strong>Example:</strong></p>
@@ -281,7 +418,7 @@ sumRange(0, 2) -&gt; 8
 <li>The array is only modifiable by the <em>update</em> function.</li>
 <li>You may assume the number of calls to <em>update</em> and <em>sumRange</em> function is distributed evenly.</li>
 </ol>
-<h2 id="method--code">Method &amp; Code</h2>
+<h2 id="method--code-2">Method &amp; Code</h2>
 <p>This array problem can be solved by creating a segment tree and storing the range sum within it.</p>
 <p><strong>Tree construction</strong></p>
 <p>The root node is the sum of whole array. The right child and left child is binary divided the array into two parts and the value in children are the sum of corresponding sum in range.</p>
@@ -453,6 +590,10 @@ sumRange(0, 2) -&gt; 8
                     
   <a class="tag tag--primary tag--small" href="https://yy-zhou.github.io/tags/segment-tree/">Segment Tree</a>
 
+  <a class="tag tag--primary tag--small" href="https://yy-zhou.github.io/tags/prefix-sum/">Prefix Sum</a>
+
+  <a class="tag tag--primary tag--small" href="https://yy-zhou.github.io/tags/dynamic-programming/">Dynamic Programming</a>
+
                   </div>
                 
               
@@ -464,7 +605,7 @@ sumRange(0, 2) -&gt; 8
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2019/06/lc-207-210-1136-topological-sort/" data-tooltip="LC 207 210 1136 - Topological Sort">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2020/04/lc-3-76-209-424-727-1156-sliding-window-finding-minimum-or-maximum-window-size/" data-tooltip="LC 3 76 209 424 727 1156 - Sliding Window: Finding Minimum or Maximum Window Size">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -472,7 +613,7 @@ sumRange(0, 2) -&gt; 8
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2019/06/lc-315-count-of-smaller-numbers-after-self/" data-tooltip="LC 315 - Count of Smaller Numbers After Self">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2020/04/lc-145-590-226-112-113-437-298-549-1120-tree-traversal-postorder/" data-tooltip="LC 145 590 226 112 113 437 298 549 1120 - Tree Traversal: Postorder">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
@@ -522,7 +663,7 @@ sumRange(0, 2) -&gt; 8
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2019/06/lc-207-210-1136-topological-sort/" data-tooltip="LC 207 210 1136 - Topological Sort">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2020/04/lc-3-76-209-424-727-1156-sliding-window-finding-minimum-or-maximum-window-size/" data-tooltip="LC 3 76 209 424 727 1156 - Sliding Window: Finding Minimum or Maximum Window Size">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -530,7 +671,7 @@ sumRange(0, 2) -&gt; 8
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2019/06/lc-315-count-of-smaller-numbers-after-self/" data-tooltip="LC 315 - Count of Smaller Numbers After Self">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2020/04/lc-145-590-226-112-113-437-298-549-1120-tree-traversal-postorder/" data-tooltip="LC 145 590 226 112 113 437 298 549 1120 - Tree Traversal: Postorder">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
