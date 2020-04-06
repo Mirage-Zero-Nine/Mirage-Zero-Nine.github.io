@@ -309,11 +309,16 @@ findMedian() -&gt; 2
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MedianFinder</span> <span style="color:#f92672">{</span>
     <span style="color:#66d9ef">private</span> Queue<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> small<span style="color:#f92672">;</span>
     <span style="color:#66d9ef">private</span> Queue<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> large<span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">boolean</span> even <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
-
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">boolean</span> even <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>        <span style="color:#75715e">// initially, the size of 2 heaps are both 0, which is even
+</span><span style="color:#75715e"></span>
     <span style="color:#75715e">/**
-</span><span style="color:#75715e">     * Use two heaps.
-</span><span style="color:#75715e">     * Max heap stores smaller part of stream, min heap stores larger part of stream.
+</span><span style="color:#75715e">     * Keeping two heaps. One min heap stores larger part of stream and one max heap stores smaller part.
+</span><span style="color:#75715e">     * The size of two heaps should be same, or the large heap can have one more elements when total size is odd.
+</span><span style="color:#75715e">     * There are two conditions:
+</span><span style="color:#75715e">     * 1. If two heaps have same size, then add one element to large heap.
+</span><span style="color:#75715e">     * 2. If total size is odd, then add one element to small heap.
+</span><span style="color:#75715e">     * The adding process is, for example, add one element to large heap:
+</span><span style="color:#75715e">     * Add given element to small heap first, then poll out the top of small heap, add the polled element to large heap.
 </span><span style="color:#75715e">     */</span>
     <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">MedianFinder</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
         small <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> PriorityQueue<span style="color:#f92672">&lt;&gt;((</span>o1<span style="color:#f92672">,</span> o2<span style="color:#f92672">)</span> <span style="color:#f92672">-&gt;</span> o2 <span style="color:#f92672">-</span> o1<span style="color:#f92672">);</span>               <span style="color:#75715e">// max heap stores smaller part of stream
@@ -332,13 +337,13 @@ findMedian() -&gt; 2
 </span><span style="color:#75715e">     * @param num given integer
 </span><span style="color:#75715e">     */</span>
     <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">addNum</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> num<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>even<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>     <span style="color:#75715e">// if total size is even, then add value to large heap
-</span><span style="color:#75715e"></span>            large<span style="color:#f92672">.</span><span style="color:#a6e22e">offer</span><span style="color:#f92672">(</span>num<span style="color:#f92672">);</span>
-            small<span style="color:#f92672">.</span><span style="color:#a6e22e">offer</span><span style="color:#f92672">(</span>large<span style="color:#f92672">.</span><span style="color:#a6e22e">poll</span><span style="color:#f92672">());</span>      <span style="color:#75715e">// move top of large heap (smallest in larger part of stream) to small heap
-</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
-            small<span style="color:#f92672">.</span><span style="color:#a6e22e">offer</span><span style="color:#f92672">(</span>num<span style="color:#f92672">);</span>
-            large<span style="color:#f92672">.</span><span style="color:#a6e22e">offer</span><span style="color:#f92672">(</span>small<span style="color:#f92672">.</span><span style="color:#a6e22e">poll</span><span style="color:#f92672">());</span>      <span style="color:#75715e">// move top of small heap to large heap
-</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>even<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            small<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>num<span style="color:#f92672">);</span>
+            large<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>small<span style="color:#f92672">.</span><span style="color:#a6e22e">poll</span><span style="color:#f92672">());</span>
+        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+            large<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>num<span style="color:#f92672">);</span>
+            small<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>large<span style="color:#f92672">.</span><span style="color:#a6e22e">poll</span><span style="color:#f92672">());</span>
+        <span style="color:#f92672">}</span>
 
         even <span style="color:#f92672">=</span> <span style="color:#f92672">!</span>even<span style="color:#f92672">;</span>
     <span style="color:#f92672">}</span>
@@ -354,7 +359,7 @@ findMedian() -&gt; 2
         <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>even<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
             <span style="color:#66d9ef">return</span> <span style="color:#f92672">(</span>small<span style="color:#f92672">.</span><span style="color:#a6e22e">peek</span><span style="color:#f92672">()</span> <span style="color:#f92672">+</span> large<span style="color:#f92672">.</span><span style="color:#a6e22e">peek</span><span style="color:#f92672">())</span> <span style="color:#f92672">/</span> 2<span style="color:#f92672">.</span><span style="color:#a6e22e">0</span><span style="color:#f92672">;</span>
         <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">return</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">double</span><span style="color:#f92672">)</span> small<span style="color:#f92672">.</span><span style="color:#a6e22e">peek</span><span style="color:#f92672">();</span>       <span style="color:#75715e">// if total length is odd, then return top of small heap
+            <span style="color:#66d9ef">return</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">double</span><span style="color:#f92672">)</span> large<span style="color:#f92672">.</span><span style="color:#a6e22e">peek</span><span style="color:#f92672">();</span>       <span style="color:#75715e">// if total length is odd, then return top of small heap
 </span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
     <span style="color:#f92672">}</span>
 <span style="color:#f92672">}</span>
