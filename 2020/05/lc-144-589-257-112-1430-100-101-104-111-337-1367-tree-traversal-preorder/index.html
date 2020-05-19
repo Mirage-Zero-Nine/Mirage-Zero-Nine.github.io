@@ -323,6 +323,12 @@
         <li><a href="#method--code-10">Method &amp; Code</a></li>
       </ul>
     </li>
+    <li><a href="#1448-count-good-nodes-in-binary-tree">1448. Count Good Nodes in Binary Tree</a>
+      <ul>
+        <li><a href="#problem-description-11">Problem description</a></li>
+        <li><a href="#method--code-11">Method &amp; Code</a></li>
+      </ul>
+    </li>
   </ul>
 </nav>
 <h1 id="144-binary-tree-preorder-traversal">144. Binary Tree Preorder Traversal</h1>
@@ -918,6 +924,77 @@ Explanation: There is no path in the binary tree that contains all the elements 
     <span style="color:#f92672">}</span>
 
     <span style="color:#66d9ef">return</span> search<span style="color:#f92672">(</span>root<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">,</span> head<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">)</span> <span style="color:#f92672">||</span> search<span style="color:#f92672">(</span>root<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span><span style="color:#f92672">,</span> head<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">);</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h1 id="1448-count-good-nodes-in-binary-tree">1448. Count Good Nodes in Binary Tree</h1>
+<p>Link: <a href="https://leetcode.com/problems/count-good-nodes-in-binary-tree/">Count Good Nodes in Binary Tree</a></p>
+<h2 id="problem-description-11">Problem description</h2>
+<p>Given a binary tree <code>root</code>, a node <em>X</em> in the tree is named <strong>good</strong> if in the path from root to <em>X</em> there are no nodes with a value <em>greater than</em> X.</p>
+<p>Return the number of <strong>good</strong> nodes in the binary tree.</p>
+<p><strong>Example 1:</strong></p>
+<p><strong><img src="../../../img/test_sample_1.png" alt="img"></strong></p>
+<pre><code>Input: root = [3,1,4,3,null,1,5]
+Output: 4
+Explanation: Nodes in blue are good.
+Root Node (3) is always a good node.
+Node 4 -&gt; (3,4) is the maximum value in the path starting from the root.
+Node 5 -&gt; (3,4,5) is the maximum value in the path
+Node 3 -&gt; (3,1,3) is the maximum value in the path.
+</code></pre><p><strong>Example 2:</strong></p>
+<p><strong><img src="../../../img/test_sample_2.png" alt="img"></strong></p>
+<pre><code>Input: root = [3,3,null,4,2]
+Output: 3
+Explanation: Node 2 -&gt; (3, 3, 2) is not good, because &quot;3&quot; is higher than it.
+</code></pre><p><strong>Example 3:</strong></p>
+<pre><code>Input: root = [1]
+Output: 1
+Explanation: Root is considered as good.
+</code></pre><p><strong>Constraints:</strong></p>
+<ul>
+<li>The number of nodes in the binary tree is in the range <code>[1, 10^5]</code>.</li>
+<li>Each node&rsquo;s value is between <code>[-10^4, 10^4]</code>.</li>
+</ul>
+<h2 id="method--code-11">Method &amp; Code</h2>
+<p>Pre-order traverse with current path&rsquo;s max tree node value. If current node is larger than the max value, then one good node is found and max path value should be updated.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Pre-order traverse with current path&#39;s max tree node value.
+</span><span style="color:#75715e"> * If current node is larger than the max value, then one good node is found and max path value should be updated.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param root root of the tree
+</span><span style="color:#75715e"> * @return the number of good nodes in the binary tree
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">goodNodes</span><span style="color:#f92672">(</span>TreeNode root<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+
+    <span style="color:#75715e">/* Corner case */</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>root <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> 0<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> count <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>1<span style="color:#f92672">];</span>
+    dfs<span style="color:#f92672">(</span>root<span style="color:#f92672">,</span> root<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span><span style="color:#f92672">,</span> count<span style="color:#f92672">);</span>
+
+    <span style="color:#66d9ef">return</span> count<span style="color:#f92672">[</span>0<span style="color:#f92672">];</span>
+<span style="color:#f92672">}</span>
+
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Pre-order traverse to count the number of good nodes.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param root  root of the tree
+</span><span style="color:#75715e"> * @param max   max value in current path
+</span><span style="color:#75715e"> * @param count int array stores the number of good nodes during the traverse
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">dfs</span><span style="color:#f92672">(</span>TreeNode root<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> max<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> count<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>root <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>root<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span> <span style="color:#f92672">&gt;=</span> max<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        count<span style="color:#f92672">[</span>0<span style="color:#f92672">]++;</span>
+        max <span style="color:#f92672">=</span> root<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+
+    dfs<span style="color:#f92672">(</span>root<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">,</span> max<span style="color:#f92672">,</span> count<span style="color:#f92672">);</span>
+    dfs<span style="color:#f92672">(</span>root<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span><span style="color:#f92672">,</span> max<span style="color:#f92672">,</span> count<span style="color:#f92672">);</span>
 <span style="color:#f92672">}</span>
 </code></pre></div>
               
