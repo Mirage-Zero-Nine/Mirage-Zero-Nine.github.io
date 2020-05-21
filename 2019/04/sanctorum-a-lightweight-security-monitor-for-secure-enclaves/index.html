@@ -13,20 +13,20 @@
 
 <meta property="og:description" content="">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Deploy uWSGI and Nginx">
-<meta name="twitter:title" content="Deploy uWSGI and Nginx">
-<meta property="og:url" content="https://yy-zhou.github.io/2018/12/deploy-uwsgi-and-nginx/">
-<meta property="twitter:url" content="https://yy-zhou.github.io/2018/12/deploy-uwsgi-and-nginx/">
+<meta property="og:title" content="Sanctorum: A lightweight security monitor for secure enclaves">
+<meta name="twitter:title" content="Sanctorum: A lightweight security monitor for secure enclaves">
+<meta property="og:url" content="https://yy-zhou.github.io/2019/04/sanctorum-a-lightweight-security-monitor-for-secure-enclaves/">
+<meta property="twitter:url" content="https://yy-zhou.github.io/2019/04/sanctorum-a-lightweight-security-monitor-for-secure-enclaves/">
 <meta property="og:site_name" content="Bingo!">
 <meta property="og:description" content="">
 <meta name="twitter:description" content="">
 <meta property="og:locale" content="en-us">
 
   
-    <meta property="article:published_time" content="2018-12-17T00:00:00">
+    <meta property="article:published_time" content="2019-04-07T00:00:00">
   
   
-    <meta property="article:modified_time" content="2018-12-17T00:00:00">
+    <meta property="article:modified_time" content="2019-04-07T00:00:00">
   
   
   
@@ -53,14 +53,14 @@
   <meta property="twitter:image" content="https://yy-zhou.github.io/img/avatar.jpg">
 
 
-    <title>Deploy uWSGI and Nginx</title>
+    <title>Sanctorum: A lightweight security monitor for secure enclaves</title>
 
     <link rel="icon" href="https://yy-zhou.github.io/favicon.png">
     
 
     
 
-    <link rel="canonical" href="https://yy-zhou.github.io/2018/12/deploy-uwsgi-and-nginx/">
+    <link rel="canonical" href="https://yy-zhou.github.io/2019/04/sanctorum-a-lightweight-security-monitor-for-secure-enclaves/">
 
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
@@ -224,15 +224,15 @@
             <div class="post-header main-content-wrap text-left">
   
     <h1 class="post-title" itemprop="headline">
-      Deploy uWSGI and Nginx
+      Sanctorum: A lightweight security monitor for secure enclaves
     </h1>
   
   
   <div class="postShorten-meta post-meta">
     
-      <time itemprop="datePublished" datetime="2018-12-17T00:00:00Z">
+      <time itemprop="datePublished" datetime="2019-04-07T00:00:00Z">
         
-  December 17, 2018
+  April 7, 2019
 
       </time>
     
@@ -251,31 +251,51 @@
           
           <div class="post-content markdown" itemprop="articleBody">
             <div class="main-content-wrap">
-              <h1 id="uwsgi">UWSGI</h1>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-ini" data-lang="ini"><span style="color:#66d9ef">[uwsgi]</span>
-<span style="color:#a6e22e">socket</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">127.0.0.1:8001     // uwsgi port</span>
-<span style="color:#a6e22e">chdir</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">/home/www/     //website path</span>
-<span style="color:#a6e22e">wsgi-file</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">manage.py      //flask main program</span>
-<span style="color:#a6e22e">callable</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">app      // app name</span>
-<span style="color:#a6e22e">processes</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">4     </span>
-<span style="color:#a6e22e">threads</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">2     </span>
-<span style="color:#a6e22e">stats</span> <span style="color:#f92672">=</span> <span style="color:#e6db74">127.0.0.1:9191      //stats of uwsgi</span>
-</code></pre></div><p>Saved as <code>uwsgiconfig.ini</code>.</p>
-<p>When start <code>uwsgi</code>, use <code>uwsgi uwsgiconfig.ini</code>.</p>
-<h1 id="nginx-config">NGINX Config</h1>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-nginx" data-lang="nginx"><span style="color:#66d9ef">server</span> {
-    <span style="color:#f92672">listen</span>  <span style="color:#ae81ff">80</span>;
-    <span style="color:#f92672">server_name</span> <span style="color:#ae81ff">142</span><span style="color:#e6db74">.93.70.153</span>; 
-
-    <span style="color:#f92672">location</span> <span style="color:#e6db74">/</span> {
-    <span style="color:#f92672">include</span>      <span style="color:#e6db74">uwsgi_params</span>;
-    <span style="color:#f92672">uwsgi_pass</span>   127.0.0.1:<span style="color:#ae81ff">8001</span>;  <span style="color:#75715e"># point to uwsgi
-</span><span style="color:#75715e"></span>    <span style="color:#f92672">uwsgi_param</span> <span style="color:#e6db74">UWSGI_PYHOME</span> <span style="color:#e6db74">/var/www/dissysproject/venv</span>; <span style="color:#75715e"># point to project venv
-</span><span style="color:#75715e"></span>    <span style="color:#f92672">uwsgi_param</span> <span style="color:#e6db74">UWSGI_CHDIR</span>  <span style="color:#e6db74">/var/www/dissysproject</span>; <span style="color:#75715e"># project path
-</span><span style="color:#75715e"></span>    <span style="color:#f92672">uwsgi_param</span> <span style="color:#e6db74">UWSGI_SCRIPT</span> <span style="color:#e6db74">manage:app</span>; <span style="color:#75715e"># start program and app variable name
-</span><span style="color:#75715e"></span>    }
-}
-</code></pre></div>
+              <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
+  <ul>
+    <li><a href="#sanctorum-a-lightweight-security-monitor-for-secure-enclaves">Sanctorum: A lightweight security monitor for secure enclaves</a>
+      <ul>
+        <li><a href="#sanctorum">Sanctorum</a></li>
+        <li><a href="#enclave">Enclave</a></li>
+        <li><a href="#relationship-between-the-enclave-and-sanctorum">Relationship between the enclave and Sanctorum:</a>
+          <ul>
+            <li><a href="#security-monitor-interface-api">Security Monitor Interface (API)</a></li>
+            <li><a href="#machine-resources-managed-by-sanctorum">Machine Resources managed by Sanctorum</a></li>
+            <li><a href="#enclaves-and-enclave-threads-managed-by-sanctorum">Enclaves and Enclave Threads managed by Sanctorum</a></li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+<h1 id="sanctorum-a-lightweight-security-monitor-for-secure-enclaves">Sanctorum: A lightweight security monitor for secure enclaves</h1>
+<h2 id="sanctorum">Sanctorum</h2>
+<p><strong>Sanctorum</strong> is a <strong>trusted software</strong> that enabling the Sanctum processor.</p>
+<p>It assure the isolation of enclaves by utilizing a small, privileged piece of monitor code in conjunction with partitioned caches and ﬂushing of shared state on context switches. In this way, Sanctorum provide isolation for enclaved processes across either space or time.</p>
+<p>Sanctorum allows enclaves to share hardware resources for performance improvements. Meanwhile, enclave state cannot be impacted by external code in a data dependent manner either directly or indirectly.</p>
+<h2 id="enclave">Enclave</h2>
+<p>An enclave is an isolated process consisting of one or more threads and a exclusive allocation of the machine resources needed by the process: memory (physical pages) and hardware structures (cache lines, etc.).</p>
+<p>Enclaves guarantee integrity and conﬁdentiality for private computations and data in the presence of untrusted privileged software such as an OS or hypervisor. Therefore, enclaves cannot rely on the OS to transparently provide services without potentially violating the integrity and conﬁdentiality of the enclave’s data. Based on that, neither the direct nor the indirect side effects of an enclave’s work are visible to untrusted software, including privileged system software.</p>
+<p>However, truly isolation is not easy when faced with side channel adversaries exploiting leakage from data dependent utilization of shared resources such as caches, OS managed demand paging, or, more recently, speculative execution.</p>
+<h2 id="relationship-between-the-enclave-and-sanctorum">Relationship between the enclave and Sanctorum:</h2>
+<p>Sanctorum <strong>authenticates enclaves</strong> via a cryptographic measurement of their initial state to guaranteeing isolated execution and private state.</p>
+<p>Sanctorum <strong>implements enclaves</strong>, being the security assurance of enclave.</p>
+<h3 id="security-monitor-interface-api">Security Monitor Interface (API)</h3>
+<p>The Sanctorum API is highly concurrent on a multicore processor, and requires transaction semantics for most API calls. After authorizing the caller, Sanctorum uses ﬁne-grained locks, and fails transactions in case of a concurrent operation.</p>
+<p>Sanctorum checks the API call against the machine’s current security policy to ensure SM cannot be asked to violate an enclave, nor allow a malicious enclave to compromise the untrusted system.</p>
+<h3 id="machine-resources-managed-by-sanctorum">Machine Resources managed by Sanctorum</h3>
+<p>Sanctorum enforces invariants over the system software’s allocation of isolated resources (cores, physical memory, cache lines, etc.) to their respective protection domains (Sanctorum itself, untrusted software, and each enclave). Protection domains must be non-overlapping with respect to machine resources in order to guarantee isolation: sharing of resources leaks their availability, and allows indirect observation of private information (as generously exempliﬁed by the recent proliferation of cache timing attacks).</p>
+<p>Furthermore, protection domains must not be allowed to modify resource allocations of other protection domains: a malicious OS would remove a portion of enclave’s memory, and learn private information if the enclave generates a fault.</p>
+<p>But enclave is not static. Enclave may collaborate with the OS to implement the dynamic operations, such as re-allocation of resources, or time-multiplexing of existing resources. As Figure 2 shown above. The process can be described as below:</p>
+<ul>
+<li>A protection domain can block <code>(block_resource(type, rid))</code> a resource it owns</li>
+<li>OS will be able to reclaim or re-allocate to a new owner by cleaning it <code>(clean_resource(type, rid))</code>.</li>
+<li>An existing domain can accept <code>(accept_resource(type, rid))</code> resources the OS offers</li>
+</ul>
+<p>This process completing the transition of the resource to a new protection domain.</p>
+<h3 id="enclaves-and-enclave-threads-managed-by-sanctorum">Enclaves and Enclave Threads managed by Sanctorum</h3>
+<p><strong>Sanctorum implements enclaves</strong>: strongly isolated processes with guarantees of exclusive access to a set of machine resources.</p>
+<p>A minimum enclaves use private physical memory, which use private physical memory. This private physical memory contains enclave private virtual pages and page tables. If enclave implemented by the hardware platform, enclaves will add additional isolation (cache lines, etc.).</p>
               
             </div>
           </div>
@@ -290,7 +310,7 @@
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2019/04/sanctorum-a-lightweight-security-monitor-for-secure-enclaves/" data-tooltip="Sanctorum: A lightweight security monitor for secure enclaves">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2019/05/notes-of-docker/" data-tooltip="Notes of Docker">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -298,7 +318,7 @@
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2018/11/clean-unwanted-files-in-git/" data-tooltip="Clean Unwanted Files in Git">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2018/12/deploy-uwsgi-and-nginx/" data-tooltip="Deploy uWSGI and Nginx">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
@@ -319,7 +339,7 @@
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#">
+          <a class="post-action-btn btn btn--default" href="#table-of-contents">
         
           <i class="fa fa-list"></i>
         </a>
@@ -348,7 +368,7 @@
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2019/04/sanctorum-a-lightweight-security-monitor-for-secure-enclaves/" data-tooltip="Sanctorum: A lightweight security monitor for secure enclaves">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2019/05/notes-of-docker/" data-tooltip="Notes of Docker">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -356,7 +376,7 @@
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2018/11/clean-unwanted-files-in-git/" data-tooltip="Clean Unwanted Files in Git">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2018/12/deploy-uwsgi-and-nginx/" data-tooltip="Deploy uWSGI and Nginx">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
@@ -377,7 +397,7 @@
       
       <li class="post-action">
         
-          <a class="post-action-btn btn btn--default" href="#">
+          <a class="post-action-btn btn btn--default" href="#table-of-contents">
         
           <i class="fa fa-list"></i>
         </a>
