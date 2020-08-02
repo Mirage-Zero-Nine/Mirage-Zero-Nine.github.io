@@ -13,29 +13,31 @@
 
 <meta property="og:description" content="">
 <meta property="og:type" content="article">
-<meta property="og:title" content="LC 937 - Reorder Data in Log Files">
-<meta name="twitter:title" content="LC 937 - Reorder Data in Log Files">
-<meta property="og:url" content="https://yy-zhou.github.io/2020/08/lc-937-reorder-data-in-log-files/">
-<meta property="twitter:url" content="https://yy-zhou.github.io/2020/08/lc-937-reorder-data-in-log-files/">
+<meta property="og:title" content="LC 1537 - Get the Maximum Score">
+<meta name="twitter:title" content="LC 1537 - Get the Maximum Score">
+<meta property="og:url" content="https://yy-zhou.github.io/2020/08/lc-1537-get-the-maximum-score/">
+<meta property="twitter:url" content="https://yy-zhou.github.io/2020/08/lc-1537-get-the-maximum-score/">
 <meta property="og:site_name" content="Bingo!">
 <meta property="og:description" content="">
 <meta name="twitter:description" content="">
 <meta property="og:locale" content="en-us">
 
   
-    <meta property="article:published_time" content="2020-08-01T00:00:00">
+    <meta property="article:published_time" content="2020-08-02T00:00:00">
   
   
-    <meta property="article:modified_time" content="2020-08-01T00:00:00">
+    <meta property="article:modified_time" content="2020-08-02T00:00:00">
   
   
   
     
-      <meta property="article:section" content="String">
-    
-      <meta property="article:section" content="Comparator">
+      <meta property="article:section" content="Array">
     
   
+  
+    
+      <meta property="article:tag" content="Two Pointers/Sliding Window">
+    
   
 
 
@@ -55,14 +57,14 @@
   <meta property="twitter:image" content="https://yy-zhou.github.io/img/avatar.jpg">
 
 
-    <title>LC 937 - Reorder Data in Log Files</title>
+    <title>LC 1537 - Get the Maximum Score</title>
 
     <link rel="icon" href="https://yy-zhou.github.io/favicon.png">
     
 
     
 
-    <link rel="canonical" href="https://yy-zhou.github.io/2020/08/lc-937-reorder-data-in-log-files/">
+    <link rel="canonical" href="https://yy-zhou.github.io/2020/08/lc-1537-get-the-maximum-score/">
 
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
@@ -206,15 +208,15 @@
             <div class="post-header main-content-wrap text-left">
   
     <h1 class="post-title" itemprop="headline">
-      LC 937 - Reorder Data in Log Files
+      LC 1537 - Get the Maximum Score
     </h1>
   
   
   <div class="postShorten-meta post-meta">
     
-      <time itemprop="datePublished" datetime="2020-08-01T00:00:00Z">
+      <time itemprop="datePublished" datetime="2020-08-02T00:00:00Z">
         
-  August 1, 2020
+  August 2, 2020
 
       </time>
     
@@ -223,9 +225,7 @@
   
     <span>in</span>
     
-      <a class="category-link" href="https://yy-zhou.github.io/categories/string">String</a>, 
-    
-      <a class="category-link" href="https://yy-zhou.github.io/categories/comparator">Comparator</a>
+      <a class="category-link" href="https://yy-zhou.github.io/categories/array">Array</a>
     
   
 
@@ -237,7 +237,7 @@
             <div class="main-content-wrap">
               <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
   <ul>
-    <li><a href="#937-reorder-data-in-log-files">937. Reorder Data in Log Files</a>
+    <li><a href="#1537-get-the-maximum-score">1537. Get the Maximum Score</a>
       <ul>
         <li><a href="#problem-description">Problem Description</a></li>
         <li><a href="#method--code">Method &amp; Code</a></li>
@@ -245,62 +245,83 @@
     </li>
   </ul>
 </nav>
-<h1 id="937-reorder-data-in-log-files">937. Reorder Data in Log Files</h1>
-<p>Link: <a href="https://leetcode.com/problems/reorder-data-in-log-files/">Reorder Data in Log Files</a></p>
+<h1 id="1537-get-the-maximum-score">1537. Get the Maximum Score</h1>
+<p>Link: <a href="https://leetcode.com/problems/get-the-maximum-score/">Get the Maximum Score</a></p>
 <h2 id="problem-description">Problem Description</h2>
-<p>You have an array of <code>logs</code>. Each log is a space delimited string of words.</p>
-<p>For each log, the first word in each log is an alphanumeric <em>identifier</em>. Then, either:</p>
+<p>You are given two <strong>sorted</strong> arrays of distinct integers <code>nums1</code> and <code>nums2.</code></p>
+<p>A <strong>valid path</strong> is defined as follows:</p>
 <ul>
-<li>Each word after the identifier will consist only of lowercase letters, or;</li>
-<li>Each word after the identifier will consist only of digits.</li>
+<li>Choose array nums1 or nums2 to traverse (from index-0).</li>
+<li>Traverse the current array from left to right.</li>
+<li>If you are reading any value that is present in <code>nums1</code> and <code>nums2</code> you are allowed to change your path to the other array. (Only one repeated value is considered in the valid path).</li>
 </ul>
-<p>We will call these two varieties of logs <em>letter-logs</em> and <em>digit-logs</em>. It is guaranteed that each log has at least one word after its identifier.</p>
-<p>Reorder the logs so that all of the letter-logs come before any digit-log. The letter-logs are ordered lexicographically ignoring identifier, with the identifier used in case of ties. The digit-logs should be put in their original order.</p>
-<p>Return the final order of the logs.</p>
+<p><em>Score</em> is defined as the sum of uniques values in a valid path.</p>
+<p>Return the maximum <em>score</em> you can obtain of all possible <strong>valid paths</strong>.</p>
+<p>Since the answer may be too large, return it modulo 10^9 + 7.</p>
 <p><strong>Example 1:</strong></p>
-<pre><code>Input: logs = [&quot;dig1 8 1 5 1&quot;,&quot;let1 art can&quot;,&quot;dig2 3 6&quot;,&quot;let2 own kit dig&quot;,&quot;let3 art zero&quot;]
-Output: [&quot;let1 art can&quot;,&quot;let3 art zero&quot;,&quot;let2 own kit dig&quot;,&quot;dig1 8 1 5 1&quot;,&quot;dig2 3 6&quot;]
+<p><strong><img src="../../../img/sample_1_1893.png" alt="img"></strong></p>
+<pre><code>Input: nums1 = [2,4,5,8,10], nums2 = [4,6,8,9]
+Output: 30
+Explanation: Valid paths:
+[2,4,5,8,10], [2,4,5,8,9], [2,4,6,8,9], [2,4,6,8,10],  (starting from nums1)
+[4,6,8,9], [4,5,8,10], [4,5,8,9], [4,6,8,10]    (starting from nums2)
+The maximum is obtained with the path in green [2,4,6,8,10].
+</code></pre><p><strong>Example 2:</strong></p>
+<pre><code>Input: nums1 = [1,3,5,7,9], nums2 = [3,5,100]
+Output: 109
+Explanation: Maximum sum is obtained with the path [1,3,5,100].
+</code></pre><p><strong>Example 3:</strong></p>
+<pre><code>Input: nums1 = [1,2,3,4,5], nums2 = [6,7,8,9,10]
+Output: 40
+Explanation: There are no common elements between nums1 and nums2.
+Maximum sum is obtained with the path [6,7,8,9,10].
+</code></pre><p><strong>Example 4:</strong></p>
+<pre><code>Input: nums1 = [1,4,5,8,9,11,19], nums2 = [2,3,4,11,12]
+Output: 61
 </code></pre><p><strong>Constraints:</strong></p>
-<ol>
-<li><code>0 &lt;= logs.length &lt;= 100</code></li>
-<li><code>3 &lt;= logs[i].length &lt;= 100</code></li>
-<li><code>logs[i]</code> is guaranteed to have an identifier, and a word after the identifier.</li>
-</ol>
+<ul>
+<li><code>1 &lt;= nums1.length &lt;= 10^5</code></li>
+<li><code>1 &lt;= nums2.length &lt;= 10^5</code></li>
+<li><code>1 &lt;= nums1[i], nums2[i] &lt;= 10^7</code></li>
+<li><code>nums1</code> and <code>nums2</code> are strictly increasing.</li>
+</ul>
 <h2 id="method--code">Method &amp; Code</h2>
-<p>Sort the array. The comparator has this order:</p>
-<ol>
-<li>If both log has letter word, simply compare the word, if the word is same, compare the identifier.</li>
-<li>Otherwise, if both word are digit word, then keep the order.</li>
-<li>If anyone of the word is letter word, the letter word has higher priority (return -1).</li>
-</ol>
+<p>Two pointers. Note that the array is sorted.</p>
+<ul>
+<li>If there are no common point in both arrays, then there are only two paths.</li>
+<li>If there is a common point, then there will be a selection.</li>
+</ul>
+<p>Hence, calculate the sum of path before the common point. When the common point reached, add the larger path sum to final result and start again for new path sum.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Sort the array.
-</span><span style="color:#75715e"> * The comparator has this order:
-</span><span style="color:#75715e"> * 1. If both log has letter word, simply compare the word, if the word is same, compare the identifier.
-</span><span style="color:#75715e"> * 2. Otherwise, if both word are digit word, then keep the order.
-</span><span style="color:#75715e"> * 3. If anyone of the word is letter word, the letter word has higher priority (return -1).
+</span><span style="color:#75715e"> * Two pointers. Note that the array is sorted.
+</span><span style="color:#75715e"> * If there are no common point in both arrays, then there are only two paths.
+</span><span style="color:#75715e"> * If there is a common point, then there will be a selection.
+</span><span style="color:#75715e"> * Hence, calculate the sum of path before the common point.
+</span><span style="color:#75715e"> * When the common point reached, add the larger path sum to final result and start again for new path sum.
 </span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param logs given log list
-</span><span style="color:#75715e"> * @return sorted array
+</span><span style="color:#75715e"> * @param nums1 first array
+</span><span style="color:#75715e"> * @param nums2 second array
+</span><span style="color:#75715e"> * @return the maximum score can obtain of all possible valid paths
 </span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">public</span> String<span style="color:#f92672">[]</span> <span style="color:#a6e22e">reorderLogFiles</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[]</span> logs<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-
-    Arrays<span style="color:#f92672">.</span><span style="color:#a6e22e">sort</span><span style="color:#f92672">(</span>logs<span style="color:#f92672">,</span> <span style="color:#f92672">(</span>o1<span style="color:#f92672">,</span> o2<span style="color:#f92672">)</span> <span style="color:#f92672">-&gt;</span> <span style="color:#f92672">{</span>
-        String<span style="color:#f92672">[]</span> log1 <span style="color:#f92672">=</span> o1<span style="color:#f92672">.</span><span style="color:#a6e22e">split</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34; &#34;</span><span style="color:#f92672">,</span> 2<span style="color:#f92672">),</span> log2 <span style="color:#f92672">=</span> o2<span style="color:#f92672">.</span><span style="color:#a6e22e">split</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34; &#34;</span><span style="color:#f92672">,</span> 2<span style="color:#f92672">);</span>
-
-        <span style="color:#66d9ef">boolean</span> isDigit1 <span style="color:#f92672">=</span> Character<span style="color:#f92672">.</span><span style="color:#a6e22e">isDigit</span><span style="color:#f92672">(</span>log1<span style="color:#f92672">[</span>1<span style="color:#f92672">].</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>0<span style="color:#f92672">)),</span> isDigit2 <span style="color:#f92672">=</span> Character<span style="color:#f92672">.</span><span style="color:#a6e22e">isDigit</span><span style="color:#f92672">(</span>log2<span style="color:#f92672">[</span>1<span style="color:#f92672">].</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>0<span style="color:#f92672">));</span>
-
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>isDigit1 <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">!</span>isDigit2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>       <span style="color:#75715e">// if both starts with letter, then this has higher priority
-</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>log1<span style="color:#f92672">[</span>1<span style="color:#f92672">].</span><span style="color:#a6e22e">equals</span><span style="color:#f92672">(</span>log2<span style="color:#f92672">[</span>1<span style="color:#f92672">]))</span> <span style="color:#f92672">{</span>
-                <span style="color:#66d9ef">return</span> log1<span style="color:#f92672">[</span>0<span style="color:#f92672">].</span><span style="color:#a6e22e">compareTo</span><span style="color:#f92672">(</span>log2<span style="color:#f92672">[</span>0<span style="color:#f92672">]);</span>
-            <span style="color:#f92672">}</span>
-            <span style="color:#66d9ef">return</span> log1<span style="color:#f92672">[</span>1<span style="color:#f92672">].</span><span style="color:#a6e22e">compareTo</span><span style="color:#f92672">(</span>log2<span style="color:#f92672">[</span>1<span style="color:#f92672">]);</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">maxSum</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> nums1<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> nums2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">int</span> m <span style="color:#f92672">=</span> nums1<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">,</span> n <span style="color:#f92672">=</span> nums2<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">,</span> index1 <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> index2 <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">long</span> sum1 <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> sum2 <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> out <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> mod <span style="color:#f92672">=</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">long</span><span style="color:#f92672">)</span> 1e9 <span style="color:#f92672">+</span> 7<span style="color:#f92672">;</span>     <span style="color:#75715e">// mod path sum at the end
+</span><span style="color:#75715e"></span>
+    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>index1 <span style="color:#f92672">&lt;</span> m <span style="color:#f92672">||</span> index2 <span style="color:#f92672">&lt;</span> n<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>index1 <span style="color:#f92672">&lt;</span> m <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">(</span>index2 <span style="color:#f92672">==</span> n <span style="color:#f92672">||</span> nums1<span style="color:#f92672">[</span>index1<span style="color:#f92672">]</span> <span style="color:#f92672">&lt;</span> nums2<span style="color:#f92672">[</span>index2<span style="color:#f92672">]))</span> <span style="color:#f92672">{</span>     <span style="color:#75715e">// array is sorted
+</span><span style="color:#75715e"></span>            sum1 <span style="color:#f92672">+=</span> nums1<span style="color:#f92672">[</span>index1<span style="color:#f92672">++];</span>
+        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>index2 <span style="color:#f92672">&lt;</span> n <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">(</span>index1 <span style="color:#f92672">==</span> m <span style="color:#f92672">||</span> nums1<span style="color:#f92672">[</span>index1<span style="color:#f92672">]</span> <span style="color:#f92672">&gt;</span> nums2<span style="color:#f92672">[</span>index2<span style="color:#f92672">]))</span> <span style="color:#f92672">{</span>
+            sum2 <span style="color:#f92672">+=</span> nums2<span style="color:#f92672">[</span>index2<span style="color:#f92672">++];</span>
+        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+            out <span style="color:#f92672">+=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>sum1<span style="color:#f92672">,</span> sum2<span style="color:#f92672">)</span> <span style="color:#f92672">+</span> nums1<span style="color:#f92672">[</span>index1<span style="color:#f92672">];</span>
+            index1<span style="color:#f92672">++;</span>       <span style="color:#75715e">// skip the common value
+</span><span style="color:#75715e"></span>            index2<span style="color:#f92672">++;</span>
+            sum1 <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>       <span style="color:#75715e">// reset path sum for next path
+</span><span style="color:#75715e"></span>            sum2 <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
         <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
 
-        <span style="color:#66d9ef">return</span> isDigit1 <span style="color:#f92672">?</span> <span style="color:#f92672">(</span>isDigit2 <span style="color:#f92672">?</span> 0 <span style="color:#f92672">:</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">:</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">;</span>      <span style="color:#75715e">// if both digit, remain the order in list (return 0)
-</span><span style="color:#75715e"></span>    <span style="color:#f92672">});</span>
-
-    <span style="color:#66d9ef">return</span> logs<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">return</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">)</span> <span style="color:#f92672">((</span>out <span style="color:#f92672">+</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>sum1<span style="color:#f92672">,</span> sum2<span style="color:#f92672">))</span> <span style="color:#f92672">%</span> mod<span style="color:#f92672">);</span>
 <span style="color:#f92672">}</span>
 </code></pre></div>
               
@@ -308,6 +329,16 @@ Output: [&quot;let1 art can&quot;,&quot;let3 art zero&quot;,&quot;let2 own kit d
           </div>
           <div id="post-footer" class="post-footer main-content-wrap">
             
+              
+                
+                
+                  <div class="post-footer-tags">
+                    <span class="text-color-light text-small">TAGGED IN</span><br/>
+                    
+  <a class="tag tag--primary tag--small" href="https://yy-zhou.github.io/tags/two-pointers/sliding-window/">Two Pointers/Sliding Window</a>
+
+                  </div>
+                
               
             
             <div class="post-actions-wrap">
@@ -317,7 +348,7 @@ Output: [&quot;let1 art can&quot;,&quot;let3 art zero&quot;,&quot;let2 own kit d
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2020/08/lc-1537-get-the-maximum-score/" data-tooltip="LC 1537 - Get the Maximum Score">
+                <a class="post-action-btn btn btn--disabled">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -325,7 +356,7 @@ Output: [&quot;let1 art can&quot;,&quot;let3 art zero&quot;,&quot;let2 own kit d
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2020/07/lc-1488-avoid-flood-in-the-city/" data-tooltip="LC 1488 - Avoid Flood in The City">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2020/08/lc-937-reorder-data-in-log-files/" data-tooltip="LC 937 - Reorder Data in Log Files">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
@@ -375,7 +406,7 @@ Output: [&quot;let1 art can&quot;,&quot;let3 art zero&quot;,&quot;let2 own kit d
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2020/08/lc-1537-get-the-maximum-score/" data-tooltip="LC 1537 - Get the Maximum Score">
+                <a class="post-action-btn btn btn--disabled">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -383,7 +414,7 @@ Output: [&quot;let1 art can&quot;,&quot;let3 art zero&quot;,&quot;let2 own kit d
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2020/07/lc-1488-avoid-flood-in-the-city/" data-tooltip="LC 1488 - Avoid Flood in The City">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://yy-zhou.github.io/2020/08/lc-937-reorder-data-in-log-files/" data-tooltip="LC 937 - Reorder Data in Log Files">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
