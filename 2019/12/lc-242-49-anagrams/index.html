@@ -240,7 +240,12 @@
     <li><a href="#valid-anagram">Valid Anagram</a>
       <ul>
         <li><a href="#problem-description">Problem Description</a></li>
-        <li><a href="#method--code">Method &amp; Code</a></li>
+        <li><a href="#method--code">Method &amp; Code</a>
+          <ul>
+            <li><a href="#array">Array</a></li>
+            <li><a href="#hash-map">Hash Map</a></li>
+          </ul>
+        </li>
       </ul>
     </li>
     <li><a href="#group-anagrams">Group Anagrams</a>
@@ -266,6 +271,7 @@ You may assume the string contains only lowercase alphabets.</p>
 <p><strong>Follow up:</strong>
 What if the inputs contain unicode characters? How would you adapt your solution to such case?</p>
 <h2 id="method--code">Method &amp; Code</h2>
+<h3 id="array">Array</h3>
 <p>Use an array to store each char&rsquo;s appearance in string in alphabet order.</p>
 <ul>
 <li>If one char appeared in first string, then +1 in array&rsquo;s represented position.</li>
@@ -274,7 +280,7 @@ What if the inputs contain unicode characters? How would you adapt your solution
 <p>If two strings are anagram, all chars will appear exact same times. Hence, all elements in array should be 0.</p>
 <p>Finally, check each element in array, if there is one element in array is not 0, return false.</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Use an array to store each char&#39;s appearance in string in alphabet order.
+</span><span style="color:#75715e"> * Keep an array to store each char&#39;s appearance in string.
 </span><span style="color:#75715e"> * If one char appeared in first string, then +1 in array&#39;s represented position.
 </span><span style="color:#75715e"> * If one char appeared in second string, -1 in array&#39;s represented position.
 </span><span style="color:#75715e"> * If two strings are anagram, all chars will appear exact same times. Hence, all elements in array should be 0.
@@ -306,6 +312,48 @@ What if the inputs contain unicode characters? How would you adapt your solution
     <span style="color:#f92672">}</span>
 
     <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h3 id="hash-map">Hash Map</h3>
+<p>Use hash map instead of int array. It is slower than use an array to record char appearance. But it can be used in larger char set like Unicode.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Use hash map instead of int array.
+</span><span style="color:#75715e"> * It is slower than use an array to record char appearance. But it can be used in larger char set like Unicode.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param s input string
+</span><span style="color:#75715e"> * @param t input string
+</span><span style="color:#75715e"> * @return whether they are anagram.
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">isAnagramWithHashMap</span><span style="color:#f92672">(</span>String s<span style="color:#f92672">,</span> String t<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+
+    <span style="color:#75715e">/* Corner case*/</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">()</span> <span style="color:#f92672">!=</span> t<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">()</span> <span style="color:#f92672">==</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>0<span style="color:#f92672">)</span> <span style="color:#f92672">==</span> t<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>0<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+
+    Map<span style="color:#f92672">&lt;</span>Character<span style="color:#f92672">,</span> Integer<span style="color:#f92672">&gt;</span> m <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashMap<span style="color:#f92672">&lt;&gt;();</span>
+    <span style="color:#66d9ef">int</span> countUsedChar <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">();</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+        m<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">),</span> m<span style="color:#f92672">.</span><span style="color:#a6e22e">getOrDefault</span><span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">),</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">+</span> 1<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> t<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">();</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">char</span> currentChar <span style="color:#f92672">=</span> t<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">);</span>
+        Integer currentCount <span style="color:#f92672">=</span> m<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>currentChar<span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>currentCount <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">||</span> currentCount <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>currentCount <span style="color:#f92672">==</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            countUsedChar<span style="color:#f92672">++;</span>        <span style="color:#75715e">// this char in both s and t now have same occurrence
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
+        m<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>t<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">),</span> currentCount <span style="color:#f92672">-</span> 1<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">return</span> countUsedChar <span style="color:#f92672">==</span> m<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">();</span>
 <span style="color:#f92672">}</span>
 </code></pre></div><h1 id="group-anagrams">Group Anagrams</h1>
 <p>Link: <a href="https://leetcode.com/problems/group-anagrams">Group Anagrams</a></p>
