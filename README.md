@@ -1,6 +1,6 @@
 # Static Files of Blog
 
-[Home page](https://yy-zhou.github.io)
+[Home page](https://Mirage-Zero-Nine.github.io)
 
 ## What's inside this repository?
 
