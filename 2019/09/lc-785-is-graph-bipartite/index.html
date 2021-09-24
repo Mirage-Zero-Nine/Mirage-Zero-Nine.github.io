@@ -291,8 +291,8 @@ We cannot find a way to divide the set of nodes into two independent subsets.
 </ul>
 <h2 id="method--code">Method &amp; Code</h2>
 <p>Two approaches: DFS and BFS.</p>
+<p>The core idea is that if the graph can be colored by only 2 colors and each adjacent node has different color, then it is bipartite.</p>
 <h3 id="dfs">DFS</h3>
-<p>If the graph can be colored by only 2 colors and each adjacent node has different color, then it is bipartite.</p>
 <p>Start from each uncolored node and color current node with 1 color. If the connected node is colored with same color, then current graph is not bipartite.</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
 </span><span style="color:#75715e"> * DFS to color the graph.
@@ -302,13 +302,20 @@ We cannot find a way to divide the set of nodes into two independent subsets.
 </span><span style="color:#75715e"> * @return return true if and only if it is bipartite
 </span><span style="color:#75715e"> */</span>
 <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">isBipartite</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[][]</span> graph<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-    <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> color <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>graph<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">];</span>
+
+    <span style="color:#75715e">/* Corner case */</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>graph <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">||</span> graph<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">==</span> 0 <span style="color:#f92672">||</span> graph<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> nodeColor <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>graph<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">];</span>
 
     <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> graph<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>color<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">==</span> 0 <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">!</span>dfs<span style="color:#f92672">(</span>color<span style="color:#f92672">,</span> graph<span style="color:#f92672">,</span> i<span style="color:#f92672">,</span> 1<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>        <span style="color:#75715e">// two colors: 1 and -1
-</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>nodeColor<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">==</span> 0 <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">!</span>dfs<span style="color:#f92672">(</span>graph<span style="color:#f92672">,</span> nodeColor<span style="color:#f92672">,</span> i<span style="color:#f92672">,</span> 1<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
         <span style="color:#f92672">}</span>
     <span style="color:#f92672">}</span>
+
     <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
 <span style="color:#f92672">}</span>
 
@@ -318,20 +325,25 @@ We cannot find a way to divide the set of nodes into two independent subsets.
 </span><span style="color:#75715e"> * @param color record each node&#39;s color
 </span><span style="color:#75715e"> * @param graph given edges list
 </span><span style="color:#75715e"> * @param node  current node
-</span><span style="color:#75715e"> * @param c     color to be used in current node
+</span><span style="color:#75715e"> * @param color color to be used in current node
 </span><span style="color:#75715e"> * @return return true if and only if it can be colored by only 2 colors
 </span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">dfs</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> color<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[][]</span> graph<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> node<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> c<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>color<span style="color:#f92672">[</span>node<span style="color:#f92672">]</span> <span style="color:#f92672">!=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">return</span> color<span style="color:#f92672">[</span>node<span style="color:#f92672">]</span> <span style="color:#f92672">==</span> c<span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-    color<span style="color:#f92672">[</span>node<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> c<span style="color:#f92672">;</span>
+<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">dfs</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[][]</span> graph<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> nodeColor<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> node<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> color<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> graph<span style="color:#f92672">[</span>node<span style="color:#f92672">].</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>dfs<span style="color:#f92672">(</span>color<span style="color:#f92672">,</span> graph<span style="color:#f92672">,</span> graph<span style="color:#f92672">[</span>node<span style="color:#f92672">][</span>i<span style="color:#f92672">],</span> <span style="color:#f92672">-</span>c<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>nodeColor<span style="color:#f92672">[</span>node<span style="color:#f92672">]</span> <span style="color:#f92672">!=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#75715e">/*
+</span><span style="color:#75715e">         * If current node has color, then it should be the same color.
+</span><span style="color:#75715e">         * If not, the other color would be used, which is conflicted to not using same color in adjacent nodes. */</span>
+        <span style="color:#66d9ef">return</span> nodeColor<span style="color:#f92672">[</span>node<span style="color:#f92672">]</span> <span style="color:#f92672">==</span> color<span style="color:#f92672">;</span>
+    <span style="color:#f92672">}</span>
+
+    nodeColor<span style="color:#f92672">[</span>node<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> color<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> n <span style="color:#f92672">:</span> graph<span style="color:#f92672">[</span>node<span style="color:#f92672">])</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>dfs<span style="color:#f92672">(</span>graph<span style="color:#f92672">,</span> nodeColor<span style="color:#f92672">,</span> n<span style="color:#f92672">,</span> <span style="color:#f92672">-</span>color<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
             <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
         <span style="color:#f92672">}</span>
     <span style="color:#f92672">}</span>
+
     <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
 <span style="color:#f92672">}</span>
 </code></pre></div><h3 id="bfs">BFS</h3>
