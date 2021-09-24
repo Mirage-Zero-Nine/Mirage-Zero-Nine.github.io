@@ -293,26 +293,49 @@ cache.get(4);       // returns 4
 <p>Each time, when <code>get</code> method is called,  call <code>lastUsed</code> if the node exist in hash map that stores all existing nodes. Move this node from its previous position to the head of list (as last recent used node).</p>
 <p>When <code>put</code> is called, check if cache size reaches the limit of capacity. If so, call <code>popEnd()</code> to remove the last node in list. Also remove the node in hash map. Then add the new node to the head of list.</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">LRUCache</span> <span style="color:#f92672">{</span>
-    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> capacity<span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">private</span> DoubleLinkedNode head<span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">private</span> DoubleLinkedNode end<span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> c <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>      <span style="color:#75715e">// count total cache size
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">private</span> HashMap<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">,</span> DoubleLinkedNode<span style="color:#f92672">&gt;</span> map <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashMap<span style="color:#f92672">&lt;&gt;();</span>
+
+    <span style="color:#75715e">/**
+</span><span style="color:#75715e">     * Two-way linked cache entry class.
+</span><span style="color:#75715e">     */</span>
+    <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Entry</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> key<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">int</span> value<span style="color:#f92672">;</span>
+        Entry previous<span style="color:#f92672">;</span>
+        Entry next<span style="color:#f92672">;</span>
+
+        <span style="color:#75715e">/**
+</span><span style="color:#75715e">         * Initialization of entry
+</span><span style="color:#75715e">         *
+</span><span style="color:#75715e">         * @param key   cache key
+</span><span style="color:#75715e">         * @param value cache value
+</span><span style="color:#75715e">         */</span>
+        Entry<span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> key<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> value<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">key</span> <span style="color:#f92672">=</span> key<span style="color:#f92672">;</span>
+            <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">value</span> <span style="color:#f92672">=</span> value<span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> capacity<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> HashMap<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">,</span> Entry<span style="color:#f92672">&gt;</span> map<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> count<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> Entry end <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Entry<span style="color:#f92672">(-</span>1<span style="color:#f92672">,</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> Entry head <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Entry<span style="color:#f92672">(-</span>1<span style="color:#f92672">,</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">);</span>
 
     <span style="color:#75715e">/**
 </span><span style="color:#75715e">     * Structure of cache:
-</span><span style="color:#75715e">     * Basically, use node to store key and value. A hash map in this cache is to store key-node pair for searching key.
-</span><span style="color:#75715e">     * Cache works as a double linked list, which contains previous Cache and next Cache.
-</span><span style="color:#75715e">     * When &lt;code&gt;put&lt;/code&gt; operation finds a existing key, move corresponding node to top of the list.
-</span><span style="color:#75715e">     * When put a new pair into cache, first check size to avoid oversize, then add this node to top of list.
-</span><span style="color:#75715e">     * If cache is oversize, then remove last Cache in double linked list. And remove corresponding key as well.
+</span><span style="color:#75715e">     * Basically, use a two-way linked list to store cache entry.
+</span><span style="color:#75715e">     * The order of the list is newest at the top, oldest at the end.
+</span><span style="color:#75715e">     * Keep a hashmap as index table to achieve O(1) look up complexity.
+</span><span style="color:#75715e">     * For &lt;code&gt;get&lt;/code&gt; operation, if entry exists, remove the entry from list, then move it to the top of the list.
+</span><span style="color:#75715e">     * If &lt;code&gt;put&lt;/code&gt; operation found an existing key, update map, remove entry from list, then move to the top.
+</span><span style="color:#75715e">     * Otherwise, check the capacity.
+</span><span style="color:#75715e">     * If over-sized, remove the last used entry (GC required) from list and index map. Then add the new entry.
 </span><span style="color:#75715e">     *
 </span><span style="color:#75715e">     * @param capacity cache capacity
 </span><span style="color:#75715e">     */</span>
-    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">LRUCache_146</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> capacity<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">LRUCache</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> capacity<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
         <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">capacity</span> <span style="color:#f92672">=</span> capacity<span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">head</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> DoubleLinkedNode<span style="color:#f92672">();</span>
-        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">end</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> DoubleLinkedNode<span style="color:#f92672">();</span>
+        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">map</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashMap<span style="color:#f92672">&lt;&gt;();</span>
         head<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span> <span style="color:#f92672">=</span> end<span style="color:#f92672">;</span>
         end<span style="color:#f92672">.</span><span style="color:#a6e22e">previous</span> <span style="color:#f92672">=</span> head<span style="color:#f92672">;</span>
     <span style="color:#f92672">}</span>
@@ -324,13 +347,13 @@ cache.get(4);       // returns 4
 </span><span style="color:#75715e">     * @return corresponding value, or -1.
 </span><span style="color:#75715e">     */</span>
     <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">get</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> key<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        DoubleLinkedNode temp <span style="color:#f92672">=</span> map<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>key<span style="color:#f92672">);</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>temp <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        Entry e <span style="color:#f92672">=</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">map</span><span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>key<span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>e <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
             <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">;</span>
         <span style="color:#f92672">}</span>
-
-        lastUsed<span style="color:#f92672">(</span>temp<span style="color:#f92672">);</span>
-        <span style="color:#66d9ef">return</span> temp<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span><span style="color:#f92672">;</span>
+        removeEntryFromList<span style="color:#f92672">(</span>e<span style="color:#f92672">);</span>
+        insertToHead<span style="color:#f92672">(</span>e<span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">return</span> e<span style="color:#f92672">.</span><span style="color:#a6e22e">value</span><span style="color:#f92672">;</span>
     <span style="color:#f92672">}</span>
 
     <span style="color:#75715e">/**
@@ -342,84 +365,66 @@ cache.get(4);       // returns 4
 </span><span style="color:#75715e">     */</span>
     <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">put</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> key<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> value<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-        DoubleLinkedNode node <span style="color:#f92672">=</span> map<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>key<span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>map<span style="color:#f92672">.</span><span style="color:#a6e22e">containsKey</span><span style="color:#f92672">(</span>key<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+            Entry e <span style="color:#f92672">=</span> map<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>key<span style="color:#f92672">);</span>
+            e<span style="color:#f92672">.</span><span style="color:#a6e22e">value</span> <span style="color:#f92672">=</span> value<span style="color:#f92672">;</span>
+            removeEntryFromList<span style="color:#f92672">(</span>e<span style="color:#f92672">);</span>
+            insertToHead<span style="color:#f92672">(</span>e<span style="color:#f92672">);</span>
 
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>node <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            DoubleLinkedNode add <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> DoubleLinkedNode<span style="color:#f92672">();</span>
-            add<span style="color:#f92672">.</span><span style="color:#a6e22e">key</span> <span style="color:#f92672">=</span> key<span style="color:#f92672">;</span>
-            add<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span> <span style="color:#f92672">=</span> value<span style="color:#f92672">;</span>
-            c<span style="color:#f92672">++;</span>
-            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>c <span style="color:#f92672">&gt;</span> capacity<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                map<span style="color:#f92672">.</span><span style="color:#a6e22e">remove</span><span style="color:#f92672">(</span>popEnd<span style="color:#f92672">().</span><span style="color:#a6e22e">key</span><span style="color:#f92672">);</span>
-                c<span style="color:#f92672">--;</span>
-            <span style="color:#f92672">}</span>
-            map<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>key<span style="color:#f92672">,</span> add<span style="color:#f92672">);</span>
-            insertHead<span style="color:#f92672">(</span>add<span style="color:#f92672">);</span>
-        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
-            map<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>key<span style="color:#f92672">).</span><span style="color:#a6e22e">val</span> <span style="color:#f92672">=</span> value<span style="color:#f92672">;</span>
-            lastUsed<span style="color:#f92672">(</span>map<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>key<span style="color:#f92672">));</span>
+            <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
         <span style="color:#f92672">}</span>
+
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(++</span>count <span style="color:#f92672">&gt;</span> capacity<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            Entry last <span style="color:#f92672">=</span> end<span style="color:#f92672">.</span><span style="color:#a6e22e">previous</span><span style="color:#f92672">;</span>
+            map<span style="color:#f92672">.</span><span style="color:#a6e22e">remove</span><span style="color:#f92672">(</span>last<span style="color:#f92672">.</span><span style="color:#a6e22e">key</span><span style="color:#f92672">);</span>
+            removeEntryFromList<span style="color:#f92672">(</span>last<span style="color:#f92672">);</span>
+            deleteEntry<span style="color:#f92672">(</span>last<span style="color:#f92672">);</span>
+            count<span style="color:#f92672">--;</span>
+        <span style="color:#f92672">}</span>
+        Entry e <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Entry<span style="color:#f92672">(</span>key<span style="color:#f92672">,</span> value<span style="color:#f92672">);</span>
+        map<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>key<span style="color:#f92672">,</span> e<span style="color:#f92672">);</span>
+        insertToHead<span style="color:#f92672">(</span>e<span style="color:#f92672">);</span>
     <span style="color:#f92672">}</span>
 
     <span style="color:#75715e">/**
-</span><span style="color:#75715e">     * Move given node next to head node.
-</span><span style="color:#75715e">     * Note that this node will be removed.
+</span><span style="color:#75715e">     * Insert an entry to the top of the list (last recent used).
+</span><span style="color:#75715e">     * Note that it regard every entry as new entry, no previous connection to it.
 </span><span style="color:#75715e">     *
-</span><span style="color:#75715e">     * @param node last node in list
+</span><span style="color:#75715e">     * @param e entry to be inserted
 </span><span style="color:#75715e">     */</span>
-    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">lastUsed</span><span style="color:#f92672">(</span>DoubleLinkedNode node<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        removeNode<span style="color:#f92672">(</span>node<span style="color:#f92672">);</span>
-        insertHead<span style="color:#f92672">(</span>node<span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">insertToHead</span><span style="color:#f92672">(</span>Entry e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        e<span style="color:#f92672">.</span><span style="color:#a6e22e">previous</span> <span style="color:#f92672">=</span> head<span style="color:#f92672">;</span>
+        e<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span> <span style="color:#f92672">=</span> head<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">;</span>
+        head<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span> <span style="color:#f92672">=</span> e<span style="color:#f92672">;</span>
+        e<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">.</span><span style="color:#a6e22e">previous</span> <span style="color:#f92672">=</span> e<span style="color:#f92672">;</span>
     <span style="color:#f92672">}</span>
 
     <span style="color:#75715e">/**
-</span><span style="color:#75715e">     * Remove given node.
+</span><span style="color:#75715e">     * Delete entry from cache.
+</span><span style="color:#75715e">     * This is actually not required in Java.
 </span><span style="color:#75715e">     *
-</span><span style="color:#75715e">     * @param node given Cache
+</span><span style="color:#75715e">     * @param e entry to be removed
 </span><span style="color:#75715e">     */</span>
-    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">removeNode</span><span style="color:#f92672">(</span>DoubleLinkedNode node<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        DoubleLinkedNode pre <span style="color:#f92672">=</span> node<span style="color:#f92672">.</span><span style="color:#a6e22e">previous</span><span style="color:#f92672">;</span>
-        DoubleLinkedNode next <span style="color:#f92672">=</span> node<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">;</span>
-        pre<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span> <span style="color:#f92672">=</span> next<span style="color:#f92672">;</span>
-        next<span style="color:#f92672">.</span><span style="color:#a6e22e">previous</span> <span style="color:#f92672">=</span> pre<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">deleteEntry</span><span style="color:#f92672">(</span>Entry e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        e<span style="color:#f92672">.</span><span style="color:#a6e22e">previous</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+        e<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
     <span style="color:#f92672">}</span>
 
     <span style="color:#75715e">/**
-</span><span style="color:#75715e">     * Insert a new node to head.
+</span><span style="color:#75715e">     * Remove (but not delete) an entry from list.
+</span><span style="color:#75715e">     * e.g: a -&gt; b -&gt; c -&gt; =&gt; a -&gt; c, where b is
 </span><span style="color:#75715e">     *
-</span><span style="color:#75715e">     * @param node Cache to be moved
+</span><span style="color:#75715e">     * @param e entry to be removed from list
 </span><span style="color:#75715e">     */</span>
-    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">insertHead</span><span style="color:#f92672">(</span>DoubleLinkedNode node<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        node<span style="color:#f92672">.</span><span style="color:#a6e22e">previous</span> <span style="color:#f92672">=</span> head<span style="color:#f92672">;</span>
-        node<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span> <span style="color:#f92672">=</span> head<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">;</span>
-        head<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">.</span><span style="color:#a6e22e">previous</span> <span style="color:#f92672">=</span> node<span style="color:#f92672">;</span>
-        head<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span> <span style="color:#f92672">=</span> node<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">removeEntryFromList</span><span style="color:#f92672">(</span>Entry e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        e<span style="color:#f92672">.</span><span style="color:#a6e22e">previous</span><span style="color:#f92672">.</span><span style="color:#a6e22e">next</span> <span style="color:#f92672">=</span> e<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">;</span>
+        e<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">.</span><span style="color:#a6e22e">previous</span> <span style="color:#f92672">=</span> e<span style="color:#f92672">.</span><span style="color:#a6e22e">previous</span><span style="color:#f92672">;</span>
+        e<span style="color:#f92672">.</span><span style="color:#a6e22e">previous</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+        e<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
     <span style="color:#f92672">}</span>
-
-    <span style="color:#75715e">/**
-</span><span style="color:#75715e">     * Remove last node in cache based on LRU policy.
-</span><span style="color:#75715e">     * Hash map needs to know which key to remove, hence pop node is required.
-</span><span style="color:#75715e">     *
-</span><span style="color:#75715e">     * @return pop node
-</span><span style="color:#75715e">     */</span>
-    <span style="color:#66d9ef">private</span> DoubleLinkedNode <span style="color:#a6e22e">popEnd</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
-        DoubleLinkedNode old <span style="color:#f92672">=</span> end<span style="color:#f92672">.</span><span style="color:#a6e22e">previous</span><span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">removeNode</span><span style="color:#f92672">(</span>old<span style="color:#f92672">);</span>
-        <span style="color:#66d9ef">return</span> old<span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#75715e">/**
-</span><span style="color:#75715e">     * Node in cache, which is a double linked list.
-</span><span style="color:#75715e">     */</span>
-    <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">DoubleLinkedNode</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> key<span style="color:#f92672">;</span>                        <span style="color:#75715e">// cache key
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> val<span style="color:#f92672">;</span>                        <span style="color:#75715e">// value store in cache
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">public</span> DoubleLinkedNode previous<span style="color:#f92672">;</span>      <span style="color:#75715e">// previous cache block pointer
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">public</span> DoubleLinkedNode next<span style="color:#f92672">;</span>          <span style="color:#75715e">// next cache block pointer
-</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
 
     <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">main</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[]</span> args<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        LRUCache_146 testCache <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> LRUCache_146<span style="color:#f92672">(</span>2<span style="color:#f92672">);</span>
+        LRUCache testCache <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> LRUCache<span style="color:#f92672">(</span>2<span style="color:#f92672">);</span>
 
         testCache<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>1<span style="color:#f92672">,</span> 1<span style="color:#f92672">);</span>
         testCache<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>2<span style="color:#f92672">,</span> 2<span style="color:#f92672">);</span>
