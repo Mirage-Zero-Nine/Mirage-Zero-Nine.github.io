@@ -34,7 +34,7 @@
     
       <meta property="article:tag" content="HashMap/HashSet">
     
-      <meta property="article:tag" content="Two Pointers/Sliding Window">
+      <meta property="article:tag" content="Trie">
     
   
 
@@ -255,8 +255,7 @@ Output: []
 <p>Keep a trie to store all words. Traverse the string, if found a char in the matches any first word in trie, search the string if it is a word.</p>
 <p>If current substring is a word, check if it has been found too many in string. If all words in substring was found with correct count, put index to the output list.</p>
 <p>The time complexity is <code>O(n) * k</code>, where k is the length of each word (all words have same length). Not sure why it runs slow on LeetCode.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java">
-<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> TrieNode root <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> TrieNode<span style="color:#f92672">();</span>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> TrieNode root <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> TrieNode<span style="color:#f92672">();</span>
 <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> HashMap<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">,</span> Integer<span style="color:#f92672">&gt;</span> wordCount <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashMap<span style="color:#f92672">&lt;&gt;();</span>
 
 <span style="color:#75715e">/**
@@ -294,7 +293,18 @@ Output: []
     <span style="color:#66d9ef">return</span> output<span style="color:#f92672">;</span>
 <span style="color:#f92672">}</span>
 
-<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">isConcatenation</span><span style="color:#f92672">(</span>String s<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> p<span style="color:#f92672">,</span> String<span style="color:#f92672">[]</span> words<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Check if substring is a valid concatenation.
+</span><span style="color:#75715e"> * A valid concatenation:
+</span><span style="color:#75715e"> * 1. Substring contains all words, without any intervening characters.
+</span><span style="color:#75715e"> * 2. Concatenation of each word in words exactly once.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param s     given string
+</span><span style="color:#75715e"> * @param index start index
+</span><span style="color:#75715e"> * @param words given words array
+</span><span style="color:#75715e"> * @return if substring is a valid concatenation
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">isConcatenation</span><span style="color:#f92672">(</span>String s<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> index<span style="color:#f92672">,</span> String<span style="color:#f92672">[]</span> words<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
     HashMap<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">,</span> Integer<span style="color:#f92672">&gt;</span> foundCount <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashMap<span style="color:#f92672">&lt;&gt;();</span>
     <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> words<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span> <span style="color:#75715e">// try to find each word in substring
 </span><span style="color:#75715e"></span>        TrieNode current <span style="color:#f92672">=</span> root<span style="color:#f92672">;</span>
@@ -302,11 +312,11 @@ Output: []
 
         <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> j <span style="color:#f92672">&lt;</span> words<span style="color:#f92672">[</span>0<span style="color:#f92672">].</span><span style="color:#a6e22e">length</span><span style="color:#f92672">();</span> j<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span> <span style="color:#75715e">// each word has same length
 </span><span style="color:#75715e"></span>
-            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>p <span style="color:#f92672">&gt;=</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">()</span> <span style="color:#f92672">||</span> current<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">[</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>p<span style="color:#f92672">)</span> <span style="color:#f92672">-</span> <span style="color:#e6db74">&#39;a&#39;</span><span style="color:#f92672">]</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>index <span style="color:#f92672">&gt;=</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">()</span> <span style="color:#f92672">||</span> current<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">[</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>index<span style="color:#f92672">)</span> <span style="color:#f92672">-</span> <span style="color:#e6db74">&#39;a&#39;</span><span style="color:#f92672">]</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
                 <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
             <span style="color:#f92672">}</span>
-            current <span style="color:#f92672">=</span> current<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">[</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>p<span style="color:#f92672">)</span> <span style="color:#f92672">-</span> <span style="color:#e6db74">&#39;a&#39;</span><span style="color:#f92672">];</span>
-            sb<span style="color:#f92672">.</span><span style="color:#a6e22e">append</span><span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>p<span style="color:#f92672">++));</span>
+            current <span style="color:#f92672">=</span> current<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">[</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>index<span style="color:#f92672">)</span> <span style="color:#f92672">-</span> <span style="color:#e6db74">&#39;a&#39;</span><span style="color:#f92672">];</span>
+            sb<span style="color:#f92672">.</span><span style="color:#a6e22e">append</span><span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>index<span style="color:#f92672">++));</span>
         <span style="color:#f92672">}</span>
         String word <span style="color:#f92672">=</span> sb<span style="color:#f92672">.</span><span style="color:#a6e22e">toString</span><span style="color:#f92672">();</span>
 
@@ -344,7 +354,6 @@ Output: []
         <span style="color:#f92672">}</span>
     <span style="color:#f92672">}</span>
 <span style="color:#f92672">}</span>
-
 </code></pre></div>
               
             </div>
@@ -359,7 +368,7 @@ Output: []
                     
   <a class="tag tag--primary tag--small" href="https://mirage-zero-nine.github.io/tags/hashmap/hashset/">HashMap/HashSet</a>
 
-  <a class="tag tag--primary tag--small" href="https://mirage-zero-nine.github.io/tags/two-pointers/sliding-window/">Two Pointers/Sliding Window</a>
+  <a class="tag tag--primary tag--small" href="https://mirage-zero-nine.github.io/tags/trie/">Trie</a>
 
                   </div>
                 
