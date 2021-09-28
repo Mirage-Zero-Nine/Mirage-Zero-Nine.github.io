@@ -15,18 +15,18 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="LC 33 81 153 154 - Search in Array">
 <meta name="twitter:title" content="LC 33 81 153 154 - Search in Array">
-<meta property="og:url" content="https://mirage-zero-nine.github.io/2019/08/lc-33-81-153-154-search-in-array/">
-<meta property="twitter:url" content="https://mirage-zero-nine.github.io/2019/08/lc-33-81-153-154-search-in-array/">
+<meta property="og:url" content="https://mirage-zero-nine.github.io/2021/09/lc-33-81-153-154-search-in-array/">
+<meta property="twitter:url" content="https://mirage-zero-nine.github.io/2021/09/lc-33-81-153-154-search-in-array/">
 <meta property="og:site_name" content="Bingo!">
 <meta property="og:description" content="">
 <meta name="twitter:description" content="">
 <meta property="og:locale" content="en-us">
 
   
-    <meta property="article:published_time" content="2019-08-28T00:00:00">
+    <meta property="article:published_time" content="2021-09-27T00:00:00">
   
   
-    <meta property="article:modified_time" content="2019-08-28T00:00:00">
+    <meta property="article:modified_time" content="2021-09-27T00:00:00">
   
   
   
@@ -64,7 +64,7 @@
 
     
 
-    <link rel="canonical" href="https://mirage-zero-nine.github.io/2019/08/lc-33-81-153-154-search-in-array/">
+    <link rel="canonical" href="https://mirage-zero-nine.github.io/2021/09/lc-33-81-153-154-search-in-array/">
 
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
@@ -214,9 +214,9 @@
   
   <div class="postShorten-meta post-meta">
     
-      <time itemprop="datePublished" datetime="2019-08-28T00:00:00Z">
+      <time itemprop="datePublished" datetime="2021-09-27T00:00:00Z">
         
-  August 28, 2019
+  September 27, 2021
 
       </time>
     
@@ -424,6 +424,7 @@ Output: 0
 </li>
 <li>Otherwise, go left. However, mid will be included, since it could be the min value (start of the rotation).</li>
 </ul>
+<p>Finally, the search range will be 1 (which is the escaping condition of the binary search). Return <code>nums[left]</code> or <code>nums[right]</code> does not make any difference, since <code>left == right</code>.</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
 </span><span style="color:#75715e"> * Binary search. The minimum element will be at left part, or right part if rotated.
 </span><span style="color:#75715e"> * - Escape condition: left == right (and it&#39;s the min value)
@@ -472,13 +473,23 @@ Output: 0
 <li>Would allow duplicates affect the run-time complexity? How and why?</li>
 </ul>
 <h2 id="method--code-3">Method &amp; Code</h2>
-<p>Modified binary search.</p>
+<p>Modified binary search, idea is almost the same as previous problem.</p>
+<ul>
+<li>If <code>nums[mid] &gt; nums[right]</code>, then go right and excluded mid, since mid is larger than right, and will never be the minimum value in array.
+<ul>
+<li>The reason of go right is that the left part is the remaining part of rotation, and the start of rotation is at right part (hence mid is larger than right, which is not supposed to happen in normal increasing array).</li>
+</ul>
+</li>
+<li>If <code>nums[mid] &lt; nums[right]</code>, go left. However, mid will be included, since it could be the min value (start of the rotation).</li>
+<li>If <code>nums[mid] == nums[right]</code>, the min value could be at left or right part. e.g.: <code>[1,3,3]</code> and <code>[2,1,1]</code>. Hence, remove the duplicated element by shrinking the right search boundary.</li>
+</ul>
+<p>Finally, the search range will be 1 (which is the escaping condition of the binary search). Return <code>nums[left]</code> or <code>nums[right]</code> does not make any difference, since <code>left == right</code>.</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Modified binary search.
-</span><span style="color:#75715e"> * Originally, to find min value in rotate sorted array is to find the lower part each time.
-</span><span style="color:#75715e"> * To avoid the duplicated value, simply shrink the right bound when mid of array is equal to right.
-</span><span style="color:#75715e"> * In this situation, the min value will either be in the right, or the duplicated one is the min value.
-</span><span style="color:#75715e"> * Either way, the right duplicated one can be ignored.
+</span><span style="color:#75715e"> * Modified binary search, idea is almost the same when array contains no duplicated elements.
+</span><span style="color:#75715e"> * - Escape condition: left == right (and it&#39;s the min value)
+</span><span style="color:#75715e"> * - If nums[mid] &gt; nums[right], then go right and excluded mid.
+</span><span style="color:#75715e"> * - If nums[mid] &lt; nums[right], go left and included mid, since it could be the min value (start of the rotation).
+</span><span style="color:#75715e"> * - If nums[mid] == nums[right], there is a duplication, shrink the right boundary.
 </span><span style="color:#75715e"> *
 </span><span style="color:#75715e"> * @param nums given array
 </span><span style="color:#75715e"> * @return minimum value in array
@@ -491,24 +502,19 @@ Output: 0
     <span style="color:#f92672">}</span>
 
     <span style="color:#66d9ef">int</span> left <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> right <span style="color:#f92672">=</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>left <span style="color:#f92672">&lt;</span> right<span style="color:#f92672">)</span> <span style="color:#f92672">{</span> <span style="color:#75715e">// escape when left == right
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">int</span> mid <span style="color:#f92672">=</span> left <span style="color:#f92672">+</span> <span style="color:#f92672">(</span>right <span style="color:#f92672">-</span> left<span style="color:#f92672">)</span> <span style="color:#f92672">/</span> 2<span style="color:#f92672">;</span>
 
-    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>left <span style="color:#f92672">&lt;</span> right<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-
-        <span style="color:#66d9ef">int</span> mid <span style="color:#f92672">=</span> left <span style="color:#f92672">+</span> <span style="color:#f92672">(</span>right <span style="color:#f92672">-</span> left<span style="color:#f92672">)</span> <span style="color:#f92672">/</span> 2<span style="color:#f92672">;</span>
-
-        <span style="color:#75715e">/*
-</span><span style="color:#75715e">         * Rightmost should be larger than middle value in array if in normal ascending array.
-</span><span style="color:#75715e">         * Therefore, if mid value is larger than rightmost value in array, then the minimum element is at right. */</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>nums<span style="color:#f92672">[</span>right<span style="color:#f92672">]</span> <span style="color:#f92672">&lt;</span> nums<span style="color:#f92672">[</span>mid<span style="color:#f92672">])</span> <span style="color:#f92672">{</span>      <span style="color:#75715e">// abnormal sub array
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>nums<span style="color:#f92672">[</span>mid<span style="color:#f92672">]</span> <span style="color:#f92672">&gt;</span> nums<span style="color:#f92672">[</span>right<span style="color:#f92672">])</span> <span style="color:#f92672">{</span> <span style="color:#75715e">// go right, excluded nums[mid] since it&#39;s already larger than nums[right]
 </span><span style="color:#75715e"></span>            left <span style="color:#f92672">=</span> mid <span style="color:#f92672">+</span> 1<span style="color:#f92672">;</span>
         <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>nums<span style="color:#f92672">[</span>mid<span style="color:#f92672">]</span> <span style="color:#f92672">&lt;</span> nums<span style="color:#f92672">[</span>right<span style="color:#f92672">])</span> <span style="color:#f92672">{</span>
-            right <span style="color:#f92672">=</span> mid<span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
-            right<span style="color:#f92672">--;</span>        <span style="color:#75715e">// duplicate value from middle to the end of array, narrow the searching range
+            right <span style="color:#f92672">=</span> mid<span style="color:#f92672">;</span> <span style="color:#75715e">// go left, mid could be the minimum, so included
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+            right<span style="color:#f92672">--;</span> <span style="color:#75715e">// excluded duplicated element
 </span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
     <span style="color:#f92672">}</span>
 
-    <span style="color:#66d9ef">return</span> nums<span style="color:#f92672">[</span>left<span style="color:#f92672">];</span>      <span style="color:#75715e">// after the while loop, left == right
+    <span style="color:#66d9ef">return</span> nums<span style="color:#f92672">[</span>right<span style="color:#f92672">];</span> <span style="color:#75715e">// return left or right does not make a difference
 </span><span style="color:#75715e"></span><span style="color:#f92672">}</span>
 </code></pre></div>
               
@@ -535,7 +541,7 @@ Output: 0
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://mirage-zero-nine.github.io/2019/08/lc-219-220-contains-duplicate/" data-tooltip="LC 219 220 - Contains Duplicate">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://mirage-zero-nine.github.io/2021/09/lc-144-589-257-112-1430-100-101-104-111-337-1367-199-tree-traversal-preorder/" data-tooltip="LC 144 589 257 112 1430 100 101 104 111 337 1367 199 - Tree Traversal: Preorder">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -543,7 +549,7 @@ Output: 0
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://mirage-zero-nine.github.io/2019/08/lc-449-297-428-serialize-and-deserialize-tree/" data-tooltip="LC 449 297 428 - Serialize and Deserialize Tree">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://mirage-zero-nine.github.io/2021/09/lc-496-503-739-42-84-85-402-768-1019-456-962-1499-321-monotone-stack/" data-tooltip="LC 496 503 739 42 84 85 402 768 1019 456 962 1499 321 - Monotone Stack">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
@@ -593,7 +599,7 @@ Output: 0
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://mirage-zero-nine.github.io/2019/08/lc-219-220-contains-duplicate/" data-tooltip="LC 219 220 - Contains Duplicate">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://mirage-zero-nine.github.io/2021/09/lc-144-589-257-112-1430-100-101-104-111-337-1367-199-tree-traversal-preorder/" data-tooltip="LC 144 589 257 112 1430 100 101 104 111 337 1367 199 - Tree Traversal: Preorder">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -601,7 +607,7 @@ Output: 0
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://mirage-zero-nine.github.io/2019/08/lc-449-297-428-serialize-and-deserialize-tree/" data-tooltip="LC 449 297 428 - Serialize and Deserialize Tree">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://mirage-zero-nine.github.io/2021/09/lc-496-503-739-42-84-85-402-768-1019-456-962-1499-321-monotone-stack/" data-tooltip="LC 496 503 739 42 84 85 402 768 1019 456 962 1499 321 - Monotone Stack">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
