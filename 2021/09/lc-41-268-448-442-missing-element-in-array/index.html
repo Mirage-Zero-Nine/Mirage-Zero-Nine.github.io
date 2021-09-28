@@ -15,18 +15,18 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="LC 41 268 448 442 - Missing Element in Array">
 <meta name="twitter:title" content="LC 41 268 448 442 - Missing Element in Array">
-<meta property="og:url" content="https://mirage-zero-nine.github.io/2020/10/lc-41-268-448-442-missing-element-in-array/">
-<meta property="twitter:url" content="https://mirage-zero-nine.github.io/2020/10/lc-41-268-448-442-missing-element-in-array/">
+<meta property="og:url" content="https://mirage-zero-nine.github.io/2021/09/lc-41-268-448-442-missing-element-in-array/">
+<meta property="twitter:url" content="https://mirage-zero-nine.github.io/2021/09/lc-41-268-448-442-missing-element-in-array/">
 <meta property="og:site_name" content="Bingo!">
 <meta property="og:description" content="">
 <meta name="twitter:description" content="">
 <meta property="og:locale" content="en-us">
 
   
-    <meta property="article:published_time" content="2020-10-03T00:00:00">
+    <meta property="article:published_time" content="2021-09-27T00:00:00">
   
   
-    <meta property="article:modified_time" content="2020-10-03T00:00:00">
+    <meta property="article:modified_time" content="2021-09-27T00:00:00">
   
   
   
@@ -39,6 +39,8 @@
       <meta property="article:tag" content="Binary Search">
     
       <meta property="article:tag" content="Bit Manipulation">
+    
+      <meta property="article:tag" content="Index Mapping">
     
   
 
@@ -66,7 +68,7 @@
 
     
 
-    <link rel="canonical" href="https://mirage-zero-nine.github.io/2020/10/lc-41-268-448-442-missing-element-in-array/">
+    <link rel="canonical" href="https://mirage-zero-nine.github.io/2021/09/lc-41-268-448-442-missing-element-in-array/">
 
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
@@ -216,9 +218,9 @@
   
   <div class="postShorten-meta post-meta">
     
-      <time itemprop="datePublished" datetime="2020-10-03T00:00:00Z">
+      <time itemprop="datePublished" datetime="2021-09-27T00:00:00Z">
         
-  October 3, 2020
+  September 27, 2021
 
       </time>
     
@@ -250,9 +252,9 @@
         <li><a href="#problem-description-1">Problem Description</a></li>
         <li><a href="#method--code-1">Method &amp; Code</a>
           <ul>
+            <li><a href="#index-mapping">Index mapping</a></li>
             <li><a href="#bit-manipulation">Bit manipulation</a></li>
             <li><a href="#binary-search">Binary search</a></li>
-            <li><a href="#index-mapping">Index mapping</a></li>
             <li><a href="#naive-solution">Naive Solution</a></li>
           </ul>
         </li>
@@ -288,14 +290,16 @@ Output: 1
 </code></pre><p><strong>Note:</strong></p>
 <p>Your algorithm should run in <em>O</em>(<em>n</em>) time and uses constant extra space.</p>
 <h2 id="method--code">Method &amp; Code</h2>
-<p>Smallest missing positive integer can only be in <code>[1, n + 1]</code> (all inclusive). Hence, traverse array three times.</p>
-<p>First, replace all non-positive numbers to array&rsquo;s length.</p>
-<p>In second traversal, find nums[i] such that its absolute value is smaller than array&rsquo;s length. Mark its representative index&rsquo;s value to negative. i.e, abs<code>(nums[i]) = 5</code>, then <code>nums[4] = - nums[4]</code>.</p>
+<p>Smallest missing positive integer can only be in <code>[1, n + 1]</code> (all-inclusive). Hence, traverse the array three times.</p>
+<ul>
+<li>First, replace all non-positive numbers to array&rsquo;s length + 1, so that in second traverse these numbers can be excluded.</li>
+<li>In second traversal, find <code>nums[i]</code> such that its absolute value is smaller than array&rsquo;s length. Mark its representative index&rsquo;s value to negative. i.e., <code>abs(nums[i]) = 5</code>, then <code>nums[4] = - nums[4]</code>.</li>
+</ul>
 <p>The reason to use absolute value is to save while loop compare to swapping method.</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
 </span><span style="color:#75715e"> * Traverse array three times.
-</span><span style="color:#75715e"> * Smallest missing positive integer can only be in [1, n + 1] (all inclusive).
-</span><span style="color:#75715e"> * First, replace all non-positive numbers to array&#39;s length.
+</span><span style="color:#75715e"> * Smallest missing positive integer can only be in [1, n + 1] (all-inclusive).
+</span><span style="color:#75715e"> * First, replace all non-positive numbers to array&#39;s length + 1, so that in second traverse these numbers can be excluded. 
 </span><span style="color:#75715e"> * In second traversal, find nums[i] such that its absolute value is smaller than array&#39;s length.
 </span><span style="color:#75715e"> * Mark its representative index&#39;s value to negative.
 </span><span style="color:#75715e"> * i.e, abs(nums[i]) = 5, then nums[4] = - nums[4]
@@ -342,7 +346,38 @@ Output: 8
 </code></pre><p><strong>Note</strong>:
 Your algorithm should run in linear runtime complexity. Could you implement it using only constant extra space complexity?</p>
 <h2 id="method--code-1">Method &amp; Code</h2>
-<h3 id="bit-manipulation">Bit manipulation</h3>
+<h3 id="index-mapping">Index mapping</h3>
+<p>Use index mapping to mapping each occurred element from 0 to n by mark each element into negative. To avoid 0, the mapping should minus 1 to assure each element in array after mapping is negative.</p>
+<p>Then check which element in array is not mapped.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Use index mapping to mapping each occurred element from 0 to n by mark each element into negative.
+</span><span style="color:#75715e"> * To avoid 0, the mapping should minus 1 to assure each element in array after mapping is negative.
+</span><span style="color:#75715e"> * Then check which element in array is not mapped.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param nums input int array
+</span><span style="color:#75715e"> * @return missing number
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">missingNumber</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> nums<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">int</span> n <span style="color:#f92672">=</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> n<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>nums<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">&lt;</span> 0 <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">(</span>Math<span style="color:#f92672">.</span><span style="color:#a6e22e">abs</span><span style="color:#f92672">(</span>nums<span style="color:#f92672">[</span>i<span style="color:#f92672">])</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">&lt;</span> n<span style="color:#f92672">)</span> <span style="color:#f92672">{</span> <span style="color:#75715e">// avoid out of bound exception
+</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">int</span> index <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">abs</span><span style="color:#f92672">(</span>nums<span style="color:#f92672">[</span>i<span style="color:#f92672">])</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">;</span> <span style="color:#75715e">// index of element to be marked to negative
+</span><span style="color:#75715e"></span>            nums<span style="color:#f92672">[</span>index<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#f92672">-</span>nums<span style="color:#f92672">[</span>index<span style="color:#f92672">]</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>nums<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">&gt;=</span> 0 <span style="color:#f92672">&amp;&amp;</span> nums<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">&lt;</span> n<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">int</span> index <span style="color:#f92672">=</span> nums<span style="color:#f92672">[</span>i<span style="color:#f92672">];</span> <span style="color:#75715e">// index of element to be marked to negative
+</span><span style="color:#75715e"></span>            nums<span style="color:#f92672">[</span>index<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#f92672">-</span>nums<span style="color:#f92672">[</span>index<span style="color:#f92672">]</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>nums<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">&gt;=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">return</span> i<span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">return</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h3 id="bit-manipulation">Bit manipulation</h3>
 <p>Only one element is missing in 0, 1, 2, &hellip;, n. And XOR operation has a principle a ^ b ^ b = a.</p>
 <p>Hence, if array has all elements from 0 to n-1, then the XOR operation will finally back to initial value itself. i.e, <code>res ^ 1 ^ 1 ^ 2 ^ 2 ... ^ (n - 1) ^ (n - 1) = res</code>.</p>
 <p>If the missing int is in range <code>[0, n]</code>, then <code>res = res ^ missingIndex ^ n</code>. Since res initially is equal to n, finally res will be missing index, which is missing number.</p>
@@ -391,42 +426,7 @@ public int binarySearch(int[] nums) {
 
     return left;
 }
-</code></pre><h3 id="index-mapping">Index mapping</h3>
-<p>Use index mapping to mapping each occurred element from 0 to n by mark each element into negative. To avoid 0, the mapping should minus 1 to assure each element in array after mapping is negative.</p>
-<p>Then check which element in array is not mapped.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Use index mapping to mapping each occurred element from 0 to n.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param nums input int array
-</span><span style="color:#75715e"> * @return missing number
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">indexMapping</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> nums<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-    <span style="color:#66d9ef">int</span> last <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span>
-
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
-
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>nums<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">==</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">||</span> <span style="color:#f92672">(</span>nums<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">&lt;</span> 0 <span style="color:#f92672">&amp;&amp;</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">abs</span><span style="color:#f92672">(</span>nums<span style="color:#f92672">[</span>i<span style="color:#f92672">])</span> <span style="color:#f92672">-</span> 1 <span style="color:#f92672">==</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
-            last <span style="color:#f92672">=</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>nums<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">&lt;</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            nums<span style="color:#f92672">[</span>Math<span style="color:#f92672">.</span><span style="color:#a6e22e">abs</span><span style="color:#f92672">(</span>nums<span style="color:#f92672">[</span>i<span style="color:#f92672">])</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#f92672">-</span>nums<span style="color:#f92672">[</span>Math<span style="color:#f92672">.</span><span style="color:#a6e22e">abs</span><span style="color:#f92672">(</span>nums<span style="color:#f92672">[</span>i<span style="color:#f92672">])</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
-            nums<span style="color:#f92672">[</span>nums<span style="color:#f92672">[</span>i<span style="color:#f92672">]]</span> <span style="color:#f92672">=</span> <span style="color:#f92672">-</span>nums<span style="color:#f92672">[</span>nums<span style="color:#f92672">[</span>i<span style="color:#f92672">]]</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>last <span style="color:#f92672">&gt;</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">return</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>nums<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">&gt;=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">return</span> i<span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">return</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span>
-<span style="color:#f92672">}</span>
-</code></pre></div><h3 id="naive-solution">Naive Solution</h3>
+</code></pre><h3 id="naive-solution">Naive Solution</h3>
 <p>Use a hash set to count occurrence.</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
 </span><span style="color:#75715e"> * Put elements into set and traverse from 0 to n to find missing number.
@@ -551,6 +551,8 @@ Output:
 
   <a class="tag tag--primary tag--small" href="https://mirage-zero-nine.github.io/tags/bit-manipulation/">Bit Manipulation</a>
 
+  <a class="tag tag--primary tag--small" href="https://mirage-zero-nine.github.io/tags/index-mapping/">Index Mapping</a>
+
                   </div>
                 
               
@@ -562,7 +564,7 @@ Output:
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://mirage-zero-nine.github.io/2020/10/lc-102-103-107-1161-1609-level-order-traversal-of-tree/" data-tooltip="LC 102 103 107 1161 1609 - Level Order Traversal of Tree">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://mirage-zero-nine.github.io/2021/09/lc-33-81-153-154-search-in-array/" data-tooltip="LC 33 81 153 154 - Search in Array">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -570,7 +572,7 @@ Output:
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://mirage-zero-nine.github.io/2020/10/lc-443-string-compression/" data-tooltip="LC 443 - String Compression">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://mirage-zero-nine.github.io/2021/09/lc-496-503-739-42-84-85-402-768-1019-456-962-1499-321-monotone-stack/" data-tooltip="LC 496 503 739 42 84 85 402 768 1019 456 962 1499 321 - Monotone Stack">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
@@ -620,7 +622,7 @@ Output:
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://mirage-zero-nine.github.io/2020/10/lc-102-103-107-1161-1609-level-order-traversal-of-tree/" data-tooltip="LC 102 103 107 1161 1609 - Level Order Traversal of Tree">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://mirage-zero-nine.github.io/2021/09/lc-33-81-153-154-search-in-array/" data-tooltip="LC 33 81 153 154 - Search in Array">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -628,7 +630,7 @@ Output:
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://mirage-zero-nine.github.io/2020/10/lc-443-string-compression/" data-tooltip="LC 443 - String Compression">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://mirage-zero-nine.github.io/2021/09/lc-496-503-739-42-84-85-402-768-1019-456-962-1499-321-monotone-stack/" data-tooltip="LC 496 503 739 42 84 85 402 768 1019 456 962 1499 321 - Monotone Stack">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
