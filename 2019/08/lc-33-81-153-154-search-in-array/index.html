@@ -412,10 +412,23 @@ Output: 1
 Output: 0
 </code></pre><h2 id="method--code-2">Method &amp; Code</h2>
 <p>Binary search. The minimum element will be at left part, or right part if rotated.</p>
-<p>There may be a &ldquo;pivot&rdquo; in the array lead a reverse, find minimum 2 int in array and finally return minor one.</p>
+<ul>
+<li>Escape condition: left == right (and it&rsquo;s the min value)</li>
+</ul>
+<p>During the search:</p>
+<ul>
+<li>If <code>nums[mid] &gt;= nums[right]</code> (actually since no duplication in array, equal will not happen), then go right and excluded mid, since mid is larger than right, and will never be the minimum value in array.
+<ul>
+<li>The reason of go right is that the left part is the remaining part of rotation, and the start of rotation is at right part (hence mid is larger than right, which is not supposed to happen in normal increasing array).</li>
+</ul>
+</li>
+<li>Otherwise, go left. However, mid will be included, since it could be the min value (start of the rotation).</li>
+</ul>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
 </span><span style="color:#75715e"> * Binary search. The minimum element will be at left part, or right part if rotated.
-</span><span style="color:#75715e"> * There may be a &#34;pivot&#34; in the array lead a reverse, find minimum 2 int in array and finally return minor one.
+</span><span style="color:#75715e"> * - Escape condition: left == right (and it&#39;s the min value)
+</span><span style="color:#75715e"> * - If nums[mid] &gt;= nums[right] (actually since no duplication in array, equal will not happen), then go right and excluded mid.
+</span><span style="color:#75715e"> * - Otherwise, go left. However, mid will be included, since it could be the min value (start of the rotation).
 </span><span style="color:#75715e"> *
 </span><span style="color:#75715e"> * @param nums given int array
 </span><span style="color:#75715e"> * @return min value in array
@@ -428,19 +441,18 @@ Output: 0
     <span style="color:#f92672">}</span>
 
     <span style="color:#66d9ef">int</span> left <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> right <span style="color:#f92672">=</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>left <span style="color:#f92672">&lt;</span> right<span style="color:#f92672">)</span> <span style="color:#f92672">{</span> <span style="color:#75715e">// escape when left == right
+</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">int</span> mid <span style="color:#f92672">=</span> left <span style="color:#f92672">+</span> <span style="color:#f92672">(</span>right <span style="color:#f92672">-</span> left<span style="color:#f92672">)</span> <span style="color:#f92672">/</span> 2<span style="color:#f92672">;</span>
 
-    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>left <span style="color:#f92672">&lt;=</span> right<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">int</span> middle <span style="color:#f92672">=</span> left <span style="color:#f92672">+</span> <span style="color:#f92672">(</span>right <span style="color:#f92672">-</span> left<span style="color:#f92672">)</span> <span style="color:#f92672">/</span> 2<span style="color:#f92672">;</span>
-
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>nums<span style="color:#f92672">[</span>middle<span style="color:#f92672">]</span> <span style="color:#f92672">&gt;=</span> nums<span style="color:#f92672">[</span>right<span style="color:#f92672">])</span> <span style="color:#f92672">{</span>
-            left <span style="color:#f92672">=</span> middle <span style="color:#f92672">+</span> 1<span style="color:#f92672">;</span>      <span style="color:#75715e">// middle could be min value
-</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>                    <span style="color:#75715e">// nums[right] &gt; nums[middle], left part contains minimum element
-</span><span style="color:#75715e"></span>            right <span style="color:#f92672">=</span> middle<span style="color:#f92672">;</span>         <span style="color:#75715e">// middle could be min value
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>nums<span style="color:#f92672">[</span>mid<span style="color:#f92672">]</span> <span style="color:#f92672">&gt;=</span> nums<span style="color:#f92672">[</span>right<span style="color:#f92672">])</span> <span style="color:#f92672">{</span> <span style="color:#75715e">// go right, excluded nums[mid] since it&#39;s already larger than nums[right]
+</span><span style="color:#75715e"></span>            left <span style="color:#f92672">=</span> mid <span style="color:#f92672">+</span> 1<span style="color:#f92672">;</span>
+        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+            right <span style="color:#f92672">=</span> mid<span style="color:#f92672">;</span> <span style="color:#75715e">// go left, mid could be the minimum, so included
 </span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
     <span style="color:#f92672">}</span>
 
-    <span style="color:#66d9ef">return</span> nums<span style="color:#f92672">[</span>right<span style="color:#f92672">];</span>
-<span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">return</span> nums<span style="color:#f92672">[</span>left<span style="color:#f92672">];</span> <span style="color:#75715e">// return left or right does not make a difference
+</span><span style="color:#75715e"></span><span style="color:#f92672">}</span>
 </code></pre></div><h1 id="154-find-minimum-in-rotated-sorted-array-ii">154. Find Minimum in Rotated Sorted Array II</h1>
 <p>Link: <a href="https://leetcode.com/problems/find-minimum-in-rotated-sorted-array-ii">Find Minimum in Rotated Sorted Array II</a></p>
 <h2 id="problem-description-3">Problem Description</h2>
