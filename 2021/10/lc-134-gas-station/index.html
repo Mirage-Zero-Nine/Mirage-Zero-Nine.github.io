@@ -15,20 +15,24 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="LC 134 - Gas Station">
 <meta name="twitter:title" content="LC 134 - Gas Station">
-<meta property="og:url" content="https://mirage-zero-nine.github.io/2019/06/lc-134-gas-station/">
-<meta property="twitter:url" content="https://mirage-zero-nine.github.io/2019/06/lc-134-gas-station/">
+<meta property="og:url" content="https://mirage-zero-nine.github.io/2021/10/lc-134-gas-station/">
+<meta property="twitter:url" content="https://mirage-zero-nine.github.io/2021/10/lc-134-gas-station/">
 <meta property="og:site_name" content="Bingo!">
 <meta property="og:description" content="">
 <meta name="twitter:description" content="">
 <meta property="og:locale" content="en-us">
 
   
-    <meta property="article:published_time" content="2019-06-18T00:00:00">
+    <meta property="article:published_time" content="2021-10-03T00:00:00">
   
   
-    <meta property="article:modified_time" content="2019-06-18T00:00:00">
+    <meta property="article:modified_time" content="2021-10-03T00:00:00">
   
   
+  
+    
+      <meta property="article:section" content="Array">
+    
   
   
     
@@ -60,7 +64,7 @@
 
     
 
-    <link rel="canonical" href="https://mirage-zero-nine.github.io/2019/06/lc-134-gas-station/">
+    <link rel="canonical" href="https://mirage-zero-nine.github.io/2021/10/lc-134-gas-station/">
 
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
@@ -210,13 +214,21 @@
   
   <div class="postShorten-meta post-meta">
     
-      <time itemprop="datePublished" datetime="2019-06-18T00:00:00Z">
+      <time itemprop="datePublished" datetime="2021-10-03T00:00:00Z">
         
-  June 18, 2019
+  October 3, 2021
 
       </time>
     
     
+  
+  
+    <span>in</span>
+    
+      <a class="category-link" href="https://mirage-zero-nine.github.io/categories/array">Array</a>
+    
+  
+
   </div>
 
 </div>
@@ -275,11 +287,16 @@ Travel to station 1. Your tank = 3 - 3 + 3 = 3
 You cannot travel back to station 2, as it requires 4 unit of gas but you only have 3.
 Therefore, you can't travel around the circuit once no matter where you start.
 </code></pre><h2 id="method--code">Method &amp; Code</h2>
-<p>If total gas can cover all cost of gas, then there will be a available start location.</p>
-<p>Traverse array, if current tank can not cover the cost at current station, set start location at next location. Finally, if total gas can not cover total cost, then return -1. Otherwise, return start location.</p>
+<p>If total gas can cover all cost of gas, then there will be an available start location.</p>
+<p>Assume the start position is 0, traverse the array and calculate the cost in each station. If the sum of gas can not cover the cost from previous station to current station, set the start location to the next location. Meanwhile, add the cost from start location to current location (which should be a negative number, meaning the needed gas from the last station to current station).</p>
+<p>i.e.: assume start position is <code>i</code>, the absolute value of <code>sum(0, i)</code> (negative, means not sufficient) should be smaller than <code>sum(i, n)</code>, where <code>n</code> is the length of array, and sum means the sum of <code>gas[i] - cost[i]</code> (cost of moving from one gas station to the next one).</p>
+<p>Finally, if total gas can not cover total cost, then return -1. Otherwise, return start location.</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
-</span><span style="color:#75715e"> * If total gas can cover all cost of gas, then there will be a available start location.
-</span><span style="color:#75715e"> * Traverse array, if current tank can not cover the cost at current station, set start location at next location.
+</span><span style="color:#75715e"> * If total gas can cover all cost of gas, then there will be an available start location.
+</span><span style="color:#75715e"> * Assume the start position is 0, then calculate the cost in each station.
+</span><span style="color:#75715e"> * If it can not cover the cost from previous station to current station, then set the start location to the next.
+</span><span style="color:#75715e"> * Meanwhile, add the cost from start location to current location. This will be checked after traverse complete.
+</span><span style="color:#75715e"> * If the remaining gas can cover the cost, the remaining gas should be more than the need before start location.
 </span><span style="color:#75715e"> * Finally, if total gas can not cover total cost, then return -1. Otherwise, return start location.
 </span><span style="color:#75715e"> *
 </span><span style="color:#75715e"> * @param gas  amount of gas
@@ -293,20 +310,21 @@ Therefore, you can't travel around the circuit once no matter where you start.
         <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">;</span>
     <span style="color:#f92672">}</span>
 
-    <span style="color:#66d9ef">int</span> size <span style="color:#f92672">=</span> gas<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">,</span> sum <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> count <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> total <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
-
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> size<span style="color:#f92672">;</span> <span style="color:#f92672">++</span>i<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        sum <span style="color:#f92672">+=</span> gas<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">-</span> cost<span style="color:#f92672">[</span>i<span style="color:#f92672">];</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>sum <span style="color:#f92672">&lt;</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            total <span style="color:#f92672">+=</span> sum<span style="color:#f92672">;</span>
-            sum <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
-            count <span style="color:#f92672">=</span> i <span style="color:#f92672">+</span> 1<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">int</span> totalCost <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> currentSum <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> start <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> <span style="color:#75715e">// assume start position is 0
+</span><span style="color:#75715e"></span>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> gas<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">int</span> currentCost <span style="color:#f92672">=</span> gas<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">-</span> cost<span style="color:#f92672">[</span>i<span style="color:#f92672">];</span> <span style="color:#75715e">// cost from previous station to current station
+</span><span style="color:#75715e"></span>        currentSum <span style="color:#f92672">+=</span> currentCost<span style="color:#f92672">;</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>currentSum <span style="color:#f92672">&lt;</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span> <span style="color:#75715e">// if this station is not reachable, set start location to next position
+</span><span style="color:#75715e"></span>            totalCost <span style="color:#f92672">+=</span> currentSum<span style="color:#f92672">;</span> <span style="color:#75715e">// add cost from start to this position
+</span><span style="color:#75715e"></span>            start <span style="color:#f92672">=</span> i <span style="color:#f92672">+</span> 1<span style="color:#f92672">;</span>
+            currentSum <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
         <span style="color:#f92672">}</span>
     <span style="color:#f92672">}</span>
 
-    total <span style="color:#f92672">+=</span> sum<span style="color:#f92672">;</span>
+    totalCost <span style="color:#f92672">+=</span> currentSum<span style="color:#f92672">;</span>
 
-    <span style="color:#66d9ef">return</span> total <span style="color:#f92672">&lt;</span> 0 <span style="color:#f92672">?</span> <span style="color:#f92672">-</span>1 <span style="color:#f92672">:</span> count<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">return</span> totalCost <span style="color:#f92672">&lt;</span> 0 <span style="color:#f92672">?</span> <span style="color:#f92672">-</span>1 <span style="color:#f92672">:</span> start<span style="color:#f92672">;</span>
 <span style="color:#f92672">}</span>
 </code></pre></div>
               
@@ -333,7 +351,7 @@ Therefore, you can't travel around the circuit once no matter where you start.
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://mirage-zero-nine.github.io/2019/06/lc-243-244-245-shortest-word-distance/" data-tooltip="LC 243 244 245 - Shortest Word Distance">
+                <a class="post-action-btn btn btn--disabled">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -341,7 +359,7 @@ Therefore, you can't travel around the circuit once no matter where you start.
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://mirage-zero-nine.github.io/2019/06/lc-269-alien-dictionary/" data-tooltip="LC 269 - Alien Dictionary">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://mirage-zero-nine.github.io/2021/09/lc-1797-design-authentication-manager/" data-tooltip="LC 1797 - Design Authentication Manager">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
@@ -391,7 +409,7 @@ Therefore, you can't travel around the circuit once no matter where you start.
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://mirage-zero-nine.github.io/2019/06/lc-243-244-245-shortest-word-distance/" data-tooltip="LC 243 244 245 - Shortest Word Distance">
+                <a class="post-action-btn btn btn--disabled">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -399,7 +417,7 @@ Therefore, you can't travel around the circuit once no matter where you start.
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://mirage-zero-nine.github.io/2019/06/lc-269-alien-dictionary/" data-tooltip="LC 269 - Alien Dictionary">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://mirage-zero-nine.github.io/2021/09/lc-1797-design-authentication-manager/" data-tooltip="LC 1797 - Design Authentication Manager">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
