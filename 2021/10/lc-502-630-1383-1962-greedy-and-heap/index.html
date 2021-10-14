@@ -426,7 +426,63 @@ Output: 72
 </code></pre></div><h1 id="1962-remove-stones-to-minimize-the-total">1962. Remove Stones to Minimize the Total</h1>
 <p>Link: <a href="https://leetcode.com/problems/remove-stones-to-minimize-the-total/">Remove Stones to Minimize the Total</a></p>
 <h2 id="problem-description-3">Problem Description</h2>
+<p>You are given a <strong>0-indexed</strong> integer array <code>piles</code>, where <code>piles[i]</code> represents the number of stones in the <code>ith</code> pile, and an integer <code>k</code>. You should apply the following operation <strong>exactly</strong> <code>k</code> times:</p>
+<ul>
+<li>Choose any <code>piles[i]</code> and <strong>remove</strong> <code>floor(piles[i] / 2)</code> stones from it.</li>
+</ul>
+<p><strong>Notice</strong> that you can apply the operation on the <strong>same</strong> pile more than once.</p>
+<p>Return <em>the <strong>minimum</strong> possible total number of stones remaining after applying the</em> <code>k</code> <em>operations</em>.</p>
+<p><code>floor(x)</code> is the <strong>greatest</strong> integer that is <strong>smaller</strong> than or <strong>equal</strong> to <code>x</code> (i.e., rounds <code>x</code> down).</p>
+<p><strong>Example 1:</strong></p>
+<pre tabindex="0"><code>Input: piles = [5,4,9], k = 2
+Output: 12
+Explanation: Steps of a possible scenario are:
+- Apply the operation on pile 2. The resulting piles are [5,4,5].
+- Apply the operation on pile 0. The resulting piles are [3,4,5].
+The total number of stones in [3,4,5] is 12.
+</code></pre><p><strong>Example 2:</strong></p>
+<pre tabindex="0"><code>Input: piles = [4,3,6,7], k = 3
+Output: 12
+Explanation: Steps of a possible scenario are:
+- Apply the operation on pile 2. The resulting piles are [4,3,3,7].
+- Apply the operation on pile 3. The resulting piles are [4,3,3,4].
+- Apply the operation on pile 0. The resulting piles are [2,3,3,4].
+The total number of stones in [2,3,3,4] is 12. 
+</code></pre><p><strong>Constraints:</strong></p>
+<ul>
+<li><code>1 &lt;= piles.length &lt;= 105</code></li>
+<li><code>1 &lt;= piles[i] &lt;= 104</code></li>
+<li><code>1 &lt;= k &lt;= 105</code></li>
+</ul>
 <h2 id="method--code-3">Method &amp; Code</h2>
+<p>Use a max heap to store all elements from given array. Also calculate the total sum of the array. Each time, poll out top of the heap and push back to the heap with the remaining value. Meanwhile, subtract half of the heap top from array sum.</p>
+<p>Repeat until k operations completed.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Use a max heap to store all elements from given array. Also calculate the total sum of the array.
+</span><span style="color:#75715e"> * Each time, poll out top of the heap and push back to the heap with the remaining value.
+</span><span style="color:#75715e"> * Meanwhile, subtract half of the heap top from array sum.
+</span><span style="color:#75715e"> * Repeat until k operations completed.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param piles given array
+</span><span style="color:#75715e"> * @param k     k times of operation
+</span><span style="color:#75715e"> * @return the minimum possible total number of stones remaining after applying the k operations
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">minStoneSum</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> piles<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> k<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    PriorityQueue<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> pq <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> PriorityQueue<span style="color:#f92672">&lt;&gt;((</span>a<span style="color:#f92672">,</span> b<span style="color:#f92672">)</span> <span style="color:#f92672">-&gt;</span> b <span style="color:#f92672">-</span> a<span style="color:#f92672">);</span>
+    <span style="color:#66d9ef">int</span> total <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> piles<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+        total <span style="color:#f92672">+=</span> piles<span style="color:#f92672">[</span>i<span style="color:#f92672">];</span>
+        pq<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>piles<span style="color:#f92672">[</span>i<span style="color:#f92672">]);</span>
+    <span style="color:#f92672">}</span>
+    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(!</span>pq<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">()</span> <span style="color:#f92672">&amp;&amp;</span> k<span style="color:#f92672">--</span> <span style="color:#f92672">&gt;</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">int</span> current <span style="color:#f92672">=</span> pq<span style="color:#f92672">.</span><span style="color:#a6e22e">poll</span><span style="color:#f92672">();</span>
+        total <span style="color:#f92672">-=</span> current <span style="color:#f92672">/</span> 2<span style="color:#f92672">;</span>
+        pq<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>current <span style="color:#f92672">-</span> current <span style="color:#f92672">/</span> 2<span style="color:#f92672">);</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">return</span> total<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div>
               
             </div>
           </div>
