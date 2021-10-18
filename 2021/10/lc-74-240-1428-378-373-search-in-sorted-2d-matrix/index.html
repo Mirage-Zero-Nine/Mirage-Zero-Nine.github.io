@@ -15,18 +15,18 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="LC 74 240 1428 378 373 - Search in Sorted 2D Matrix">
 <meta name="twitter:title" content="LC 74 240 1428 378 373 - Search in Sorted 2D Matrix">
-<meta property="og:url" content="https://mirage-zero-nine.github.io/2020/05/lc-74-240-1428-378-373-search-in-sorted-2d-matrix/">
-<meta property="twitter:url" content="https://mirage-zero-nine.github.io/2020/05/lc-74-240-1428-378-373-search-in-sorted-2d-matrix/">
+<meta property="og:url" content="https://mirage-zero-nine.github.io/2021/10/lc-74-240-1428-378-373-search-in-sorted-2d-matrix/">
+<meta property="twitter:url" content="https://mirage-zero-nine.github.io/2021/10/lc-74-240-1428-378-373-search-in-sorted-2d-matrix/">
 <meta property="og:site_name" content="Bingo!">
 <meta property="og:description" content="">
 <meta name="twitter:description" content="">
 <meta property="og:locale" content="en-us">
 
   
-    <meta property="article:published_time" content="2020-05-23T00:00:00">
+    <meta property="article:published_time" content="2021-10-17T00:00:00">
   
   
-    <meta property="article:modified_time" content="2020-05-23T00:00:00">
+    <meta property="article:modified_time" content="2021-10-17T00:00:00">
   
   
   
@@ -68,7 +68,7 @@
 
     
 
-    <link rel="canonical" href="https://mirage-zero-nine.github.io/2020/05/lc-74-240-1428-378-373-search-in-sorted-2d-matrix/">
+    <link rel="canonical" href="https://mirage-zero-nine.github.io/2021/10/lc-74-240-1428-378-373-search-in-sorted-2d-matrix/">
 
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
@@ -218,9 +218,9 @@
   
   <div class="postShorten-meta post-meta">
     
-      <time itemprop="datePublished" datetime="2020-05-23T00:00:00Z">
+      <time itemprop="datePublished" datetime="2021-10-17T00:00:00Z">
         
-  May 23, 2020
+  October 17, 2021
 
       </time>
     
@@ -266,7 +266,11 @@
     <li><a href="#378-kth-smallest-element-in-a-sorted-matrix">378. Kth Smallest Element in a Sorted Matrix</a>
       <ul>
         <li><a href="#problem-description-3">Problem Description</a></li>
-        <li><a href="#method--code-3">Method &amp; Code</a></li>
+        <li><a href="#method--code-3">Method &amp; Code</a>
+          <ul>
+            <li><a href="#heap">Heap</a></li>
+          </ul>
+        </li>
       </ul>
     </li>
     <li><a href="#373-find-k-pairs-with-smallest-sums">373. Find K Pairs with Smallest Sums</a>
@@ -489,9 +493,9 @@ You may assume k is always valid, 1 ≤ k ≤ n2.</p>
 <ol>
 <li>Start the <strong>Binary Search</strong> with <code>start = matrix[0][0]</code> and <code>end = matrix[n-1][n-1]</code>.</li>
 <li>Find <code>median</code> of the <code>start</code> and the <code>end</code>. This <code>median</code> number is NOT necessarily an element in the matrix.</li>
-<li>Count all the numbers smaller than or equal to <code>median</code> in the matrix. As the matrix is sorted, we can do this in O(N).</li>
-<li>While counting, we can keep track of the “smallest number greater than the <code>median</code>” (<code>n1</code>) and at the same time the “biggest number less than or equal to the <code>median</code>” (<code>n2</code>). These two numbers will be used to adjust the &ldquo;number range&rdquo; for the <strong>Binary Search</strong> in the next iteration.</li>
-<li>If the count is equal to K, <code>n1</code> will be our required number as it is the “biggest number less than or equal to the <code>middle</code>”, and is definitely present in the matrix.</li>
+<li>Count all the numbers smaller than or equal to <code>median</code> in the matrix. As the matrix is sorted, it can be done in O(N).</li>
+<li>While counting, keep tracking the “smallest number greater than the <code>median</code>” (<code>n1</code>) and at the same time the “biggest number less than or equal to the <code>median</code>” (<code>n2</code>). These two numbers will be used to adjust the &ldquo;number range&rdquo; for the <strong>Binary Search</strong> in the next iteration.</li>
+<li>If the count is equal to K, <code>n1</code> will be required number as it is the “biggest number less than or equal to the <code>middle</code>”, and is definitely present in the matrix.</li>
 <li>If the count is less than K, update <code>start = n2</code> to search in the higher part of the matrix and if the count is greater than K, update <code>end = n1</code> to search in the lower part of the matrix in the next iteration.</li>
 </ol>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
@@ -554,6 +558,38 @@ You may assume k is always valid, 1 ≤ k ≤ n2.</p>
 </span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
     <span style="color:#f92672">}</span>
     <span style="color:#66d9ef">return</span> count<span style="color:#f92672">;</span>
+<span style="color:#f92672">}</span>
+</code></pre></div><h3 id="heap">Heap</h3>
+<p>Keep a min heap and started at each row&rsquo;s start position. Since each of the rows and columns are sorted, it can be guaranteed this is the smallest element for each row. Each time, poll out the top of the heap and add the next element in current row to the heap.</p>
+<p>After k times, the top of the heap is required element.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Keep a min heap and started at each row&#39;s start position.
+</span><span style="color:#75715e"> * Since each of the rows and columns are sorted, it can be guaranteed this is the smallest element for each row.
+</span><span style="color:#75715e"> * Each time, poll out the top of the heap and add the next element in current row to the heap.
+</span><span style="color:#75715e"> * After k times, the top of the heap is required element.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param matrix given matrix
+</span><span style="color:#75715e"> * @param k      kth smallest element
+</span><span style="color:#75715e"> * @return kth smallest element in the sorted order
+</span><span style="color:#75715e"> */</span>
+<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">kthSmallestMinHeap</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[][]</span> matrix<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> k<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">int</span> m <span style="color:#f92672">=</span> matrix<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">,</span> n <span style="color:#f92672">=</span> matrix<span style="color:#f92672">[</span>0<span style="color:#f92672">].</span><span style="color:#a6e22e">length</span><span style="color:#f92672">,</span> out <span style="color:#f92672">=</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">;</span>
+    PriorityQueue<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]&gt;</span> pq <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> PriorityQueue<span style="color:#f92672">&lt;&gt;(</span>Comparator<span style="color:#f92672">.</span><span style="color:#a6e22e">comparingInt</span><span style="color:#f92672">(</span>o <span style="color:#f92672">-&gt;</span> o<span style="color:#f92672">[</span>0<span style="color:#f92672">]));</span>
+
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> m<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+        pq<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]{</span>matrix<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>0<span style="color:#f92672">],</span> i<span style="color:#f92672">,</span> 0<span style="color:#f92672">});</span> <span style="color:#75715e">// line&#39;s start element, row #, column #
+</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> k<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+        <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> top <span style="color:#f92672">=</span> pq<span style="color:#f92672">.</span><span style="color:#a6e22e">poll</span><span style="color:#f92672">();</span>
+        <span style="color:#66d9ef">int</span> row <span style="color:#f92672">=</span> top<span style="color:#f92672">[</span>1<span style="color:#f92672">],</span> column <span style="color:#f92672">=</span> top<span style="color:#f92672">[</span>2<span style="color:#f92672">];</span>
+        out <span style="color:#f92672">=</span> top<span style="color:#f92672">[</span>0<span style="color:#f92672">];</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>column <span style="color:#f92672">+</span> 1 <span style="color:#f92672">&lt;</span> n<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            pq<span style="color:#f92672">.</span><span style="color:#a6e22e">offer</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]{</span>matrix<span style="color:#f92672">[</span>row<span style="color:#f92672">][</span>column <span style="color:#f92672">+</span> 1<span style="color:#f92672">],</span> row<span style="color:#f92672">,</span> column <span style="color:#f92672">+</span> 1<span style="color:#f92672">});</span>
+        <span style="color:#f92672">}</span>
+    <span style="color:#f92672">}</span>
+
+    <span style="color:#66d9ef">return</span> out<span style="color:#f92672">;</span>
 <span style="color:#f92672">}</span>
 </code></pre></div><h1 id="373-find-k-pairs-with-smallest-sums">373. Find K Pairs with Smallest Sums</h1>
 <p>Link: <a href="https://leetcode.com/problems/find-k-pairs-with-smallest-sums">Find K Pairs with Smallest Sums</a></p>
@@ -673,7 +709,7 @@ Explanation: All possible pairs are returned from the sequence: [1,3],[2,3]
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://mirage-zero-nine.github.io/2020/05/lc-1348-tweet-counts-per-frequency/" data-tooltip="LC 1348 - Tweet Counts Per Frequency">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://mirage-zero-nine.github.io/2021/10/lc-715-range-module/" data-tooltip="LC 715 - Range Module">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -681,7 +717,7 @@ Explanation: All possible pairs are returned from the sequence: [1,3],[2,3]
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://mirage-zero-nine.github.io/2020/05/lc-792-number-of-matching-subsequences/" data-tooltip="LC 792 - Number of Matching Subsequences">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://mirage-zero-nine.github.io/2021/10/lc-502-630-1383-1962-greedy-and-heap/" data-tooltip="LC 502 630 1383 1962 - Greedy And Heap">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
@@ -731,7 +767,7 @@ Explanation: All possible pairs are returned from the sequence: [1,3],[2,3]
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://mirage-zero-nine.github.io/2020/05/lc-1348-tweet-counts-per-frequency/" data-tooltip="LC 1348 - Tweet Counts Per Frequency">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://mirage-zero-nine.github.io/2021/10/lc-715-range-module/" data-tooltip="LC 715 - Range Module">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -739,7 +775,7 @@ Explanation: All possible pairs are returned from the sequence: [1,3],[2,3]
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://mirage-zero-nine.github.io/2020/05/lc-792-number-of-matching-subsequences/" data-tooltip="LC 792 - Number of Matching Subsequences">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://mirage-zero-nine.github.io/2021/10/lc-502-630-1383-1962-greedy-and-heap/" data-tooltip="LC 502 630 1383 1962 - Greedy And Heap">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
