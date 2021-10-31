@@ -241,7 +241,7 @@
             <div class="main-content-wrap">
               <h1 id="table-of-contents">Table of Contents</h1><nav id="TableOfContents">
   <ul>
-    <li><a href="#kth-largest-element-in-an-array">Kth Largest Element in an Array</a>
+    <li><a href="#215-kth-largest-element-in-an-array">215. Kth Largest Element in an Array</a>
       <ul>
         <li><a href="#problem-description">Problem Description</a></li>
         <li><a href="#method--code">Method &amp; Code</a>
@@ -254,7 +254,7 @@
     </li>
   </ul>
 </nav>
-<h1 id="kth-largest-element-in-an-array">Kth Largest Element in an Array</h1>
+<h1 id="215-kth-largest-element-in-an-array">215. Kth Largest Element in an Array</h1>
 <p>Link: <a href="https://leetcode.com/problems/kth-largest-element-in-an-array">Kth Largest Element in an Array</a></p>
 <h2 id="problem-description">Problem Description</h2>
 <p>Find the <strong>k</strong>th largest element in an unsorted array. Note that it is the kth largest element in the sorted order, not the kth distinct element.</p>
@@ -286,38 +286,46 @@ You may assume k is always valid, 1 ≤ k ≤ array&rsquo;s length.</p>
 
     <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>left <span style="color:#f92672">&lt;=</span> right<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
 
-        <span style="color:#66d9ef">int</span> index <span style="color:#f92672">=</span> partition<span style="color:#f92672">(</span>nums<span style="color:#f92672">,</span> left<span style="color:#f92672">,</span> right<span style="color:#f92672">);</span>
+        <span style="color:#66d9ef">int</span> pivotPosition <span style="color:#f92672">=</span> partition<span style="color:#f92672">(</span>nums<span style="color:#f92672">,</span> left<span style="color:#f92672">,</span> right<span style="color:#f92672">);</span>
 
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>index <span style="color:#f92672">-</span> left <span style="color:#f92672">+</span> 1 <span style="color:#f92672">&lt;</span> k<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            k <span style="color:#f92672">=</span> k <span style="color:#f92672">-</span> <span style="color:#f92672">(</span>index <span style="color:#f92672">-</span> left <span style="color:#f92672">+</span> 1<span style="color:#f92672">);</span>
-            left <span style="color:#f92672">=</span> index <span style="color:#f92672">+</span> 1<span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>index <span style="color:#f92672">-</span> left <span style="color:#f92672">+</span> 1 <span style="color:#f92672">&gt;</span> k<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            right <span style="color:#f92672">=</span> index <span style="color:#f92672">-</span> 1<span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">return</span> nums<span style="color:#f92672">[</span>index<span style="color:#f92672">];</span>
+        <span style="color:#75715e">/*
+</span><span style="color:#75715e">         * Pivot position shows how many value in array is larger than pivot.
+</span><span style="color:#75715e">         * If the pivot divide to a right sub array that has a size of k, then kth is found.
+</span><span style="color:#75715e">         * Otherwise, if pivot divides a subarray smaller than k, then there are k - k&#39; elements to be found.
+</span><span style="color:#75715e">         * If pivot divides a larger subarray, then directly narrow the search range to right subarray.
+</span><span style="color:#75715e">         * The reason is that under this condition, the right subarray contains more than k larger elements.
+</span><span style="color:#75715e">         * Therefore, directly partition in right subarray will suffice. */</span>
+        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>pivotPosition <span style="color:#f92672">-</span> left <span style="color:#f92672">+</span> 1 <span style="color:#f92672">&lt;</span> k<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+            k <span style="color:#f92672">=</span> k <span style="color:#f92672">-</span> <span style="color:#f92672">(</span>pivotPosition <span style="color:#f92672">-</span> left <span style="color:#f92672">+</span> 1<span style="color:#f92672">);</span>         <span style="color:#75715e">// find out how many larger element should be found
+</span><span style="color:#75715e"></span>            left <span style="color:#f92672">=</span> pivotPosition <span style="color:#f92672">+</span> 1<span style="color:#f92672">;</span>                   <span style="color:#75715e">// reset search range
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>pivotPosition <span style="color:#f92672">-</span> left <span style="color:#f92672">+</span> 1 <span style="color:#f92672">&gt;</span> k<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>      <span style="color:#75715e">// more than k larger elements are found
+</span><span style="color:#75715e"></span>            right <span style="color:#f92672">=</span> pivotPosition <span style="color:#f92672">-</span> 1<span style="color:#f92672">;</span>                  <span style="color:#75715e">// reset search range
+</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+            <span style="color:#66d9ef">return</span> nums<span style="color:#f92672">[</span>pivotPosition<span style="color:#f92672">];</span>
         <span style="color:#f92672">}</span>
     <span style="color:#f92672">}</span>
-    <span style="color:#66d9ef">return</span> 0<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">return</span> Integer<span style="color:#f92672">.</span><span style="color:#a6e22e">MAX_VALUE</span><span style="color:#f92672">;</span>
 <span style="color:#f92672">}</span>
 
 <span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Quick select.
+</span><span style="color:#75715e"> * Quick selection, make elements value between [0, leftBound] are all &gt;= pivot.
 </span><span style="color:#75715e"> *
 </span><span style="color:#75715e"> * @param array given array
-</span><span style="color:#75715e"> * @param left  start position
-</span><span style="color:#75715e"> * @param right end position
-</span><span style="color:#75715e"> * @return partition array
+</span><span style="color:#75715e"> * @param left  left index
+</span><span style="color:#75715e"> * @param right right index
+</span><span style="color:#75715e"> * @return pivot position
 </span><span style="color:#75715e"> */</span>
 <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">partition</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> array<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> left<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> right<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-    Random r <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Random<span style="color:#f92672">();</span>
-    <span style="color:#66d9ef">int</span> pivotIndex <span style="color:#f92672">=</span> r<span style="color:#f92672">.</span><span style="color:#a6e22e">nextInt</span><span style="color:#f92672">((</span>right <span style="color:#f92672">-</span> left<span style="color:#f92672">)</span> <span style="color:#f92672">+</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">+</span> left<span style="color:#f92672">;</span>
-<span style="color:#75715e">//        int pivotIndex = left + (right - left) / 2;
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> pivot <span style="color:#f92672">=</span> array<span style="color:#f92672">[</span>pivotIndex<span style="color:#f92672">];</span>
-    swap<span style="color:#f92672">(</span>array<span style="color:#f92672">,</span> pivotIndex<span style="color:#f92672">,</span> right<span style="color:#f92672">);</span>
-
+    <span style="color:#75715e">// Random r = new Random();
+</span><span style="color:#75715e"></span>    <span style="color:#75715e">// int pivotIndex = r.nextInt((right - left) + 1) + left;
+</span><span style="color:#75715e"></span>
+    <span style="color:#66d9ef">int</span> pivotIndex <span style="color:#f92672">=</span> left <span style="color:#f92672">+</span> <span style="color:#f92672">(</span>right <span style="color:#f92672">-</span> left<span style="color:#f92672">)</span> <span style="color:#f92672">/</span> 2<span style="color:#f92672">;</span>
+    <span style="color:#66d9ef">int</span> pivot <span style="color:#f92672">=</span> array<span style="color:#f92672">[</span>pivotIndex<span style="color:#f92672">];</span>
+    swap<span style="color:#f92672">(</span>array<span style="color:#f92672">,</span> pivotIndex<span style="color:#f92672">,</span> right<span style="color:#f92672">);</span>     <span style="color:#75715e">// swap elements to the end of range
+</span><span style="color:#75715e"></span>
     <span style="color:#66d9ef">int</span> leftBound <span style="color:#f92672">=</span> left<span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">int</span> rightBound <span style="color:#f92672">=</span> right <span style="color:#f92672">-</span> 1<span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>leftBound <span style="color:#f92672">&lt;=</span> rightBound<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+    <span style="color:#66d9ef">int</span> rightBound <span style="color:#f92672">=</span> right <span style="color:#f92672">-</span> 1<span style="color:#f92672">;</span>         <span style="color:#75715e">// set right bound to right - 1 to exclude pivot
+</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>leftBound <span style="color:#f92672">&lt;=</span> rightBound<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
         <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>array<span style="color:#f92672">[</span>leftBound<span style="color:#f92672">]</span> <span style="color:#f92672">&gt;=</span> pivot<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
             leftBound<span style="color:#f92672">++;</span>
         <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>array<span style="color:#f92672">[</span>rightBound<span style="color:#f92672">]</span> <span style="color:#f92672">&lt;</span> pivot<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
@@ -330,6 +338,13 @@ You may assume k is always valid, 1 ≤ k ≤ array&rsquo;s length.</p>
     <span style="color:#66d9ef">return</span> leftBound<span style="color:#f92672">;</span>
 <span style="color:#f92672">}</span>
 
+<span style="color:#75715e">/**
+</span><span style="color:#75715e"> * Swap two elements in array by given index.
+</span><span style="color:#75715e"> *
+</span><span style="color:#75715e"> * @param array given array
+</span><span style="color:#75715e"> * @param left  left index
+</span><span style="color:#75715e"> * @param right right index
+</span><span style="color:#75715e"> */</span>
 <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">swap</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> array<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> left<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> right<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
     <span style="color:#66d9ef">int</span> temp <span style="color:#f92672">=</span> array<span style="color:#f92672">[</span>left<span style="color:#f92672">];</span>
     array<span style="color:#f92672">[</span>left<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> array<span style="color:#f92672">[</span>right<span style="color:#f92672">];</span>
