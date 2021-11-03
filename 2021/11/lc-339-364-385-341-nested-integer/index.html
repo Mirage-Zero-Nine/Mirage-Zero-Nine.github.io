@@ -15,18 +15,18 @@
 <meta property="og:type" content="article">
 <meta property="og:title" content="LC 339 364 385 341 - Nested Integer">
 <meta name="twitter:title" content="LC 339 364 385 341 - Nested Integer">
-<meta property="og:url" content="https://mirage-zero-nine.github.io/2020/04/lc-339-364-385-341-nested-integer/">
-<meta property="twitter:url" content="https://mirage-zero-nine.github.io/2020/04/lc-339-364-385-341-nested-integer/">
+<meta property="og:url" content="https://mirage-zero-nine.github.io/2021/11/lc-339-364-385-341-nested-integer/">
+<meta property="twitter:url" content="https://mirage-zero-nine.github.io/2021/11/lc-339-364-385-341-nested-integer/">
 <meta property="og:site_name" content="Bingo!">
 <meta property="og:description" content="">
 <meta name="twitter:description" content="">
 <meta property="og:locale" content="en-us">
 
   
-    <meta property="article:published_time" content="2020-04-10T00:00:00">
+    <meta property="article:published_time" content="2021-11-02T00:00:00">
   
   
-    <meta property="article:modified_time" content="2020-04-10T00:00:00">
+    <meta property="article:modified_time" content="2021-11-02T00:00:00">
   
   
   
@@ -70,7 +70,7 @@
 
     
 
-    <link rel="canonical" href="https://mirage-zero-nine.github.io/2020/04/lc-339-364-385-341-nested-integer/">
+    <link rel="canonical" href="https://mirage-zero-nine.github.io/2021/11/lc-339-364-385-341-nested-integer/">
 
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous" />
@@ -220,9 +220,9 @@
   
   <div class="postShorten-meta post-meta">
     
-      <time itemprop="datePublished" datetime="2020-04-10T00:00:00Z">
+      <time itemprop="datePublished" datetime="2021-11-02T00:00:00Z">
         
-  April 10, 2020
+  November 2, 2021
 
       </time>
     
@@ -504,44 +504,55 @@ Explanation: By calling next repeatedly until hasNext returns false,
 <p>Use a stack to temporary store nested integers. The structure of nested integer is similar to a rootless tree, where the actual root is an &ldquo;invisible&rdquo; node.</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">NestedIterator</span> <span style="color:#66d9ef">implements</span> Iterator<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> <span style="color:#f92672">{</span>
 
-    <span style="color:#66d9ef">private</span> Stack<span style="color:#f92672">&lt;</span>NestedInteger<span style="color:#f92672">&gt;</span> stack <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Stack<span style="color:#f92672">&lt;&gt;();</span>     <span style="color:#75715e">// nested integers are given in reversed order
-</span><span style="color:#75715e"></span>
+    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> Stack<span style="color:#f92672">&lt;</span>ListIterator<span style="color:#f92672">&lt;</span>NestedInteger<span style="color:#f92672">&gt;&gt;</span> stack <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Stack<span style="color:#f92672">&lt;&gt;();</span>
+
     <span style="color:#75715e">/**
-</span><span style="color:#75715e">     * Initialize class.
+</span><span style="color:#75715e">     * The NestedInteger is similar to an n-ary tree. The given list could be treated as a children list of a root node.
+</span><span style="color:#75715e">     * Hence, this problem is actually implementing an n-ary tree leaves iterator.
+</span><span style="color:#75715e">     * Keep a list iterator stack to store the lists.
+</span><span style="color:#75715e">     * Initially, it is storing the iterator of whole given list, which is actually the children of a root node.
+</span><span style="color:#75715e">     * To get the next available element, push NestedInteger with list to stack until find an element that is Integer.
+</span><span style="color:#75715e">     * When next() is called, return the next element of the top of the stack.
 </span><span style="color:#75715e">     *
 </span><span style="color:#75715e">     * @param nestedList given nest integer list
 </span><span style="color:#75715e">     */</span>
     <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">NestedIterator</span><span style="color:#f92672">(</span>List<span style="color:#f92672">&lt;</span>NestedInteger<span style="color:#f92672">&gt;</span> nestedList<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> nestedList<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">()</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">;</span> i <span style="color:#f92672">&gt;=</span> 0<span style="color:#f92672">;</span> i<span style="color:#f92672">--)</span> <span style="color:#f92672">{</span>
-            stack<span style="color:#f92672">.</span><span style="color:#a6e22e">push</span><span style="color:#f92672">(</span>nestedList<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>i<span style="color:#f92672">));</span>
-        <span style="color:#f92672">}</span>
+        stack<span style="color:#f92672">.</span><span style="color:#a6e22e">push</span><span style="color:#f92672">(</span>nestedList<span style="color:#f92672">.</span><span style="color:#a6e22e">listIterator</span><span style="color:#f92672">());</span>
     <span style="color:#f92672">}</span>
 
     <span style="color:#75715e">/**
 </span><span style="color:#75715e">     * Return next value in nested integer.
+</span><span style="color:#75715e">     * Since the top of the stack is the previous element of the digit, call next() to get the next element.
 </span><span style="color:#75715e">     *
 </span><span style="color:#75715e">     * @return next value in nested integer.
 </span><span style="color:#75715e">     */</span>
     <span style="color:#a6e22e">@Override</span>
     <span style="color:#66d9ef">public</span> Integer <span style="color:#a6e22e">next</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">return</span> stack<span style="color:#f92672">.</span><span style="color:#a6e22e">pop</span><span style="color:#f92672">().</span><span style="color:#a6e22e">getInteger</span><span style="color:#f92672">();</span>
+        <span style="color:#66d9ef">return</span> hasNext<span style="color:#f92672">()</span> <span style="color:#f92672">?</span> stack<span style="color:#f92672">.</span><span style="color:#a6e22e">peek</span><span style="color:#f92672">().</span><span style="color:#a6e22e">next</span><span style="color:#f92672">().</span><span style="color:#a6e22e">getInteger</span><span style="color:#f92672">()</span> <span style="color:#f92672">:</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
     <span style="color:#f92672">}</span>
 
     <span style="color:#75715e">/**
-</span><span style="color:#75715e">     * Check if iterator has next element.
+</span><span style="color:#75715e">     * This method combine &#34;find next&#34; and &#34;check if it has next&#34;.
+</span><span style="color:#75715e">     * If the top of the stack does not have element left, pop it.
+</span><span style="color:#75715e">     * Then push element into stack until it is a digit.
+</span><span style="color:#75715e">     * Note that after found the digit element, move one element back.
+</span><span style="color:#75715e">     * In this way, if this method was called multiple times, it would not skip the next available value.
 </span><span style="color:#75715e">     *
 </span><span style="color:#75715e">     * @return if iterator has next element
 </span><span style="color:#75715e">     */</span>
     <span style="color:#a6e22e">@Override</span>
     <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">hasNext</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+
         <span style="color:#66d9ef">while</span> <span style="color:#f92672">(!</span>stack<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
-            NestedInteger curr <span style="color:#f92672">=</span> stack<span style="color:#f92672">.</span><span style="color:#a6e22e">peek</span><span style="color:#f92672">();</span>
-            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>curr<span style="color:#f92672">.</span><span style="color:#a6e22e">isInteger</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
-                <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
-            <span style="color:#f92672">}</span>
-            stack<span style="color:#f92672">.</span><span style="color:#a6e22e">pop</span><span style="color:#f92672">();</span>
-            <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> curr<span style="color:#f92672">.</span><span style="color:#a6e22e">getList</span><span style="color:#f92672">().</span><span style="color:#a6e22e">size</span><span style="color:#f92672">()</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">;</span> i <span style="color:#f92672">&gt;=</span> 0<span style="color:#f92672">;</span> i<span style="color:#f92672">--)</span> <span style="color:#f92672">{</span>
-                stack<span style="color:#f92672">.</span><span style="color:#a6e22e">push</span><span style="color:#f92672">(</span>curr<span style="color:#f92672">.</span><span style="color:#a6e22e">getList</span><span style="color:#f92672">().</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>i<span style="color:#f92672">));</span>
+            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>stack<span style="color:#f92672">.</span><span style="color:#a6e22e">peek</span><span style="color:#f92672">().</span><span style="color:#a6e22e">hasNext</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+                stack<span style="color:#f92672">.</span><span style="color:#a6e22e">pop</span><span style="color:#f92672">();</span> <span style="color:#75715e">// current nested integer has been used
+</span><span style="color:#75715e"></span>            <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+                NestedInteger next <span style="color:#f92672">=</span> stack<span style="color:#f92672">.</span><span style="color:#a6e22e">peek</span><span style="color:#f92672">().</span><span style="color:#a6e22e">next</span><span style="color:#f92672">();</span>
+                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>next<span style="color:#f92672">.</span><span style="color:#a6e22e">isInteger</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+                    stack<span style="color:#f92672">.</span><span style="color:#a6e22e">peek</span><span style="color:#f92672">().</span><span style="color:#a6e22e">previous</span><span style="color:#f92672">();</span> <span style="color:#75715e">// move to previous element
+</span><span style="color:#75715e"></span>                    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+                <span style="color:#f92672">}</span>
+                stack<span style="color:#f92672">.</span><span style="color:#a6e22e">push</span><span style="color:#f92672">(</span>next<span style="color:#f92672">.</span><span style="color:#a6e22e">getList</span><span style="color:#f92672">().</span><span style="color:#a6e22e">listIterator</span><span style="color:#f92672">());</span>
             <span style="color:#f92672">}</span>
         <span style="color:#f92672">}</span>
         <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
@@ -574,7 +585,7 @@ Explanation: By calling next repeatedly until hasNext returns false,
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://mirage-zero-nine.github.io/2020/04/lc-8-205-249-293-482-551-686-929-1160-1169-string-problems/" data-tooltip="LC 8 205 249 293 482 551 686 929 1160 1169 - String Problems">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://mirage-zero-nine.github.io/2021/11/java-snippets/" data-tooltip="Java Snippets">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -582,7 +593,7 @@ Explanation: By calling next repeatedly until hasNext returns false,
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://mirage-zero-nine.github.io/2020/04/lc-224-227-772-implement-calculator/" data-tooltip="LC 224 227 772 - Implement Calculator">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://mirage-zero-nine.github.io/2021/11/lc-720-longest-word-in-dictionary/" data-tooltip="LC 720 - Longest Word in Dictionary">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
@@ -632,7 +643,7 @@ Explanation: By calling next repeatedly until hasNext returns false,
           
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://mirage-zero-nine.github.io/2020/04/lc-8-205-249-293-482-551-686-929-1160-1169-string-problems/" data-tooltip="LC 8 205 249 293 482 551 686 929 1160 1169 - String Problems">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://mirage-zero-nine.github.io/2021/11/java-snippets/" data-tooltip="Java Snippets">
               
                   <i class="fa fa-angle-left"></i>
                   <span class="hide-xs hide-sm text-small icon-ml">NEXT</span>
@@ -640,7 +651,7 @@ Explanation: By calling next repeatedly until hasNext returns false,
             </li>
             <li class="post-action">
               
-                <a class="post-action-btn btn btn--default tooltip--top" href="https://mirage-zero-nine.github.io/2020/04/lc-224-227-772-implement-calculator/" data-tooltip="LC 224 227 772 - Implement Calculator">
+                <a class="post-action-btn btn btn--default tooltip--top" href="https://mirage-zero-nine.github.io/2021/11/lc-720-longest-word-in-dictionary/" data-tooltip="LC 720 - Longest Word in Dictionary">
               
                   <span class="hide-xs hide-sm text-small icon-mr">PREVIOUS</span>
                   <i class="fa fa-angle-right"></i>
