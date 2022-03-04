@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.92.2 with theme Tranquilpeak 0.4.8-BETA">
+<meta name="generator" content="Hugo 0.93.1 with theme Tranquilpeak 0.4.8-BETA">
 <meta name="author" content="Notebook">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -264,63 +264,63 @@
 <li>You may assume all tickets form at least one valid itinerary.</li>
 </ol>
 <p><strong>Example 1:</strong></p>
-<pre tabindex="0"><code>Input: [[&quot;MUC&quot;, &quot;LHR&quot;], [&quot;JFK&quot;, &quot;MUC&quot;], [&quot;SFO&quot;, &quot;SJC&quot;], [&quot;LHR&quot;, &quot;SFO&quot;]]
-Output: [&quot;JFK&quot;, &quot;MUC&quot;, &quot;LHR&quot;, &quot;SFO&quot;, &quot;SJC&quot;]
+<pre tabindex="0"><code>Input: [[&#34;MUC&#34;, &#34;LHR&#34;], [&#34;JFK&#34;, &#34;MUC&#34;], [&#34;SFO&#34;, &#34;SJC&#34;], [&#34;LHR&#34;, &#34;SFO&#34;]]
+Output: [&#34;JFK&#34;, &#34;MUC&#34;, &#34;LHR&#34;, &#34;SFO&#34;, &#34;SJC&#34;]
 </code></pre><p><strong>Example 2:</strong></p>
-<pre tabindex="0"><code>Input: [[&quot;JFK&quot;,&quot;SFO&quot;],[&quot;JFK&quot;,&quot;ATL&quot;],[&quot;SFO&quot;,&quot;ATL&quot;],[&quot;ATL&quot;,&quot;JFK&quot;],[&quot;ATL&quot;,&quot;SFO&quot;]]
-Output: [&quot;JFK&quot;,&quot;ATL&quot;,&quot;JFK&quot;,&quot;SFO&quot;,&quot;ATL&quot;,&quot;SFO&quot;]
-Explanation: Another possible reconstruction is [&quot;JFK&quot;,&quot;SFO&quot;,&quot;ATL&quot;,&quot;JFK&quot;,&quot;ATL&quot;,&quot;SFO&quot;].
+<pre tabindex="0"><code>Input: [[&#34;JFK&#34;,&#34;SFO&#34;],[&#34;JFK&#34;,&#34;ATL&#34;],[&#34;SFO&#34;,&#34;ATL&#34;],[&#34;ATL&#34;,&#34;JFK&#34;],[&#34;ATL&#34;,&#34;SFO&#34;]]
+Output: [&#34;JFK&#34;,&#34;ATL&#34;,&#34;JFK&#34;,&#34;SFO&#34;,&#34;ATL&#34;,&#34;SFO&#34;]
+Explanation: Another possible reconstruction is [&#34;JFK&#34;,&#34;SFO&#34;,&#34;ATL&#34;,&#34;JFK&#34;,&#34;ATL&#34;,&#34;SFO&#34;].
              But it is larger in lexical order.
 </code></pre><h2 id="method--code">Method &amp; Code</h2>
 <p>The given list could be a directed cycle graph, therefore, although this problem is much alike a topologic sorting problem, it can not be solved in this way. The method to solve this problem is DFS/BFS, and DFS is better, as itinerary graph are more inclined to be a deep graph rather than a wide graph.</p>
 <p>Use a hash map to store departure - destination pair.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
-</span><span style="color:#75715e"> * DFS search in graph.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param tickets list contains all departure - destination pair
-</span><span style="color:#75715e"> * @return reconstructed in order itinerary
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">public</span> List<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">findItinerary</span><span style="color:#f92672">(</span>List<span style="color:#f92672">&lt;</span>List<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;&gt;</span> tickets<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-    List<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> out <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;&gt;();</span>
-
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>tickets<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">()</span> <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">return</span> out<span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-
-    HashMap<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">,</span> PriorityQueue<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;&gt;</span> m <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashMap<span style="color:#f92672">&lt;&gt;();</span>
-
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>List<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> ticket <span style="color:#f92672">:</span> tickets<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>m<span style="color:#f92672">.</span><span style="color:#a6e22e">containsKey</span><span style="color:#f92672">(</span>ticket<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>0<span style="color:#f92672">)))</span> <span style="color:#f92672">{</span>
-            m<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>ticket<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>0<span style="color:#f92672">)).</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>ticket<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>1<span style="color:#f92672">));</span>
-        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
-            PriorityQueue<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> q <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> PriorityQueue<span style="color:#f92672">&lt;&gt;();</span>
-            q<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>ticket<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>1<span style="color:#f92672">));</span>
-            m<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>ticket<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>0<span style="color:#f92672">),</span> q<span style="color:#f92672">);</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-
-    dfs<span style="color:#f92672">(</span>m<span style="color:#f92672">,</span> out<span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;JFK&#34;</span><span style="color:#f92672">);</span>
-
-    <span style="color:#66d9ef">return</span> out<span style="color:#f92672">;</span>
-<span style="color:#f92672">}</span>
-
-<span style="color:#75715e">/**
-</span><span style="color:#75715e"> * DFS searching in graph to obtain the output list.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param m     hash map contains departure - destination
-</span><span style="color:#75715e"> * @param out   output list
-</span><span style="color:#75715e"> * @param start departure
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">dfs</span><span style="color:#f92672">(</span>HashMap<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">,</span> PriorityQueue<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;&gt;</span> m<span style="color:#f92672">,</span> List<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> out<span style="color:#f92672">,</span> String start<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-
-    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>m<span style="color:#f92672">.</span><span style="color:#a6e22e">containsKey</span><span style="color:#f92672">(</span>start<span style="color:#f92672">)</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">!</span>m<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>start<span style="color:#f92672">).</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>       <span style="color:#75715e">// DFS to the end of path
-</span><span style="color:#75715e"></span>        String destination <span style="color:#f92672">=</span> m<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>start<span style="color:#f92672">).</span><span style="color:#a6e22e">poll</span><span style="color:#f92672">();</span>
-        dfs<span style="color:#f92672">(</span>m<span style="color:#f92672">,</span> out<span style="color:#f92672">,</span> destination<span style="color:#f92672">);</span>
-    <span style="color:#f92672">}</span>
-
-    out<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>0<span style="color:#f92672">,</span> start<span style="color:#f92672">);</span>
-<span style="color:#f92672">}</span>
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * DFS search in graph.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param tickets list contains all departure - destination pair
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return reconstructed in order itinerary
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> List<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">findItinerary</span><span style="color:#f92672">(</span>List<span style="color:#f92672">&lt;</span>List<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;&gt;</span> tickets<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    List<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> out <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;&gt;();</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>tickets<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">()</span> <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> out<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    HashMap<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">,</span> PriorityQueue<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;&gt;</span> m <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashMap<span style="color:#f92672">&lt;&gt;();</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>List<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> ticket <span style="color:#f92672">:</span> tickets<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>m<span style="color:#f92672">.</span><span style="color:#a6e22e">containsKey</span><span style="color:#f92672">(</span>ticket<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>0<span style="color:#f92672">)))</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            m<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>ticket<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>0<span style="color:#f92672">)).</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>ticket<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>1<span style="color:#f92672">));</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            PriorityQueue<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> q <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> PriorityQueue<span style="color:#f92672">&lt;&gt;();</span>
+</span></span><span style="display:flex;"><span>            q<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>ticket<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>1<span style="color:#f92672">));</span>
+</span></span><span style="display:flex;"><span>            m<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>ticket<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>0<span style="color:#f92672">),</span> q<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    dfs<span style="color:#f92672">(</span>m<span style="color:#f92672">,</span> out<span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;JFK&#34;</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> out<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * DFS searching in graph to obtain the output list.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param m     hash map contains departure - destination
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param out   output list
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param start departure
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">dfs</span><span style="color:#f92672">(</span>HashMap<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">,</span> PriorityQueue<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;&gt;</span> m<span style="color:#f92672">,</span> List<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> out<span style="color:#f92672">,</span> String start<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>m<span style="color:#f92672">.</span><span style="color:#a6e22e">containsKey</span><span style="color:#f92672">(</span>start<span style="color:#f92672">)</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">!</span>m<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>start<span style="color:#f92672">).</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>       <span style="color:#75715e">// DFS to the end of path
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        String destination <span style="color:#f92672">=</span> m<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>start<span style="color:#f92672">).</span><span style="color:#a6e22e">poll</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>        dfs<span style="color:#f92672">(</span>m<span style="color:#f92672">,</span> out<span style="color:#f92672">,</span> destination<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    out<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>0<span style="color:#f92672">,</span> start<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div>
               
             </div>
           </div>

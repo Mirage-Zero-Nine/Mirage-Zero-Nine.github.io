@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.92.2 with theme Tranquilpeak 0.4.8-BETA">
+<meta name="generator" content="Hugo 0.93.1 with theme Tranquilpeak 0.4.8-BETA">
 <meta name="author" content="Notebook">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -266,50 +266,50 @@ Output: false
 <li>If two vertices in the same edge have the same newest son, then there is a loop in graph, which is invalid.</li>
 <li>If they have different newest son, union the son together.</li>
 </ul>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Union find.
-</span><span style="color:#75715e"> * Find the newest son of nodes in each edge.
-</span><span style="color:#75715e"> * If two vertices in the same edge have the same newest son, then there is a loop in graph, which is invalid.
-</span><span style="color:#75715e"> * If they have different newest son, union the son together.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param n     n nodes
-</span><span style="color:#75715e"> * @param edges edges that connect vertices
-</span><span style="color:#75715e"> * @return whether these edges make up a valid tree
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">validTree</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> n<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[][]</span> edges<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-
-    <span style="color:#75715e">/* Corner case */</span>
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>edges<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">!=</span> n <span style="color:#f92672">-</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>       <span style="color:#75715e">// if edges are more than nodes - 1, then it will definitely create a loop
-</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> root <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>n<span style="color:#f92672">];</span>    <span style="color:#75715e">// save connections of each node
-</span><span style="color:#75715e"></span>    Arrays<span style="color:#f92672">.</span><span style="color:#a6e22e">fill</span><span style="color:#f92672">(</span>root<span style="color:#f92672">,</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">);</span> <span style="color:#75715e">// all nodes are independent at beginning
-</span><span style="color:#75715e"></span>
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> edge <span style="color:#f92672">:</span> edges<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-
-        <span style="color:#66d9ef">int</span> r1 <span style="color:#f92672">=</span> find<span style="color:#f92672">(</span>edge<span style="color:#f92672">[</span>0<span style="color:#f92672">],</span> root<span style="color:#f92672">),</span> r2 <span style="color:#f92672">=</span> find<span style="color:#f92672">(</span>edge<span style="color:#f92672">[</span>1<span style="color:#f92672">],</span> root<span style="color:#f92672">);</span>     <span style="color:#75715e">// find their newest son
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>r1 <span style="color:#f92672">==</span> r2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>     <span style="color:#75715e">// if two nodes has same newest son, then the union operation will create a loop
-</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span>
-        root<span style="color:#f92672">[</span>r1<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> r2<span style="color:#f92672">;</span> <span style="color:#75715e">// union two nodes
-</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
-<span style="color:#f92672">}</span>
-
-<span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Find newest son of given node.
-</span><span style="color:#75715e"> * If current node is -1 (initial value), then current node itself is the newest son.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param vertex current node
-</span><span style="color:#75715e"> * @param root   array store root of each node
-</span><span style="color:#75715e"> * @return newest son of node
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">find</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> vertex<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> root<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-    <span style="color:#66d9ef">return</span> <span style="color:#f92672">(</span>root<span style="color:#f92672">[</span>vertex<span style="color:#f92672">]</span> <span style="color:#f92672">==</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">)</span> <span style="color:#f92672">?</span> vertex <span style="color:#f92672">:</span> find<span style="color:#f92672">(</span>root<span style="color:#f92672">[</span>vertex<span style="color:#f92672">],</span> root<span style="color:#f92672">);</span>
-<span style="color:#f92672">}</span>
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Union find.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Find the newest son of nodes in each edge.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * If two vertices in the same edge have the same newest son, then there is a loop in graph, which is invalid.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * If they have different newest son, union the son together.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param n     n nodes
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param edges edges that connect vertices
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return whether these edges make up a valid tree
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">validTree</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> n<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[][]</span> edges<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/* Corner case */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>edges<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">!=</span> n <span style="color:#f92672">-</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>       <span style="color:#75715e">// if edges are more than nodes - 1, then it will definitely create a loop
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> root <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>n<span style="color:#f92672">];</span>    <span style="color:#75715e">// save connections of each node
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    Arrays<span style="color:#f92672">.</span><span style="color:#a6e22e">fill</span><span style="color:#f92672">(</span>root<span style="color:#f92672">,</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">);</span> <span style="color:#75715e">// all nodes are independent at beginning
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> edge <span style="color:#f92672">:</span> edges<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> r1 <span style="color:#f92672">=</span> find<span style="color:#f92672">(</span>edge<span style="color:#f92672">[</span>0<span style="color:#f92672">],</span> root<span style="color:#f92672">),</span> r2 <span style="color:#f92672">=</span> find<span style="color:#f92672">(</span>edge<span style="color:#f92672">[</span>1<span style="color:#f92672">],</span> root<span style="color:#f92672">);</span>     <span style="color:#75715e">// find their newest son
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>r1 <span style="color:#f92672">==</span> r2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>     <span style="color:#75715e">// if two nodes has same newest son, then the union operation will create a loop
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        root<span style="color:#f92672">[</span>r1<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> r2<span style="color:#f92672">;</span> <span style="color:#75715e">// union two nodes
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Find newest son of given node.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * If current node is -1 (initial value), then current node itself is the newest son.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param vertex current node
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param root   array store root of each node
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return newest son of node
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">find</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> vertex<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> root<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#f92672">(</span>root<span style="color:#f92672">[</span>vertex<span style="color:#f92672">]</span> <span style="color:#f92672">==</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">)</span> <span style="color:#f92672">?</span> vertex <span style="color:#f92672">:</span> find<span style="color:#f92672">(</span>root<span style="color:#f92672">[</span>vertex<span style="color:#f92672">],</span> root<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div>
               
             </div>
           </div>

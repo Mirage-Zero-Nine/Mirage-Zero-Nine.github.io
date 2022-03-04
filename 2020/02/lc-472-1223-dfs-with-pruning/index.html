@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.92.2 with theme Tranquilpeak 0.4.8-BETA">
+<meta name="generator" content="Hugo 0.93.1 with theme Tranquilpeak 0.4.8-BETA">
 <meta name="author" content="Notebook">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -265,13 +265,13 @@
 <p>Given a list of words (<strong>without duplicates</strong>), please write a program that returns all concatenated words in the given list of words.</p>
 <p>A concatenated word is defined as a string that is comprised entirely of at least two shorter words in the given array.</p>
 <p><strong>Example:</strong></p>
-<pre tabindex="0"><code>Input: [&quot;cat&quot;,&quot;cats&quot;,&quot;catsdogcats&quot;,&quot;dog&quot;,&quot;dogcatsdog&quot;,&quot;hippopotamuses&quot;,&quot;rat&quot;,&quot;ratcatdogcat&quot;]
+<pre tabindex="0"><code>Input: [&#34;cat&#34;,&#34;cats&#34;,&#34;catsdogcats&#34;,&#34;dog&#34;,&#34;dogcatsdog&#34;,&#34;hippopotamuses&#34;,&#34;rat&#34;,&#34;ratcatdogcat&#34;]
 
-Output: [&quot;catsdogcats&quot;,&quot;dogcatsdog&quot;,&quot;ratcatdogcat&quot;]
+Output: [&#34;catsdogcats&#34;,&#34;dogcatsdog&#34;,&#34;ratcatdogcat&#34;]
 
-Explanation: &quot;catsdogcats&quot; can be concatenated by &quot;cats&quot;, &quot;dog&quot; and &quot;cats&quot;; 
- &quot;dogcatsdog&quot; can be concatenated by &quot;dog&quot;, &quot;cats&quot; and &quot;dog&quot;; 
-&quot;ratcatdogcat&quot; can be concatenated by &quot;rat&quot;, &quot;cat&quot;, &quot;dog&quot; and &quot;cat&quot;.
+Explanation: &#34;catsdogcats&#34; can be concatenated by &#34;cats&#34;, &#34;dog&#34; and &#34;cats&#34;; 
+ &#34;dogcatsdog&#34; can be concatenated by &#34;dog&#34;, &#34;cats&#34; and &#34;dog&#34;; 
+&#34;ratcatdogcat&#34; can be concatenated by &#34;rat&#34;, &#34;cat&#34;, &#34;dog&#34; and &#34;cat&#34;.
 </code></pre><p><strong>Note:</strong></p>
 <ol>
 <li>The number of elements of the given array will not exceed <code>10,000 </code></li>
@@ -282,64 +282,64 @@ Explanation: &quot;catsdogcats&quot; can be concatenated by &quot;cats&quot;, &q
 <h2 id="method--code">Method &amp; Code</h2>
 <p>Sort the word list, then from shortest word, check if current word can be formed by shorter words. The sub-problem is actually Word Break problem above.</p>
 <p>Time complexity: <code>O(n * m ^ 2)</code>, where n is the length of list, m is the length of longest word in given list.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Sort the word list, then from shortest word, check if current word can be formed by shorter words.
-</span><span style="color:#75715e"> * The sub-problem is actually word break I.
-</span><span style="color:#75715e"> * Time complexity: O(n * m ^ 2), where n is the length of list, m is the length of longest word in given list.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param words given words list
-</span><span style="color:#75715e"> * @return list of words can be formed by other words in list
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">public</span> List<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">findAllConcatenatedWordsInADict</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[]</span> words<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-
-    Arrays<span style="color:#f92672">.</span><span style="color:#a6e22e">sort</span><span style="color:#f92672">(</span>words<span style="color:#f92672">,</span> <span style="color:#f92672">(</span>a<span style="color:#f92672">,</span> b<span style="color:#f92672">)</span> <span style="color:#f92672">-&gt;</span> a<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">()</span> <span style="color:#f92672">-</span> b<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">());</span>
-
-    List<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> out <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;&gt;();</span>
-    HashSet<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> dictionary <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashSet<span style="color:#f92672">&lt;&gt;();</span>       <span style="color:#75715e">// store all possibles words that can form longer words
-</span><span style="color:#75715e"></span>
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>String w <span style="color:#f92672">:</span> words<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>dictionary<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">()</span> <span style="color:#f92672">!=</span> 0 <span style="color:#f92672">&amp;&amp;</span> wordBreak<span style="color:#f92672">(</span>w<span style="color:#f92672">,</span> dictionary<span style="color:#f92672">,</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>w<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">()],</span> 0<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>       <span style="color:#75715e">// word break
-</span><span style="color:#75715e"></span>            out<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>w<span style="color:#f92672">);</span>
-        <span style="color:#f92672">}</span>
-
-        dictionary<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>w<span style="color:#f92672">);</span>      <span style="color:#75715e">// previous shorter word may form later longer words
-</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">return</span> out<span style="color:#f92672">;</span>
-<span style="color:#f92672">}</span>
-
-<span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Use DFS with memorization to find if s can be segmented. Use an integer array as memorization to avoid TLE.
-</span><span style="color:#75715e"> * Time complexity: O(m ^ 2), where m is the length of word.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param s          given string
-</span><span style="color:#75715e"> * @param dictionary given dictionary
-</span><span style="color:#75715e"> * @param mem        memorization array
-</span><span style="color:#75715e"> * @param start      start index
-</span><span style="color:#75715e"> * @return if s can be segmented into a space-separated sequence of one or more dictionary words
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">wordBreak</span><span style="color:#f92672">(</span>String s<span style="color:#f92672">,</span> HashSet<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> dictionary<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> mem<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> start<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>dictionary<span style="color:#f92672">.</span><span style="color:#a6e22e">contains</span><span style="color:#f92672">(</span>s<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>mem<span style="color:#f92672">[</span>start<span style="color:#f92672">]</span> <span style="color:#f92672">!=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">return</span> mem<span style="color:#f92672">[</span>start<span style="color:#f92672">]</span> <span style="color:#f92672">==</span> 1<span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">();</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>dictionary<span style="color:#f92672">.</span><span style="color:#a6e22e">contains</span><span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">substring</span><span style="color:#f92672">(</span>i<span style="color:#f92672">))</span> <span style="color:#f92672">&amp;&amp;</span> wordBreak<span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">substring</span><span style="color:#f92672">(</span>0<span style="color:#f92672">,</span> i<span style="color:#f92672">),</span> dictionary<span style="color:#f92672">,</span> mem<span style="color:#f92672">,</span> i<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
-            mem<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span>
-            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-    mem<span style="color:#f92672">[</span>start<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">;</span>
-
-    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
-<span style="color:#f92672">}</span>
-</code></pre></div><h1 id="dice-roll-simulation">Dice Roll Simulation</h1>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Sort the word list, then from shortest word, check if current word can be formed by shorter words.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * The sub-problem is actually word break I.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Time complexity: O(n * m ^ 2), where n is the length of list, m is the length of longest word in given list.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param words given words list
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return list of words can be formed by other words in list
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> List<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">findAllConcatenatedWordsInADict</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[]</span> words<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    Arrays<span style="color:#f92672">.</span><span style="color:#a6e22e">sort</span><span style="color:#f92672">(</span>words<span style="color:#f92672">,</span> <span style="color:#f92672">(</span>a<span style="color:#f92672">,</span> b<span style="color:#f92672">)</span> <span style="color:#f92672">-&gt;</span> a<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">()</span> <span style="color:#f92672">-</span> b<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">());</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    List<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> out <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;&gt;();</span>
+</span></span><span style="display:flex;"><span>    HashSet<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> dictionary <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashSet<span style="color:#f92672">&lt;&gt;();</span>       <span style="color:#75715e">// store all possibles words that can form longer words
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>String w <span style="color:#f92672">:</span> words<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>dictionary<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">()</span> <span style="color:#f92672">!=</span> 0 <span style="color:#f92672">&amp;&amp;</span> wordBreak<span style="color:#f92672">(</span>w<span style="color:#f92672">,</span> dictionary<span style="color:#f92672">,</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>w<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">()],</span> 0<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>       <span style="color:#75715e">// word break
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            out<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>w<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        dictionary<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>w<span style="color:#f92672">);</span>      <span style="color:#75715e">// previous shorter word may form later longer words
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> out<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Use DFS with memorization to find if s can be segmented. Use an integer array as memorization to avoid TLE.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Time complexity: O(m ^ 2), where m is the length of word.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param s          given string
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param dictionary given dictionary
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param mem        memorization array
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param start      start index
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return if s can be segmented into a space-separated sequence of one or more dictionary words
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">wordBreak</span><span style="color:#f92672">(</span>String s<span style="color:#f92672">,</span> HashSet<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> dictionary<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> mem<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> start<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>dictionary<span style="color:#f92672">.</span><span style="color:#a6e22e">contains</span><span style="color:#f92672">(</span>s<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>mem<span style="color:#f92672">[</span>start<span style="color:#f92672">]</span> <span style="color:#f92672">!=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> mem<span style="color:#f92672">[</span>start<span style="color:#f92672">]</span> <span style="color:#f92672">==</span> 1<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">();</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>dictionary<span style="color:#f92672">.</span><span style="color:#a6e22e">contains</span><span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">substring</span><span style="color:#f92672">(</span>i<span style="color:#f92672">))</span> <span style="color:#f92672">&amp;&amp;</span> wordBreak<span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">substring</span><span style="color:#f92672">(</span>0<span style="color:#f92672">,</span> i<span style="color:#f92672">),</span> dictionary<span style="color:#f92672">,</span> mem<span style="color:#f92672">,</span> i<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            mem<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    mem<span style="color:#f92672">[</span>start<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><h1 id="dice-roll-simulation">Dice Roll Simulation</h1>
 <p>Link: <a href="https://leetcode.com/problems/dice-roll-simulation">Dice Roll Simulation</a></p>
 <h2 id="problem-description-1">Problem Description</h2>
 <p>A die simulator generates a random number from 1 to 6 for each roll. You introduced a constraint to the generator such that it cannot roll the number <code>i</code> more than <code>rollMax[i]</code> (1-indexed) <strong>consecutive</strong> times.</p>
@@ -365,64 +365,64 @@ Output: 181
 <p>DFS with memorization.</p>
 <p>The memorization array stores value under specific remaining dices, roll limit, and dice value.</p>
 <p>The constraint of DFS is that, first, if remaining dice is 0, then current dice has only one combination. Second, if consecutive roll has reached the limit, current dice roll can not be the limited value.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> MOD <span style="color:#f92672">=</span> 1000000000 <span style="color:#f92672">+</span> 7<span style="color:#f92672">;</span>
-
-<span style="color:#75715e">/**
-</span><span style="color:#75715e"> * DFS with memorization.
-</span><span style="color:#75715e"> * The memorization array stores value under specific remaining dices, roll limit, and dice value.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param n       n dices
-</span><span style="color:#75715e"> * @param rollMax max consecutive rolls of one dice value
-</span><span style="color:#75715e"> * @return the number of distinct sequences that can be obtained with exact n rolls
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">dieSimulator</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> n<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> rollMax<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-    <span style="color:#66d9ef">int</span><span style="color:#f92672">[][][]</span> mem <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>n<span style="color:#f92672">][</span>16<span style="color:#f92672">][</span>6<span style="color:#f92672">];</span>      <span style="color:#75715e">// n remaining dices, at most roll 16 times, dice has 6 facet
-</span><span style="color:#75715e"></span>
-    <span style="color:#66d9ef">int</span> out <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> 6<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
-        out <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>out <span style="color:#f92672">+</span> dfs<span style="color:#f92672">(</span>mem<span style="color:#f92672">,</span> rollMax<span style="color:#f92672">,</span> n <span style="color:#f92672">-</span> 1<span style="color:#f92672">,</span> 1<span style="color:#f92672">,</span> i<span style="color:#f92672">))</span> <span style="color:#f92672">%</span> MOD<span style="color:#f92672">;</span>     <span style="color:#75715e">// first dice roll
-</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">return</span> out<span style="color:#f92672">;</span>
-<span style="color:#f92672">}</span>
-
-<span style="color:#75715e">/**
-</span><span style="color:#75715e"> * DFS with memorization.
-</span><span style="color:#75715e"> * The constraint of DFS is that, first, if remaining dice is 0, then current dice has only one combination.
-</span><span style="color:#75715e"> * Second, if consecutive roll has reached the limit, current dice roll can not be the limited value.
-</span><span style="color:#75715e"> * A memorization array is used to store the previous result of specific remaining dice, roll limit and dice value.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param mem         memory array
-</span><span style="color:#75715e"> * @param max         max consecutive rolls of one dice value
-</span><span style="color:#75715e"> * @param remaining   remaining dice roll
-</span><span style="color:#75715e"> * @param consecutive previous consecutive roll
-</span><span style="color:#75715e"> * @param i           previous dice value
-</span><span style="color:#75715e"> * @return the number of distinct sequences that can be obtained with exact n rolls
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">dfs</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[][][]</span> mem<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> max<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> remaining<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> consecutive<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> i<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>remaining <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">return</span> 1<span style="color:#f92672">;</span>       <span style="color:#75715e">// last dice has only one combination
-</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>mem<span style="color:#f92672">[</span>remaining<span style="color:#f92672">][</span>consecutive<span style="color:#f92672">][</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">!=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">return</span> mem<span style="color:#f92672">[</span>remaining<span style="color:#f92672">][</span>consecutive<span style="color:#f92672">][</span>i<span style="color:#f92672">];</span>      <span style="color:#75715e">// memorization
-</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">int</span> out <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> j <span style="color:#f92672">&lt;</span> 6<span style="color:#f92672">;</span> j<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>j <span style="color:#f92672">!=</span> i<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            out <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>out <span style="color:#f92672">+</span> dfs<span style="color:#f92672">(</span>mem<span style="color:#f92672">,</span> max<span style="color:#f92672">,</span> remaining <span style="color:#f92672">-</span> 1<span style="color:#f92672">,</span> 1<span style="color:#f92672">,</span> j<span style="color:#f92672">))</span> <span style="color:#f92672">%</span> MOD<span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>consecutive <span style="color:#f92672">&lt;</span> max<span style="color:#f92672">[</span>i<span style="color:#f92672">])</span> <span style="color:#f92672">{</span>
-            out <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>out <span style="color:#f92672">+</span> dfs<span style="color:#f92672">(</span>mem<span style="color:#f92672">,</span> max<span style="color:#f92672">,</span> remaining <span style="color:#f92672">-</span> 1<span style="color:#f92672">,</span> consecutive <span style="color:#f92672">+</span> 1<span style="color:#f92672">,</span> j<span style="color:#f92672">))</span> <span style="color:#f92672">%</span> MOD<span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-
-    mem<span style="color:#f92672">[</span>remaining<span style="color:#f92672">][</span>consecutive<span style="color:#f92672">][</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> out<span style="color:#f92672">;</span>
-
-    <span style="color:#66d9ef">return</span> out<span style="color:#f92672">;</span>
-<span style="color:#f92672">}</span>
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> MOD <span style="color:#f92672">=</span> 1000000000 <span style="color:#f92672">+</span> 7<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * DFS with memorization.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * The memorization array stores value under specific remaining dices, roll limit, and dice value.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param n       n dices
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param rollMax max consecutive rolls of one dice value
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return the number of distinct sequences that can be obtained with exact n rolls
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">dieSimulator</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> n<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> rollMax<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span><span style="color:#f92672">[][][]</span> mem <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>n<span style="color:#f92672">][</span>16<span style="color:#f92672">][</span>6<span style="color:#f92672">];</span>      <span style="color:#75715e">// n remaining dices, at most roll 16 times, dice has 6 facet
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> out <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> 6<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        out <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>out <span style="color:#f92672">+</span> dfs<span style="color:#f92672">(</span>mem<span style="color:#f92672">,</span> rollMax<span style="color:#f92672">,</span> n <span style="color:#f92672">-</span> 1<span style="color:#f92672">,</span> 1<span style="color:#f92672">,</span> i<span style="color:#f92672">))</span> <span style="color:#f92672">%</span> MOD<span style="color:#f92672">;</span>     <span style="color:#75715e">// first dice roll
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> out<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * DFS with memorization.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * The constraint of DFS is that, first, if remaining dice is 0, then current dice has only one combination.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Second, if consecutive roll has reached the limit, current dice roll can not be the limited value.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * A memorization array is used to store the previous result of specific remaining dice, roll limit and dice value.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param mem         memory array
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param max         max consecutive rolls of one dice value
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param remaining   remaining dice roll
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param consecutive previous consecutive roll
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param i           previous dice value
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return the number of distinct sequences that can be obtained with exact n rolls
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">dfs</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[][][]</span> mem<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> max<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> remaining<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> consecutive<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> i<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>remaining <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> 1<span style="color:#f92672">;</span>       <span style="color:#75715e">// last dice has only one combination
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>mem<span style="color:#f92672">[</span>remaining<span style="color:#f92672">][</span>consecutive<span style="color:#f92672">][</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">!=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> mem<span style="color:#f92672">[</span>remaining<span style="color:#f92672">][</span>consecutive<span style="color:#f92672">][</span>i<span style="color:#f92672">];</span>      <span style="color:#75715e">// memorization
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> out <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> j <span style="color:#f92672">&lt;</span> 6<span style="color:#f92672">;</span> j<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>j <span style="color:#f92672">!=</span> i<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            out <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>out <span style="color:#f92672">+</span> dfs<span style="color:#f92672">(</span>mem<span style="color:#f92672">,</span> max<span style="color:#f92672">,</span> remaining <span style="color:#f92672">-</span> 1<span style="color:#f92672">,</span> 1<span style="color:#f92672">,</span> j<span style="color:#f92672">))</span> <span style="color:#f92672">%</span> MOD<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>consecutive <span style="color:#f92672">&lt;</span> max<span style="color:#f92672">[</span>i<span style="color:#f92672">])</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            out <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>out <span style="color:#f92672">+</span> dfs<span style="color:#f92672">(</span>mem<span style="color:#f92672">,</span> max<span style="color:#f92672">,</span> remaining <span style="color:#f92672">-</span> 1<span style="color:#f92672">,</span> consecutive <span style="color:#f92672">+</span> 1<span style="color:#f92672">,</span> j<span style="color:#f92672">))</span> <span style="color:#f92672">%</span> MOD<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    mem<span style="color:#f92672">[</span>remaining<span style="color:#f92672">][</span>consecutive<span style="color:#f92672">][</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> out<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> out<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div>
               
             </div>
           </div>

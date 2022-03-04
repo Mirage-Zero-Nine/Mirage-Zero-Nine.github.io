@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.92.2 with theme Tranquilpeak 0.4.8-BETA">
+<meta name="generator" content="Hugo 0.93.1 with theme Tranquilpeak 0.4.8-BETA">
 <meta name="author" content="Notebook">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -258,119 +258,119 @@ Explanation: You can allocate to the first, second and third child with 1, 2, 1 
 <p>If decreasing sub array is longer than largest candies give to previous child, update candies with length. Otherwise, simply add the sum from 1 to length of decreasing sub array to total candies count.</p>
 <p>Finally, if decreasing sub array reaches the end of array, count the decreasing sum again.</p>
 <p>There is a more simple two pass solution, the idea is same but use a extra array to store each child&rsquo;s exact candy. See code below. This solution can also return the number of candies that each child can have.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
-</span><span style="color:#75715e"> * If sub array is increasing, then give candy based by previous rating.
-</span><span style="color:#75715e"> * If sub array is decreasing, then count the length of decreasing sub array.
-</span><span style="color:#75715e"> * If decreasing sub array is longer than largest candies give to previous child, update candies with length.
-</span><span style="color:#75715e"> * Otherwise, simply add the sum from 1 to length of decreasing sub array to total candies count.
-</span><span style="color:#75715e"> * Finally, if decreasing sub array reaches the end of array, count the decreasing sum again.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param ratings given rating array
-</span><span style="color:#75715e"> * @return minimum total candies to give
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">candy</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> ratings<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-
-    <span style="color:#75715e">/* Corner case */</span>
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>ratings<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">&lt;</span> 2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">return</span> ratings<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">int</span> decreasing <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>         <span style="color:#75715e">// length of decreasing sub array
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> previousCandy <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span>      <span style="color:#75715e">// largest candies give to a child in previous array
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> totalCandy <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span>         <span style="color:#75715e">// sum of candies
-</span><span style="color:#75715e"></span>
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> ratings<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
-
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>ratings<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">&lt;</span> ratings<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">])</span> <span style="color:#f92672">{</span>      <span style="color:#75715e">// calculate total length of decreasing array
-</span><span style="color:#75715e"></span>            decreasing<span style="color:#f92672">++;</span>
-        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
-
-            <span style="color:#75715e">/*
-</span><span style="color:#75715e">             * If there is no decreasing array, then check current rating and previous rating.
-</span><span style="color:#75715e">             * If two rating values are same, previous largest candies can be set to 1.
-</span><span style="color:#75715e">             * If later part is decreasing array, sum will be recalculated.
-</span><span style="color:#75715e">             * Otherwise, 1 candy will suffice, since only higher rating get more candies than their neighbors. */</span>
-            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>decreasing <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>ratings<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">==</span> ratings<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">])</span> <span style="color:#f92672">{</span>
-                    previousCandy <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span>
-                <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>        <span style="color:#75715e">// normal increasing array
-</span><span style="color:#75715e"></span>                    previousCandy<span style="color:#f92672">++;</span>
-                <span style="color:#f92672">}</span>
-                totalCandy <span style="color:#f92672">+=</span> previousCandy<span style="color:#f92672">;</span>
-            <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
-
-                <span style="color:#75715e">/*
-</span><span style="color:#75715e">                 * If reaches the end of decreasing array, then there are two conditions:
-</span><span style="color:#75715e">                 * If decreasing part is shorter than most previous candies , simply add sum of length to total candies.
-</span><span style="color:#75715e">                 * Otherwise, the whole decreasing sub array will be updated.
-</span><span style="color:#75715e">                 * The candies give to child should starts at lowest rating, which is 1.
-</span><span style="color:#75715e">                 * Then add one during the traverse of decreasing sub array.
-</span><span style="color:#75715e">                 * Finally, add the difference at the start of decreasing sub array.
-</span><span style="color:#75715e">                 * The value is length of decreasing sub array minus previous candies give to this point. */</span>
-                totalCandy <span style="color:#f92672">+=</span> <span style="color:#f92672">(</span>1 <span style="color:#f92672">+</span> decreasing<span style="color:#f92672">)</span> <span style="color:#f92672">*</span> decreasing <span style="color:#f92672">/</span> 2<span style="color:#f92672">;</span>
-
-                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>decreasing <span style="color:#f92672">&gt;=</span> previousCandy<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                    totalCandy <span style="color:#f92672">=</span> totalCandy <span style="color:#f92672">+</span> <span style="color:#f92672">(</span>decreasing <span style="color:#f92672">-</span> previousCandy<span style="color:#f92672">)</span> <span style="color:#f92672">+</span> 1<span style="color:#f92672">;</span>
-                <span style="color:#f92672">}</span>
-
-                previousCandy <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>ratings<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">==</span> ratings<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">])</span> <span style="color:#f92672">?</span> 1 <span style="color:#f92672">:</span> 2<span style="color:#f92672">;</span>     <span style="color:#75715e">// current should be higher than lower rating
-</span><span style="color:#75715e"></span>                totalCandy <span style="color:#f92672">+=</span> previousCandy<span style="color:#f92672">;</span>
-                decreasing <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
-            <span style="color:#f92672">}</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#75715e">/*
-</span><span style="color:#75715e">     * If decreasing sub array reaches the end of array, then the sum of this sub array will not be added to total.
-</span><span style="color:#75715e">     * Therefore, complete the decreasing array calculation process again to finish it. */</span>
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>decreasing <span style="color:#f92672">&gt;</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        totalCandy <span style="color:#f92672">+=</span> <span style="color:#f92672">(</span>1 <span style="color:#f92672">+</span> decreasing<span style="color:#f92672">)</span> <span style="color:#f92672">*</span> decreasing <span style="color:#f92672">/</span> 2<span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>decreasing <span style="color:#f92672">&gt;=</span> previousCandy<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            totalCandy <span style="color:#f92672">+=</span> decreasing <span style="color:#f92672">-</span> previousCandy <span style="color:#f92672">+</span> 1<span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">return</span> totalCandy<span style="color:#f92672">;</span>
-<span style="color:#f92672">}</span>
-
-<span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Two pass to find each position&#39;s minimum candies.
-</span><span style="color:#75715e"> * First pass, from left to right, find the min candies that each increasing order subarray needed.
-</span><span style="color:#75715e"> * Second pass, from right to left, find the required candies for decreasing order subarray.
-</span><span style="color:#75715e"> * During second pass, candies depends on the larger one between previous candies plus one, or the origin candies.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param ratings given rating array
-</span><span style="color:#75715e"> * @return minimum total candies to give
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">twoPass</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> ratings<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-
-    <span style="color:#75715e">/* Corner case */</span>
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>ratings<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">&lt;</span> 2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">return</span> ratings<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">int</span> n <span style="color:#f92672">=</span> ratings<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> tmp <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>n<span style="color:#f92672">];</span>
-    Arrays<span style="color:#f92672">.</span><span style="color:#a6e22e">fill</span><span style="color:#f92672">(</span>tmp<span style="color:#f92672">,</span> 1<span style="color:#f92672">);</span>
-
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> n<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>ratings<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">&gt;</span> ratings<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">])</span> <span style="color:#f92672">{</span>      <span style="color:#75715e">// if current rating is larger than left one
-</span><span style="color:#75715e"></span>            tmp<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> tmp<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> 1<span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-    <span style="color:#66d9ef">int</span> out <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> n <span style="color:#f92672">-</span> 1<span style="color:#f92672">;</span> i <span style="color:#f92672">&gt;</span> 0<span style="color:#f92672">;</span> i<span style="color:#f92672">--)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>ratings<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span> <span style="color:#f92672">&gt;</span> ratings<span style="color:#f92672">[</span>i<span style="color:#f92672">])</span> <span style="color:#f92672">{</span>      <span style="color:#75715e">// if left one is larger than current rating
-</span><span style="color:#75715e"></span>            tmp<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>tmp<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> 1<span style="color:#f92672">,</span> tmp<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">]);</span>
-        <span style="color:#f92672">}</span>
-        out <span style="color:#f92672">+=</span> tmp<span style="color:#f92672">[</span>i<span style="color:#f92672">];</span>
-    <span style="color:#f92672">}</span>
-
-    out <span style="color:#f92672">+=</span> tmp<span style="color:#f92672">[</span>0<span style="color:#f92672">];</span>
-
-    <span style="color:#66d9ef">return</span> out<span style="color:#f92672">;</span>
-<span style="color:#f92672">}</span>
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * If sub array is increasing, then give candy based by previous rating.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * If sub array is decreasing, then count the length of decreasing sub array.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * If decreasing sub array is longer than largest candies give to previous child, update candies with length.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Otherwise, simply add the sum from 1 to length of decreasing sub array to total candies count.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Finally, if decreasing sub array reaches the end of array, count the decreasing sum again.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param ratings given rating array
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return minimum total candies to give
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">candy</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> ratings<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/* Corner case */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>ratings<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">&lt;</span> 2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> ratings<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> decreasing <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>         <span style="color:#75715e">// length of decreasing sub array
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> previousCandy <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span>      <span style="color:#75715e">// largest candies give to a child in previous array
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> totalCandy <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span>         <span style="color:#75715e">// sum of candies
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> ratings<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>ratings<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">&lt;</span> ratings<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">])</span> <span style="color:#f92672">{</span>      <span style="color:#75715e">// calculate total length of decreasing array
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            decreasing<span style="color:#f92672">++;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">/*
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">             * If there is no decreasing array, then check current rating and previous rating.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">             * If two rating values are same, previous largest candies can be set to 1.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">             * If later part is decreasing array, sum will be recalculated.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">             * Otherwise, 1 candy will suffice, since only higher rating get more candies than their neighbors. */</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>decreasing <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>ratings<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">==</span> ratings<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">])</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                    previousCandy <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>        <span style="color:#75715e">// normal increasing array
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                    previousCandy<span style="color:#f92672">++;</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>                totalCandy <span style="color:#f92672">+=</span> previousCandy<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                <span style="color:#75715e">/*
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">                 * If reaches the end of decreasing array, then there are two conditions:
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">                 * If decreasing part is shorter than most previous candies , simply add sum of length to total candies.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">                 * Otherwise, the whole decreasing sub array will be updated.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">                 * The candies give to child should starts at lowest rating, which is 1.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">                 * Then add one during the traverse of decreasing sub array.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">                 * Finally, add the difference at the start of decreasing sub array.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">                 * The value is length of decreasing sub array minus previous candies give to this point. */</span>
+</span></span><span style="display:flex;"><span>                totalCandy <span style="color:#f92672">+=</span> <span style="color:#f92672">(</span>1 <span style="color:#f92672">+</span> decreasing<span style="color:#f92672">)</span> <span style="color:#f92672">*</span> decreasing <span style="color:#f92672">/</span> 2<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>decreasing <span style="color:#f92672">&gt;=</span> previousCandy<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                    totalCandy <span style="color:#f92672">=</span> totalCandy <span style="color:#f92672">+</span> <span style="color:#f92672">(</span>decreasing <span style="color:#f92672">-</span> previousCandy<span style="color:#f92672">)</span> <span style="color:#f92672">+</span> 1<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                previousCandy <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>ratings<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">==</span> ratings<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">])</span> <span style="color:#f92672">?</span> 1 <span style="color:#f92672">:</span> 2<span style="color:#f92672">;</span>     <span style="color:#75715e">// current should be higher than lower rating
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                totalCandy <span style="color:#f92672">+=</span> previousCandy<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>                decreasing <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/*
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * If decreasing sub array reaches the end of array, then the sum of this sub array will not be added to total.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * Therefore, complete the decreasing array calculation process again to finish it. */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>decreasing <span style="color:#f92672">&gt;</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        totalCandy <span style="color:#f92672">+=</span> <span style="color:#f92672">(</span>1 <span style="color:#f92672">+</span> decreasing<span style="color:#f92672">)</span> <span style="color:#f92672">*</span> decreasing <span style="color:#f92672">/</span> 2<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>decreasing <span style="color:#f92672">&gt;=</span> previousCandy<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            totalCandy <span style="color:#f92672">+=</span> decreasing <span style="color:#f92672">-</span> previousCandy <span style="color:#f92672">+</span> 1<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> totalCandy<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Two pass to find each position&#39;s minimum candies.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * First pass, from left to right, find the min candies that each increasing order subarray needed.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Second pass, from right to left, find the required candies for decreasing order subarray.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * During second pass, candies depends on the larger one between previous candies plus one, or the origin candies.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param ratings given rating array
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return minimum total candies to give
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">twoPass</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> ratings<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/* Corner case */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>ratings<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">&lt;</span> 2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> ratings<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> n <span style="color:#f92672">=</span> ratings<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> tmp <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>n<span style="color:#f92672">];</span>
+</span></span><span style="display:flex;"><span>    Arrays<span style="color:#f92672">.</span><span style="color:#a6e22e">fill</span><span style="color:#f92672">(</span>tmp<span style="color:#f92672">,</span> 1<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> n<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>ratings<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">&gt;</span> ratings<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">])</span> <span style="color:#f92672">{</span>      <span style="color:#75715e">// if current rating is larger than left one
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            tmp<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> tmp<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> 1<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> out <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> n <span style="color:#f92672">-</span> 1<span style="color:#f92672">;</span> i <span style="color:#f92672">&gt;</span> 0<span style="color:#f92672">;</span> i<span style="color:#f92672">--)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>ratings<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span> <span style="color:#f92672">&gt;</span> ratings<span style="color:#f92672">[</span>i<span style="color:#f92672">])</span> <span style="color:#f92672">{</span>      <span style="color:#75715e">// if left one is larger than current rating
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            tmp<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>tmp<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> 1<span style="color:#f92672">,</span> tmp<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">]);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        out <span style="color:#f92672">+=</span> tmp<span style="color:#f92672">[</span>i<span style="color:#f92672">];</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    out <span style="color:#f92672">+=</span> tmp<span style="color:#f92672">[</span>0<span style="color:#f92672">];</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> out<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div>
               
             </div>
           </div>

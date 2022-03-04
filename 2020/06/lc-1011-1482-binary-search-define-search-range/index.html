@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.92.2 with theme Tranquilpeak 0.4.8-BETA">
+<meta name="generator" content="Hugo 0.93.1 with theme Tranquilpeak 0.4.8-BETA">
 <meta name="author" content="Notebook">
 <meta name="keywords" content="">
 <meta name="description" content="Normally, binary search is implemented to find a specific target in an ordered collection (array, list, etc.). However, sometimes the search target can be a specific range that is differ from given collection. The meaning of binary search is identical to normal problems, that to remove half of the all possible values until the target was found. For example, the search range could be the min and max possible value in given collection.">
@@ -285,62 +285,62 @@ Initially state is from max value in weights to sum of total weights.
 And the average of these two value is the initially capacity of ship.
 Each time, check if work can be finished under current capacity.
 If takes more days, increase ship capacity. Otherwise, decrease ship capacity.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Binary search on ship capacity.
-</span><span style="color:#75715e"> * Initially state is from max value in weights to sum of total weights.
-</span><span style="color:#75715e"> * And the average of these two value is the initially capacity of ship.
-</span><span style="color:#75715e"> * Each time, check if work can be finished under current capacity.
-</span><span style="color:#75715e"> * If takes more days, increase ship capacity. Otherwise, decrease ship capacity.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param weights array with package weights
-</span><span style="color:#75715e"> * @param days    total days
-</span><span style="color:#75715e"> * @return least weight capacity of the ship that will result in all the packages being shipped within D days
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">shipWithinDays</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> weights<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> days<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-    <span style="color:#66d9ef">int</span> sum <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> max <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>Integer w <span style="color:#f92672">:</span> weights<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        sum <span style="color:#f92672">+=</span> w<span style="color:#f92672">;</span>
-        max <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>w<span style="color:#f92672">,</span> max<span style="color:#f92672">);</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">int</span> start <span style="color:#f92672">=</span> max<span style="color:#f92672">,</span> end <span style="color:#f92672">=</span> sum<span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">int</span> mid<span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>start <span style="color:#f92672">&lt;</span> end<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-
-        mid <span style="color:#f92672">=</span> start <span style="color:#f92672">+</span> <span style="color:#f92672">(</span>end <span style="color:#f92672">-</span> start<span style="color:#f92672">)</span> <span style="color:#f92672">/</span> 2<span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">int</span> count <span style="color:#f92672">=</span> binarySearch<span style="color:#f92672">(</span>weights<span style="color:#f92672">,</span> mid<span style="color:#f92672">);</span>
-
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>count <span style="color:#f92672">&lt;=</span> days<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>        <span style="color:#75715e">// if finishing job within limit, decrease capacity to find min
-</span><span style="color:#75715e"></span>            end <span style="color:#f92672">=</span> mid<span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>count <span style="color:#f92672">&gt;</span> days<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>         <span style="color:#75715e">// if finishing job longer than limit, increase capacity
-</span><span style="color:#75715e"></span>            start <span style="color:#f92672">=</span> mid <span style="color:#f92672">+</span> 1<span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">return</span> start<span style="color:#f92672">;</span>
-<span style="color:#f92672">}</span>
-
-<span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Binary search.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param arr given array
-</span><span style="color:#75715e"> * @param max ship capacity
-</span><span style="color:#75715e"> * @return days to transport all packages under current capacity
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">binarySearch</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> arr<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> max<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-    <span style="color:#66d9ef">int</span> temp <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> count <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span>
-
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">:</span> arr<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        temp <span style="color:#f92672">+=</span> i<span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>temp <span style="color:#f92672">&gt;</span> max<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>       <span style="color:#75715e">// if current sum is larger than capacity
-</span><span style="color:#75715e"></span>            temp <span style="color:#f92672">=</span> i<span style="color:#f92672">;</span>           <span style="color:#75715e">// reset ship
-</span><span style="color:#75715e"></span>            count<span style="color:#f92672">++;</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-    <span style="color:#66d9ef">return</span> count<span style="color:#f92672">;</span>
-<span style="color:#f92672">}</span>
-</code></pre></div><h1 id="1482-minimum-number-of-days-to-make-m-bouquets">1482. Minimum Number of Days to Make m Bouquets</h1>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Binary search on ship capacity.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Initially state is from max value in weights to sum of total weights.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * And the average of these two value is the initially capacity of ship.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Each time, check if work can be finished under current capacity.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * If takes more days, increase ship capacity. Otherwise, decrease ship capacity.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param weights array with package weights
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param days    total days
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return least weight capacity of the ship that will result in all the packages being shipped within D days
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">shipWithinDays</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> weights<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> days<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> sum <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> max <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>Integer w <span style="color:#f92672">:</span> weights<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        sum <span style="color:#f92672">+=</span> w<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        max <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>w<span style="color:#f92672">,</span> max<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> start <span style="color:#f92672">=</span> max<span style="color:#f92672">,</span> end <span style="color:#f92672">=</span> sum<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> mid<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>start <span style="color:#f92672">&lt;</span> end<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        mid <span style="color:#f92672">=</span> start <span style="color:#f92672">+</span> <span style="color:#f92672">(</span>end <span style="color:#f92672">-</span> start<span style="color:#f92672">)</span> <span style="color:#f92672">/</span> 2<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> count <span style="color:#f92672">=</span> binarySearch<span style="color:#f92672">(</span>weights<span style="color:#f92672">,</span> mid<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>count <span style="color:#f92672">&lt;=</span> days<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>        <span style="color:#75715e">// if finishing job within limit, decrease capacity to find min
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            end <span style="color:#f92672">=</span> mid<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>count <span style="color:#f92672">&gt;</span> days<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>         <span style="color:#75715e">// if finishing job longer than limit, increase capacity
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            start <span style="color:#f92672">=</span> mid <span style="color:#f92672">+</span> 1<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> start<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Binary search.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param arr given array
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param max ship capacity
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return days to transport all packages under current capacity
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">binarySearch</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> arr<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> max<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> temp <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> count <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">:</span> arr<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        temp <span style="color:#f92672">+=</span> i<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>temp <span style="color:#f92672">&gt;</span> max<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>       <span style="color:#75715e">// if current sum is larger than capacity
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            temp <span style="color:#f92672">=</span> i<span style="color:#f92672">;</span>           <span style="color:#75715e">// reset ship
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            count<span style="color:#f92672">++;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> count<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><h1 id="1482-minimum-number-of-days-to-make-m-bouquets">1482. Minimum Number of Days to Make m Bouquets</h1>
 <p>Link: <a href="https://leetcode.com/problems/minimum-number-of-days-to-make-m-bouquets/">Minimum Number of Days to Make m Bouquets</a></p>
 <h2 id="problem-description-1">Problem Description</h2>
 <p>Given an integer array <code>bloomDay</code>, an integer <code>m</code> and an integer <code>k</code>.</p>
@@ -350,7 +350,7 @@ If takes more days, increase ship capacity. Otherwise, decrease ship capacity.</
 <p><strong>Example 1:</strong></p>
 <pre tabindex="0"><code>Input: bloomDay = [1,10,3,10,2], m = 3, k = 1
 Output: 3
-Explanation: Let's see what happened in the first three days. x means flower bloomed and _ means flower didn't bloom in the garden.
+Explanation: Let&#39;s see what happened in the first three days. x means flower bloomed and _ means flower didn&#39;t bloom in the garden.
 We need 3 bouquets each should contain 1 flower.
 After day 1: [x, _, _, _, _]   // we can only make one bouquet.
 After day 2: [x, _, _, _, x]   // we can only make two bouquets.
@@ -363,7 +363,7 @@ Explanation: We need 3 bouquets each has 2 flowers, that means we need 6 flowers
 <pre tabindex="0"><code>Input: bloomDay = [7,7,7,7,12,7,7], m = 2, k = 3
 Output: 12
 Explanation: We need 2 bouquets each should have 3 flowers.
-Here's the garden after the 7 and 12 days:
+Here&#39;s the garden after the 7 and 12 days:
 After day 7: [x, x, x, x, _, x, x]
 We can make one bouquet of the first three flowers that bloomed. We cannot make another bouquet from the last three flowers that bloomed because they are not adjacent.
 After day 12: [x, x, x, x, x, x, x]
@@ -386,50 +386,50 @@ Output: 9
 <h2 id="method--code-1">Method &amp; Code</h2>
 <p>Binary search to search the minimum waiting days. The left bound is 1, right bound is the max possible value in array.</p>
 <p>Each time, try to find if current mid value can make m bouquets. To find the number of bouquets can be made in current array, simply traverse the array and count.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Binary search to search the minimum waiting days.
-</span><span style="color:#75715e"> * The left bound is 1, right bound is the max possible value in array.
-</span><span style="color:#75715e"> * Each time, try to find if current mid value can make m bouquets.
-</span><span style="color:#75715e"> * To find the number of bouquets can be made in current array, simply traverse the array and count.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param bloomDay given array
-</span><span style="color:#75715e"> * @param m        m bouquets required
-</span><span style="color:#75715e"> * @param k        adjacent flowers for each bouquet
-</span><span style="color:#75715e"> * @return the minimum number of days required to be able to make m bouquets
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">minDays</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> bloomDay<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> m<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> k<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-    <span style="color:#66d9ef">int</span> n <span style="color:#f92672">=</span> bloomDay<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span>
-
-    <span style="color:#75715e">/* Corner case */</span>
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>n <span style="color:#f92672">&lt;</span> m <span style="color:#f92672">*</span> k<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">int</span> left <span style="color:#f92672">=</span> 1<span style="color:#f92672">,</span> right <span style="color:#f92672">=</span> 1000000000<span style="color:#f92672">;</span>
-
-    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>left <span style="color:#f92672">&lt;</span> right<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">int</span> mid <span style="color:#f92672">=</span> left <span style="color:#f92672">+</span> <span style="color:#f92672">(</span>right <span style="color:#f92672">-</span> left<span style="color:#f92672">)</span> <span style="color:#f92672">/</span> 2<span style="color:#f92672">;</span>        <span style="color:#75715e">// possible waiting days
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">int</span> bouquets <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> consecutive <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
-
-        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> n<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>bloomDay<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">&gt;</span> mid<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>        <span style="color:#75715e">// if current flower requires waiting
-</span><span style="color:#75715e"></span>                consecutive <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
-            <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(++</span>consecutive <span style="color:#f92672">&gt;=</span> k<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>        <span style="color:#75715e">// if k consecutive flowers has been found
-</span><span style="color:#75715e"></span>                bouquets<span style="color:#f92672">++;</span>
-                consecutive <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
-            <span style="color:#f92672">}</span>
-        <span style="color:#f92672">}</span>
-
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>bouquets <span style="color:#f92672">&lt;</span> m<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            left <span style="color:#f92672">=</span> mid <span style="color:#f92672">+</span> 1<span style="color:#f92672">;</span>     <span style="color:#75715e">// need more days
-</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
-            right <span style="color:#f92672">=</span> mid<span style="color:#f92672">;</span>        <span style="color:#75715e">// could be the final required days or could wait for less days
-</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">return</span> left<span style="color:#f92672">;</span>
-<span style="color:#f92672">}</span>
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Binary search to search the minimum waiting days.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * The left bound is 1, right bound is the max possible value in array.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Each time, try to find if current mid value can make m bouquets.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * To find the number of bouquets can be made in current array, simply traverse the array and count.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param bloomDay given array
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param m        m bouquets required
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param k        adjacent flowers for each bouquet
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return the minimum number of days required to be able to make m bouquets
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">minDays</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> bloomDay<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> m<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> k<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> n <span style="color:#f92672">=</span> bloomDay<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/* Corner case */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>n <span style="color:#f92672">&lt;</span> m <span style="color:#f92672">*</span> k<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> left <span style="color:#f92672">=</span> 1<span style="color:#f92672">,</span> right <span style="color:#f92672">=</span> 1000000000<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>left <span style="color:#f92672">&lt;</span> right<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> mid <span style="color:#f92672">=</span> left <span style="color:#f92672">+</span> <span style="color:#f92672">(</span>right <span style="color:#f92672">-</span> left<span style="color:#f92672">)</span> <span style="color:#f92672">/</span> 2<span style="color:#f92672">;</span>        <span style="color:#75715e">// possible waiting days
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">int</span> bouquets <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> consecutive <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> n<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>bloomDay<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">&gt;</span> mid<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>        <span style="color:#75715e">// if current flower requires waiting
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                consecutive <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(++</span>consecutive <span style="color:#f92672">&gt;=</span> k<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>        <span style="color:#75715e">// if k consecutive flowers has been found
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                bouquets<span style="color:#f92672">++;</span>
+</span></span><span style="display:flex;"><span>                consecutive <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>bouquets <span style="color:#f92672">&lt;</span> m<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            left <span style="color:#f92672">=</span> mid <span style="color:#f92672">+</span> 1<span style="color:#f92672">;</span>     <span style="color:#75715e">// need more days
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            right <span style="color:#f92672">=</span> mid<span style="color:#f92672">;</span>        <span style="color:#75715e">// could be the final required days or could wait for less days
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> left<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div>
               
             </div>
           </div>

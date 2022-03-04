@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.92.2 with theme Tranquilpeak 0.4.8-BETA">
+<meta name="generator" content="Hugo 0.93.1 with theme Tranquilpeak 0.4.8-BETA">
 <meta name="author" content="Notebook">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -275,59 +275,59 @@ Output: 1
 <p>The general approach is to count the appearance of int during the DFS, then check the occurrence at leaf node.</p>
 <p>However, since the node only contains ints from 1 - 9, then keep an integer to count the occurrence will suffice. Flip the <code>i</code>th bit at each node, if the int has odd occurrence, it will finally be 1. If the int has odd occurrence, it will finally be 0.</p>
 <p>Check the number of 1 at leaf node. If there is at most one 1, then this path is valid.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
-</span><span style="color:#75715e"> * DFS + bit mask to count the number of odd occurrence.
-</span><span style="color:#75715e"> * If a path has at least one palindromic permutation, then it can only contains at most one odd occurrence of int.
-</span><span style="color:#75715e"> * The general approach is to count the appearance of int during the DFS, then check the occurrence at leaf node.
-</span><span style="color:#75715e"> * However, since the node only contains ints from 1 - 9, then keep an integer to count the occurrence will suffice.
-</span><span style="color:#75715e"> * Flip the ith bit at each node, if the int has odd occurrence, it will finally be 1.
-</span><span style="color:#75715e"> * If the int has odd occurrence, it will finally be 0.
-</span><span style="color:#75715e"> * Check the number of 1 at leaf node. If there is at most one 1, then this path is valid.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param root root of the tree
-</span><span style="color:#75715e"> * @return the number of pseudo-palindromic paths going from the root node to leaf nodes
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">pseudoPalindromicPaths</span><span style="color:#f92672">(</span>TreeNode root<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>root <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">return</span> 0<span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> total <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>1<span style="color:#f92672">];</span>
-    dfs<span style="color:#f92672">(</span>root<span style="color:#f92672">,</span> 0<span style="color:#f92672">,</span> total<span style="color:#f92672">);</span>
-
-    <span style="color:#66d9ef">return</span> total<span style="color:#f92672">[</span>0<span style="color:#f92672">];</span>
-<span style="color:#f92672">}</span>
-
-<span style="color:#75715e">/**
-</span><span style="color:#75715e"> * DFS to collect all the node values in path.
-</span><span style="color:#75715e"> * If current node is leaf, check the number of odd occurrence in path.
-</span><span style="color:#75715e"> * If at most one odd occurrence in path, then is path is pseudo-palindromic.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param root  current node
-</span><span style="color:#75715e"> * @param count occurrence of ints in path
-</span><span style="color:#75715e"> * @param total total pseudo-palindromic path
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">dfs</span><span style="color:#f92672">(</span>TreeNode root<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> count<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> total<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>root <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-
-    count <span style="color:#f92672">^=</span> 1 <span style="color:#f92672">&lt;&lt;</span> root<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">;</span>     <span style="color:#75715e">// bit mask, flip the ith bit at root.val
-</span><span style="color:#75715e"></span>
-    <span style="color:#75715e">/*
-</span><span style="color:#75715e">     * The odd node in the bit count will represented as 1, since it will flip odd times.
-</span><span style="color:#75715e">     * If the path is pseudo-palindromic, then at most one 1 can be allowed in the count.
-</span><span style="color:#75715e">     * count &amp; (count - 1) will remove the right most 1 in the count.
-</span><span style="color:#75715e">     * If there are more than one 1 in count, then it will not be 0 and the path is not pseudo-palindromic. */</span>
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>root<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;&amp;</span> root<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">(</span>count <span style="color:#f92672">&amp;</span> <span style="color:#f92672">(</span>count <span style="color:#f92672">-</span> 1<span style="color:#f92672">))</span> <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        total<span style="color:#f92672">[</span>0<span style="color:#f92672">]++;</span>
-    <span style="color:#f92672">}</span>
-
-    dfs<span style="color:#f92672">(</span>root<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">,</span> count<span style="color:#f92672">,</span> total<span style="color:#f92672">);</span>
-    dfs<span style="color:#f92672">(</span>root<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span><span style="color:#f92672">,</span> count<span style="color:#f92672">,</span> total<span style="color:#f92672">);</span>
-<span style="color:#f92672">}</span>
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * DFS + bit mask to count the number of odd occurrence.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * If a path has at least one palindromic permutation, then it can only contains at most one odd occurrence of int.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * The general approach is to count the appearance of int during the DFS, then check the occurrence at leaf node.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * However, since the node only contains ints from 1 - 9, then keep an integer to count the occurrence will suffice.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Flip the ith bit at each node, if the int has odd occurrence, it will finally be 1.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * If the int has odd occurrence, it will finally be 0.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Check the number of 1 at leaf node. If there is at most one 1, then this path is valid.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param root root of the tree
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return the number of pseudo-palindromic paths going from the root node to leaf nodes
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">pseudoPalindromicPaths</span><span style="color:#f92672">(</span>TreeNode root<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>root <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> 0<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> total <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>1<span style="color:#f92672">];</span>
+</span></span><span style="display:flex;"><span>    dfs<span style="color:#f92672">(</span>root<span style="color:#f92672">,</span> 0<span style="color:#f92672">,</span> total<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> total<span style="color:#f92672">[</span>0<span style="color:#f92672">];</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * DFS to collect all the node values in path.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * If current node is leaf, check the number of odd occurrence in path.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * If at most one odd occurrence in path, then is path is pseudo-palindromic.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param root  current node
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param count occurrence of ints in path
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param total total pseudo-palindromic path
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">dfs</span><span style="color:#f92672">(</span>TreeNode root<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> count<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> total<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>root <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    count <span style="color:#f92672">^=</span> 1 <span style="color:#f92672">&lt;&lt;</span> root<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">;</span>     <span style="color:#75715e">// bit mask, flip the ith bit at root.val
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/*
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * The odd node in the bit count will represented as 1, since it will flip odd times.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * If the path is pseudo-palindromic, then at most one 1 can be allowed in the count.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * count &amp; (count - 1) will remove the right most 1 in the count.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * If there are more than one 1 in count, then it will not be 0 and the path is not pseudo-palindromic. */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>root<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;&amp;</span> root<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span> <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">(</span>count <span style="color:#f92672">&amp;</span> <span style="color:#f92672">(</span>count <span style="color:#f92672">-</span> 1<span style="color:#f92672">))</span> <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        total<span style="color:#f92672">[</span>0<span style="color:#f92672">]++;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    dfs<span style="color:#f92672">(</span>root<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">,</span> count<span style="color:#f92672">,</span> total<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>    dfs<span style="color:#f92672">(</span>root<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span><span style="color:#f92672">,</span> count<span style="color:#f92672">,</span> total<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div>
               
             </div>
           </div>

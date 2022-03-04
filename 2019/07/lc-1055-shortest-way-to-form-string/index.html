@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.92.2 with theme Tranquilpeak 0.4.8-BETA">
+<meta name="generator" content="Hugo 0.93.1 with theme Tranquilpeak 0.4.8-BETA">
 <meta name="author" content="Notebook">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -253,17 +253,17 @@
 <p>From any string, we can form a <em>subsequence</em> of that string by deleting some number of characters (possibly no deletions).</p>
 <p>Given two strings <code>source</code> and <code>target</code>, return the minimum number of subsequences of <code>source</code> such that their concatenation equals <code>target</code>. If the task is impossible, return <code>-1</code>.</p>
 <p><strong>Example 1:</strong></p>
-<pre tabindex="0"><code>Input: source = &quot;abc&quot;, target = &quot;abcbc&quot;
+<pre tabindex="0"><code>Input: source = &#34;abc&#34;, target = &#34;abcbc&#34;
 Output: 2
-Explanation: The target &quot;abcbc&quot; can be formed by &quot;abc&quot; and &quot;bc&quot;, which are subsequences of source &quot;abc&quot;.
+Explanation: The target &#34;abcbc&#34; can be formed by &#34;abc&#34; and &#34;bc&#34;, which are subsequences of source &#34;abc&#34;.
 </code></pre><p><strong>Example 2:</strong></p>
-<pre tabindex="0"><code>Input: source = &quot;abc&quot;, target = &quot;acdbc&quot;
+<pre tabindex="0"><code>Input: source = &#34;abc&#34;, target = &#34;acdbc&#34;
 Output: -1
-Explanation: The target string cannot be constructed from the subsequences of source string due to the character &quot;d&quot; in target string.
+Explanation: The target string cannot be constructed from the subsequences of source string due to the character &#34;d&#34; in target string.
 </code></pre><p><strong>Example 3:</strong></p>
-<pre tabindex="0"><code>Input: source = &quot;xyz&quot;, target = &quot;xzyxz&quot;
+<pre tabindex="0"><code>Input: source = &#34;xyz&#34;, target = &#34;xzyxz&#34;
 Output: 3
-Explanation: The target string can be constructed as follows &quot;xz&quot; + &quot;y&quot; + &quot;xz&quot;.
+Explanation: The target string can be constructed as follows &#34;xz&#34; + &#34;y&#34; + &#34;xz&#34;.
 </code></pre><p><strong>Note:</strong></p>
 <ol>
 <li>Both the <code>source</code> and <code>target</code> strings consist of only lowercase English letters from &ldquo;a&rdquo;-&ldquo;z&rdquo;.</li>
@@ -272,44 +272,44 @@ Explanation: The target string can be constructed as follows &quot;xz&quot; + &q
 <h2 id="method--code">Method &amp; Code</h2>
 <p>Greedy &amp; two pointers.</p>
 <p>Target can only be formed by substring. The substring can be formed by subsequence in source. Hence, use a pointer points at start position of target, and check each character in source. Find the max subsequence in source that can form substring in target.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Greedy &amp; two pointers.
-</span><span style="color:#75715e"> * Target can only be formed by substring. The substring can be formed by subsequence in source.
-</span><span style="color:#75715e"> * Hence, use a pointer points at start position of target, and check each character in source.
-</span><span style="color:#75715e"> * Find the max subsequence in source that can form substring in target.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param source source string
-</span><span style="color:#75715e"> * @param target target string
-</span><span style="color:#75715e"> * @return minimum number of subsequences of source such that their concatenation equals target
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">shortestWay</span><span style="color:#f92672">(</span>String source<span style="color:#f92672">,</span> String target<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-
-    <span style="color:#66d9ef">int</span> min <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> p <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>     <span style="color:#75715e">// p is the pointer in target, points at the start position of substring
-</span><span style="color:#75715e"></span>
-    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>p <span style="color:#f92672">&lt;</span> target<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
-
-        <span style="color:#66d9ef">int</span> start <span style="color:#f92672">=</span> p<span style="color:#f92672">;</span>      <span style="color:#75715e">// mark start position, in case there contains char in target that do not in source
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> source<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">();</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
-
-            <span style="color:#75715e">/*
-</span><span style="color:#75715e">             * Find maximum chars in target that can be made up by subsequence of source.
-</span><span style="color:#75715e">             * Each time, if a char in source is matched to char in target, move pointer in target forward.
-</span><span style="color:#75715e">             * Finally, if target pointer moves to the end of target, return counter. */</span>
-            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>p <span style="color:#f92672">&lt;</span> target<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">()</span> <span style="color:#f92672">&amp;&amp;</span> source<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span> <span style="color:#f92672">==</span> target<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>p<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
-                p<span style="color:#f92672">++;</span>
-            <span style="color:#f92672">}</span>
-        <span style="color:#f92672">}</span>
-
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>start <span style="color:#f92672">==</span> p<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span>
-
-        min<span style="color:#f92672">++;</span>      <span style="color:#75715e">// find one subsequence
-</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">return</span> min<span style="color:#f92672">;</span>
-<span style="color:#f92672">}</span>
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Greedy &amp; two pointers.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Target can only be formed by substring. The substring can be formed by subsequence in source.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Hence, use a pointer points at start position of target, and check each character in source.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Find the max subsequence in source that can form substring in target.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param source source string
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param target target string
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return minimum number of subsequences of source such that their concatenation equals target
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">shortestWay</span><span style="color:#f92672">(</span>String source<span style="color:#f92672">,</span> String target<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> min <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> p <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>     <span style="color:#75715e">// p is the pointer in target, points at the start position of substring
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>p <span style="color:#f92672">&lt;</span> target<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> start <span style="color:#f92672">=</span> p<span style="color:#f92672">;</span>      <span style="color:#75715e">// mark start position, in case there contains char in target that do not in source
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> source<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">();</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">/*
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">             * Find maximum chars in target that can be made up by subsequence of source.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">             * Each time, if a char in source is matched to char in target, move pointer in target forward.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">             * Finally, if target pointer moves to the end of target, return counter. */</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>p <span style="color:#f92672">&lt;</span> target<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">()</span> <span style="color:#f92672">&amp;&amp;</span> source<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span> <span style="color:#f92672">==</span> target<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>p<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                p<span style="color:#f92672">++;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>start <span style="color:#f92672">==</span> p<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        min<span style="color:#f92672">++;</span>      <span style="color:#75715e">// find one subsequence
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> min<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div>
               
             </div>
           </div>

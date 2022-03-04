@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.92.2 with theme Tranquilpeak 0.4.8-BETA">
+<meta name="generator" content="Hugo 0.93.1 with theme Tranquilpeak 0.4.8-BETA">
 <meta name="author" content="Notebook">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -278,221 +278,221 @@
 <p><img src="../../../img/sample_2_1497.png" alt="img"></p>
 <pre tabindex="0"><code>Input:
 urls = [
-  &quot;http://news.yahoo.com&quot;,
-  &quot;http://news.yahoo.com/news&quot;,
-  &quot;http://news.yahoo.com/news/topics/&quot;,
-  &quot;http://news.google.com&quot;,
-  &quot;http://news.yahoo.com/us&quot;
+  &#34;http://news.yahoo.com&#34;,
+  &#34;http://news.yahoo.com/news&#34;,
+  &#34;http://news.yahoo.com/news/topics/&#34;,
+  &#34;http://news.google.com&#34;,
+  &#34;http://news.yahoo.com/us&#34;
 ]
 edges = [[2,0],[2,1],[3,2],[3,1],[0,4]]
-startUrl = &quot;http://news.yahoo.com/news/topics/&quot;
+startUrl = &#34;http://news.yahoo.com/news/topics/&#34;
 Output: [
-  &quot;http://news.yahoo.com&quot;,
-  &quot;http://news.yahoo.com/news&quot;,
-  &quot;http://news.yahoo.com/news/topics/&quot;,
-  &quot;http://news.yahoo.com/us&quot;
+  &#34;http://news.yahoo.com&#34;,
+  &#34;http://news.yahoo.com/news&#34;,
+  &#34;http://news.yahoo.com/news/topics/&#34;,
+  &#34;http://news.yahoo.com/us&#34;
 ]
 </code></pre><p><strong>Example 2:</strong></p>
 <p><strong><img src="../../../img/sample_3_1497.png" alt="img"></strong></p>
 <pre tabindex="0"><code>Input: 
 urls = [
-  &quot;http://news.yahoo.com&quot;,
-  &quot;http://news.yahoo.com/news&quot;,
-  &quot;http://news.yahoo.com/news/topics/&quot;,
-  &quot;http://news.google.com&quot;
+  &#34;http://news.yahoo.com&#34;,
+  &#34;http://news.yahoo.com/news&#34;,
+  &#34;http://news.yahoo.com/news/topics/&#34;,
+  &#34;http://news.google.com&#34;
 ]
 edges = [[0,2],[2,1],[3,2],[3,1],[3,0]]
-startUrl = &quot;http://news.google.com&quot;
-Output: [&quot;http://news.google.com&quot;]
+startUrl = &#34;http://news.google.com&#34;
+Output: [&#34;http://news.google.com&#34;]
 Explanation: The startUrl links to all other pages that do not share the same hostname.
 </code></pre><p><strong>Constraints:</strong></p>
 <ul>
 <li><code>1 &lt;= urls.length &lt;= 1000</code></li>
 <li><code>1 &lt;= urls[i].length &lt;= 300</code></li>
 <li><code>startUrl</code> is one of the <code>urls</code>.</li>
-<li>Hostname label must be from 1 to 63 characters long, including the dots, may contain only the ASCII letters from &lsquo;a&rsquo; to &lsquo;z&rsquo;, digits from &lsquo;0&rsquo; to &lsquo;9&rsquo; and the hyphen-minus character ('-').</li>
-<li>The hostname may not start or end with the hyphen-minus character ('-').</li>
+<li>Hostname label must be from 1 to 63 characters long, including the dots, may contain only the ASCII letters from &lsquo;a&rsquo; to &lsquo;z&rsquo;, digits from &lsquo;0&rsquo; to &lsquo;9&rsquo; and the hyphen-minus character (&rsquo;-&rsquo;).</li>
+<li>The hostname may not start or end with the hyphen-minus character (&rsquo;-&rsquo;).</li>
 <li>See: <a href="https://en.wikipedia.org/wiki/Hostname#Restrictions_on_valid_hostnames">https://en.wikipedia.org/wiki/Hostname#Restrictions_on_valid_hostnames</a></li>
 <li>You may assume there&rsquo;re no duplicates in url library.</li>
 </ul>
 <h2 id="method--code">Method &amp; Code</h2>
 <h3 id="volatile--synchronized">volatile &amp; synchronized</h3>
 <p>Multi thread implemented by a static volatile HashSet and synchronized adding function.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Crawl</span> <span style="color:#f92672">{</span>
-    <span style="color:#75715e">/**
-</span><span style="color:#75715e">     * Multi thread implemented by a static volatile HashSet and synchronized adding function.
-</span><span style="color:#75715e">     *
-</span><span style="color:#75715e">     * @param startUrl   start URL
-</span><span style="color:#75715e">     * @param htmlParser HTML Parser class
-</span><span style="color:#75715e">     * @return all urls obtained by web crawler in any order
-</span><span style="color:#75715e">     */</span>
-    <span style="color:#66d9ef">public</span> List<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">crawl</span><span style="color:#f92672">(</span>String startUrl<span style="color:#f92672">,</span> HtmlParser htmlParser<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-
-        <span style="color:#66d9ef">int</span> index <span style="color:#f92672">=</span> startUrl<span style="color:#f92672">.</span><span style="color:#a6e22e">indexOf</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#39;/&#39;</span><span style="color:#f92672">,</span> 7<span style="color:#f92672">);</span>
-        String hostname <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>index <span style="color:#f92672">!=</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">)</span> <span style="color:#f92672">?</span> startUrl<span style="color:#f92672">.</span><span style="color:#a6e22e">substring</span><span style="color:#f92672">(</span>0<span style="color:#f92672">,</span> index<span style="color:#f92672">)</span> <span style="color:#f92672">:</span> startUrl<span style="color:#f92672">;</span>
-
-        Crawler crawler <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Crawler<span style="color:#f92672">(</span>startUrl<span style="color:#f92672">,</span> hostname<span style="color:#f92672">,</span> htmlParser<span style="color:#f92672">);</span>
-        Crawler<span style="color:#f92672">.</span><span style="color:#a6e22e">visited</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashSet<span style="color:#f92672">&lt;&gt;();</span>      <span style="color:#75715e">// static property belongs to class
-</span><span style="color:#75715e"></span>        Thread thread <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Thread<span style="color:#f92672">(</span>crawler<span style="color:#f92672">);</span>
-        thread<span style="color:#f92672">.</span><span style="color:#a6e22e">start</span><span style="color:#f92672">();</span>
-        Crawler<span style="color:#f92672">.</span><span style="color:#a6e22e">joinThread</span><span style="color:#f92672">(</span>thread<span style="color:#f92672">);</span>             <span style="color:#75715e">// waiting for complete
-</span><span style="color:#75715e"></span>
-        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">&lt;&gt;(</span>Crawler<span style="color:#f92672">.</span><span style="color:#a6e22e">visited</span><span style="color:#f92672">);</span>
-    <span style="color:#f92672">}</span>
-<span style="color:#f92672">}</span>
-
-<span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Implemented the Crawler that
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Crawler</span> <span style="color:#66d9ef">implements</span> Runnable <span style="color:#f92672">{</span>
-    String startURL<span style="color:#f92672">;</span>
-    String hostName<span style="color:#f92672">;</span>
-    HtmlParser htmlParser<span style="color:#f92672">;</span>
-
-    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">volatile</span> HashSet<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> visited<span style="color:#f92672">;</span>     <span style="color:#75715e">// visible to all other threads
-</span><span style="color:#75715e"></span>
-    <span style="color:#75715e">/**
-</span><span style="color:#75715e">     * Crawler constructor.
-</span><span style="color:#75715e">     *
-</span><span style="color:#75715e">     * @param startURL   start URL
-</span><span style="color:#75715e">     * @param hostName   host name
-</span><span style="color:#75715e">     * @param htmlParser HTML Parser class
-</span><span style="color:#75715e">     */</span>
-    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">Crawler</span><span style="color:#f92672">(</span>String startURL<span style="color:#f92672">,</span> String hostName<span style="color:#f92672">,</span> HtmlParser htmlParser<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">startURL</span> <span style="color:#f92672">=</span> startURL<span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">hostName</span> <span style="color:#f92672">=</span> hostName<span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">htmlParser</span> <span style="color:#f92672">=</span> htmlParser<span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#75715e">/**
-</span><span style="color:#75715e">     * Override run method in Crawler.
-</span><span style="color:#75715e">     */</span>
-    <span style="color:#a6e22e">@Override</span>
-    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">run</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">startURL</span><span style="color:#f92672">.</span><span style="color:#a6e22e">startsWith</span><span style="color:#f92672">(</span>hostName<span style="color:#f92672">)</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">!</span>visited<span style="color:#f92672">.</span><span style="color:#a6e22e">contains</span><span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">startURL</span><span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
-            addUrl<span style="color:#f92672">(</span>visited<span style="color:#f92672">,</span> startURL<span style="color:#f92672">);</span>
-            List<span style="color:#f92672">&lt;</span>Thread<span style="color:#f92672">&gt;</span> threads <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">&lt;&gt;();</span>
-            <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>String s <span style="color:#f92672">:</span> htmlParser<span style="color:#f92672">.</span><span style="color:#a6e22e">getUrls</span><span style="color:#f92672">(</span>startURL<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
-                Crawler crawler <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Crawler<span style="color:#f92672">(</span>s<span style="color:#f92672">,</span> hostName<span style="color:#f92672">,</span> htmlParser<span style="color:#f92672">);</span>
-                Thread thread <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Thread<span style="color:#f92672">(</span>crawler<span style="color:#f92672">);</span>
-                thread<span style="color:#f92672">.</span><span style="color:#a6e22e">start</span><span style="color:#f92672">();</span>
-                threads<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>thread<span style="color:#f92672">);</span>
-            <span style="color:#f92672">}</span>
-
-            <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>Thread t <span style="color:#f92672">:</span> threads<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                joinThread<span style="color:#f92672">(</span>t<span style="color:#f92672">);</span>
-            <span style="color:#f92672">}</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#75715e">/**
-</span><span style="color:#75715e">     * Add visited URL to hash set. Thread safe by keyword synchronized.
-</span><span style="color:#75715e">     *
-</span><span style="color:#75715e">     * @param visited hash set contains all visited URL
-</span><span style="color:#75715e">     * @param url     URL to be added
-</span><span style="color:#75715e">     */</span>
-    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">synchronized</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">addUrl</span><span style="color:#f92672">(</span>Set<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> visited<span style="color:#f92672">,</span> String url<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        visited<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>url<span style="color:#f92672">);</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#75715e">/**
-</span><span style="color:#75715e">     * One thread to wait until another thread completes its execution.
-</span><span style="color:#75715e">     *
-</span><span style="color:#75715e">     * @param thread waits for this thread to die
-</span><span style="color:#75715e">     */</span>
-    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">joinThread</span><span style="color:#f92672">(</span>Thread thread<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
-            thread<span style="color:#f92672">.</span><span style="color:#a6e22e">join</span><span style="color:#f92672">();</span>
-        <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>InterruptedException e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            e<span style="color:#f92672">.</span><span style="color:#a6e22e">printStackTrace</span><span style="color:#f92672">();</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-<span style="color:#f92672">}</span>
-</code></pre></div><h3 id="concurrent-hashmap">Concurrent HashMap</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Crawl</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * Multi thread implemented by a static volatile HashSet and synchronized adding function.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @param startUrl   start URL
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @param htmlParser HTML Parser class
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @return all urls obtained by web crawler in any order
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> List<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">crawl</span><span style="color:#f92672">(</span>String startUrl<span style="color:#f92672">,</span> HtmlParser htmlParser<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> index <span style="color:#f92672">=</span> startUrl<span style="color:#f92672">.</span><span style="color:#a6e22e">indexOf</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#39;/&#39;</span><span style="color:#f92672">,</span> 7<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        String hostname <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>index <span style="color:#f92672">!=</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">)</span> <span style="color:#f92672">?</span> startUrl<span style="color:#f92672">.</span><span style="color:#a6e22e">substring</span><span style="color:#f92672">(</span>0<span style="color:#f92672">,</span> index<span style="color:#f92672">)</span> <span style="color:#f92672">:</span> startUrl<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        Crawler crawler <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Crawler<span style="color:#f92672">(</span>startUrl<span style="color:#f92672">,</span> hostname<span style="color:#f92672">,</span> htmlParser<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        Crawler<span style="color:#f92672">.</span><span style="color:#a6e22e">visited</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashSet<span style="color:#f92672">&lt;&gt;();</span>      <span style="color:#75715e">// static property belongs to class
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        Thread thread <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Thread<span style="color:#f92672">(</span>crawler<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        thread<span style="color:#f92672">.</span><span style="color:#a6e22e">start</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>        Crawler<span style="color:#f92672">.</span><span style="color:#a6e22e">joinThread</span><span style="color:#f92672">(</span>thread<span style="color:#f92672">);</span>             <span style="color:#75715e">// waiting for complete
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">&lt;&gt;(</span>Crawler<span style="color:#f92672">.</span><span style="color:#a6e22e">visited</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Implemented the Crawler that
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Crawler</span> <span style="color:#66d9ef">implements</span> Runnable <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    String startURL<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    String hostName<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    HtmlParser htmlParser<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">volatile</span> HashSet<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> visited<span style="color:#f92672">;</span>     <span style="color:#75715e">// visible to all other threads
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * Crawler constructor.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @param startURL   start URL
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @param hostName   host name
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @param htmlParser HTML Parser class
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">Crawler</span><span style="color:#f92672">(</span>String startURL<span style="color:#f92672">,</span> String hostName<span style="color:#f92672">,</span> HtmlParser htmlParser<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">startURL</span> <span style="color:#f92672">=</span> startURL<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">hostName</span> <span style="color:#f92672">=</span> hostName<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">htmlParser</span> <span style="color:#f92672">=</span> htmlParser<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * Override run method in Crawler.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">run</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">startURL</span><span style="color:#f92672">.</span><span style="color:#a6e22e">startsWith</span><span style="color:#f92672">(</span>hostName<span style="color:#f92672">)</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">!</span>visited<span style="color:#f92672">.</span><span style="color:#a6e22e">contains</span><span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">startURL</span><span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            addUrl<span style="color:#f92672">(</span>visited<span style="color:#f92672">,</span> startURL<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>            List<span style="color:#f92672">&lt;</span>Thread<span style="color:#f92672">&gt;</span> threads <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">&lt;&gt;();</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>String s <span style="color:#f92672">:</span> htmlParser<span style="color:#f92672">.</span><span style="color:#a6e22e">getUrls</span><span style="color:#f92672">(</span>startURL<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                Crawler crawler <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Crawler<span style="color:#f92672">(</span>s<span style="color:#f92672">,</span> hostName<span style="color:#f92672">,</span> htmlParser<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>                Thread thread <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Thread<span style="color:#f92672">(</span>crawler<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>                thread<span style="color:#f92672">.</span><span style="color:#a6e22e">start</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>                threads<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>thread<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>Thread t <span style="color:#f92672">:</span> threads<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                joinThread<span style="color:#f92672">(</span>t<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * Add visited URL to hash set. Thread safe by keyword synchronized.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @param visited hash set contains all visited URL
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @param url     URL to be added
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">synchronized</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">addUrl</span><span style="color:#f92672">(</span>Set<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> visited<span style="color:#f92672">,</span> String url<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        visited<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>url<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * One thread to wait until another thread completes its execution.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @param thread waits for this thread to die
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">joinThread</span><span style="color:#f92672">(</span>Thread thread<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            thread<span style="color:#f92672">.</span><span style="color:#a6e22e">join</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>InterruptedException e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            e<span style="color:#f92672">.</span><span style="color:#a6e22e">printStackTrace</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><h3 id="concurrent-hashmap">Concurrent HashMap</h3>
 <p>Use ConcurrentHashMap instead of volatile and synchronized keyword.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Crawl</span> <span style="color:#f92672">{</span>
-		<span style="color:#75715e">/**
-</span><span style="color:#75715e">     * Use ConcurrentHashMap instead of volatile and synchronized keyword.
-</span><span style="color:#75715e">     *
-</span><span style="color:#75715e">     * @param startUrl   start URL
-</span><span style="color:#75715e">     * @param htmlParser HTML Parser class
-</span><span style="color:#75715e">     * @return all urls obtained by web crawler in any order
-</span><span style="color:#75715e">     */</span>
-    <span style="color:#66d9ef">public</span> List<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">crawlWithMap</span><span style="color:#f92672">(</span>String startUrl<span style="color:#f92672">,</span> HtmlParser htmlParser<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-
-        <span style="color:#66d9ef">int</span> index <span style="color:#f92672">=</span> startUrl<span style="color:#f92672">.</span><span style="color:#a6e22e">indexOf</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#39;/&#39;</span><span style="color:#f92672">,</span> 7<span style="color:#f92672">);</span>
-        String hostname <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>index <span style="color:#f92672">!=</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">)</span> <span style="color:#f92672">?</span> startUrl<span style="color:#f92672">.</span><span style="color:#a6e22e">substring</span><span style="color:#f92672">(</span>0<span style="color:#f92672">,</span> index<span style="color:#f92672">)</span> <span style="color:#f92672">:</span> startUrl<span style="color:#f92672">;</span>
-
-        CrawlerWithMap crawler <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> CrawlerWithMap<span style="color:#f92672">(</span>startUrl<span style="color:#f92672">,</span> hostname<span style="color:#f92672">,</span> htmlParser<span style="color:#f92672">);</span>
-        CrawlerWithMap<span style="color:#f92672">.</span><span style="color:#a6e22e">map</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ConcurrentHashMap<span style="color:#f92672">&lt;&gt;();</span>
-        CrawlerWithMap<span style="color:#f92672">.</span><span style="color:#a6e22e">result</span> <span style="color:#f92672">=</span> ConcurrentHashMap<span style="color:#f92672">.</span><span style="color:#a6e22e">newKeySet</span><span style="color:#f92672">();</span>
-        Thread thread <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Thread<span style="color:#f92672">(</span>crawler<span style="color:#f92672">);</span>
-        thread<span style="color:#f92672">.</span><span style="color:#a6e22e">start</span><span style="color:#f92672">();</span>
-
-        CrawlerWithMap<span style="color:#f92672">.</span><span style="color:#a6e22e">joinThread</span><span style="color:#f92672">(</span>thread<span style="color:#f92672">);</span>
-        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;&gt;(</span>CrawlerWithMap<span style="color:#f92672">.</span><span style="color:#a6e22e">result</span><span style="color:#f92672">);</span>
-    <span style="color:#f92672">}</span>
-<span style="color:#f92672">}</span>
-
-<span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Implemented Crawler with ConcurrentHashMap.
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">class</span> <span style="color:#a6e22e">CrawlerWithMap</span> <span style="color:#66d9ef">implements</span> Runnable <span style="color:#f92672">{</span>
-    String startUrl<span style="color:#f92672">;</span>
-    String hostname<span style="color:#f92672">;</span>
-    HtmlParser htmlParser<span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> ConcurrentHashMap<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">,</span> String<span style="color:#f92672">&gt;</span> map <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ConcurrentHashMap<span style="color:#f92672">&lt;&gt;();</span>
-    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> Set<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> result <span style="color:#f92672">=</span> ConcurrentHashMap<span style="color:#f92672">.</span><span style="color:#a6e22e">newKeySet</span><span style="color:#f92672">();</span>
-
-    <span style="color:#75715e">/**
-</span><span style="color:#75715e">     * Crawler constructor.
-</span><span style="color:#75715e">     *
-</span><span style="color:#75715e">     * @param startURL   start URL
-</span><span style="color:#75715e">     * @param hostName   host name
-</span><span style="color:#75715e">     * @param htmlParser HTML Parser class
-</span><span style="color:#75715e">     */</span>
-    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">CrawlerWithMap</span><span style="color:#f92672">(</span>String startURL<span style="color:#f92672">,</span> String hostName<span style="color:#f92672">,</span> HtmlParser htmlParser<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">startUrl</span> <span style="color:#f92672">=</span> startURL<span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">hostname</span> <span style="color:#f92672">=</span> hostName<span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">htmlParser</span> <span style="color:#f92672">=</span> htmlParser<span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#75715e">/**
-</span><span style="color:#75715e">     * Override run method in Crawler.
-</span><span style="color:#75715e">     */</span>
-    <span style="color:#a6e22e">@Override</span>
-    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">run</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">startUrl</span><span style="color:#f92672">.</span><span style="color:#a6e22e">startsWith</span><span style="color:#f92672">(</span>hostname<span style="color:#f92672">)</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">!</span>result<span style="color:#f92672">.</span><span style="color:#a6e22e">contains</span><span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">startUrl</span><span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
-
-            result<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">startUrl</span><span style="color:#f92672">);</span>
-            List<span style="color:#f92672">&lt;</span>Thread<span style="color:#f92672">&gt;</span> threads <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;&gt;();</span>
-
-            <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>String s <span style="color:#f92672">:</span> htmlParser<span style="color:#f92672">.</span><span style="color:#a6e22e">getUrls</span><span style="color:#f92672">(</span>startUrl<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
-                Crawler crawler <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Crawler<span style="color:#f92672">(</span>s<span style="color:#f92672">,</span> hostname<span style="color:#f92672">,</span> htmlParser<span style="color:#f92672">);</span>
-                Thread thread <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Thread<span style="color:#f92672">(</span>crawler<span style="color:#f92672">);</span>
-                thread<span style="color:#f92672">.</span><span style="color:#a6e22e">start</span><span style="color:#f92672">();</span>
-                threads<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>thread<span style="color:#f92672">);</span>
-            <span style="color:#f92672">}</span>
-            <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>Thread t <span style="color:#f92672">:</span> threads<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                joinThread<span style="color:#f92672">(</span>t<span style="color:#f92672">);</span>      <span style="color:#75715e">// wait for all threads to complete
-</span><span style="color:#75715e"></span>            <span style="color:#f92672">}</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#75715e">/**
-</span><span style="color:#75715e">     * One thread to wait until another thread completes its execution.
-</span><span style="color:#75715e">     *
-</span><span style="color:#75715e">     * @param thread waits for this thread to die
-</span><span style="color:#75715e">     */</span>
-    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">joinThread</span><span style="color:#f92672">(</span>Thread thread<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
-            thread<span style="color:#f92672">.</span><span style="color:#a6e22e">join</span><span style="color:#f92672">();</span>
-        <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>InterruptedException e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            e<span style="color:#f92672">.</span><span style="color:#a6e22e">printStackTrace</span><span style="color:#f92672">();</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-<span style="color:#f92672">}</span>
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Crawl</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>		<span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * Use ConcurrentHashMap instead of volatile and synchronized keyword.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @param startUrl   start URL
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @param htmlParser HTML Parser class
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @return all urls obtained by web crawler in any order
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> List<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">crawlWithMap</span><span style="color:#f92672">(</span>String startUrl<span style="color:#f92672">,</span> HtmlParser htmlParser<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> index <span style="color:#f92672">=</span> startUrl<span style="color:#f92672">.</span><span style="color:#a6e22e">indexOf</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#39;/&#39;</span><span style="color:#f92672">,</span> 7<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        String hostname <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>index <span style="color:#f92672">!=</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">)</span> <span style="color:#f92672">?</span> startUrl<span style="color:#f92672">.</span><span style="color:#a6e22e">substring</span><span style="color:#f92672">(</span>0<span style="color:#f92672">,</span> index<span style="color:#f92672">)</span> <span style="color:#f92672">:</span> startUrl<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        CrawlerWithMap crawler <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> CrawlerWithMap<span style="color:#f92672">(</span>startUrl<span style="color:#f92672">,</span> hostname<span style="color:#f92672">,</span> htmlParser<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        CrawlerWithMap<span style="color:#f92672">.</span><span style="color:#a6e22e">map</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ConcurrentHashMap<span style="color:#f92672">&lt;&gt;();</span>
+</span></span><span style="display:flex;"><span>        CrawlerWithMap<span style="color:#f92672">.</span><span style="color:#a6e22e">result</span> <span style="color:#f92672">=</span> ConcurrentHashMap<span style="color:#f92672">.</span><span style="color:#a6e22e">newKeySet</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>        Thread thread <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Thread<span style="color:#f92672">(</span>crawler<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        thread<span style="color:#f92672">.</span><span style="color:#a6e22e">start</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        CrawlerWithMap<span style="color:#f92672">.</span><span style="color:#a6e22e">joinThread</span><span style="color:#f92672">(</span>thread<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;&gt;(</span>CrawlerWithMap<span style="color:#f92672">.</span><span style="color:#a6e22e">result</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Implemented Crawler with ConcurrentHashMap.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">class</span> <span style="color:#a6e22e">CrawlerWithMap</span> <span style="color:#66d9ef">implements</span> Runnable <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    String startUrl<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    String hostname<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    HtmlParser htmlParser<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> ConcurrentHashMap<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">,</span> String<span style="color:#f92672">&gt;</span> map <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ConcurrentHashMap<span style="color:#f92672">&lt;&gt;();</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> Set<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> result <span style="color:#f92672">=</span> ConcurrentHashMap<span style="color:#f92672">.</span><span style="color:#a6e22e">newKeySet</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * Crawler constructor.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @param startURL   start URL
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @param hostName   host name
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @param htmlParser HTML Parser class
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">CrawlerWithMap</span><span style="color:#f92672">(</span>String startURL<span style="color:#f92672">,</span> String hostName<span style="color:#f92672">,</span> HtmlParser htmlParser<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">startUrl</span> <span style="color:#f92672">=</span> startURL<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">hostname</span> <span style="color:#f92672">=</span> hostName<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">htmlParser</span> <span style="color:#f92672">=</span> htmlParser<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * Override run method in Crawler.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">run</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">startUrl</span><span style="color:#f92672">.</span><span style="color:#a6e22e">startsWith</span><span style="color:#f92672">(</span>hostname<span style="color:#f92672">)</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">!</span>result<span style="color:#f92672">.</span><span style="color:#a6e22e">contains</span><span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">startUrl</span><span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            result<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">startUrl</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>            List<span style="color:#f92672">&lt;</span>Thread<span style="color:#f92672">&gt;</span> threads <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;&gt;();</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>String s <span style="color:#f92672">:</span> htmlParser<span style="color:#f92672">.</span><span style="color:#a6e22e">getUrls</span><span style="color:#f92672">(</span>startUrl<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                Crawler crawler <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Crawler<span style="color:#f92672">(</span>s<span style="color:#f92672">,</span> hostname<span style="color:#f92672">,</span> htmlParser<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>                Thread thread <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Thread<span style="color:#f92672">(</span>crawler<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>                thread<span style="color:#f92672">.</span><span style="color:#a6e22e">start</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>                threads<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>thread<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>Thread t <span style="color:#f92672">:</span> threads<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                joinThread<span style="color:#f92672">(</span>t<span style="color:#f92672">);</span>      <span style="color:#75715e">// wait for all threads to complete
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * One thread to wait until another thread completes its execution.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @param thread waits for this thread to die
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">joinThread</span><span style="color:#f92672">(</span>Thread thread<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">try</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            thread<span style="color:#f92672">.</span><span style="color:#a6e22e">join</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span> <span style="color:#66d9ef">catch</span> <span style="color:#f92672">(</span>InterruptedException e<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            e<span style="color:#f92672">.</span><span style="color:#a6e22e">printStackTrace</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div>
               
             </div>
           </div>

@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.92.2 with theme Tranquilpeak 0.4.8-BETA">
+<meta name="generator" content="Hugo 0.93.1 with theme Tranquilpeak 0.4.8-BETA">
 <meta name="author" content="Notebook">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -252,7 +252,7 @@ Output: [1]
 Explanation:
 All of the servers start out available.
 The first 3 requests are handled by the first 3 servers in order.
-Request 3 comes in. Server 0 is busy, so it's assigned to the next available server, which is 1.
+Request 3 comes in. Server 0 is busy, so it&#39;s assigned to the next available server, which is 1.
 Request 4 comes in. It cannot be handled since all servers are busy, so it is dropped.
 Servers 0 and 2 handled one request each, while server 1 handled two requests. Hence server 1 is the busiest server.
 </code></pre><p><strong>Example 2:</strong></p>
@@ -290,60 +290,60 @@ Output: [0]
 <p>Each time, find all the available servers in priority queue, if there is no available server, skip current round.</p>
 <p>Then find if ceiling of <code>i % k</code> exist in available servers, if not, assign the first available server in set. Remove the assigned server and add the server and new end time into priority queue.</p>
 <p>Keep doing this until all request has been handled.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Keep a int array to track the total number of requests that the ith server handled.
-</span><span style="color:#75715e"> * Use a TreeMap to store the servers at the number of requests.
-</span><span style="color:#75715e"> * Use a priority queue to save all the servers that are busy.
-</span><span style="color:#75715e"> * Use a TreeSet to store all the available servers.
-</span><span style="color:#75715e"> * Each time, find all the available servers in priority queue, if there is no available server, skip current round.
-</span><span style="color:#75715e"> * Then find if ceiling of i % k exist in available servers, if not, assign the first available server in set.
-</span><span style="color:#75715e"> * Remove the assigned server and add the server and new end time into priority queue.
-</span><span style="color:#75715e"> * Keep doing this until all request has been handled.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param k       k servers
-</span><span style="color:#75715e"> * @param arrival arrival time
-</span><span style="color:#75715e"> * @param load    each request&#39;s process time
-</span><span style="color:#75715e"> * @return a list containing the IDs (0-indexed) of the busiest server(s)
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">public</span> List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">busiestServers</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> k<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> arrival<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> load<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-    <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> requestCount <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>k<span style="color:#f92672">];</span>
-    TreeMap<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">,</span> HashSet<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;&gt;</span> map <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> TreeMap<span style="color:#f92672">&lt;&gt;((</span>o1<span style="color:#f92672">,</span> o2<span style="color:#f92672">)</span> <span style="color:#f92672">-&gt;</span> o2 <span style="color:#f92672">-</span> o1<span style="color:#f92672">);</span>
-    PriorityQueue<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]&gt;</span> pq <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> PriorityQueue<span style="color:#f92672">&lt;&gt;(</span>Comparator<span style="color:#f92672">.</span><span style="color:#a6e22e">comparingInt</span><span style="color:#f92672">(</span>o <span style="color:#f92672">-&gt;</span> o<span style="color:#f92672">[</span>1<span style="color:#f92672">]));</span>  <span style="color:#75715e">// server index, end time
-</span><span style="color:#75715e"></span>    TreeSet<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> available <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> TreeSet<span style="color:#f92672">&lt;&gt;();</span>
-
-    map<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>0<span style="color:#f92672">,</span> <span style="color:#66d9ef">new</span> HashSet<span style="color:#f92672">&lt;&gt;());</span>
-
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> k<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
-        available<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>i<span style="color:#f92672">);</span>
-        map<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>0<span style="color:#f92672">).</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>i<span style="color:#f92672">);</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> arrival<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">int</span> current <span style="color:#f92672">=</span> arrival<span style="color:#f92672">[</span>i<span style="color:#f92672">];</span>
-        <span style="color:#66d9ef">int</span> endTime <span style="color:#f92672">=</span> current <span style="color:#f92672">+</span> load<span style="color:#f92672">[</span>i<span style="color:#f92672">];</span>
-        <span style="color:#66d9ef">while</span> <span style="color:#f92672">(!</span>pq<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">()</span> <span style="color:#f92672">&amp;&amp;</span> pq<span style="color:#f92672">.</span><span style="color:#a6e22e">peek</span><span style="color:#f92672">()[</span>1<span style="color:#f92672">]</span> <span style="color:#f92672">&lt;=</span> current<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>      <span style="color:#75715e">// find all available server in pq
-</span><span style="color:#75715e"></span>            available<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>pq<span style="color:#f92672">.</span><span style="color:#a6e22e">poll</span><span style="color:#f92672">()[</span>0<span style="color:#f92672">]);</span>
-        <span style="color:#f92672">}</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>available<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">()</span> <span style="color:#f92672">!=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            Integer next <span style="color:#f92672">=</span> available<span style="color:#f92672">.</span><span style="color:#a6e22e">ceiling</span><span style="color:#f92672">(</span>i <span style="color:#f92672">%</span> k<span style="color:#f92672">);</span>
-
-            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>next <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                next <span style="color:#f92672">=</span> available<span style="color:#f92672">.</span><span style="color:#a6e22e">first</span><span style="color:#f92672">();</span>
-            <span style="color:#f92672">}</span>
-
-            pq<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]{</span>next<span style="color:#f92672">,</span> endTime<span style="color:#f92672">});</span>       <span style="color:#75715e">// add to busy server queue
-</span><span style="color:#75715e"></span>            available<span style="color:#f92672">.</span><span style="color:#a6e22e">remove</span><span style="color:#f92672">(</span>next<span style="color:#f92672">);</span>                 <span style="color:#75715e">// remove the used server
-</span><span style="color:#75715e"></span>            map<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>requestCount<span style="color:#f92672">[</span>next<span style="color:#f92672">]).</span><span style="color:#a6e22e">remove</span><span style="color:#f92672">(</span>next<span style="color:#f92672">);</span>
-            requestCount<span style="color:#f92672">[</span>next<span style="color:#f92672">]++;</span>
-            HashSet<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> set <span style="color:#f92672">=</span> map<span style="color:#f92672">.</span><span style="color:#a6e22e">getOrDefault</span><span style="color:#f92672">(</span>requestCount<span style="color:#f92672">[</span>next<span style="color:#f92672">],</span> <span style="color:#66d9ef">new</span> HashSet<span style="color:#f92672">&lt;&gt;());</span>
-            set<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>next<span style="color:#f92672">);</span>
-            map<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>requestCount<span style="color:#f92672">[</span>next<span style="color:#f92672">],</span> set<span style="color:#f92672">);</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;&gt;(</span>map<span style="color:#f92672">.</span><span style="color:#a6e22e">firstEntry</span><span style="color:#f92672">().</span><span style="color:#a6e22e">getValue</span><span style="color:#f92672">());</span>
-<span style="color:#f92672">}</span>
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Keep a int array to track the total number of requests that the ith server handled.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Use a TreeMap to store the servers at the number of requests.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Use a priority queue to save all the servers that are busy.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Use a TreeSet to store all the available servers.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Each time, find all the available servers in priority queue, if there is no available server, skip current round.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Then find if ceiling of i % k exist in available servers, if not, assign the first available server in set.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Remove the assigned server and add the server and new end time into priority queue.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Keep doing this until all request has been handled.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param k       k servers
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param arrival arrival time
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param load    each request&#39;s process time
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return a list containing the IDs (0-indexed) of the busiest server(s)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">busiestServers</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> k<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> arrival<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> load<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> requestCount <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>k<span style="color:#f92672">];</span>
+</span></span><span style="display:flex;"><span>    TreeMap<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">,</span> HashSet<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;&gt;</span> map <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> TreeMap<span style="color:#f92672">&lt;&gt;((</span>o1<span style="color:#f92672">,</span> o2<span style="color:#f92672">)</span> <span style="color:#f92672">-&gt;</span> o2 <span style="color:#f92672">-</span> o1<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>    PriorityQueue<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]&gt;</span> pq <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> PriorityQueue<span style="color:#f92672">&lt;&gt;(</span>Comparator<span style="color:#f92672">.</span><span style="color:#a6e22e">comparingInt</span><span style="color:#f92672">(</span>o <span style="color:#f92672">-&gt;</span> o<span style="color:#f92672">[</span>1<span style="color:#f92672">]));</span>  <span style="color:#75715e">// server index, end time
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    TreeSet<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> available <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> TreeSet<span style="color:#f92672">&lt;&gt;();</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    map<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>0<span style="color:#f92672">,</span> <span style="color:#66d9ef">new</span> HashSet<span style="color:#f92672">&lt;&gt;());</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> k<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        available<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>i<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        map<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>0<span style="color:#f92672">).</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>i<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> arrival<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> current <span style="color:#f92672">=</span> arrival<span style="color:#f92672">[</span>i<span style="color:#f92672">];</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> endTime <span style="color:#f92672">=</span> current <span style="color:#f92672">+</span> load<span style="color:#f92672">[</span>i<span style="color:#f92672">];</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">while</span> <span style="color:#f92672">(!</span>pq<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">()</span> <span style="color:#f92672">&amp;&amp;</span> pq<span style="color:#f92672">.</span><span style="color:#a6e22e">peek</span><span style="color:#f92672">()[</span>1<span style="color:#f92672">]</span> <span style="color:#f92672">&lt;=</span> current<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>      <span style="color:#75715e">// find all available server in pq
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            available<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>pq<span style="color:#f92672">.</span><span style="color:#a6e22e">poll</span><span style="color:#f92672">()[</span>0<span style="color:#f92672">]);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>available<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">()</span> <span style="color:#f92672">!=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            Integer next <span style="color:#f92672">=</span> available<span style="color:#f92672">.</span><span style="color:#a6e22e">ceiling</span><span style="color:#f92672">(</span>i <span style="color:#f92672">%</span> k<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>next <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                next <span style="color:#f92672">=</span> available<span style="color:#f92672">.</span><span style="color:#a6e22e">first</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            pq<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]{</span>next<span style="color:#f92672">,</span> endTime<span style="color:#f92672">});</span>       <span style="color:#75715e">// add to busy server queue
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            available<span style="color:#f92672">.</span><span style="color:#a6e22e">remove</span><span style="color:#f92672">(</span>next<span style="color:#f92672">);</span>                 <span style="color:#75715e">// remove the used server
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            map<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>requestCount<span style="color:#f92672">[</span>next<span style="color:#f92672">]).</span><span style="color:#a6e22e">remove</span><span style="color:#f92672">(</span>next<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>            requestCount<span style="color:#f92672">[</span>next<span style="color:#f92672">]++;</span>
+</span></span><span style="display:flex;"><span>            HashSet<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> set <span style="color:#f92672">=</span> map<span style="color:#f92672">.</span><span style="color:#a6e22e">getOrDefault</span><span style="color:#f92672">(</span>requestCount<span style="color:#f92672">[</span>next<span style="color:#f92672">],</span> <span style="color:#66d9ef">new</span> HashSet<span style="color:#f92672">&lt;&gt;());</span>
+</span></span><span style="display:flex;"><span>            set<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>next<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>            map<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>requestCount<span style="color:#f92672">[</span>next<span style="color:#f92672">],</span> set<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;&gt;(</span>map<span style="color:#f92672">.</span><span style="color:#a6e22e">firstEntry</span><span style="color:#f92672">().</span><span style="color:#a6e22e">getValue</span><span style="color:#f92672">());</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div>
               
             </div>
           </div>

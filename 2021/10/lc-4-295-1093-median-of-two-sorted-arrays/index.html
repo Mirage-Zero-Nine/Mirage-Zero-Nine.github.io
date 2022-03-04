@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.92.2 with theme Tranquilpeak 0.4.8-BETA">
+<meta name="generator" content="Hugo 0.93.1 with theme Tranquilpeak 0.4.8-BETA">
 <meta name="author" content="Notebook">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -301,65 +301,65 @@ The median is (2 + 3)/2 = 2.5
 <p>The basic idea is that, to find median, two arrays should be divided into 4 parts, <code>smaller1</code>, <code>smaller2</code>, <code>larger1</code>, <code>larger2</code>. The elements in <code>smaller1</code>, <code>smaller2</code> and <code>larger1</code>, <code>larger2</code> can only at most has a difference of 1. That is to say, <code>abs[(small1 + small2) - (larger1 + larger2)]&lt;=1</code>. If total length of two arrays are even, then it can be evenly divided into two parts. Otherwise, one part will have one more element.</p>
 <p>The way to find the correct partition is using binary search in first array. Note that to avoid out of bound exception, the first array should be assured as shorter array. Each time, the first array will be divided into two parts. Since this array is sorted, the two parts will be assured to be one small part, and one large part. Then, the partition position of second array will be fixed as well: <code>middle2 = (nums2.length + nums1.length + 1) / 2 - middle1</code>. Index smaller than <code>middle2</code> will be divided into <code>small2</code> and larger elements will be divided into <code>large2</code>.</p>
 <p>To ensure the division is correct, check if this <code>maxLeft1 &lt;= minRight2 &amp;&amp; maxLeft2 &lt;= minRight1</code>  is met. The division above ensure that two arrays is divided into two parts, and this condition assure all elements in small part will be less than or equal to larger part. If both conditions are matched, then median can be found.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Divide and conquer, compare the middle elements of two arrays, and recurse.
-</span><span style="color:#75715e"> * Each time, do binary search at first array (shorter array).
-</span><span style="color:#75715e"> * Array will be divided into 2 parts, since array is sorted, it will be one small part and one large part.
-</span><span style="color:#75715e"> * To find median, the second array will be divided into two parts.
-</span><span style="color:#75715e"> * The # of elements in both part is fixed, that sum of elements # in both parts difference should be less than 2.
-</span><span style="color:#75715e"> * To ensure current partition has correctly divided all elements, maxLeft1 &lt;= minRight2 &amp;&amp; maxLeft2 &lt;= minRight1.
-</span><span style="color:#75715e"> * If the condition is not matched, keep binary search in first array until the condition is matched.
-</span><span style="color:#75715e"> * Time complexity: O(log(m+n)).
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param nums1 first sorted array with length m
-</span><span style="color:#75715e"> * @param nums2 second sorted array with length n
-</span><span style="color:#75715e"> * @return median of the two sorted arrays
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">double</span> <span style="color:#a6e22e">findMedianSortedArrays</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> nums1<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> nums2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>nums1<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">&gt;</span> nums2<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">return</span> findMedianSortedArrays<span style="color:#f92672">(</span>nums2<span style="color:#f92672">,</span> nums1<span style="color:#f92672">);</span>        <span style="color:#75715e">// assure nums1 is shorter array to avoid corner case
-</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">int</span> left <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> right <span style="color:#f92672">=</span> nums1<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span>
-
-    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>left <span style="color:#f92672">&lt;=</span> right<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>     <span style="color:#75715e">// binary search only in first array, partition position in second array is fixed
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">int</span> middle1 <span style="color:#f92672">=</span> left <span style="color:#f92672">+</span> <span style="color:#f92672">(</span>right <span style="color:#f92672">-</span> left<span style="color:#f92672">)</span> <span style="color:#f92672">/</span> 2<span style="color:#f92672">;</span>       <span style="color:#75715e">// binary search middle index
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">int</span> middle2 <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>nums2<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">+</span> nums1<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">+</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">/</span> 2 <span style="color:#f92672">-</span> middle1<span style="color:#f92672">;</span>
-
-        <span style="color:#75715e">/*
-</span><span style="color:#75715e">         * maxLeft1 is the max value in left subarray of first array.
-</span><span style="color:#75715e">         * maxLeft2 is the max value in left subarray of second array.
-</span><span style="color:#75715e">         * minRight1 is the min value in right subarray of first array.
-</span><span style="color:#75715e">         * minRight2 is the min value in right subarray of second array.
-</span><span style="color:#75715e">         * Corner case: partition index reaches the end (or beginning) of array.
-</span><span style="color:#75715e">         * If reaches the end of array, then set to MAX_VALUE.
-</span><span style="color:#75715e">         * If reaches the beginning of array, set to MIN_VALUE. */</span>
-        <span style="color:#66d9ef">int</span> maxLeft1 <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>middle1 <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">?</span> Integer<span style="color:#f92672">.</span><span style="color:#a6e22e">MIN_VALUE</span> <span style="color:#f92672">:</span> nums1<span style="color:#f92672">[</span>middle1 <span style="color:#f92672">-</span> 1<span style="color:#f92672">];</span>     <span style="color:#75715e">// left of middle index
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">int</span> minRight1 <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>middle1 <span style="color:#f92672">==</span> nums1<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">)</span> <span style="color:#f92672">?</span> Integer<span style="color:#f92672">.</span><span style="color:#a6e22e">MAX_VALUE</span> <span style="color:#f92672">:</span> nums1<span style="color:#f92672">[</span>middle1<span style="color:#f92672">];</span>     <span style="color:#75715e">// middle index
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">int</span> maxLeft2 <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>middle2 <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">?</span> Integer<span style="color:#f92672">.</span><span style="color:#a6e22e">MIN_VALUE</span> <span style="color:#f92672">:</span> nums2<span style="color:#f92672">[</span>middle2 <span style="color:#f92672">-</span> 1<span style="color:#f92672">];</span>     <span style="color:#75715e">// left of middle index
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">int</span> minRight2 <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>middle2 <span style="color:#f92672">==</span> nums2<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">)</span> <span style="color:#f92672">?</span> Integer<span style="color:#f92672">.</span><span style="color:#a6e22e">MAX_VALUE</span> <span style="color:#f92672">:</span> nums2<span style="color:#f92672">[</span>middle2<span style="color:#f92672">];</span>     <span style="color:#75715e">// middle index
-</span><span style="color:#75715e"></span>
-        <span style="color:#75715e">/*
-</span><span style="color:#75715e">         * The condition for finding the median is that maxLeft1 &lt;= minRight2 &amp;&amp; maxLeft2 &lt;= minRight1.
-</span><span style="color:#75715e">         * If so, the partition has already divide to parts that all left values are smaller than all right values.
-</span><span style="color:#75715e">         * If sum of two arrays are even, then return the average of median.
-</span><span style="color:#75715e">         * If sum of two arrays are odd, return the median.
-</span><span style="color:#75715e">         * If the condition is not met, then the partition position is incorrect,
-</span><span style="color:#75715e">         * If max in left subarray 1 is larger than min in right subarray 2, move partition position to left.
-</span><span style="color:#75715e">         * Since the partition has include elements that should belong to right sub array.
-</span><span style="color:#75715e">         * Otherwise, move partition position to right. */</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>maxLeft1 <span style="color:#f92672">&lt;=</span> minRight2 <span style="color:#f92672">&amp;&amp;</span> maxLeft2 <span style="color:#f92672">&lt;=</span> minRight1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">return</span> <span style="color:#f92672">((</span>nums1<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">+</span> nums2<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">)</span> <span style="color:#f92672">%</span> 2 <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">?</span> <span style="color:#f92672">((</span><span style="color:#66d9ef">double</span><span style="color:#f92672">)</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>maxLeft1<span style="color:#f92672">,</span> maxLeft2<span style="color:#f92672">)</span> <span style="color:#f92672">+</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">min</span><span style="color:#f92672">(</span>minRight1<span style="color:#f92672">,</span> minRight2<span style="color:#f92672">))</span> <span style="color:#f92672">/</span> 2 <span style="color:#f92672">:</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>maxLeft1<span style="color:#f92672">,</span> maxLeft2<span style="color:#f92672">);</span>
-        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>maxLeft1 <span style="color:#f92672">&gt;</span> minRight2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            right <span style="color:#f92672">=</span> middle1 <span style="color:#f92672">-</span> 1<span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
-            left <span style="color:#f92672">=</span> middle1 <span style="color:#f92672">+</span> 1<span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-    <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">;</span>
-<span style="color:#f92672">}</span>
-</code></pre></div><h1 id="295-find-median-from-data-stream">295. Find Median from Data Stream</h1>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Divide and conquer, compare the middle elements of two arrays, and recurse.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Each time, do binary search at first array (shorter array).
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Array will be divided into 2 parts, since array is sorted, it will be one small part and one large part.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * To find median, the second array will be divided into two parts.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * The # of elements in both part is fixed, that sum of elements # in both parts difference should be less than 2.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * To ensure current partition has correctly divided all elements, maxLeft1 &lt;= minRight2 &amp;&amp; maxLeft2 &lt;= minRight1.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * If the condition is not matched, keep binary search in first array until the condition is matched.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Time complexity: O(log(m+n)).
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param nums1 first sorted array with length m
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param nums2 second sorted array with length n
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return median of the two sorted arrays
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">double</span> <span style="color:#a6e22e">findMedianSortedArrays</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> nums1<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> nums2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>nums1<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">&gt;</span> nums2<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> findMedianSortedArrays<span style="color:#f92672">(</span>nums2<span style="color:#f92672">,</span> nums1<span style="color:#f92672">);</span>        <span style="color:#75715e">// assure nums1 is shorter array to avoid corner case
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> left <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> right <span style="color:#f92672">=</span> nums1<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>left <span style="color:#f92672">&lt;=</span> right<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>     <span style="color:#75715e">// binary search only in first array, partition position in second array is fixed
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">int</span> middle1 <span style="color:#f92672">=</span> left <span style="color:#f92672">+</span> <span style="color:#f92672">(</span>right <span style="color:#f92672">-</span> left<span style="color:#f92672">)</span> <span style="color:#f92672">/</span> 2<span style="color:#f92672">;</span>       <span style="color:#75715e">// binary search middle index
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">int</span> middle2 <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>nums2<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">+</span> nums1<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">+</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">/</span> 2 <span style="color:#f92672">-</span> middle1<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">/*
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">         * maxLeft1 is the max value in left subarray of first array.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">         * maxLeft2 is the max value in left subarray of second array.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">         * minRight1 is the min value in right subarray of first array.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">         * minRight2 is the min value in right subarray of second array.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">         * Corner case: partition index reaches the end (or beginning) of array.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">         * If reaches the end of array, then set to MAX_VALUE.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">         * If reaches the beginning of array, set to MIN_VALUE. */</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> maxLeft1 <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>middle1 <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">?</span> Integer<span style="color:#f92672">.</span><span style="color:#a6e22e">MIN_VALUE</span> <span style="color:#f92672">:</span> nums1<span style="color:#f92672">[</span>middle1 <span style="color:#f92672">-</span> 1<span style="color:#f92672">];</span>     <span style="color:#75715e">// left of middle index
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">int</span> minRight1 <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>middle1 <span style="color:#f92672">==</span> nums1<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">)</span> <span style="color:#f92672">?</span> Integer<span style="color:#f92672">.</span><span style="color:#a6e22e">MAX_VALUE</span> <span style="color:#f92672">:</span> nums1<span style="color:#f92672">[</span>middle1<span style="color:#f92672">];</span>     <span style="color:#75715e">// middle index
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">int</span> maxLeft2 <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>middle2 <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">?</span> Integer<span style="color:#f92672">.</span><span style="color:#a6e22e">MIN_VALUE</span> <span style="color:#f92672">:</span> nums2<span style="color:#f92672">[</span>middle2 <span style="color:#f92672">-</span> 1<span style="color:#f92672">];</span>     <span style="color:#75715e">// left of middle index
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">int</span> minRight2 <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>middle2 <span style="color:#f92672">==</span> nums2<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">)</span> <span style="color:#f92672">?</span> Integer<span style="color:#f92672">.</span><span style="color:#a6e22e">MAX_VALUE</span> <span style="color:#f92672">:</span> nums2<span style="color:#f92672">[</span>middle2<span style="color:#f92672">];</span>     <span style="color:#75715e">// middle index
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">/*
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">         * The condition for finding the median is that maxLeft1 &lt;= minRight2 &amp;&amp; maxLeft2 &lt;= minRight1.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">         * If so, the partition has already divide to parts that all left values are smaller than all right values.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">         * If sum of two arrays are even, then return the average of median.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">         * If sum of two arrays are odd, return the median.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">         * If the condition is not met, then the partition position is incorrect,
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">         * If max in left subarray 1 is larger than min in right subarray 2, move partition position to left.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">         * Since the partition has include elements that should belong to right sub array.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">         * Otherwise, move partition position to right. */</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>maxLeft1 <span style="color:#f92672">&lt;=</span> minRight2 <span style="color:#f92672">&amp;&amp;</span> maxLeft2 <span style="color:#f92672">&lt;=</span> minRight1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> <span style="color:#f92672">((</span>nums1<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">+</span> nums2<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">)</span> <span style="color:#f92672">%</span> 2 <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">?</span> <span style="color:#f92672">((</span><span style="color:#66d9ef">double</span><span style="color:#f92672">)</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>maxLeft1<span style="color:#f92672">,</span> maxLeft2<span style="color:#f92672">)</span> <span style="color:#f92672">+</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">min</span><span style="color:#f92672">(</span>minRight1<span style="color:#f92672">,</span> minRight2<span style="color:#f92672">))</span> <span style="color:#f92672">/</span> 2 <span style="color:#f92672">:</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>maxLeft1<span style="color:#f92672">,</span> maxLeft2<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>maxLeft1 <span style="color:#f92672">&gt;</span> minRight2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            right <span style="color:#f92672">=</span> middle1 <span style="color:#f92672">-</span> 1<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            left <span style="color:#f92672">=</span> middle1 <span style="color:#f92672">+</span> 1<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><h1 id="295-find-median-from-data-stream">295. Find Median from Data Stream</h1>
 <p>Link: <a href="https://leetcode.com/problems/find-median-from-data-stream/">Find Median from Data Stream</a></p>
 <h2 id="problem-description-1">Problem Description</h2>
 <p>Median is the middle value in an ordered integer list. If the size of the list is even, there is no middle value. So the median is the mean of the two middle value.</p>
@@ -396,64 +396,64 @@ findMedian() -&gt; 2
 <li>If stream size is even, then return the average of two middle value in stream.</li>
 <li>If stream size is odd, return value in the middle of stream, which is the top of small heap.</li>
 </ol>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MedianFinder</span> <span style="color:#f92672">{</span>
-    <span style="color:#66d9ef">private</span> Queue<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> small<span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">private</span> Queue<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> large<span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">boolean</span> even <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>        <span style="color:#75715e">// initially, the size of 2 heaps are both 0, which is even
-</span><span style="color:#75715e"></span>
-    <span style="color:#75715e">/**
-</span><span style="color:#75715e">     * Keeping two heaps. One min heap stores larger part of stream and one max heap stores smaller part.
-</span><span style="color:#75715e">     * The size of two heaps should be same, or the large heap can have one more elements when total size is odd.
-</span><span style="color:#75715e">     * There are two conditions:
-</span><span style="color:#75715e">     * 1. If two heaps have same size, then add one element to large heap.
-</span><span style="color:#75715e">     * 2. If total size is odd, then add one element to small heap.
-</span><span style="color:#75715e">     * The adding process is, for example, add one element to large heap:
-</span><span style="color:#75715e">     * Add given element to small heap first, then poll out the top of small heap, add the polled element to large heap.
-</span><span style="color:#75715e">     */</span>
-    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">MedianFinder</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
-        small <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> PriorityQueue<span style="color:#f92672">&lt;&gt;((</span>o1<span style="color:#f92672">,</span> o2<span style="color:#f92672">)</span> <span style="color:#f92672">-&gt;</span> o2 <span style="color:#f92672">-</span> o1<span style="color:#f92672">);</span>               <span style="color:#75715e">// max heap stores smaller part of stream
-</span><span style="color:#75715e"></span>        large <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> PriorityQueue<span style="color:#f92672">&lt;&gt;();</span>                                  <span style="color:#75715e">// min heap stores larger part of stream
-</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
-
-    <span style="color:#75715e">/**
-</span><span style="color:#75715e">     * Add number to heap.
-</span><span style="color:#75715e">     * Basic rule: add value to a heap, then poll out top of this heap and add this value to the other heap.
-</span><span style="color:#75715e">     * Size of small heap should be larger or equal to large heap.
-</span><span style="color:#75715e">     * This rule make findMedian() easier.
-</span><span style="color:#75715e">     * If total size is odd, then small heap is larger. Add value to large heap to make two heaps size equal.
-</span><span style="color:#75715e">     * Otherwise, add value to small heap. If findMedian() is called, return top of the small heap.
-</span><span style="color:#75715e">     * To add value, if add to small heap, first add value to large heap, then move top of large heap to small heap.
-</span><span style="color:#75715e">     *
-</span><span style="color:#75715e">     * @param num given integer
-</span><span style="color:#75715e">     */</span>
-    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">addNum</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> num<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>even<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            small<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>num<span style="color:#f92672">);</span>
-            large<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>small<span style="color:#f92672">.</span><span style="color:#a6e22e">poll</span><span style="color:#f92672">());</span>
-        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
-            large<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>num<span style="color:#f92672">);</span>
-            small<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>large<span style="color:#f92672">.</span><span style="color:#a6e22e">poll</span><span style="color:#f92672">());</span>
-        <span style="color:#f92672">}</span>
-
-        even <span style="color:#f92672">=</span> <span style="color:#f92672">!</span>even<span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#75715e">/**
-</span><span style="color:#75715e">     * If stream size is even, then return the average of two middle value in stream.
-</span><span style="color:#75715e">     * If stream size is odd, return value in the middle of stream, which is the top of small heap.
-</span><span style="color:#75715e">     * The reason is that, when adding value to heap, always keep small heap size larger or equal to large heap.
-</span><span style="color:#75715e">     *
-</span><span style="color:#75715e">     * @return median value in stream
-</span><span style="color:#75715e">     */</span>
-    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">double</span> <span style="color:#a6e22e">findMedian</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>even<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">return</span> <span style="color:#f92672">(</span>small<span style="color:#f92672">.</span><span style="color:#a6e22e">peek</span><span style="color:#f92672">()</span> <span style="color:#f92672">+</span> large<span style="color:#f92672">.</span><span style="color:#a6e22e">peek</span><span style="color:#f92672">())</span> <span style="color:#f92672">/</span> 2<span style="color:#f92672">.</span><span style="color:#a6e22e">0</span><span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">return</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">double</span><span style="color:#f92672">)</span> large<span style="color:#f92672">.</span><span style="color:#a6e22e">peek</span><span style="color:#f92672">();</span>       <span style="color:#75715e">// if total length is odd, then return top of small heap
-</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-<span style="color:#f92672">}</span>
-</code></pre></div><h2 id="follow-up">Follow Up</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">MedianFinder</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> Queue<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> small<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> Queue<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> large<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">private</span> <span style="color:#66d9ef">boolean</span> even <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>        <span style="color:#75715e">// initially, the size of 2 heaps are both 0, which is even
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * Keeping two heaps. One min heap stores larger part of stream and one max heap stores smaller part.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * The size of two heaps should be same, or the large heap can have one more elements when total size is odd.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * There are two conditions:
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * 1. If two heaps have same size, then add one element to large heap.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * 2. If total size is odd, then add one element to small heap.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * The adding process is, for example, add one element to large heap:
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * Add given element to small heap first, then poll out the top of small heap, add the polled element to large heap.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">MedianFinder</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        small <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> PriorityQueue<span style="color:#f92672">&lt;&gt;((</span>o1<span style="color:#f92672">,</span> o2<span style="color:#f92672">)</span> <span style="color:#f92672">-&gt;</span> o2 <span style="color:#f92672">-</span> o1<span style="color:#f92672">);</span>               <span style="color:#75715e">// max heap stores smaller part of stream
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        large <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> PriorityQueue<span style="color:#f92672">&lt;&gt;();</span>                                  <span style="color:#75715e">// min heap stores larger part of stream
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * Add number to heap.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * Basic rule: add value to a heap, then poll out top of this heap and add this value to the other heap.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * Size of small heap should be larger or equal to large heap.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * This rule make findMedian() easier.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * If total size is odd, then small heap is larger. Add value to large heap to make two heaps size equal.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * Otherwise, add value to small heap. If findMedian() is called, return top of the small heap.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * To add value, if add to small heap, first add value to large heap, then move top of large heap to small heap.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @param num given integer
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">addNum</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> num<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>even<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            small<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>num<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>            large<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>small<span style="color:#f92672">.</span><span style="color:#a6e22e">poll</span><span style="color:#f92672">());</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            large<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>num<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>            small<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>large<span style="color:#f92672">.</span><span style="color:#a6e22e">poll</span><span style="color:#f92672">());</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        even <span style="color:#f92672">=</span> <span style="color:#f92672">!</span>even<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * If stream size is even, then return the average of two middle value in stream.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * If stream size is odd, return value in the middle of stream, which is the top of small heap.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * The reason is that, when adding value to heap, always keep small heap size larger or equal to large heap.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @return median value in stream
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">double</span> <span style="color:#a6e22e">findMedian</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>even<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> <span style="color:#f92672">(</span>small<span style="color:#f92672">.</span><span style="color:#a6e22e">peek</span><span style="color:#f92672">()</span> <span style="color:#f92672">+</span> large<span style="color:#f92672">.</span><span style="color:#a6e22e">peek</span><span style="color:#f92672">())</span> <span style="color:#f92672">/</span> 2<span style="color:#f92672">.</span><span style="color:#a6e22e">0</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">double</span><span style="color:#f92672">)</span> large<span style="color:#f92672">.</span><span style="color:#a6e22e">peek</span><span style="color:#f92672">();</span>       <span style="color:#75715e">// if total length is odd, then return top of small heap
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><h2 id="follow-up">Follow Up</h2>
 <h3 id="if-all-integer-numbers-from-the-stream-are-between-0-and-100-how-would-you-optimize-it">If all integer numbers from the stream are between 0 and 100, how would you optimize it?</h3>
 <p>See next problem.</p>
 <h3 id="if-99-of-all-integer-numbers-from-the-stream-are-between-0-and-100-how-would-you-optimize-it">If 99% of all integer numbers from the stream are between 0 and 100, how would you optimize it?</h3>
@@ -518,74 +518,74 @@ The mode is 1 as it appears the most in the sample.
 <li>m2: <code>total / 2 + 1</code></li>
 </ul>
 <p>If the number of elements in array is odd, then <code>m1 == m2</code>. Otherwise, <code>m1 + 1 == m2</code>. Since the array is &ldquo;sorted&rdquo;, simply traverse the array and add each element count and find <code>m1</code> and <code>m2</code>.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Two loops.
-</span><span style="color:#75715e"> * First loop find the min, max, average and mode of the array.
-</span><span style="color:#75715e"> * Second loop to find the median of the array by finding two candidates of median: (total + 1) / 2, total / 2 + 1.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param count given array
-</span><span style="color:#75715e"> * @return the statistics of the sample as an array of floating-point numbers [minimum, maximum, mean, median, mode]
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">double</span><span style="color:#f92672">[]</span> <span style="color:#a6e22e">sampleStats</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> count<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-
-    <span style="color:#75715e">/* Corner case */</span>
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>count <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">||</span> count<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">double</span><span style="color:#f92672">[</span>5<span style="color:#f92672">];</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">double</span> min <span style="color:#f92672">=</span> Double<span style="color:#f92672">.</span><span style="color:#a6e22e">MAX_VALUE</span><span style="color:#f92672">,</span> max <span style="color:#f92672">=</span> Double<span style="color:#f92672">.</span><span style="color:#a6e22e">MIN_VALUE</span><span style="color:#f92672">,</span> mode <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> mean<span style="color:#f92672">,</span> median<span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">int</span> frequency <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">long</span> totalElements <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> sum <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
-
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> count<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>count<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">!=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            min <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">min</span><span style="color:#f92672">(</span>i<span style="color:#f92672">,</span> min<span style="color:#f92672">);</span>
-            max <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>i<span style="color:#f92672">,</span> max<span style="color:#f92672">);</span>
-            sum <span style="color:#f92672">+=</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">long</span><span style="color:#f92672">)</span> count<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">*</span> i<span style="color:#f92672">;</span>
-            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>count<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">&gt;</span> frequency<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                frequency <span style="color:#f92672">=</span> count<span style="color:#f92672">[</span>i<span style="color:#f92672">];</span>
-                mode <span style="color:#f92672">=</span> i<span style="color:#f92672">;</span>
-            <span style="color:#f92672">}</span>
-            totalElements <span style="color:#f92672">+=</span> count<span style="color:#f92672">[</span>i<span style="color:#f92672">];</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-
-    mean <span style="color:#f92672">=</span> sum <span style="color:#f92672">/</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">double</span><span style="color:#f92672">)</span> totalElements<span style="color:#f92672">;</span>
-    median <span style="color:#f92672">=</span> findMedian<span style="color:#f92672">(</span>count<span style="color:#f92672">,</span> totalElements<span style="color:#f92672">,</span> sum<span style="color:#f92672">);</span>
-
-    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">double</span><span style="color:#f92672">[]{</span>min<span style="color:#f92672">,</span> max<span style="color:#f92672">,</span> mean<span style="color:#f92672">,</span> median<span style="color:#f92672">,</span> mode<span style="color:#f92672">};</span>
-<span style="color:#f92672">}</span>
-
-<span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Find median from given array.
-</span><span style="color:#75715e"> * The idea is to find the two possible candidate of median: (total + 1) / 2 and total / 2 + 1.
-</span><span style="color:#75715e"> * If the number of elements in array is even, then (total + 1) / 2 &lt; total / 2 + 1.
-</span><span style="color:#75715e"> * If the number of elements in array is odd, then (total + 1) / 2 == total / 2 + 1.
-</span><span style="color:#75715e"> * Traverse the array and find the value of two candidate of median.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param count         given array
-</span><span style="color:#75715e"> * @param totalElements number of elements in given array
-</span><span style="color:#75715e"> * @param sum           sum of all the elements in the array
-</span><span style="color:#75715e"> * @return median from the given array
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">double</span> <span style="color:#a6e22e">findMedian</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> count<span style="color:#f92672">,</span> <span style="color:#66d9ef">long</span> totalElements<span style="color:#f92672">,</span> <span style="color:#66d9ef">long</span> sum<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-    <span style="color:#66d9ef">int</span> middle1 <span style="color:#f92672">=</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">)</span> <span style="color:#f92672">((</span>totalElements <span style="color:#f92672">+</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">/</span> 2<span style="color:#f92672">),</span> middle2 <span style="color:#f92672">=</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">)</span> <span style="color:#f92672">(</span>totalElements <span style="color:#f92672">/</span> 2 <span style="color:#f92672">+</span> 1<span style="color:#f92672">),</span> currentCountSum <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">double</span> median <span style="color:#f92672">=</span> totalElements <span style="color:#f92672">==</span> 1 <span style="color:#f92672">?</span> sum <span style="color:#f92672">:</span> 0<span style="color:#f92672">;</span> <span style="color:#75715e">// if there is only one element, then the median is the only element
-</span><span style="color:#75715e"></span>
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> totalElements <span style="color:#f92672">&gt;</span> 1 <span style="color:#f92672">&amp;&amp;</span> i <span style="color:#f92672">&lt;</span> count<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">int</span> next <span style="color:#f92672">=</span> currentCountSum <span style="color:#f92672">+</span> count<span style="color:#f92672">[</span>i<span style="color:#f92672">];</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>currentCountSum <span style="color:#f92672">&lt;</span> middle1 <span style="color:#f92672">&amp;&amp;</span> next <span style="color:#f92672">&gt;=</span> middle1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span> <span style="color:#75715e">// if middle is under current element
-</span><span style="color:#75715e"></span>            median <span style="color:#f92672">+=</span> i <span style="color:#f92672">/</span> 2d<span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>currentCountSum <span style="color:#f92672">&lt;</span> middle2 <span style="color:#f92672">&amp;&amp;</span> next <span style="color:#f92672">&gt;=</span> middle2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            median <span style="color:#f92672">+=</span> i <span style="color:#f92672">/</span> 2d<span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span>
-        currentCountSum <span style="color:#f92672">+=</span> count<span style="color:#f92672">[</span>i<span style="color:#f92672">];</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">return</span> median<span style="color:#f92672">;</span>
-<span style="color:#f92672">}</span>
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Two loops.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * First loop find the min, max, average and mode of the array.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Second loop to find the median of the array by finding two candidates of median: (total + 1) / 2, total / 2 + 1.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param count given array
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return the statistics of the sample as an array of floating-point numbers [minimum, maximum, mean, median, mode]
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">double</span><span style="color:#f92672">[]</span> <span style="color:#a6e22e">sampleStats</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> count<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/* Corner case */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>count <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">||</span> count<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">double</span><span style="color:#f92672">[</span>5<span style="color:#f92672">];</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">double</span> min <span style="color:#f92672">=</span> Double<span style="color:#f92672">.</span><span style="color:#a6e22e">MAX_VALUE</span><span style="color:#f92672">,</span> max <span style="color:#f92672">=</span> Double<span style="color:#f92672">.</span><span style="color:#a6e22e">MIN_VALUE</span><span style="color:#f92672">,</span> mode <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> mean<span style="color:#f92672">,</span> median<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> frequency <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">long</span> totalElements <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> sum <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> count<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>count<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">!=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            min <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">min</span><span style="color:#f92672">(</span>i<span style="color:#f92672">,</span> min<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>            max <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>i<span style="color:#f92672">,</span> max<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>            sum <span style="color:#f92672">+=</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">long</span><span style="color:#f92672">)</span> count<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">*</span> i<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>count<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">&gt;</span> frequency<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                frequency <span style="color:#f92672">=</span> count<span style="color:#f92672">[</span>i<span style="color:#f92672">];</span>
+</span></span><span style="display:flex;"><span>                mode <span style="color:#f92672">=</span> i<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>            totalElements <span style="color:#f92672">+=</span> count<span style="color:#f92672">[</span>i<span style="color:#f92672">];</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    mean <span style="color:#f92672">=</span> sum <span style="color:#f92672">/</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">double</span><span style="color:#f92672">)</span> totalElements<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    median <span style="color:#f92672">=</span> findMedian<span style="color:#f92672">(</span>count<span style="color:#f92672">,</span> totalElements<span style="color:#f92672">,</span> sum<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">double</span><span style="color:#f92672">[]{</span>min<span style="color:#f92672">,</span> max<span style="color:#f92672">,</span> mean<span style="color:#f92672">,</span> median<span style="color:#f92672">,</span> mode<span style="color:#f92672">};</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Find median from given array.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * The idea is to find the two possible candidate of median: (total + 1) / 2 and total / 2 + 1.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * If the number of elements in array is even, then (total + 1) / 2 &lt; total / 2 + 1.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * If the number of elements in array is odd, then (total + 1) / 2 == total / 2 + 1.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Traverse the array and find the value of two candidate of median.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param count         given array
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param totalElements number of elements in given array
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param sum           sum of all the elements in the array
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return median from the given array
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">double</span> <span style="color:#a6e22e">findMedian</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> count<span style="color:#f92672">,</span> <span style="color:#66d9ef">long</span> totalElements<span style="color:#f92672">,</span> <span style="color:#66d9ef">long</span> sum<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> middle1 <span style="color:#f92672">=</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">)</span> <span style="color:#f92672">((</span>totalElements <span style="color:#f92672">+</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">/</span> 2<span style="color:#f92672">),</span> middle2 <span style="color:#f92672">=</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">)</span> <span style="color:#f92672">(</span>totalElements <span style="color:#f92672">/</span> 2 <span style="color:#f92672">+</span> 1<span style="color:#f92672">),</span> currentCountSum <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">double</span> median <span style="color:#f92672">=</span> totalElements <span style="color:#f92672">==</span> 1 <span style="color:#f92672">?</span> sum <span style="color:#f92672">:</span> 0<span style="color:#f92672">;</span> <span style="color:#75715e">// if there is only one element, then the median is the only element
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> totalElements <span style="color:#f92672">&gt;</span> 1 <span style="color:#f92672">&amp;&amp;</span> i <span style="color:#f92672">&lt;</span> count<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> next <span style="color:#f92672">=</span> currentCountSum <span style="color:#f92672">+</span> count<span style="color:#f92672">[</span>i<span style="color:#f92672">];</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>currentCountSum <span style="color:#f92672">&lt;</span> middle1 <span style="color:#f92672">&amp;&amp;</span> next <span style="color:#f92672">&gt;=</span> middle1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span> <span style="color:#75715e">// if middle is under current element
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            median <span style="color:#f92672">+=</span> i <span style="color:#f92672">/</span> 2d<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>currentCountSum <span style="color:#f92672">&lt;</span> middle2 <span style="color:#f92672">&amp;&amp;</span> next <span style="color:#f92672">&gt;=</span> middle2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            median <span style="color:#f92672">+=</span> i <span style="color:#f92672">/</span> 2d<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        currentCountSum <span style="color:#f92672">+=</span> count<span style="color:#f92672">[</span>i<span style="color:#f92672">];</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> median<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div>
               
             </div>
           </div>

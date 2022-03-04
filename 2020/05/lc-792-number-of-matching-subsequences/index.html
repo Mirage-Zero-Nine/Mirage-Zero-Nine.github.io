@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.92.2 with theme Tranquilpeak 0.4.8-BETA">
+<meta name="generator" content="Hugo 0.93.1 with theme Tranquilpeak 0.4.8-BETA">
 <meta name="author" content="Notebook">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -260,10 +260,10 @@
 <p>Given string <code>S</code> and a dictionary of words <code>words</code>, find the number of <code>words[i]</code> that is a subsequence of <code>S</code>.</p>
 <pre tabindex="0"><code>Example :
 Input: 
-S = &quot;abcde&quot;
-words = [&quot;a&quot;, &quot;bb&quot;, &quot;acd&quot;, &quot;ace&quot;]
+S = &#34;abcde&#34;
+words = [&#34;a&#34;, &#34;bb&#34;, &#34;acd&#34;, &#34;ace&#34;]
 Output: 3
-Explanation: There are three words in words that are a subsequence of S: &quot;a&quot;, &quot;acd&quot;, &quot;ace&quot;.
+Explanation: There are three words in words that are a subsequence of S: &#34;a&#34;, &#34;acd&#34;, &#34;ace&#34;.
 </code></pre><p><strong>Note:</strong></p>
 <ul>
 <li>All words in <code>words</code> and <code>S</code> will only consists of lowercase letters.</li>
@@ -276,129 +276,129 @@ Explanation: There are three words in words that are a subsequence of S: &quot;a
 <p>n pointers. Each pointer points at the last searched char in each word. Create a iterator class that iterate all characters in the string.</p>
 <p>Then traverse the string. Keep a list to group and store all the iterators. Each iterator is grouped as the first char in the iterator. Under each char, obtain all iterators at this char. If the iterator is at the last index of word, one subsequence is found. Otherwise, iterate to the next char in current word and add back to the list.</p>
 <p>Time analysis: <code>O(n * m)</code>, where n is the length of the string, m is the length of the words list.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
-</span><span style="color:#75715e"> * n pointers. Each pointer points at the last searched char in each word.
-</span><span style="color:#75715e"> * Create a iterator class that iterate all characters in the string. Then traverse the string.
-</span><span style="color:#75715e"> * Keep a list to group and store all the iterators. Each iterator is grouped as the first char in the iterator.
-</span><span style="color:#75715e"> * Under each char, obtain all iterators at this char.
-</span><span style="color:#75715e"> * If the iterator is at the last index of word, one subsequence is found.
-</span><span style="color:#75715e"> * Otherwise, iterate to the next char in current word and add back to the list.
-</span><span style="color:#75715e"> * Time analysis: O(n * m), where n is the length of the string, m is the length of the words list.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param S     given string
-</span><span style="color:#75715e"> * @param words given words list
-</span><span style="color:#75715e"> * @return the number of words[i] that is a subsequence of S
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">numMatchingSubseq</span><span style="color:#f92672">(</span>String S<span style="color:#f92672">,</span> String<span style="color:#f92672">[]</span> words<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-
-    List<span style="color:#f92672">&lt;</span>List<span style="color:#f92672">&lt;</span>CharacterIterator<span style="color:#f92672">&gt;&gt;</span> tmp <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;&gt;();</span>      <span style="color:#75715e">// store iterators based on first char of iterator
-</span><span style="color:#75715e"></span>
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> 26<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
-        tmp<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;&gt;());</span>
-    <span style="color:#f92672">}</span>
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>String w <span style="color:#f92672">:</span> words<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        tmp<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>w<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>0<span style="color:#f92672">)</span> <span style="color:#f92672">-</span> <span style="color:#e6db74">&#39;a&#39;</span><span style="color:#f92672">).</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> CharacterIterator<span style="color:#f92672">(</span>w<span style="color:#f92672">));</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">int</span> count <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>Character c <span style="color:#f92672">:</span> S<span style="color:#f92672">.</span><span style="color:#a6e22e">toCharArray</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">int</span> index <span style="color:#f92672">=</span> c <span style="color:#f92672">-</span> <span style="color:#e6db74">&#39;a&#39;</span><span style="color:#f92672">;</span>
-        List<span style="color:#f92672">&lt;</span>CharacterIterator<span style="color:#f92672">&gt;</span> current <span style="color:#f92672">=</span> tmp<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>index<span style="color:#f92672">);</span>
-        tmp<span style="color:#f92672">.</span><span style="color:#a6e22e">set</span><span style="color:#f92672">(</span>index<span style="color:#f92672">,</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;&gt;());</span>      <span style="color:#75715e">// remove all iterators in current char
-</span><span style="color:#75715e"></span>
-        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>CharacterIterator i <span style="color:#f92672">:</span> current<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>i<span style="color:#f92672">.</span><span style="color:#a6e22e">isLast</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>                  <span style="color:#75715e">// if current char in the iterator is not the last char in word
-</span><span style="color:#75715e"></span>                <span style="color:#66d9ef">char</span> next <span style="color:#f92672">=</span> i<span style="color:#f92672">.</span><span style="color:#a6e22e">getNext</span><span style="color:#f92672">();</span>        <span style="color:#75715e">// move to next char
-</span><span style="color:#75715e"></span>                tmp<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>next <span style="color:#f92672">-</span> <span style="color:#e6db74">&#39;a&#39;</span><span style="color:#f92672">).</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>i<span style="color:#f92672">);</span>     <span style="color:#75715e">// add iterator to next char
-</span><span style="color:#75715e"></span>            <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
-                count<span style="color:#f92672">++;</span>                        <span style="color:#75715e">// otherwise, if the last char is reached, one word is found
-</span><span style="color:#75715e"></span>            <span style="color:#f92672">}</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">return</span> count<span style="color:#f92672">;</span>
-<span style="color:#f92672">}</span>
-
-<span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Iterator class that iterate all characters in the string.
-</span><span style="color:#75715e"> * One int represents current position of the iterator.
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">static</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">CharacterIterator</span> <span style="color:#f92672">{</span>
-    String s<span style="color:#f92672">;</span>           <span style="color:#75715e">// string in this iterator
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> current<span style="color:#f92672">;</span>        <span style="color:#75715e">// current index of char
-</span><span style="color:#75715e"></span>
-    <span style="color:#75715e">/**
-</span><span style="color:#75715e">     * Constructor of the iterator.
-</span><span style="color:#75715e">     *
-</span><span style="color:#75715e">     * @param s string of the iterator
-</span><span style="color:#75715e">     */</span>
-    CharacterIterator<span style="color:#f92672">(</span>String s<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">s</span> <span style="color:#f92672">=</span> s<span style="color:#f92672">;</span>
-        current <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>        <span style="color:#75715e">// initially, the index points at the first char in string
-</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
-
-    <span style="color:#75715e">/**
-</span><span style="color:#75715e">     * Check if current char is the last char in string
-</span><span style="color:#75715e">     *
-</span><span style="color:#75715e">     * @return if current char is the last char in string
-</span><span style="color:#75715e">     */</span>
-    <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">isLast</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">return</span> current <span style="color:#f92672">==</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">()</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#75715e">/**
-</span><span style="color:#75715e">     * Return the next character in the string and move index forward by 1.
-</span><span style="color:#75715e">     *
-</span><span style="color:#75715e">     * @return next character in string, or null if current char is the last char in string
-</span><span style="color:#75715e">     */</span>
-    Character <span style="color:#a6e22e">getNext</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>isLast<span style="color:#f92672">())</span> <span style="color:#f92672">{</span>     <span style="color:#75715e">// if current position is the last char, return null
-</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span>
-
-        <span style="color:#66d9ef">return</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(++</span>current<span style="color:#f92672">);</span>
-    <span style="color:#f92672">}</span>
-<span style="color:#f92672">}</span>
-</code></pre></div><h3 id="stringcharacteriterator">StringCharacterIterator</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * n pointers. Each pointer points at the last searched char in each word.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Create a iterator class that iterate all characters in the string. Then traverse the string.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Keep a list to group and store all the iterators. Each iterator is grouped as the first char in the iterator.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Under each char, obtain all iterators at this char.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * If the iterator is at the last index of word, one subsequence is found.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Otherwise, iterate to the next char in current word and add back to the list.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Time analysis: O(n * m), where n is the length of the string, m is the length of the words list.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param S     given string
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param words given words list
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return the number of words[i] that is a subsequence of S
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">numMatchingSubseq</span><span style="color:#f92672">(</span>String S<span style="color:#f92672">,</span> String<span style="color:#f92672">[]</span> words<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    List<span style="color:#f92672">&lt;</span>List<span style="color:#f92672">&lt;</span>CharacterIterator<span style="color:#f92672">&gt;&gt;</span> tmp <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;&gt;();</span>      <span style="color:#75715e">// store iterators based on first char of iterator
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> 26<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        tmp<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;&gt;());</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>String w <span style="color:#f92672">:</span> words<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        tmp<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>w<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>0<span style="color:#f92672">)</span> <span style="color:#f92672">-</span> <span style="color:#e6db74">&#39;a&#39;</span><span style="color:#f92672">).</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> CharacterIterator<span style="color:#f92672">(</span>w<span style="color:#f92672">));</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> count <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>Character c <span style="color:#f92672">:</span> S<span style="color:#f92672">.</span><span style="color:#a6e22e">toCharArray</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> index <span style="color:#f92672">=</span> c <span style="color:#f92672">-</span> <span style="color:#e6db74">&#39;a&#39;</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        List<span style="color:#f92672">&lt;</span>CharacterIterator<span style="color:#f92672">&gt;</span> current <span style="color:#f92672">=</span> tmp<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>index<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        tmp<span style="color:#f92672">.</span><span style="color:#a6e22e">set</span><span style="color:#f92672">(</span>index<span style="color:#f92672">,</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;&gt;());</span>      <span style="color:#75715e">// remove all iterators in current char
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>CharacterIterator i <span style="color:#f92672">:</span> current<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>i<span style="color:#f92672">.</span><span style="color:#a6e22e">isLast</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>                  <span style="color:#75715e">// if current char in the iterator is not the last char in word
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                <span style="color:#66d9ef">char</span> next <span style="color:#f92672">=</span> i<span style="color:#f92672">.</span><span style="color:#a6e22e">getNext</span><span style="color:#f92672">();</span>        <span style="color:#75715e">// move to next char
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                tmp<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>next <span style="color:#f92672">-</span> <span style="color:#e6db74">&#39;a&#39;</span><span style="color:#f92672">).</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>i<span style="color:#f92672">);</span>     <span style="color:#75715e">// add iterator to next char
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                count<span style="color:#f92672">++;</span>                        <span style="color:#75715e">// otherwise, if the last char is reached, one word is found
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> count<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Iterator class that iterate all characters in the string.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * One int represents current position of the iterator.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">CharacterIterator</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    String s<span style="color:#f92672">;</span>           <span style="color:#75715e">// string in this iterator
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> current<span style="color:#f92672">;</span>        <span style="color:#75715e">// current index of char
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * Constructor of the iterator.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @param s string of the iterator
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     */</span>
+</span></span><span style="display:flex;"><span>    CharacterIterator<span style="color:#f92672">(</span>String s<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">s</span> <span style="color:#f92672">=</span> s<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        current <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>        <span style="color:#75715e">// initially, the index points at the first char in string
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * Check if current char is the last char in string
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @return if current char is the last char in string
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">isLast</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> current <span style="color:#f92672">==</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">()</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * Return the next character in the string and move index forward by 1.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @return next character in string, or null if current char is the last char in string
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     */</span>
+</span></span><span style="display:flex;"><span>    Character <span style="color:#a6e22e">getNext</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>isLast<span style="color:#f92672">())</span> <span style="color:#f92672">{</span>     <span style="color:#75715e">// if current position is the last char, return null
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(++</span>current<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><h3 id="stringcharacteriterator">StringCharacterIterator</h3>
 <p>Idea is same as the previous approach. The difference is that this solution imports the <code>StringCharacterIterator</code> instead of create one.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Idea is same as the previous approach.
-</span><span style="color:#75715e"> * The difference is that this solution imports the StringCharacterIterator instead of create one.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param S     given string
-</span><span style="color:#75715e"> * @param words given words list
-</span><span style="color:#75715e"> * @return the number of words[i] that is a subsequence of S
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">numMatchingSubseqIterator</span><span style="color:#f92672">(</span>String S<span style="color:#f92672">,</span> String<span style="color:#f92672">[]</span> words<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-
-    List<span style="color:#f92672">&lt;</span>List<span style="color:#f92672">&lt;</span>StringCharacterIterator<span style="color:#f92672">&gt;&gt;</span> waiting <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;&gt;();</span>
-
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> 26<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
-        waiting<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;&gt;());</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>String w <span style="color:#f92672">:</span> words<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        waiting<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>w<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>0<span style="color:#f92672">)</span> <span style="color:#f92672">-</span> <span style="color:#e6db74">&#39;a&#39;</span><span style="color:#f92672">).</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> StringCharacterIterator<span style="color:#f92672">(</span>w<span style="color:#f92672">));</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">int</span> count <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>Character c <span style="color:#f92672">:</span> S<span style="color:#f92672">.</span><span style="color:#a6e22e">toCharArray</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">int</span> index <span style="color:#f92672">=</span> c <span style="color:#f92672">-</span> <span style="color:#e6db74">&#39;a&#39;</span><span style="color:#f92672">;</span>
-        List<span style="color:#f92672">&lt;</span>StringCharacterIterator<span style="color:#f92672">&gt;</span> current <span style="color:#f92672">=</span> waiting<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>index<span style="color:#f92672">);</span>
-        waiting<span style="color:#f92672">.</span><span style="color:#a6e22e">set</span><span style="color:#f92672">(</span>index<span style="color:#f92672">,</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;&gt;());</span>
-        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>StringCharacterIterator i <span style="color:#f92672">:</span> current<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">char</span> next <span style="color:#f92672">=</span> i<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">();</span>
-            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>next <span style="color:#f92672">!=</span> StringCharacterIterator<span style="color:#f92672">.</span><span style="color:#a6e22e">DONE</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>     <span style="color:#75715e">// if not iterated to the end of word
-</span><span style="color:#75715e"></span>                waiting<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>next <span style="color:#f92672">-</span> <span style="color:#e6db74">&#39;a&#39;</span><span style="color:#f92672">).</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>i<span style="color:#f92672">);</span>
-            <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
-                count<span style="color:#f92672">++;</span>
-            <span style="color:#f92672">}</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">return</span> count<span style="color:#f92672">;</span>
-<span style="color:#f92672">}</span>
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Idea is same as the previous approach.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * The difference is that this solution imports the StringCharacterIterator instead of create one.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param S     given string
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param words given words list
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return the number of words[i] that is a subsequence of S
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">numMatchingSubseqIterator</span><span style="color:#f92672">(</span>String S<span style="color:#f92672">,</span> String<span style="color:#f92672">[]</span> words<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    List<span style="color:#f92672">&lt;</span>List<span style="color:#f92672">&lt;</span>StringCharacterIterator<span style="color:#f92672">&gt;&gt;</span> waiting <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;&gt;();</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> 26<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        waiting<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;&gt;());</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>String w <span style="color:#f92672">:</span> words<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        waiting<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>w<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>0<span style="color:#f92672">)</span> <span style="color:#f92672">-</span> <span style="color:#e6db74">&#39;a&#39;</span><span style="color:#f92672">).</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> StringCharacterIterator<span style="color:#f92672">(</span>w<span style="color:#f92672">));</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> count <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>Character c <span style="color:#f92672">:</span> S<span style="color:#f92672">.</span><span style="color:#a6e22e">toCharArray</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> index <span style="color:#f92672">=</span> c <span style="color:#f92672">-</span> <span style="color:#e6db74">&#39;a&#39;</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        List<span style="color:#f92672">&lt;</span>StringCharacterIterator<span style="color:#f92672">&gt;</span> current <span style="color:#f92672">=</span> waiting<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>index<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        waiting<span style="color:#f92672">.</span><span style="color:#a6e22e">set</span><span style="color:#f92672">(</span>index<span style="color:#f92672">,</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;&gt;());</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>StringCharacterIterator i <span style="color:#f92672">:</span> current<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">char</span> next <span style="color:#f92672">=</span> i<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>next <span style="color:#f92672">!=</span> StringCharacterIterator<span style="color:#f92672">.</span><span style="color:#a6e22e">DONE</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>     <span style="color:#75715e">// if not iterated to the end of word
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                waiting<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>next <span style="color:#f92672">-</span> <span style="color:#e6db74">&#39;a&#39;</span><span style="color:#f92672">).</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>i<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                count<span style="color:#f92672">++;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> count<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div>
               
             </div>
           </div>

@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.92.2 with theme Tranquilpeak 0.4.8-BETA">
+<meta name="generator" content="Hugo 0.93.1 with theme Tranquilpeak 0.4.8-BETA">
 <meta name="author" content="Notebook">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -278,45 +278,45 @@ Output: [1]
 <li>If this prefix is in map, <code>m[prefix]</code> is the node achieved this prefix sum.</li>
 </ul>
 <p>To skip all nodes between <code>m[prefix]</code> and <code>cur.next</code> (exclusive), simply link <code>m[prefix].next = cur.next</code>.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Prefix sum.
-</span><span style="color:#75715e"> * Use a hash map to store prefix sum.
-</span><span style="color:#75715e"> * Prefix sum can only be increasing or decreasing if given array is monotonous.
-</span><span style="color:#75715e"> * When meet the same prefix, remove all elements of the subarray between them.
-</span><span style="color:#75715e"> * If it&#39;s a prefix that we&#39;ve never seen, set m[prefix] = current.
-</span><span style="color:#75715e"> * If this prefix is in map, m[prefix] is the node achieved this prefix sum.
-</span><span style="color:#75715e"> * To skip all nodes between m[prefix] and cur.next (exclusive), simply link m[prefix].next = cur.next.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param head head node of list
-</span><span style="color:#75715e"> * @return list without such sequences that sum is 0
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">public</span> ListNode <span style="color:#a6e22e">removeZeroSumSublists</span><span style="color:#f92672">(</span>ListNode head<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-    ListNode dummy <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ListNode<span style="color:#f92672">(</span>0<span style="color:#f92672">),</span> cur <span style="color:#f92672">=</span> dummy<span style="color:#f92672">;</span>
-    dummy<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span> <span style="color:#f92672">=</span> head<span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">int</span> prefix <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>         <span style="color:#75715e">// calculate prefix sum
-</span><span style="color:#75715e"></span>    Map<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">,</span> ListNode<span style="color:#f92672">&gt;</span> m <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashMap<span style="color:#f92672">&lt;&gt;();</span>     <span style="color:#75715e">// key: prefix sum; value: node with current prefix sum
-</span><span style="color:#75715e"></span>
-    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>cur <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        prefix <span style="color:#f92672">+=</span> cur<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span><span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>m<span style="color:#f92672">.</span><span style="color:#a6e22e">containsKey</span><span style="color:#f92672">(</span>prefix<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
-            cur <span style="color:#f92672">=</span> m<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>prefix<span style="color:#f92672">).</span><span style="color:#a6e22e">next</span><span style="color:#f92672">;</span>
-            <span style="color:#66d9ef">int</span> p <span style="color:#f92672">=</span> prefix <span style="color:#f92672">+</span> cur<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span><span style="color:#f92672">;</span>
-
-            <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>p <span style="color:#f92672">!=</span> prefix<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>       <span style="color:#75715e">// remove invalid prefix sum
-</span><span style="color:#75715e"></span>                m<span style="color:#f92672">.</span><span style="color:#a6e22e">remove</span><span style="color:#f92672">(</span>p<span style="color:#f92672">);</span>
-                cur <span style="color:#f92672">=</span> cur<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">;</span>
-                p <span style="color:#f92672">+=</span> cur<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span><span style="color:#f92672">;</span>
-            <span style="color:#f92672">}</span>
-
-            m<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>prefix<span style="color:#f92672">).</span><span style="color:#a6e22e">next</span> <span style="color:#f92672">=</span> cur<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
-            m<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>prefix<span style="color:#f92672">,</span> cur<span style="color:#f92672">);</span>
-        <span style="color:#f92672">}</span>
-        cur <span style="color:#f92672">=</span> cur<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-    <span style="color:#66d9ef">return</span> dummy<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">;</span>
-<span style="color:#f92672">}</span>
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Prefix sum.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Use a hash map to store prefix sum.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Prefix sum can only be increasing or decreasing if given array is monotonous.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * When meet the same prefix, remove all elements of the subarray between them.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * If it&#39;s a prefix that we&#39;ve never seen, set m[prefix] = current.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * If this prefix is in map, m[prefix] is the node achieved this prefix sum.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * To skip all nodes between m[prefix] and cur.next (exclusive), simply link m[prefix].next = cur.next.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param head head node of list
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return list without such sequences that sum is 0
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> ListNode <span style="color:#a6e22e">removeZeroSumSublists</span><span style="color:#f92672">(</span>ListNode head<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    ListNode dummy <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ListNode<span style="color:#f92672">(</span>0<span style="color:#f92672">),</span> cur <span style="color:#f92672">=</span> dummy<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    dummy<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span> <span style="color:#f92672">=</span> head<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> prefix <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>         <span style="color:#75715e">// calculate prefix sum
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    Map<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">,</span> ListNode<span style="color:#f92672">&gt;</span> m <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashMap<span style="color:#f92672">&lt;&gt;();</span>     <span style="color:#75715e">// key: prefix sum; value: node with current prefix sum
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>cur <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        prefix <span style="color:#f92672">+=</span> cur<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>m<span style="color:#f92672">.</span><span style="color:#a6e22e">containsKey</span><span style="color:#f92672">(</span>prefix<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            cur <span style="color:#f92672">=</span> m<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>prefix<span style="color:#f92672">).</span><span style="color:#a6e22e">next</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">int</span> p <span style="color:#f92672">=</span> prefix <span style="color:#f92672">+</span> cur<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>p <span style="color:#f92672">!=</span> prefix<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>       <span style="color:#75715e">// remove invalid prefix sum
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                m<span style="color:#f92672">.</span><span style="color:#a6e22e">remove</span><span style="color:#f92672">(</span>p<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>                cur <span style="color:#f92672">=</span> cur<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>                p <span style="color:#f92672">+=</span> cur<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            m<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>prefix<span style="color:#f92672">).</span><span style="color:#a6e22e">next</span> <span style="color:#f92672">=</span> cur<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            m<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>prefix<span style="color:#f92672">,</span> cur<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        cur <span style="color:#f92672">=</span> cur<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> dummy<span style="color:#f92672">.</span><span style="color:#a6e22e">next</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div>
               
             </div>
           </div>

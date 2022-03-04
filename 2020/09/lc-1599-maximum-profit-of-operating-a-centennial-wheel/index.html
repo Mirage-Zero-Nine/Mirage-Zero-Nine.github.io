@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.92.2 with theme Tranquilpeak 0.4.8-BETA">
+<meta name="generator" content="Hugo 0.93.1 with theme Tranquilpeak 0.4.8-BETA">
 <meta name="author" content="Notebook">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -313,46 +313,46 @@ The highest profit was $36 after rotating the wheel 9 times.
 <li>Before all the customers coming, the wheel will rotate, no matter there is new customer or not.</li>
 <li>Finally, the last rotate may reduce profit if the onboard people is less than 4.</li>
 </ol>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Simple simulation.
-</span><span style="color:#75715e"> * Some corner cases:
-</span><span style="color:#75715e"> * 1. If in each rotation, 4 * boardingCost * 4 - runningCost &lt;= 0, then no profit.
-</span><span style="color:#75715e"> * 2. Before all the customers coming, the wheel will rotate, no matter there is new customer or not.
-</span><span style="color:#75715e"> * 3. Finally, the last rotate may reduce profit if the onboard people is less than 4.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param customers    customers arrives at ith rotation
-</span><span style="color:#75715e"> * @param boardingCost profit made for each one onboard
-</span><span style="color:#75715e"> * @param runningCost  cost of each rotation
-</span><span style="color:#75715e"> * @return the minimum number of rotations you need to perform to maximize profit
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">minOperationsMaxProfit</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> customers<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> boardingCost<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> runningCost<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-    <span style="color:#66d9ef">int</span> rotate <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> waiting <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> profit <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> boarding<span style="color:#f92672">;</span>
-
-    <span style="color:#75715e">/* Corner case */</span>
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>boardingCost <span style="color:#f92672">*</span> 4 <span style="color:#f92672">-</span> runningCost <span style="color:#f92672">&lt;</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> customer <span style="color:#f92672">:</span> customers<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        waiting <span style="color:#f92672">+=</span> customer<span style="color:#f92672">;</span>
-        boarding <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">min</span><span style="color:#f92672">(</span>waiting<span style="color:#f92672">,</span> 4<span style="color:#f92672">);</span>
-        profit <span style="color:#f92672">+=</span> boardingCost <span style="color:#f92672">*</span> boarding <span style="color:#f92672">-</span> runningCost<span style="color:#f92672">;</span>
-        waiting <span style="color:#f92672">-=</span> boarding<span style="color:#f92672">;</span>
-        rotate<span style="color:#f92672">++;</span>       <span style="color:#75715e">// the wheel will rotate even though there is no customer
-</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
-
-    rotate <span style="color:#f92672">+=</span> <span style="color:#f92672">(</span>waiting <span style="color:#f92672">/</span> 4<span style="color:#f92672">);</span>
-    <span style="color:#66d9ef">int</span> last <span style="color:#f92672">=</span> waiting <span style="color:#f92672">%</span> 4<span style="color:#f92672">;</span>
-    profit <span style="color:#f92672">+=</span> <span style="color:#f92672">(</span>boardingCost <span style="color:#f92672">*</span> <span style="color:#f92672">(</span>waiting <span style="color:#f92672">-</span> last<span style="color:#f92672">)</span> <span style="color:#f92672">-</span> runningCost <span style="color:#f92672">*</span> waiting <span style="color:#f92672">/</span> 4<span style="color:#f92672">);</span>
-
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>last <span style="color:#f92672">*</span> boardingCost <span style="color:#f92672">-</span> runningCost <span style="color:#f92672">&gt;</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        rotate<span style="color:#f92672">++;</span>
-        profit <span style="color:#f92672">+=</span> <span style="color:#f92672">(</span>last <span style="color:#f92672">*</span> boardingCost <span style="color:#f92672">-</span> runningCost<span style="color:#f92672">);</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">return</span> profit <span style="color:#f92672">&gt;</span> 0 <span style="color:#f92672">?</span> rotate <span style="color:#f92672">:</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">;</span>
-<span style="color:#f92672">}</span>
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Simple simulation.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Some corner cases:
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * 1. If in each rotation, 4 * boardingCost * 4 - runningCost &lt;= 0, then no profit.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * 2. Before all the customers coming, the wheel will rotate, no matter there is new customer or not.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * 3. Finally, the last rotate may reduce profit if the onboard people is less than 4.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param customers    customers arrives at ith rotation
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param boardingCost profit made for each one onboard
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param runningCost  cost of each rotation
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return the minimum number of rotations you need to perform to maximize profit
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">minOperationsMaxProfit</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> customers<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> boardingCost<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> runningCost<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> rotate <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> waiting <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> profit <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> boarding<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/* Corner case */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>boardingCost <span style="color:#f92672">*</span> 4 <span style="color:#f92672">-</span> runningCost <span style="color:#f92672">&lt;</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> customer <span style="color:#f92672">:</span> customers<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        waiting <span style="color:#f92672">+=</span> customer<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        boarding <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">min</span><span style="color:#f92672">(</span>waiting<span style="color:#f92672">,</span> 4<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        profit <span style="color:#f92672">+=</span> boardingCost <span style="color:#f92672">*</span> boarding <span style="color:#f92672">-</span> runningCost<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        waiting <span style="color:#f92672">-=</span> boarding<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        rotate<span style="color:#f92672">++;</span>       <span style="color:#75715e">// the wheel will rotate even though there is no customer
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    rotate <span style="color:#f92672">+=</span> <span style="color:#f92672">(</span>waiting <span style="color:#f92672">/</span> 4<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> last <span style="color:#f92672">=</span> waiting <span style="color:#f92672">%</span> 4<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    profit <span style="color:#f92672">+=</span> <span style="color:#f92672">(</span>boardingCost <span style="color:#f92672">*</span> <span style="color:#f92672">(</span>waiting <span style="color:#f92672">-</span> last<span style="color:#f92672">)</span> <span style="color:#f92672">-</span> runningCost <span style="color:#f92672">*</span> waiting <span style="color:#f92672">/</span> 4<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>last <span style="color:#f92672">*</span> boardingCost <span style="color:#f92672">-</span> runningCost <span style="color:#f92672">&gt;</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        rotate<span style="color:#f92672">++;</span>
+</span></span><span style="display:flex;"><span>        profit <span style="color:#f92672">+=</span> <span style="color:#f92672">(</span>last <span style="color:#f92672">*</span> boardingCost <span style="color:#f92672">-</span> runningCost<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> profit <span style="color:#f92672">&gt;</span> 0 <span style="color:#f92672">?</span> rotate <span style="color:#f92672">:</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div>
               
             </div>
           </div>

@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.92.2 with theme Tranquilpeak 0.4.8-BETA">
+<meta name="generator" content="Hugo 0.93.1 with theme Tranquilpeak 0.4.8-BETA">
 <meta name="author" content="Notebook">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -278,78 +278,78 @@ Output: 1999999984
 <p>In this problem, <code>NUM</code> can be <code>2*(10^9)</code> (or <code>Integer.MAX_VALUE</code>).</p>
 <p>Then use binary search to find nth ugly number (under this definition).</p>
 <p><img src="../../../img/Ugly-Number-III.png" alt="Ugly-Number-III"></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Calculate how many numbers from 1 to NUM are divisible by either a, b or c:
-</span><span style="color:#75715e"> * (NUM / a) + (NUM / b) + (NUM / c) – (NUM / lcm(a, b)) – (NUM / lcm(b, c)) – (NUM / lcm(a, c)) + (NUM / lcm(a, b, c))
-</span><span style="color:#75715e"> * In this problem, NUM can be 2*(10^9) (or Integer.MAX_VALUE).
-</span><span style="color:#75715e"> * Then use binary search to find nth ugly number (under this definition).
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param n nth ugly number
-</span><span style="color:#75715e"> * @param a first prime number
-</span><span style="color:#75715e"> * @param b second prime number
-</span><span style="color:#75715e"> * @param c third prime number
-</span><span style="color:#75715e"> * @return n-th ugly number
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">nthUglyNumber</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> n<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> a<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> b<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> c<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-    <span style="color:#66d9ef">int</span> low <span style="color:#f92672">=</span> 1<span style="color:#f92672">,</span> high <span style="color:#f92672">=</span> Integer<span style="color:#f92672">.</span><span style="color:#a6e22e">MAX_VALUE</span><span style="color:#f92672">,</span> mid<span style="color:#f92672">;</span>
-
-    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>low <span style="color:#f92672">&lt;</span> high<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        mid <span style="color:#f92672">=</span> low <span style="color:#f92672">+</span> <span style="color:#f92672">(</span>high <span style="color:#f92672">-</span> low<span style="color:#f92672">)</span> <span style="color:#f92672">/</span> 2<span style="color:#f92672">;</span>
-
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>count<span style="color:#f92672">(</span>a<span style="color:#f92672">,</span> b<span style="color:#f92672">,</span> c<span style="color:#f92672">,</span> mid<span style="color:#f92672">)</span> <span style="color:#f92672">&lt;</span> n<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            low <span style="color:#f92672">=</span> mid <span style="color:#f92672">+</span> 1<span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
-            high <span style="color:#f92672">=</span> mid<span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#75715e">/*
-</span><span style="color:#75715e">     * Return the number of previous binary search&#39;s right bound.
-</span><span style="color:#75715e">     * From this range [1, high], there are exactly n ugly numbers and the range can not be shrunk. */</span>
-    <span style="color:#66d9ef">return</span> high<span style="color:#f92672">;</span>
-<span style="color:#f92672">}</span>
-
-<span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Count how many numbers from 1 to NUM are divisible by either a, b or c by this formula:
-</span><span style="color:#75715e"> * (NUM / a) + (NUM / b) + (NUM / c) – (NUM / lcm(a, b)) – (NUM / lcm(b, c)) – (NUM / lcm(a, c)) + (NUM / lcm(a, b, c))
-</span><span style="color:#75715e"> * Also, lcm(a,b,c) = lcm(a,lcm(b,c)).
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param a   number a
-</span><span style="color:#75715e"> * @param b   number b
-</span><span style="color:#75715e"> * @param c   number c
-</span><span style="color:#75715e"> * @param num upper bound of searching range
-</span><span style="color:#75715e"> * @return LCM of a, b and c
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">count</span><span style="color:#f92672">(</span><span style="color:#66d9ef">long</span> a<span style="color:#f92672">,</span> <span style="color:#66d9ef">long</span> b<span style="color:#f92672">,</span> <span style="color:#66d9ef">long</span> c<span style="color:#f92672">,</span> <span style="color:#66d9ef">long</span> num<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-    <span style="color:#66d9ef">return</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">)</span> <span style="color:#f92672">((</span>num <span style="color:#f92672">/</span> a<span style="color:#f92672">)</span> <span style="color:#f92672">+</span> <span style="color:#f92672">(</span>num <span style="color:#f92672">/</span> b<span style="color:#f92672">)</span> <span style="color:#f92672">+</span> <span style="color:#f92672">(</span>num <span style="color:#f92672">/</span> c<span style="color:#f92672">)</span> <span style="color:#f92672">-</span> <span style="color:#f92672">(</span>num <span style="color:#f92672">/</span> lcm<span style="color:#f92672">(</span>a<span style="color:#f92672">,</span> b<span style="color:#f92672">))</span> <span style="color:#f92672">-</span> <span style="color:#f92672">(</span>num <span style="color:#f92672">/</span> lcm<span style="color:#f92672">(</span>b<span style="color:#f92672">,</span> c<span style="color:#f92672">))</span> <span style="color:#f92672">-</span> <span style="color:#f92672">(</span>num <span style="color:#f92672">/</span> lcm<span style="color:#f92672">(</span>a<span style="color:#f92672">,</span> c<span style="color:#f92672">))</span> <span style="color:#f92672">+</span> <span style="color:#f92672">(</span>num <span style="color:#f92672">/</span> lcm<span style="color:#f92672">(</span>a<span style="color:#f92672">,</span> lcm<span style="color:#f92672">(</span>b<span style="color:#f92672">,</span> c<span style="color:#f92672">))));</span>
-<span style="color:#f92672">}</span>
-
-<span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Calculate GCD (Greatest Common Divisor) of a and b.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param a first number
-</span><span style="color:#75715e"> * @param b second number
-</span><span style="color:#75715e"> * @return GCD of a and b
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">long</span> <span style="color:#a6e22e">gcd</span><span style="color:#f92672">(</span><span style="color:#66d9ef">long</span> a<span style="color:#f92672">,</span> <span style="color:#66d9ef">long</span> b<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>a <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">return</span> b<span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">return</span> gcd<span style="color:#f92672">(</span>b <span style="color:#f92672">%</span> a<span style="color:#f92672">,</span> a<span style="color:#f92672">);</span>
-<span style="color:#f92672">}</span>
-
-<span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Calculate the LCM (Least Common Multiple) of a and b.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param a first number
-</span><span style="color:#75715e"> * @param b second number
-</span><span style="color:#75715e"> * @return LCM (Least Common Multiple) of a and b
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">long</span> <span style="color:#a6e22e">lcm</span><span style="color:#f92672">(</span><span style="color:#66d9ef">long</span> a<span style="color:#f92672">,</span> <span style="color:#66d9ef">long</span> b<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-    <span style="color:#66d9ef">return</span> <span style="color:#f92672">(</span>a <span style="color:#f92672">*</span> b<span style="color:#f92672">)</span> <span style="color:#f92672">/</span> gcd<span style="color:#f92672">(</span>a<span style="color:#f92672">,</span> b<span style="color:#f92672">);</span>
-<span style="color:#f92672">}</span>
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Calculate how many numbers from 1 to NUM are divisible by either a, b or c:
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * (NUM / a) + (NUM / b) + (NUM / c) – (NUM / lcm(a, b)) – (NUM / lcm(b, c)) – (NUM / lcm(a, c)) + (NUM / lcm(a, b, c))
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * In this problem, NUM can be 2*(10^9) (or Integer.MAX_VALUE).
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Then use binary search to find nth ugly number (under this definition).
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param n nth ugly number
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param a first prime number
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param b second prime number
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param c third prime number
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return n-th ugly number
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">nthUglyNumber</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> n<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> a<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> b<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> c<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> low <span style="color:#f92672">=</span> 1<span style="color:#f92672">,</span> high <span style="color:#f92672">=</span> Integer<span style="color:#f92672">.</span><span style="color:#a6e22e">MAX_VALUE</span><span style="color:#f92672">,</span> mid<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>low <span style="color:#f92672">&lt;</span> high<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        mid <span style="color:#f92672">=</span> low <span style="color:#f92672">+</span> <span style="color:#f92672">(</span>high <span style="color:#f92672">-</span> low<span style="color:#f92672">)</span> <span style="color:#f92672">/</span> 2<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>count<span style="color:#f92672">(</span>a<span style="color:#f92672">,</span> b<span style="color:#f92672">,</span> c<span style="color:#f92672">,</span> mid<span style="color:#f92672">)</span> <span style="color:#f92672">&lt;</span> n<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            low <span style="color:#f92672">=</span> mid <span style="color:#f92672">+</span> 1<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            high <span style="color:#f92672">=</span> mid<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/*
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * Return the number of previous binary search&#39;s right bound.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * From this range [1, high], there are exactly n ugly numbers and the range can not be shrunk. */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> high<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Count how many numbers from 1 to NUM are divisible by either a, b or c by this formula:
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * (NUM / a) + (NUM / b) + (NUM / c) – (NUM / lcm(a, b)) – (NUM / lcm(b, c)) – (NUM / lcm(a, c)) + (NUM / lcm(a, b, c))
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Also, lcm(a,b,c) = lcm(a,lcm(b,c)).
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param a   number a
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param b   number b
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param c   number c
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param num upper bound of searching range
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return LCM of a, b and c
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">count</span><span style="color:#f92672">(</span><span style="color:#66d9ef">long</span> a<span style="color:#f92672">,</span> <span style="color:#66d9ef">long</span> b<span style="color:#f92672">,</span> <span style="color:#66d9ef">long</span> c<span style="color:#f92672">,</span> <span style="color:#66d9ef">long</span> num<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">)</span> <span style="color:#f92672">((</span>num <span style="color:#f92672">/</span> a<span style="color:#f92672">)</span> <span style="color:#f92672">+</span> <span style="color:#f92672">(</span>num <span style="color:#f92672">/</span> b<span style="color:#f92672">)</span> <span style="color:#f92672">+</span> <span style="color:#f92672">(</span>num <span style="color:#f92672">/</span> c<span style="color:#f92672">)</span> <span style="color:#f92672">-</span> <span style="color:#f92672">(</span>num <span style="color:#f92672">/</span> lcm<span style="color:#f92672">(</span>a<span style="color:#f92672">,</span> b<span style="color:#f92672">))</span> <span style="color:#f92672">-</span> <span style="color:#f92672">(</span>num <span style="color:#f92672">/</span> lcm<span style="color:#f92672">(</span>b<span style="color:#f92672">,</span> c<span style="color:#f92672">))</span> <span style="color:#f92672">-</span> <span style="color:#f92672">(</span>num <span style="color:#f92672">/</span> lcm<span style="color:#f92672">(</span>a<span style="color:#f92672">,</span> c<span style="color:#f92672">))</span> <span style="color:#f92672">+</span> <span style="color:#f92672">(</span>num <span style="color:#f92672">/</span> lcm<span style="color:#f92672">(</span>a<span style="color:#f92672">,</span> lcm<span style="color:#f92672">(</span>b<span style="color:#f92672">,</span> c<span style="color:#f92672">))));</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Calculate GCD (Greatest Common Divisor) of a and b.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param a first number
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param b second number
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return GCD of a and b
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">long</span> <span style="color:#a6e22e">gcd</span><span style="color:#f92672">(</span><span style="color:#66d9ef">long</span> a<span style="color:#f92672">,</span> <span style="color:#66d9ef">long</span> b<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>a <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> b<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> gcd<span style="color:#f92672">(</span>b <span style="color:#f92672">%</span> a<span style="color:#f92672">,</span> a<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Calculate the LCM (Least Common Multiple) of a and b.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param a first number
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param b second number
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return LCM (Least Common Multiple) of a and b
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">long</span> <span style="color:#a6e22e">lcm</span><span style="color:#f92672">(</span><span style="color:#66d9ef">long</span> a<span style="color:#f92672">,</span> <span style="color:#66d9ef">long</span> b<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#f92672">(</span>a <span style="color:#f92672">*</span> b<span style="color:#f92672">)</span> <span style="color:#f92672">/</span> gcd<span style="color:#f92672">(</span>a<span style="color:#f92672">,</span> b<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div>
               
             </div>
           </div>

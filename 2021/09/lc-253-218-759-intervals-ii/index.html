@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.92.2 with theme Tranquilpeak 0.4.8-BETA">
+<meta name="generator" content="Hugo 0.93.1 with theme Tranquilpeak 0.4.8-BETA">
 <meta name="author" content="Notebook">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -296,86 +296,86 @@ Output: 1
 <h3 id="time-point">Time Point</h3>
 <p>Define a &ldquo;time point&rdquo; to represent each meeting&rsquo;s start and end time. Then sort the list that contains all time points of meeting.</p>
 <p>Iterate all points in list. If there is continues start point, then there is overlap. Otherwise, one meeting is over and the room is cleaned for next meeting (see comparator for details).</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Define a &#34;time point&#34; to represent each meeting&#39;s start and end time.
-</span><span style="color:#75715e"> * Then sort the list that contains all time points of meeting.
-</span><span style="color:#75715e"> * Iterate all points in list. If there is continues start point, then there is overlap.
-</span><span style="color:#75715e"> * Otherwise, one meeting is over and the room is cleaned for next meeting (see comparator for details).
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param intervals given time interval
-</span><span style="color:#75715e"> * @return minimum non-overlapped number
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">minMeetingRooms</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[][]</span> intervals<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-
-    <span style="color:#75715e">/* Corner case */</span>
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>intervals <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">return</span> 0<span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>intervals<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">&lt;=</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">return</span> intervals<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-
-    List<span style="color:#f92672">&lt;</span>Point<span style="color:#f92672">&gt;</span> list <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">&lt;&gt;();</span>
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> i <span style="color:#f92672">:</span> intervals<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        list<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> Point<span style="color:#f92672">(</span>i<span style="color:#f92672">[</span>0<span style="color:#f92672">],</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">));</span>
-        list<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> Point<span style="color:#f92672">(</span>i<span style="color:#f92672">[</span>1<span style="color:#f92672">],</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">));</span>
-    <span style="color:#f92672">}</span>
-
-    Collections<span style="color:#f92672">.</span><span style="color:#a6e22e">sort</span><span style="color:#f92672">(</span>list<span style="color:#f92672">);</span>
-
-    <span style="color:#66d9ef">int</span> count <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> max <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>Point p <span style="color:#f92672">:</span> list<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>p<span style="color:#f92672">.</span><span style="color:#a6e22e">isEnd</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>     <span style="color:#75715e">// there is overlap
-</span><span style="color:#75715e"></span>            count<span style="color:#f92672">++;</span>
-        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>            <span style="color:#75715e">// one meeting is over, no overlap here
-</span><span style="color:#75715e"></span>            count<span style="color:#f92672">--;</span>
-        <span style="color:#f92672">}</span>
-
-        max <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>max<span style="color:#f92672">,</span> count<span style="color:#f92672">);</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">return</span> max<span style="color:#f92672">;</span>
-<span style="color:#f92672">}</span>
-
-<span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Point that represent each time stamp.
-</span><span style="color:#75715e"> * Each point has following fields:
-</span><span style="color:#75715e"> * val: time of current point.
-</span><span style="color:#75715e"> * isEnd: is current time a end time.
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">static</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Point</span> <span style="color:#66d9ef">implements</span> Comparable<span style="color:#f92672">&lt;</span>Point<span style="color:#f92672">&gt;</span> <span style="color:#f92672">{</span>
-    <span style="color:#66d9ef">int</span> val<span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">boolean</span> isEnd<span style="color:#f92672">;</span>
-
-    <span style="color:#75715e">/**
-</span><span style="color:#75715e">     * Constructor of time point.
-</span><span style="color:#75715e">     *
-</span><span style="color:#75715e">     * @param val   time of current point
-</span><span style="color:#75715e">     * @param isEnd is current time a end time
-</span><span style="color:#75715e">     */</span>
-    Point<span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> val<span style="color:#f92672">,</span> <span style="color:#66d9ef">boolean</span> isEnd<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">val</span> <span style="color:#f92672">=</span> val<span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">isEnd</span> <span style="color:#f92672">=</span> isEnd<span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#75715e">/**
-</span><span style="color:#75715e">     * Compare two points.
-</span><span style="color:#75715e">     * If they have different time, then point with earlier time has higher priority.
-</span><span style="color:#75715e">     * Otherwise, end point has higher priority.
-</span><span style="color:#75715e">     *
-</span><span style="color:#75715e">     * @param p other point
-</span><span style="color:#75715e">     * @return -1, 0, or 1 as the first argument is less than, equal to, or greater than the second
-</span><span style="color:#75715e">     */</span>
-    <span style="color:#a6e22e">@Override</span>
-    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">compareTo</span><span style="color:#f92672">(</span>Point p<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">val</span> <span style="color:#f92672">!=</span> p<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">val</span> <span style="color:#f92672">-</span> p<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span><span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">isEnd</span> <span style="color:#f92672">?</span> <span style="color:#f92672">-</span>1 <span style="color:#f92672">:</span> 1<span style="color:#f92672">;</span>     <span style="color:#75715e">// if identical end time is considered as overlap, the order should be reversed
-</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-<span style="color:#f92672">}</span>
-</code></pre></div><h3 id="heap">Heap</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Define a &#34;time point&#34; to represent each meeting&#39;s start and end time.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Then sort the list that contains all time points of meeting.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Iterate all points in list. If there is continues start point, then there is overlap.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Otherwise, one meeting is over and the room is cleaned for next meeting (see comparator for details).
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param intervals given time interval
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return minimum non-overlapped number
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">minMeetingRooms</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[][]</span> intervals<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/* Corner case */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>intervals <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> 0<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>intervals<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">&lt;=</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> intervals<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    List<span style="color:#f92672">&lt;</span>Point<span style="color:#f92672">&gt;</span> list <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">&lt;&gt;();</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> i <span style="color:#f92672">:</span> intervals<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        list<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> Point<span style="color:#f92672">(</span>i<span style="color:#f92672">[</span>0<span style="color:#f92672">],</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">));</span>
+</span></span><span style="display:flex;"><span>        list<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> Point<span style="color:#f92672">(</span>i<span style="color:#f92672">[</span>1<span style="color:#f92672">],</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">));</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    Collections<span style="color:#f92672">.</span><span style="color:#a6e22e">sort</span><span style="color:#f92672">(</span>list<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> count <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> max <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>Point p <span style="color:#f92672">:</span> list<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>p<span style="color:#f92672">.</span><span style="color:#a6e22e">isEnd</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>     <span style="color:#75715e">// there is overlap
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            count<span style="color:#f92672">++;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>            <span style="color:#75715e">// one meeting is over, no overlap here
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            count<span style="color:#f92672">--;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        max <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>max<span style="color:#f92672">,</span> count<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> max<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Point that represent each time stamp.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Each point has following fields:
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * val: time of current point.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * isEnd: is current time a end time.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Point</span> <span style="color:#66d9ef">implements</span> Comparable<span style="color:#f92672">&lt;</span>Point<span style="color:#f92672">&gt;</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> val<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">boolean</span> isEnd<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * Constructor of time point.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @param val   time of current point
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @param isEnd is current time a end time
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     */</span>
+</span></span><span style="display:flex;"><span>    Point<span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> val<span style="color:#f92672">,</span> <span style="color:#66d9ef">boolean</span> isEnd<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">val</span> <span style="color:#f92672">=</span> val<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">isEnd</span> <span style="color:#f92672">=</span> isEnd<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * Compare two points.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * If they have different time, then point with earlier time has higher priority.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * Otherwise, end point has higher priority.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @param p other point
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @return -1, 0, or 1 as the first argument is less than, equal to, or greater than the second
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">compareTo</span><span style="color:#f92672">(</span>Point p<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">val</span> <span style="color:#f92672">!=</span> p<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">val</span> <span style="color:#f92672">-</span> p<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">isEnd</span> <span style="color:#f92672">?</span> <span style="color:#f92672">-</span>1 <span style="color:#f92672">:</span> 1<span style="color:#f92672">;</span>     <span style="color:#75715e">// if identical end time is considered as overlap, the order should be reversed
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><h3 id="heap">Heap</h3>
 <p>Since it is only the end time conflict that requires one more room, therefore, use a heap to save ending time. They are several cases:</p>
 <ol>
 <li>Heap is empty.</li>
@@ -387,45 +387,45 @@ Output: 1
 <p>For situation 1,2,3, add current interval end to heap and one more room is required.</p>
 <p>For situation 4, their is no conflict, hence add the end time to heap.</p>
 <p>For situation 5, assume no extra room is required, continue, do nothing.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Solution II.
-</span><span style="color:#75715e"> * Since it is only the end time conflict that requires one more room, therefore, use a heap to save ending time.
-</span><span style="color:#75715e"> * They are several cases:
-</span><span style="color:#75715e"> * 1. Heap is empty
-</span><span style="color:#75715e"> * 2. Two intervals has same start
-</span><span style="color:#75715e"> * 3. Interval ends with a time smaller than top of heap (start before the other end)
-</span><span style="color:#75715e"> * 4. Interval ends with a time larger than top of heap (start after the end)
-</span><span style="color:#75715e"> * 5. Interval ends with a time smaller than top of heap
-</span><span style="color:#75715e"> * For situation 1,2,3, add current interval end to heap and one more room is required.
-</span><span style="color:#75715e"> * For situation 4, their is no conflict, hence add the end time to heap.
-</span><span style="color:#75715e"> * For situation 5, no extra room is required, continue, do nothing.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param intervals given time interval
-</span><span style="color:#75715e"> * @return minimum non-overlapped number
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">heap</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[][]</span> intervals<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-
-    <span style="color:#75715e">/* Corner case */</span>
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>intervals<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">&lt;</span> 2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">return</span> <span style="color:#f92672">(</span>intervals<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">?</span> 0 <span style="color:#f92672">:</span> 1<span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-
-    Arrays<span style="color:#f92672">.</span><span style="color:#a6e22e">sort</span><span style="color:#f92672">(</span>intervals<span style="color:#f92672">,</span> Comparator<span style="color:#f92672">.</span><span style="color:#a6e22e">comparingInt</span><span style="color:#f92672">(</span>i <span style="color:#f92672">-&gt;</span> i<span style="color:#f92672">[</span>0<span style="color:#f92672">]));</span>     <span style="color:#75715e">// sort based on intervals[i][0]
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> count <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
-    PriorityQueue<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> q <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> PriorityQueue<span style="color:#f92672">&lt;&gt;();</span>
-
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> intervals<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>q<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">()</span> <span style="color:#f92672">||</span> intervals<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>0<span style="color:#f92672">]</span> <span style="color:#f92672">&lt;</span> q<span style="color:#f92672">.</span><span style="color:#a6e22e">peek</span><span style="color:#f92672">()</span> <span style="color:#f92672">||</span> intervals<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>0<span style="color:#f92672">]</span> <span style="color:#f92672">==</span> intervals<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">][</span>0<span style="color:#f92672">])</span> <span style="color:#f92672">{</span>
-            q<span style="color:#f92672">.</span><span style="color:#a6e22e">offer</span><span style="color:#f92672">(</span>intervals<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>1<span style="color:#f92672">]);</span>
-            count<span style="color:#f92672">++;</span>
-        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>intervals<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>0<span style="color:#f92672">]</span> <span style="color:#f92672">&gt;</span> q<span style="color:#f92672">.</span><span style="color:#a6e22e">peek</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
-            q<span style="color:#f92672">.</span><span style="color:#a6e22e">poll</span><span style="color:#f92672">();</span>
-            q<span style="color:#f92672">.</span><span style="color:#a6e22e">offer</span><span style="color:#f92672">(</span>intervals<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>1<span style="color:#f92672">]);</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-    <span style="color:#66d9ef">return</span> count<span style="color:#f92672">;</span>
-<span style="color:#f92672">}</span>
-</code></pre></div><h3 id="two-pointers">Two Pointers</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Solution II.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Since it is only the end time conflict that requires one more room, therefore, use a heap to save ending time.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * They are several cases:
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * 1. Heap is empty
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * 2. Two intervals has same start
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * 3. Interval ends with a time smaller than top of heap (start before the other end)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * 4. Interval ends with a time larger than top of heap (start after the end)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * 5. Interval ends with a time smaller than top of heap
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * For situation 1,2,3, add current interval end to heap and one more room is required.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * For situation 4, their is no conflict, hence add the end time to heap.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * For situation 5, no extra room is required, continue, do nothing.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param intervals given time interval
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return minimum non-overlapped number
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">heap</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[][]</span> intervals<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/* Corner case */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>intervals<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">&lt;</span> 2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#f92672">(</span>intervals<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">?</span> 0 <span style="color:#f92672">:</span> 1<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    Arrays<span style="color:#f92672">.</span><span style="color:#a6e22e">sort</span><span style="color:#f92672">(</span>intervals<span style="color:#f92672">,</span> Comparator<span style="color:#f92672">.</span><span style="color:#a6e22e">comparingInt</span><span style="color:#f92672">(</span>i <span style="color:#f92672">-&gt;</span> i<span style="color:#f92672">[</span>0<span style="color:#f92672">]));</span>     <span style="color:#75715e">// sort based on intervals[i][0]
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> count <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    PriorityQueue<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> q <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> PriorityQueue<span style="color:#f92672">&lt;&gt;();</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> intervals<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>q<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">()</span> <span style="color:#f92672">||</span> intervals<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>0<span style="color:#f92672">]</span> <span style="color:#f92672">&lt;</span> q<span style="color:#f92672">.</span><span style="color:#a6e22e">peek</span><span style="color:#f92672">()</span> <span style="color:#f92672">||</span> intervals<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>0<span style="color:#f92672">]</span> <span style="color:#f92672">==</span> intervals<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">][</span>0<span style="color:#f92672">])</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            q<span style="color:#f92672">.</span><span style="color:#a6e22e">offer</span><span style="color:#f92672">(</span>intervals<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>1<span style="color:#f92672">]);</span>
+</span></span><span style="display:flex;"><span>            count<span style="color:#f92672">++;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>intervals<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>0<span style="color:#f92672">]</span> <span style="color:#f92672">&gt;</span> q<span style="color:#f92672">.</span><span style="color:#a6e22e">peek</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            q<span style="color:#f92672">.</span><span style="color:#a6e22e">poll</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>            q<span style="color:#f92672">.</span><span style="color:#a6e22e">offer</span><span style="color:#f92672">(</span>intervals<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>1<span style="color:#f92672">]);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> count<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><h3 id="two-pointers">Two Pointers</h3>
 <p>Sort start time and end time separately. Then one pointer point at start time, one point at end time.</p>
 <p>If there is an overlap, then the combination of the start and end time of the overlapped meeting will have an overlap.</p>
 <ul>
@@ -433,39 +433,39 @@ Output: 1
 <li>Otherwise, there is no conflict, move end time pointer forward.</li>
 </ul>
 <p>Time complexity: <code>O(nlogn)</code></p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Solution III.
-</span><span style="color:#75715e"> * Sort start time and end time separately.
-</span><span style="color:#75715e"> * Then one pointer point at start time, one point at end time.
-</span><span style="color:#75715e"> * If start time &lt; end time, then one more room is required.
-</span><span style="color:#75715e"> * Otherwise, there is no conflict, move end time pointer forward.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param intervals given time interval
-</span><span style="color:#75715e"> * @return minimum non-overlapped number
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">twoPointers</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[][]</span> intervals<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-    <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> starts <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>intervals<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">];</span>
-    <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> ends <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>intervals<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">];</span>
-
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> intervals<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
-        starts<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> intervals<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>0<span style="color:#f92672">];</span>
-        ends<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> intervals<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>1<span style="color:#f92672">];</span>
-    <span style="color:#f92672">}</span>
-
-    Arrays<span style="color:#f92672">.</span><span style="color:#a6e22e">sort</span><span style="color:#f92672">(</span>starts<span style="color:#f92672">);</span>
-    Arrays<span style="color:#f92672">.</span><span style="color:#a6e22e">sort</span><span style="color:#f92672">(</span>ends<span style="color:#f92672">);</span>
-    <span style="color:#66d9ef">int</span> rooms <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> end <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
-
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> start <span style="color:#f92672">:</span> starts<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>start <span style="color:#f92672">&lt;</span> ends<span style="color:#f92672">[</span>end<span style="color:#f92672">])</span> <span style="color:#f92672">{</span>
-            rooms<span style="color:#f92672">++;</span>
-        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
-            end<span style="color:#f92672">++;</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-    <span style="color:#66d9ef">return</span> rooms<span style="color:#f92672">;</span>
-<span style="color:#f92672">}</span>
-</code></pre></div><h1 id="218-the-skyline-problem">218. The Skyline Problem</h1>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Solution III.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Sort start time and end time separately.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Then one pointer point at start time, one point at end time.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * If start time &lt; end time, then one more room is required.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Otherwise, there is no conflict, move end time pointer forward.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param intervals given time interval
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return minimum non-overlapped number
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">twoPointers</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[][]</span> intervals<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> starts <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>intervals<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">];</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> ends <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>intervals<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">];</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> intervals<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        starts<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> intervals<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>0<span style="color:#f92672">];</span>
+</span></span><span style="display:flex;"><span>        ends<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> intervals<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>1<span style="color:#f92672">];</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    Arrays<span style="color:#f92672">.</span><span style="color:#a6e22e">sort</span><span style="color:#f92672">(</span>starts<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>    Arrays<span style="color:#f92672">.</span><span style="color:#a6e22e">sort</span><span style="color:#f92672">(</span>ends<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> rooms <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> end <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> start <span style="color:#f92672">:</span> starts<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>start <span style="color:#f92672">&lt;</span> ends<span style="color:#f92672">[</span>end<span style="color:#f92672">])</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            rooms<span style="color:#f92672">++;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            end<span style="color:#f92672">++;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> rooms<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><h1 id="218-the-skyline-problem">218. The Skyline Problem</h1>
 <p>Link: <a href="https://leetcode.com/problems/the-skyline-problem/">The Skyline Problem</a></p>
 <h2 id="problem-description-1">Problem Description</h2>
 <p>A city&rsquo;s skyline is the outer contour of the silhouette formed by all the buildings in that city when viewed from a distance. Now suppose you are <strong>given the locations and height of all the buildings</strong> as shown on a cityscape photo (Figure A), write a program to <strong>output the skyline</strong> formed by these buildings collectively (Figure B).</p>
@@ -498,303 +498,303 @@ Output: 1
 <li>If set is empty, then current point is the last point of current building.</li>
 <li>Otherwise, check if current edge is highest. At right edge, the lower point is the new key point.</li>
 </ul>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Solution with tree set. Remove in tree set is O(logn).
-</span><span style="color:#75715e"> * Use two lists. One list stores all points representing building. Sort this list based on point priority.
-</span><span style="color:#75715e"> * The other list all building&#39;s start and height. This list will not be sorted.
-</span><span style="color:#75715e"> * Then iterate all points in first list. Use a tree set to find the highest building.
-</span><span style="color:#75715e"> * First, current point is a left edge:
-</span><span style="color:#75715e"> * If set is empty, then current left edge is beginning of new building and a new key points is found.
-</span><span style="color:#75715e"> * If set is not empty, check if current edge is highest. If so, then a new key point is found.
-</span><span style="color:#75715e"> * Otherwise, current point is a right edge:
-</span><span style="color:#75715e"> * If set is empty, then current point is the last point of current building.
-</span><span style="color:#75715e"> * Otherwise, check if current edge is highest. At right edge, the lower point is the new key point.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param buildings given buildings list
-</span><span style="color:#75715e"> * @return skyline formed by these buildings collectively
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">public</span> List<span style="color:#f92672">&lt;</span>List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;&gt;</span> <span style="color:#a6e22e">getSkyline</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[][]</span> buildings<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-    List<span style="color:#f92672">&lt;</span>List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;&gt;</span> out <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">&lt;&gt;();</span>
-
-    <span style="color:#75715e">/* Corner case */</span>
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>buildings <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">||</span> buildings<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">==</span> 0 <span style="color:#f92672">||</span> buildings<span style="color:#f92672">[</span>0<span style="color:#f92672">].</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">return</span> out<span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-
-    List<span style="color:#f92672">&lt;</span>PointWithIndex<span style="color:#f92672">&gt;</span> leftEdge <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;&gt;(),</span> points <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;&gt;();</span>
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> buildings<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> b <span style="color:#f92672">=</span> buildings<span style="color:#f92672">[</span>i<span style="color:#f92672">];</span>
-        points<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> PointWithIndex<span style="color:#f92672">(</span>b<span style="color:#f92672">[</span>0<span style="color:#f92672">],</span> b<span style="color:#f92672">[</span>2<span style="color:#f92672">],</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">,</span> i<span style="color:#f92672">));</span>
-        points<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> PointWithIndex<span style="color:#f92672">(</span>b<span style="color:#f92672">[</span>1<span style="color:#f92672">],</span> b<span style="color:#f92672">[</span>2<span style="color:#f92672">],</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">,</span> i<span style="color:#f92672">));</span>
-        leftEdge<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> PointWithIndex<span style="color:#f92672">(</span>b<span style="color:#f92672">[</span>0<span style="color:#f92672">],</span> b<span style="color:#f92672">[</span>2<span style="color:#f92672">],</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">,</span> i<span style="color:#f92672">));</span>
-    <span style="color:#f92672">}</span>
-
-    Collections<span style="color:#f92672">.</span><span style="color:#a6e22e">sort</span><span style="color:#f92672">(</span>points<span style="color:#f92672">);</span>        <span style="color:#75715e">// sort all points
-</span><span style="color:#75715e"></span>
-    <span style="color:#75715e">/*
-</span><span style="color:#75715e">     * Create a new comparator to find highest building in tree set.
-</span><span style="color:#75715e">     * If points have different height, then higher point has higher priority.
-</span><span style="color:#75715e">     * Otherwise, prior point has higher priority. */</span>
-    TreeSet<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> ts <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> TreeSet<span style="color:#f92672">&lt;&gt;((</span>a<span style="color:#f92672">,</span> b<span style="color:#f92672">)</span> <span style="color:#f92672">-&gt;</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>leftEdge<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>a<span style="color:#f92672">).</span><span style="color:#a6e22e">height</span> <span style="color:#f92672">!=</span> leftEdge<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>b<span style="color:#f92672">).</span><span style="color:#a6e22e">height</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">return</span> leftEdge<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>b<span style="color:#f92672">).</span><span style="color:#a6e22e">height</span> <span style="color:#f92672">-</span> leftEdge<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>a<span style="color:#f92672">).</span><span style="color:#a6e22e">height</span><span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span>
-        <span style="color:#66d9ef">return</span> a <span style="color:#f92672">-</span> b<span style="color:#f92672">;</span>
-    <span style="color:#f92672">});</span>
-
-<span style="color:#75715e">//        Comparator&lt;Integer&gt; comparator = (a, b) -&gt;
-</span><span style="color:#75715e">//                leftEdge.get(a).height != leftEdge.get(b).height ?
-</span><span style="color:#75715e">//                        Integer.compare(leftEdge.get(b).height, leftEdge.get(a).height) :
-</span><span style="color:#75715e">//                        a - b;
-</span><span style="color:#75715e">//        TreeSet&lt;Integer&gt; ts = new TreeSet&lt;&gt;(comparator);
-</span><span style="color:#75715e"></span>
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>PointWithIndex p <span style="color:#f92672">:</span> points<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        ArrayList<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> tmp <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;&gt;();</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>p<span style="color:#f92672">.</span><span style="color:#a6e22e">isEnd</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>        <span style="color:#75715e">// left edge
-</span><span style="color:#75715e"></span>
-            <span style="color:#75715e">/*
-</span><span style="color:#75715e">             * If set is empty, then current left edge is beginning of new building and a new key points is found.
-</span><span style="color:#75715e">             * If set is not empty, check if current edge is highest. If so, then a new key point is found. */</span>
-            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>ts<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">()</span> <span style="color:#f92672">||</span> p<span style="color:#f92672">.</span><span style="color:#a6e22e">height</span> <span style="color:#f92672">&gt;</span> leftEdge<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>ts<span style="color:#f92672">.</span><span style="color:#a6e22e">first</span><span style="color:#f92672">()).</span><span style="color:#a6e22e">height</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                tmp<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>p<span style="color:#f92672">.</span><span style="color:#a6e22e">x</span><span style="color:#f92672">);</span>
-                tmp<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>p<span style="color:#f92672">.</span><span style="color:#a6e22e">height</span><span style="color:#f92672">);</span>
-                out<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>tmp<span style="color:#f92672">);</span>
-            <span style="color:#f92672">}</span>
-            ts<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>p<span style="color:#f92672">.</span><span style="color:#a6e22e">index</span><span style="color:#f92672">);</span>    <span style="color:#75715e">// the overrode comparator will compare height first
-</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>                <span style="color:#75715e">// right edge
-</span><span style="color:#75715e"></span>            ts<span style="color:#f92672">.</span><span style="color:#a6e22e">remove</span><span style="color:#f92672">(</span>p<span style="color:#f92672">.</span><span style="color:#a6e22e">index</span><span style="color:#f92672">);</span>        <span style="color:#75715e">// right edge, no more current building, remove the building point from set
-</span><span style="color:#75715e"></span>
-            <span style="color:#75715e">/*
-</span><span style="color:#75715e">             * If set is empty, then current point is the last point of current building.
-</span><span style="color:#75715e">             * Otherwise, check if current edge is highest.
-</span><span style="color:#75715e">             * In this situation, the lower point is the new key point. */</span>
-            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>ts<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">()</span> <span style="color:#f92672">||</span> p<span style="color:#f92672">.</span><span style="color:#a6e22e">height</span> <span style="color:#f92672">&gt;</span> leftEdge<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>ts<span style="color:#f92672">.</span><span style="color:#a6e22e">first</span><span style="color:#f92672">()).</span><span style="color:#a6e22e">height</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                tmp<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>p<span style="color:#f92672">.</span><span style="color:#a6e22e">x</span><span style="color:#f92672">);</span>
-                tmp<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>ts<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">()</span> <span style="color:#f92672">?</span> 0 <span style="color:#f92672">:</span> leftEdge<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>ts<span style="color:#f92672">.</span><span style="color:#a6e22e">first</span><span style="color:#f92672">()).</span><span style="color:#a6e22e">height</span><span style="color:#f92672">);</span>        <span style="color:#75715e">// last point has 0 height
-</span><span style="color:#75715e"></span>                out<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>tmp<span style="color:#f92672">);</span>
-            <span style="color:#f92672">}</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">return</span> out<span style="color:#f92672">;</span>
-<span style="color:#f92672">}</span>
-
-<span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Point of building with height and mark if current point is build end.
-</span><span style="color:#75715e"> * Also, the point has index field, which represent the order of building this point belongs to.
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">PointWithIndex</span> <span style="color:#66d9ef">implements</span> Comparable<span style="color:#f92672">&lt;</span>PointWithIndex<span style="color:#f92672">&gt;</span> <span style="color:#f92672">{</span>
-    <span style="color:#66d9ef">int</span> x<span style="color:#f92672">,</span> height<span style="color:#f92672">,</span> index<span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">boolean</span> isEnd<span style="color:#f92672">;</span>
-
-    <span style="color:#75715e">/**
-</span><span style="color:#75715e">     * Constructor of point with index.
-</span><span style="color:#75715e">     *
-</span><span style="color:#75715e">     * @param x      point x coord
-</span><span style="color:#75715e">     * @param height height of current point
-</span><span style="color:#75715e">     * @param isEnd  is current point the end of building
-</span><span style="color:#75715e">     * @param index  position of building
-</span><span style="color:#75715e">     */</span>
-    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">PointWithIndex</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> x<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> height<span style="color:#f92672">,</span> <span style="color:#66d9ef">boolean</span> isEnd<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> index<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">x</span> <span style="color:#f92672">=</span> x<span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">height</span> <span style="color:#f92672">=</span> height<span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">isEnd</span> <span style="color:#f92672">=</span> isEnd<span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">index</span> <span style="color:#f92672">=</span> index<span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#75715e">/**
-</span><span style="color:#75715e">     * Priority:
-</span><span style="color:#75715e">     * 1. If point has different position, smaller one has higher priority.
-</span><span style="color:#75715e">     * 2. If both points are left edges, find higher one.
-</span><span style="color:#75715e">     * 3. If both points are right edge, find lower one.
-</span><span style="color:#75715e">     * 4. Otherwise, one left edge and one right edge, find left one.
-</span><span style="color:#75715e">     *
-</span><span style="color:#75715e">     * @param that the other point with index
-</span><span style="color:#75715e">     * @return priority
-</span><span style="color:#75715e">     */</span>
-    <span style="color:#a6e22e">@Override</span>
-    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">compareTo</span><span style="color:#f92672">(</span>PointWithIndex that<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">x</span> <span style="color:#f92672">!=</span> that<span style="color:#f92672">.</span><span style="color:#a6e22e">x</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">x</span> <span style="color:#f92672">-</span> that<span style="color:#f92672">.</span><span style="color:#a6e22e">x</span><span style="color:#f92672">;</span>     <span style="color:#75715e">// smaller index has higher priority
-</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span><span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">isEnd</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">!</span>that<span style="color:#f92672">.</span><span style="color:#a6e22e">isEnd</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>       <span style="color:#75715e">// both left edges: find higher one
-</span><span style="color:#75715e"></span>                <span style="color:#66d9ef">return</span> that<span style="color:#f92672">.</span><span style="color:#a6e22e">height</span> <span style="color:#f92672">-</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">height</span><span style="color:#f92672">;</span>
-            <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">isEnd</span> <span style="color:#f92672">&amp;&amp;</span> that<span style="color:#f92672">.</span><span style="color:#a6e22e">isEnd</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>      <span style="color:#75715e">// both right edges: find lower one
-</span><span style="color:#75715e"></span>                <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">height</span> <span style="color:#f92672">-</span> that<span style="color:#f92672">.</span><span style="color:#a6e22e">height</span><span style="color:#f92672">;</span>
-            <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>        <span style="color:#75715e">// one left edge and one right edge: find left edge
-</span><span style="color:#75715e"></span>                <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">isEnd</span> <span style="color:#f92672">?</span> 1 <span style="color:#f92672">:</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">;</span>
-            <span style="color:#f92672">}</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-<span style="color:#f92672">}</span>
-</code></pre></div><h3 id="max-heap-with-point">Max Heap with Point</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Solution with tree set. Remove in tree set is O(logn).
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Use two lists. One list stores all points representing building. Sort this list based on point priority.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * The other list all building&#39;s start and height. This list will not be sorted.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Then iterate all points in first list. Use a tree set to find the highest building.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * First, current point is a left edge:
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * If set is empty, then current left edge is beginning of new building and a new key points is found.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * If set is not empty, check if current edge is highest. If so, then a new key point is found.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Otherwise, current point is a right edge:
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * If set is empty, then current point is the last point of current building.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Otherwise, check if current edge is highest. At right edge, the lower point is the new key point.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param buildings given buildings list
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return skyline formed by these buildings collectively
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> List<span style="color:#f92672">&lt;</span>List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;&gt;</span> <span style="color:#a6e22e">getSkyline</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[][]</span> buildings<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    List<span style="color:#f92672">&lt;</span>List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;&gt;</span> out <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">&lt;&gt;();</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/* Corner case */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>buildings <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">||</span> buildings<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">==</span> 0 <span style="color:#f92672">||</span> buildings<span style="color:#f92672">[</span>0<span style="color:#f92672">].</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> out<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    List<span style="color:#f92672">&lt;</span>PointWithIndex<span style="color:#f92672">&gt;</span> leftEdge <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;&gt;(),</span> points <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;&gt;();</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> buildings<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> b <span style="color:#f92672">=</span> buildings<span style="color:#f92672">[</span>i<span style="color:#f92672">];</span>
+</span></span><span style="display:flex;"><span>        points<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> PointWithIndex<span style="color:#f92672">(</span>b<span style="color:#f92672">[</span>0<span style="color:#f92672">],</span> b<span style="color:#f92672">[</span>2<span style="color:#f92672">],</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">,</span> i<span style="color:#f92672">));</span>
+</span></span><span style="display:flex;"><span>        points<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> PointWithIndex<span style="color:#f92672">(</span>b<span style="color:#f92672">[</span>1<span style="color:#f92672">],</span> b<span style="color:#f92672">[</span>2<span style="color:#f92672">],</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">,</span> i<span style="color:#f92672">));</span>
+</span></span><span style="display:flex;"><span>        leftEdge<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> PointWithIndex<span style="color:#f92672">(</span>b<span style="color:#f92672">[</span>0<span style="color:#f92672">],</span> b<span style="color:#f92672">[</span>2<span style="color:#f92672">],</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">,</span> i<span style="color:#f92672">));</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    Collections<span style="color:#f92672">.</span><span style="color:#a6e22e">sort</span><span style="color:#f92672">(</span>points<span style="color:#f92672">);</span>        <span style="color:#75715e">// sort all points
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/*
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * Create a new comparator to find highest building in tree set.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * If points have different height, then higher point has higher priority.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * Otherwise, prior point has higher priority. */</span>
+</span></span><span style="display:flex;"><span>    TreeSet<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> ts <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> TreeSet<span style="color:#f92672">&lt;&gt;((</span>a<span style="color:#f92672">,</span> b<span style="color:#f92672">)</span> <span style="color:#f92672">-&gt;</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>leftEdge<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>a<span style="color:#f92672">).</span><span style="color:#a6e22e">height</span> <span style="color:#f92672">!=</span> leftEdge<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>b<span style="color:#f92672">).</span><span style="color:#a6e22e">height</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> leftEdge<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>b<span style="color:#f92672">).</span><span style="color:#a6e22e">height</span> <span style="color:#f92672">-</span> leftEdge<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>a<span style="color:#f92672">).</span><span style="color:#a6e22e">height</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> a <span style="color:#f92672">-</span> b<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">});</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//        Comparator&lt;Integer&gt; comparator = (a, b) -&gt;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">//                leftEdge.get(a).height != leftEdge.get(b).height ?
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">//                        Integer.compare(leftEdge.get(b).height, leftEdge.get(a).height) :
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">//                        a - b;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">//        TreeSet&lt;Integer&gt; ts = new TreeSet&lt;&gt;(comparator);
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>PointWithIndex p <span style="color:#f92672">:</span> points<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        ArrayList<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> tmp <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;&gt;();</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>p<span style="color:#f92672">.</span><span style="color:#a6e22e">isEnd</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>        <span style="color:#75715e">// left edge
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">/*
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">             * If set is empty, then current left edge is beginning of new building and a new key points is found.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">             * If set is not empty, check if current edge is highest. If so, then a new key point is found. */</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>ts<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">()</span> <span style="color:#f92672">||</span> p<span style="color:#f92672">.</span><span style="color:#a6e22e">height</span> <span style="color:#f92672">&gt;</span> leftEdge<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>ts<span style="color:#f92672">.</span><span style="color:#a6e22e">first</span><span style="color:#f92672">()).</span><span style="color:#a6e22e">height</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                tmp<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>p<span style="color:#f92672">.</span><span style="color:#a6e22e">x</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>                tmp<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>p<span style="color:#f92672">.</span><span style="color:#a6e22e">height</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>                out<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>tmp<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>            ts<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>p<span style="color:#f92672">.</span><span style="color:#a6e22e">index</span><span style="color:#f92672">);</span>    <span style="color:#75715e">// the overrode comparator will compare height first
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>                <span style="color:#75715e">// right edge
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            ts<span style="color:#f92672">.</span><span style="color:#a6e22e">remove</span><span style="color:#f92672">(</span>p<span style="color:#f92672">.</span><span style="color:#a6e22e">index</span><span style="color:#f92672">);</span>        <span style="color:#75715e">// right edge, no more current building, remove the building point from set
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">/*
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">             * If set is empty, then current point is the last point of current building.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">             * Otherwise, check if current edge is highest.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">             * In this situation, the lower point is the new key point. */</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>ts<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">()</span> <span style="color:#f92672">||</span> p<span style="color:#f92672">.</span><span style="color:#a6e22e">height</span> <span style="color:#f92672">&gt;</span> leftEdge<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>ts<span style="color:#f92672">.</span><span style="color:#a6e22e">first</span><span style="color:#f92672">()).</span><span style="color:#a6e22e">height</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                tmp<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>p<span style="color:#f92672">.</span><span style="color:#a6e22e">x</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>                tmp<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>ts<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">()</span> <span style="color:#f92672">?</span> 0 <span style="color:#f92672">:</span> leftEdge<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>ts<span style="color:#f92672">.</span><span style="color:#a6e22e">first</span><span style="color:#f92672">()).</span><span style="color:#a6e22e">height</span><span style="color:#f92672">);</span>        <span style="color:#75715e">// last point has 0 height
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                out<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>tmp<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> out<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Point of building with height and mark if current point is build end.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Also, the point has index field, which represent the order of building this point belongs to.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">PointWithIndex</span> <span style="color:#66d9ef">implements</span> Comparable<span style="color:#f92672">&lt;</span>PointWithIndex<span style="color:#f92672">&gt;</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> x<span style="color:#f92672">,</span> height<span style="color:#f92672">,</span> index<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">boolean</span> isEnd<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * Constructor of point with index.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @param x      point x coord
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @param height height of current point
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @param isEnd  is current point the end of building
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @param index  position of building
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">PointWithIndex</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> x<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> height<span style="color:#f92672">,</span> <span style="color:#66d9ef">boolean</span> isEnd<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> index<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">x</span> <span style="color:#f92672">=</span> x<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">height</span> <span style="color:#f92672">=</span> height<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">isEnd</span> <span style="color:#f92672">=</span> isEnd<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">index</span> <span style="color:#f92672">=</span> index<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * Priority:
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * 1. If point has different position, smaller one has higher priority.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * 2. If both points are left edges, find higher one.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * 3. If both points are right edge, find lower one.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * 4. Otherwise, one left edge and one right edge, find left one.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @param that the other point with index
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @return priority
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">compareTo</span><span style="color:#f92672">(</span>PointWithIndex that<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">x</span> <span style="color:#f92672">!=</span> that<span style="color:#f92672">.</span><span style="color:#a6e22e">x</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">x</span> <span style="color:#f92672">-</span> that<span style="color:#f92672">.</span><span style="color:#a6e22e">x</span><span style="color:#f92672">;</span>     <span style="color:#75715e">// smaller index has higher priority
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span><span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">isEnd</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">!</span>that<span style="color:#f92672">.</span><span style="color:#a6e22e">isEnd</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>       <span style="color:#75715e">// both left edges: find higher one
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                <span style="color:#66d9ef">return</span> that<span style="color:#f92672">.</span><span style="color:#a6e22e">height</span> <span style="color:#f92672">-</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">height</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">isEnd</span> <span style="color:#f92672">&amp;&amp;</span> that<span style="color:#f92672">.</span><span style="color:#a6e22e">isEnd</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>      <span style="color:#75715e">// both right edges: find lower one
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">height</span> <span style="color:#f92672">-</span> that<span style="color:#f92672">.</span><span style="color:#a6e22e">height</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>        <span style="color:#75715e">// one left edge and one right edge: find left edge
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">isEnd</span> <span style="color:#f92672">?</span> 1 <span style="color:#f92672">:</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><h3 id="max-heap-with-point">Max Heap with Point</h3>
 <p>Solution with max heap. The idea is almost same. However, remove element in heap is O(n), which is slower than remove element in tree set.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Solution with max heap. The idea is almost same.
-</span><span style="color:#75715e"> * However, remove element in heap is O(n), which is slower than remove element in tree set.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param buildings given buildings list
-</span><span style="color:#75715e"> * @return skyline formed by these buildings collectively
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">public</span> List<span style="color:#f92672">&lt;</span>List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;&gt;</span> <span style="color:#a6e22e">maxHeap</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[][]</span> buildings<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-    List<span style="color:#f92672">&lt;</span>List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;&gt;</span> out <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">&lt;&gt;();</span>
-
-    <span style="color:#75715e">/* Corner case */</span>
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>buildings <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">||</span> buildings<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">==</span> 0 <span style="color:#f92672">||</span> buildings<span style="color:#f92672">[</span>0<span style="color:#f92672">].</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">return</span> out<span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-
-    List<span style="color:#f92672">&lt;</span>Point<span style="color:#f92672">&gt;</span> points <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;&gt;();</span>
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> b <span style="color:#f92672">:</span> buildings<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        points<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> Point<span style="color:#f92672">(</span>b<span style="color:#f92672">[</span>0<span style="color:#f92672">],</span> b<span style="color:#f92672">[</span>2<span style="color:#f92672">],</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">));</span>      <span style="color:#75715e">// add start point and its height
-</span><span style="color:#75715e"></span>        points<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> Point<span style="color:#f92672">(</span>b<span style="color:#f92672">[</span>1<span style="color:#f92672">],</span> b<span style="color:#f92672">[</span>2<span style="color:#f92672">],</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">));</span>     <span style="color:#75715e">// add end point and its height
-</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
-
-    Collections<span style="color:#f92672">.</span><span style="color:#a6e22e">sort</span><span style="color:#f92672">(</span>points<span style="color:#f92672">);</span>
-    Queue<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> maxHeap <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> PriorityQueue<span style="color:#f92672">&lt;&gt;(</span>buildings<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">,</span> <span style="color:#66d9ef">new</span> Comparator<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;()</span> <span style="color:#f92672">{</span>
-        <span style="color:#a6e22e">@Override</span>
-        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">compare</span><span style="color:#f92672">(</span>Integer o1<span style="color:#f92672">,</span> Integer o2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">return</span> o2 <span style="color:#f92672">-</span> o1<span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">});</span>
-
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>Point ep <span style="color:#f92672">:</span> points<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>ep<span style="color:#f92672">.</span><span style="color:#a6e22e">isEnd</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>maxHeap<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">()</span> <span style="color:#f92672">||</span> ep<span style="color:#f92672">.</span><span style="color:#a6e22e">height</span> <span style="color:#f92672">&gt;</span> maxHeap<span style="color:#f92672">.</span><span style="color:#a6e22e">peek</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
-                ArrayList<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> tmp <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;&gt;();</span>
-                tmp<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>ep<span style="color:#f92672">.</span><span style="color:#a6e22e">x</span><span style="color:#f92672">);</span>
-                tmp<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>ep<span style="color:#f92672">.</span><span style="color:#a6e22e">height</span><span style="color:#f92672">);</span>
-                out<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>tmp<span style="color:#f92672">);</span>
-<span style="color:#75715e">//                    out.add(new ArrayList&lt;Integer&gt;() {{
-</span><span style="color:#75715e">//                        add(ep.x);
-</span><span style="color:#75715e">//                        add(ep.height);
-</span><span style="color:#75715e">//                    }});
-</span><span style="color:#75715e"></span>            <span style="color:#f92672">}</span>
-            maxHeap<span style="color:#f92672">.</span><span style="color:#a6e22e">offer</span><span style="color:#f92672">(</span>ep<span style="color:#f92672">.</span><span style="color:#a6e22e">height</span><span style="color:#f92672">);</span>       <span style="color:#75715e">// current height
-</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
-            maxHeap<span style="color:#f92672">.</span><span style="color:#a6e22e">remove</span><span style="color:#f92672">(</span>ep<span style="color:#f92672">.</span><span style="color:#a6e22e">height</span><span style="color:#f92672">);</span>
-            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>maxHeap<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">()</span> <span style="color:#f92672">||</span> ep<span style="color:#f92672">.</span><span style="color:#a6e22e">height</span> <span style="color:#f92672">&gt;</span> maxHeap<span style="color:#f92672">.</span><span style="color:#a6e22e">peek</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
-                ArrayList<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> tmp <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;&gt;();</span>
-                tmp<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>ep<span style="color:#f92672">.</span><span style="color:#a6e22e">x</span><span style="color:#f92672">);</span>
-                tmp<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>maxHeap<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">()</span> <span style="color:#f92672">?</span> 0 <span style="color:#f92672">:</span> maxHeap<span style="color:#f92672">.</span><span style="color:#a6e22e">peek</span><span style="color:#f92672">());</span>
-                out<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>tmp<span style="color:#f92672">);</span>
-<span style="color:#75715e">//                    out.add(new ArrayList&lt;Integer&gt;() {{
-</span><span style="color:#75715e">//                        add(ep.x);
-</span><span style="color:#75715e">//                        add(maxHeap.isEmpty() ? 0 : maxHeap.peek());
-</span><span style="color:#75715e">//                    }});
-</span><span style="color:#75715e"></span>            <span style="color:#f92672">}</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">return</span> out<span style="color:#f92672">;</span>
-<span style="color:#f92672">}</span>
-
-<span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Point of building with height and mark if current point is build end.
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Point</span> <span style="color:#66d9ef">implements</span> Comparable<span style="color:#f92672">&lt;</span>Point<span style="color:#f92672">&gt;</span> <span style="color:#f92672">{</span>
-    <span style="color:#66d9ef">int</span> x<span style="color:#f92672">,</span> height<span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">boolean</span> isEnd<span style="color:#f92672">;</span>
-
-    <span style="color:#75715e">/**
-</span><span style="color:#75715e">     * Constructor of point.
-</span><span style="color:#75715e">     *
-</span><span style="color:#75715e">     * @param x      point x coord
-</span><span style="color:#75715e">     * @param height height of current point
-</span><span style="color:#75715e">     * @param isEnd  is current point the end of building
-</span><span style="color:#75715e">     */</span>
-    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">Point</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> x<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> height<span style="color:#f92672">,</span> <span style="color:#66d9ef">boolean</span> isEnd<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">x</span> <span style="color:#f92672">=</span> x<span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">height</span> <span style="color:#f92672">=</span> height<span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">isEnd</span> <span style="color:#f92672">=</span> isEnd<span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#75715e">/**
-</span><span style="color:#75715e">     * Priority:
-</span><span style="color:#75715e">     * 1. If point has different position, smaller one has higher priority.
-</span><span style="color:#75715e">     * 2. If both points are left edges, find higher one.
-</span><span style="color:#75715e">     * 3. If both points are right edge, find lower one.
-</span><span style="color:#75715e">     * 4. Otherwise, one left edge and one right edge, find left one.
-</span><span style="color:#75715e">     *
-</span><span style="color:#75715e">     * @param that the other point with index
-</span><span style="color:#75715e">     * @return priority
-</span><span style="color:#75715e">     */</span>
-    <span style="color:#a6e22e">@Override</span>
-    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">compareTo</span><span style="color:#f92672">(</span>Point that<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">x</span> <span style="color:#f92672">!=</span> that<span style="color:#f92672">.</span><span style="color:#a6e22e">x</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>                     <span style="color:#75715e">// smaller index has higher priority
-</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">x</span> <span style="color:#f92672">-</span> that<span style="color:#f92672">.</span><span style="color:#a6e22e">x</span><span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span><span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">isEnd</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">!</span>that<span style="color:#f92672">.</span><span style="color:#a6e22e">isEnd</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>       <span style="color:#75715e">// both left edges: find higher one
-</span><span style="color:#75715e"></span>                <span style="color:#66d9ef">return</span> that<span style="color:#f92672">.</span><span style="color:#a6e22e">height</span> <span style="color:#f92672">-</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">height</span><span style="color:#f92672">;</span>
-            <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">isEnd</span> <span style="color:#f92672">&amp;&amp;</span> that<span style="color:#f92672">.</span><span style="color:#a6e22e">isEnd</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>      <span style="color:#75715e">// both right edges: find lower one
-</span><span style="color:#75715e"></span>                <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">height</span> <span style="color:#f92672">-</span> that<span style="color:#f92672">.</span><span style="color:#a6e22e">height</span><span style="color:#f92672">;</span>
-            <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>        <span style="color:#75715e">// one left edge and one right edge: find left edge
-</span><span style="color:#75715e"></span>                <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">isEnd</span> <span style="color:#f92672">?</span> 1 <span style="color:#f92672">:</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">;</span>
-            <span style="color:#f92672">}</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-<span style="color:#f92672">}</span>
-</code></pre></div><h3 id="max-heap-with-treemap">Max Heap with TreeMap</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Solution with max heap. The idea is almost same.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * However, remove element in heap is O(n), which is slower than remove element in tree set.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param buildings given buildings list
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return skyline formed by these buildings collectively
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> List<span style="color:#f92672">&lt;</span>List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;&gt;</span> <span style="color:#a6e22e">maxHeap</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[][]</span> buildings<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    List<span style="color:#f92672">&lt;</span>List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;&gt;</span> out <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">&lt;&gt;();</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/* Corner case */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>buildings <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">||</span> buildings<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">==</span> 0 <span style="color:#f92672">||</span> buildings<span style="color:#f92672">[</span>0<span style="color:#f92672">].</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> out<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    List<span style="color:#f92672">&lt;</span>Point<span style="color:#f92672">&gt;</span> points <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;&gt;();</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> b <span style="color:#f92672">:</span> buildings<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        points<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> Point<span style="color:#f92672">(</span>b<span style="color:#f92672">[</span>0<span style="color:#f92672">],</span> b<span style="color:#f92672">[</span>2<span style="color:#f92672">],</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">));</span>      <span style="color:#75715e">// add start point and its height
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        points<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> Point<span style="color:#f92672">(</span>b<span style="color:#f92672">[</span>1<span style="color:#f92672">],</span> b<span style="color:#f92672">[</span>2<span style="color:#f92672">],</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">));</span>     <span style="color:#75715e">// add end point and its height
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    Collections<span style="color:#f92672">.</span><span style="color:#a6e22e">sort</span><span style="color:#f92672">(</span>points<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>    Queue<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> maxHeap <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> PriorityQueue<span style="color:#f92672">&lt;&gt;(</span>buildings<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">,</span> <span style="color:#66d9ef">new</span> Comparator<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;()</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">compare</span><span style="color:#f92672">(</span>Integer o1<span style="color:#f92672">,</span> Integer o2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> o2 <span style="color:#f92672">-</span> o1<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">});</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>Point ep <span style="color:#f92672">:</span> points<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>ep<span style="color:#f92672">.</span><span style="color:#a6e22e">isEnd</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>maxHeap<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">()</span> <span style="color:#f92672">||</span> ep<span style="color:#f92672">.</span><span style="color:#a6e22e">height</span> <span style="color:#f92672">&gt;</span> maxHeap<span style="color:#f92672">.</span><span style="color:#a6e22e">peek</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                ArrayList<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> tmp <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;&gt;();</span>
+</span></span><span style="display:flex;"><span>                tmp<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>ep<span style="color:#f92672">.</span><span style="color:#a6e22e">x</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>                tmp<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>ep<span style="color:#f92672">.</span><span style="color:#a6e22e">height</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>                out<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>tmp<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//                    out.add(new ArrayList&lt;Integer&gt;() {{
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">//                        add(ep.x);
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">//                        add(ep.height);
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">//                    }});
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>            maxHeap<span style="color:#f92672">.</span><span style="color:#a6e22e">offer</span><span style="color:#f92672">(</span>ep<span style="color:#f92672">.</span><span style="color:#a6e22e">height</span><span style="color:#f92672">);</span>       <span style="color:#75715e">// current height
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            maxHeap<span style="color:#f92672">.</span><span style="color:#a6e22e">remove</span><span style="color:#f92672">(</span>ep<span style="color:#f92672">.</span><span style="color:#a6e22e">height</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>maxHeap<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">()</span> <span style="color:#f92672">||</span> ep<span style="color:#f92672">.</span><span style="color:#a6e22e">height</span> <span style="color:#f92672">&gt;</span> maxHeap<span style="color:#f92672">.</span><span style="color:#a6e22e">peek</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                ArrayList<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> tmp <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;&gt;();</span>
+</span></span><span style="display:flex;"><span>                tmp<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>ep<span style="color:#f92672">.</span><span style="color:#a6e22e">x</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>                tmp<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>maxHeap<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">()</span> <span style="color:#f92672">?</span> 0 <span style="color:#f92672">:</span> maxHeap<span style="color:#f92672">.</span><span style="color:#a6e22e">peek</span><span style="color:#f92672">());</span>
+</span></span><span style="display:flex;"><span>                out<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>tmp<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//                    out.add(new ArrayList&lt;Integer&gt;() {{
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">//                        add(ep.x);
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">//                        add(maxHeap.isEmpty() ? 0 : maxHeap.peek());
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">//                    }});
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> out<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Point of building with height and mark if current point is build end.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Point</span> <span style="color:#66d9ef">implements</span> Comparable<span style="color:#f92672">&lt;</span>Point<span style="color:#f92672">&gt;</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> x<span style="color:#f92672">,</span> height<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">boolean</span> isEnd<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * Constructor of point.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @param x      point x coord
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @param height height of current point
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @param isEnd  is current point the end of building
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">Point</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> x<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> height<span style="color:#f92672">,</span> <span style="color:#66d9ef">boolean</span> isEnd<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">x</span> <span style="color:#f92672">=</span> x<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">height</span> <span style="color:#f92672">=</span> height<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">isEnd</span> <span style="color:#f92672">=</span> isEnd<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * Priority:
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * 1. If point has different position, smaller one has higher priority.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * 2. If both points are left edges, find higher one.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * 3. If both points are right edge, find lower one.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * 4. Otherwise, one left edge and one right edge, find left one.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @param that the other point with index
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @return priority
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">compareTo</span><span style="color:#f92672">(</span>Point that<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">x</span> <span style="color:#f92672">!=</span> that<span style="color:#f92672">.</span><span style="color:#a6e22e">x</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>                     <span style="color:#75715e">// smaller index has higher priority
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">x</span> <span style="color:#f92672">-</span> that<span style="color:#f92672">.</span><span style="color:#a6e22e">x</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span><span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">isEnd</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">!</span>that<span style="color:#f92672">.</span><span style="color:#a6e22e">isEnd</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>       <span style="color:#75715e">// both left edges: find higher one
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                <span style="color:#66d9ef">return</span> that<span style="color:#f92672">.</span><span style="color:#a6e22e">height</span> <span style="color:#f92672">-</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">height</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">isEnd</span> <span style="color:#f92672">&amp;&amp;</span> that<span style="color:#f92672">.</span><span style="color:#a6e22e">isEnd</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>      <span style="color:#75715e">// both right edges: find lower one
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">height</span> <span style="color:#f92672">-</span> that<span style="color:#f92672">.</span><span style="color:#a6e22e">height</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>        <span style="color:#75715e">// one left edge and one right edge: find left edge
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">isEnd</span> <span style="color:#f92672">?</span> 1 <span style="color:#f92672">:</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><h3 id="max-heap-with-treemap">Max Heap with TreeMap</h3>
 <p>Use a heap and tree map to sort the given coord. The idea is similar. However, it uses negative number to mark left edge&rsquo;s height. In this way to reduce boolean mark.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Use a heap and tree map to sort the given coord. The idea is similar.
-</span><span style="color:#75715e"> * However, it uses negative number to mark left edge&#39;s height. In this way to reduce boolean mark.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param buildings given buildings list
-</span><span style="color:#75715e"> * @return skyline formed by these buildings collectively
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">public</span> List<span style="color:#f92672">&lt;</span>List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;&gt;</span> <span style="color:#a6e22e">heap</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[][]</span> buildings<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-    List<span style="color:#f92672">&lt;</span>List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;&gt;</span> out <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">&lt;&gt;();</span>
-    List<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]&gt;</span> height <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">&lt;&gt;();</span>
-
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> b <span style="color:#f92672">:</span> buildings<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        height<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]{</span>b<span style="color:#f92672">[</span>0<span style="color:#f92672">],</span> <span style="color:#f92672">-</span>b<span style="color:#f92672">[</span>2<span style="color:#f92672">]});</span>     <span style="color:#75715e">// incomplete height marked as negative
-</span><span style="color:#75715e"></span>        height<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]{</span>b<span style="color:#f92672">[</span>1<span style="color:#f92672">],</span> b<span style="color:#f92672">[</span>2<span style="color:#f92672">]});</span>
-    <span style="color:#f92672">}</span>
-
-    height<span style="color:#f92672">.</span><span style="color:#a6e22e">sort</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> Comparator<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]&gt;()</span> <span style="color:#f92672">{</span>
-        <span style="color:#a6e22e">@Override</span>
-        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">compare</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> a<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> b<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>a<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span> <span style="color:#f92672">==</span> b<span style="color:#f92672">[</span>0<span style="color:#f92672">])</span> <span style="color:#f92672">{</span>
-                <span style="color:#66d9ef">return</span> a<span style="color:#f92672">[</span>1<span style="color:#f92672">]</span> <span style="color:#f92672">-</span> b<span style="color:#f92672">[</span>1<span style="color:#f92672">];</span>     <span style="color:#75715e">// if position is same, sort by height
-</span><span style="color:#75715e"></span>            <span style="color:#f92672">}</span>
-            <span style="color:#66d9ef">return</span> a<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span> <span style="color:#f92672">-</span> b<span style="color:#f92672">[</span>0<span style="color:#f92672">];</span>     <span style="color:#75715e">// sort the given array by position
-</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">});</span>
-
-    TreeMap<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">,</span> Integer<span style="color:#f92672">&gt;</span> tm <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> TreeMap<span style="color:#f92672">&lt;&gt;();</span>     <span style="color:#75715e">// key: height; value: how many at this height
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> previousHighest <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
-    tm<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>0<span style="color:#f92672">,</span> 1<span style="color:#f92672">);</span>
-
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> b <span style="color:#f92672">:</span> height<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>b<span style="color:#f92672">[</span>1<span style="color:#f92672">]</span> <span style="color:#f92672">&lt;</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            tm<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(-</span>b<span style="color:#f92672">[</span>1<span style="color:#f92672">],</span> tm<span style="color:#f92672">.</span><span style="color:#a6e22e">getOrDefault</span><span style="color:#f92672">(-</span>b<span style="color:#f92672">[</span>1<span style="color:#f92672">],</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">+</span> 1<span style="color:#f92672">);</span>
-        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>tm<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>b<span style="color:#f92672">[</span>1<span style="color:#f92672">])</span> <span style="color:#f92672">&gt;</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                tm<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>b<span style="color:#f92672">[</span>1<span style="color:#f92672">],</span> tm<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>b<span style="color:#f92672">[</span>1<span style="color:#f92672">])</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">);</span>
-            <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
-                tm<span style="color:#f92672">.</span><span style="color:#a6e22e">remove</span><span style="color:#f92672">(</span>b<span style="color:#f92672">[</span>1<span style="color:#f92672">]);</span>
-            <span style="color:#f92672">}</span>
-        <span style="color:#f92672">}</span>
-        <span style="color:#66d9ef">int</span> currentHighest <span style="color:#f92672">=</span> tm<span style="color:#f92672">.</span><span style="color:#a6e22e">lastKey</span><span style="color:#f92672">();</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>currentHighest <span style="color:#f92672">!=</span> previousHighest<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>        <span style="color:#75715e">// if there is a new height
-</span><span style="color:#75715e"></span>            previousHighest <span style="color:#f92672">=</span> currentHighest<span style="color:#f92672">;</span>
-            ArrayList<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> temp <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;&gt;();</span>
-            temp<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>b<span style="color:#f92672">[</span>0<span style="color:#f92672">]);</span>
-            temp<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>currentHighest<span style="color:#f92672">);</span>
-            out<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>temp<span style="color:#f92672">);</span>
-
-<span style="color:#75715e">//                out.add(new ArrayList&lt;Integer&gt;() {{
-</span><span style="color:#75715e">//                    add(b[0]);
-</span><span style="color:#75715e">//                    add(currentHighest);
-</span><span style="color:#75715e">//                }});
-</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">return</span> out<span style="color:#f92672">;</span>
-<span style="color:#f92672">}</span>
-</code></pre></div><h1 id="759-employee-free-time">759. Employee Free Time</h1>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Use a heap and tree map to sort the given coord. The idea is similar.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * However, it uses negative number to mark left edge&#39;s height. In this way to reduce boolean mark.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param buildings given buildings list
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return skyline formed by these buildings collectively
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> List<span style="color:#f92672">&lt;</span>List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;&gt;</span> <span style="color:#a6e22e">heap</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[][]</span> buildings<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    List<span style="color:#f92672">&lt;</span>List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;&gt;</span> out <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">&lt;&gt;();</span>
+</span></span><span style="display:flex;"><span>    List<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]&gt;</span> height <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">&lt;&gt;();</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> b <span style="color:#f92672">:</span> buildings<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        height<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]{</span>b<span style="color:#f92672">[</span>0<span style="color:#f92672">],</span> <span style="color:#f92672">-</span>b<span style="color:#f92672">[</span>2<span style="color:#f92672">]});</span>     <span style="color:#75715e">// incomplete height marked as negative
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        height<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]{</span>b<span style="color:#f92672">[</span>1<span style="color:#f92672">],</span> b<span style="color:#f92672">[</span>2<span style="color:#f92672">]});</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    height<span style="color:#f92672">.</span><span style="color:#a6e22e">sort</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> Comparator<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]&gt;()</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">compare</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> a<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> b<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>a<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span> <span style="color:#f92672">==</span> b<span style="color:#f92672">[</span>0<span style="color:#f92672">])</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">return</span> a<span style="color:#f92672">[</span>1<span style="color:#f92672">]</span> <span style="color:#f92672">-</span> b<span style="color:#f92672">[</span>1<span style="color:#f92672">];</span>     <span style="color:#75715e">// if position is same, sort by height
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> a<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span> <span style="color:#f92672">-</span> b<span style="color:#f92672">[</span>0<span style="color:#f92672">];</span>     <span style="color:#75715e">// sort the given array by position
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">});</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    TreeMap<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">,</span> Integer<span style="color:#f92672">&gt;</span> tm <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> TreeMap<span style="color:#f92672">&lt;&gt;();</span>     <span style="color:#75715e">// key: height; value: how many at this height
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> previousHighest <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    tm<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>0<span style="color:#f92672">,</span> 1<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> b <span style="color:#f92672">:</span> height<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>b<span style="color:#f92672">[</span>1<span style="color:#f92672">]</span> <span style="color:#f92672">&lt;</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            tm<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(-</span>b<span style="color:#f92672">[</span>1<span style="color:#f92672">],</span> tm<span style="color:#f92672">.</span><span style="color:#a6e22e">getOrDefault</span><span style="color:#f92672">(-</span>b<span style="color:#f92672">[</span>1<span style="color:#f92672">],</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">+</span> 1<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>tm<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>b<span style="color:#f92672">[</span>1<span style="color:#f92672">])</span> <span style="color:#f92672">&gt;</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                tm<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>b<span style="color:#f92672">[</span>1<span style="color:#f92672">],</span> tm<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>b<span style="color:#f92672">[</span>1<span style="color:#f92672">])</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                tm<span style="color:#f92672">.</span><span style="color:#a6e22e">remove</span><span style="color:#f92672">(</span>b<span style="color:#f92672">[</span>1<span style="color:#f92672">]);</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> currentHighest <span style="color:#f92672">=</span> tm<span style="color:#f92672">.</span><span style="color:#a6e22e">lastKey</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>currentHighest <span style="color:#f92672">!=</span> previousHighest<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>        <span style="color:#75715e">// if there is a new height
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            previousHighest <span style="color:#f92672">=</span> currentHighest<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>            ArrayList<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> temp <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;&gt;();</span>
+</span></span><span style="display:flex;"><span>            temp<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>b<span style="color:#f92672">[</span>0<span style="color:#f92672">]);</span>
+</span></span><span style="display:flex;"><span>            temp<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>currentHighest<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>            out<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>temp<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">//                out.add(new ArrayList&lt;Integer&gt;() {{
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">//                    add(b[0]);
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">//                    add(currentHighest);
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">//                }});
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> out<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><h1 id="759-employee-free-time">759. Employee Free Time</h1>
 <p>Link: <a href="https://leetcode.com/problems/employee-free-time/">Employee Free Time</a></p>
 <h2 id="problem-description-2">Problem Description</h2>
 <p>We are given a list <code>schedule</code> of employees, which represents the working time for each employee.</p>
@@ -806,7 +806,7 @@ Output: 1
 Output: [[3,4]]
 Explanation: There are a total of three employees, and all common
 free time intervals would be [-inf, 1], [3, 4], [10, inf].
-We discard any intervals that contain inf as they aren't finite.
+We discard any intervals that contain inf as they aren&#39;t finite.
 </code></pre><p><strong>Example 2:</strong></p>
 <pre tabindex="0"><code>Input: schedule = [[[1,3],[6,7]],[[2,4]],[[2,5],[9,12]]]
 Output: [[5,6],[7,9]] 
@@ -817,90 +817,90 @@ Output: [[5,6],[7,9]]
 </ul>
 <h2 id="method--code-2">Method &amp; Code</h2>
 <p>Convert each interval&rsquo;s start and end to time point. Each time point contains time value and start/end. Sort the time point list. Then it becomes to merge interval problem.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Convert each interval&#39;s start and end to time point. Each time point contains time value and start/end.
-</span><span style="color:#75715e"> * Sort the time point list. Then it becomes to merge interval problem.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param schedule given interval list
-</span><span style="color:#75715e"> * @return the list of finite intervals representing common free time for all employees in sorted order
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">public</span> List<span style="color:#f92672">&lt;</span>Interval<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">employeeFreeTime</span><span style="color:#f92672">(</span>List<span style="color:#f92672">&lt;</span>List<span style="color:#f92672">&lt;</span>Interval<span style="color:#f92672">&gt;&gt;</span> schedule<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-
-    List<span style="color:#f92672">&lt;</span>Interval<span style="color:#f92672">&gt;</span> out <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">&lt;&gt;();</span>
-
-    <span style="color:#75715e">/* Corner case */</span>
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>schedule <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">||</span> schedule<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">()</span> <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">return</span> out<span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-
-    List<span style="color:#f92672">&lt;</span>Point<span style="color:#f92672">&gt;</span> list <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">&lt;&gt;();</span>
-
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>List<span style="color:#f92672">&lt;</span>Interval<span style="color:#f92672">&gt;</span> l <span style="color:#f92672">:</span> schedule<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>Interval i <span style="color:#f92672">:</span> l<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            list<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> Point<span style="color:#f92672">(</span>i<span style="color:#f92672">.</span><span style="color:#a6e22e">start</span><span style="color:#f92672">,</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">));</span>
-            list<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> Point<span style="color:#f92672">(</span>i<span style="color:#f92672">.</span><span style="color:#a6e22e">end</span><span style="color:#f92672">,</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">));</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-
-    Collections<span style="color:#f92672">.</span><span style="color:#a6e22e">sort</span><span style="color:#f92672">(</span>list<span style="color:#f92672">);</span>
-
-    <span style="color:#66d9ef">int</span> count <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">int</span> start <span style="color:#f92672">=</span> Integer<span style="color:#f92672">.</span><span style="color:#a6e22e">MIN_VALUE</span><span style="color:#f92672">,</span> end<span style="color:#f92672">;</span>
-
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>Point p <span style="color:#f92672">:</span> list<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>p<span style="color:#f92672">.</span><span style="color:#a6e22e">isStart</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>count<span style="color:#f92672">++</span> <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>     <span style="color:#75715e">// if count == 0, then there is no overlap here
-</span><span style="color:#75715e"></span>                end <span style="color:#f92672">=</span> p<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span><span style="color:#f92672">;</span>        <span style="color:#75715e">// if there is a new free interval, then current point should be end point
-</span><span style="color:#75715e"></span>                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>start <span style="color:#f92672">&gt;</span> Integer<span style="color:#f92672">.</span><span style="color:#a6e22e">MIN_VALUE</span> <span style="color:#f92672">&amp;&amp;</span> start <span style="color:#f92672">&lt;</span> end<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                    out<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> Interval<span style="color:#f92672">(</span>start<span style="color:#f92672">,</span> end<span style="color:#f92672">));</span>      <span style="color:#75715e">// found a new free interval
-</span><span style="color:#75715e"></span>                <span style="color:#f92672">}</span>
-            <span style="color:#f92672">}</span>
-        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>        <span style="color:#75715e">// current point is the end of employee interval
-</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(--</span>count <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>     <span style="color:#75715e">// if --count == 0, then there may be a new free interval based on next point
-</span><span style="color:#75715e"></span>                start <span style="color:#f92672">=</span> p<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span><span style="color:#f92672">;</span>
-            <span style="color:#f92672">}</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">return</span> out<span style="color:#f92672">;</span>
-<span style="color:#f92672">}</span>
-
-<span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Time point with mark of start or end.
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Point</span> <span style="color:#66d9ef">implements</span> Comparable<span style="color:#f92672">&lt;</span>Point<span style="color:#f92672">&gt;</span> <span style="color:#f92672">{</span>
-    <span style="color:#66d9ef">int</span> val<span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">boolean</span> isStart<span style="color:#f92672">;</span>
-
-    <span style="color:#75715e">/**
-</span><span style="color:#75715e">     * Constructor of time point.
-</span><span style="color:#75715e">     *
-</span><span style="color:#75715e">     * @param val     value
-</span><span style="color:#75715e">     * @param isStart is current point representing a start of interval
-</span><span style="color:#75715e">     */</span>
-    Point<span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> val<span style="color:#f92672">,</span> <span style="color:#66d9ef">boolean</span> isStart<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">val</span> <span style="color:#f92672">=</span> val<span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">isStart</span> <span style="color:#f92672">=</span> isStart<span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#75715e">/**
-</span><span style="color:#75715e">     * Override the comparator.
-</span><span style="color:#75715e">     * If two points have different value, then compare the value.
-</span><span style="color:#75715e">     * Otherwise, end point has higher priority.
-</span><span style="color:#75715e">     *
-</span><span style="color:#75715e">     * @param p time point
-</span><span style="color:#75715e">     * @return priority of point
-</span><span style="color:#75715e">     */</span>
-    <span style="color:#a6e22e">@Override</span>
-    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">compareTo</span><span style="color:#f92672">(</span>Point p<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">val</span> <span style="color:#f92672">!=</span> p<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">val</span> <span style="color:#f92672">-</span> p<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span><span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">isStart</span> <span style="color:#f92672">?</span> 1 <span style="color:#f92672">:</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-<span style="color:#f92672">}</span>
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Convert each interval&#39;s start and end to time point. Each time point contains time value and start/end.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Sort the time point list. Then it becomes to merge interval problem.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param schedule given interval list
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return the list of finite intervals representing common free time for all employees in sorted order
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> List<span style="color:#f92672">&lt;</span>Interval<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">employeeFreeTime</span><span style="color:#f92672">(</span>List<span style="color:#f92672">&lt;</span>List<span style="color:#f92672">&lt;</span>Interval<span style="color:#f92672">&gt;&gt;</span> schedule<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    List<span style="color:#f92672">&lt;</span>Interval<span style="color:#f92672">&gt;</span> out <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">&lt;&gt;();</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/* Corner case */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>schedule <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">||</span> schedule<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">()</span> <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> out<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    List<span style="color:#f92672">&lt;</span>Point<span style="color:#f92672">&gt;</span> list <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">&lt;&gt;();</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>List<span style="color:#f92672">&lt;</span>Interval<span style="color:#f92672">&gt;</span> l <span style="color:#f92672">:</span> schedule<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>Interval i <span style="color:#f92672">:</span> l<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            list<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> Point<span style="color:#f92672">(</span>i<span style="color:#f92672">.</span><span style="color:#a6e22e">start</span><span style="color:#f92672">,</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">));</span>
+</span></span><span style="display:flex;"><span>            list<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> Point<span style="color:#f92672">(</span>i<span style="color:#f92672">.</span><span style="color:#a6e22e">end</span><span style="color:#f92672">,</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">));</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    Collections<span style="color:#f92672">.</span><span style="color:#a6e22e">sort</span><span style="color:#f92672">(</span>list<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> count <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> start <span style="color:#f92672">=</span> Integer<span style="color:#f92672">.</span><span style="color:#a6e22e">MIN_VALUE</span><span style="color:#f92672">,</span> end<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>Point p <span style="color:#f92672">:</span> list<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>p<span style="color:#f92672">.</span><span style="color:#a6e22e">isStart</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>count<span style="color:#f92672">++</span> <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>     <span style="color:#75715e">// if count == 0, then there is no overlap here
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                end <span style="color:#f92672">=</span> p<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span><span style="color:#f92672">;</span>        <span style="color:#75715e">// if there is a new free interval, then current point should be end point
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>start <span style="color:#f92672">&gt;</span> Integer<span style="color:#f92672">.</span><span style="color:#a6e22e">MIN_VALUE</span> <span style="color:#f92672">&amp;&amp;</span> start <span style="color:#f92672">&lt;</span> end<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                    out<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> Interval<span style="color:#f92672">(</span>start<span style="color:#f92672">,</span> end<span style="color:#f92672">));</span>      <span style="color:#75715e">// found a new free interval
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>        <span style="color:#75715e">// current point is the end of employee interval
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(--</span>count <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>     <span style="color:#75715e">// if --count == 0, then there may be a new free interval based on next point
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                start <span style="color:#f92672">=</span> p<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> out<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Time point with mark of start or end.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">static</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Point</span> <span style="color:#66d9ef">implements</span> Comparable<span style="color:#f92672">&lt;</span>Point<span style="color:#f92672">&gt;</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> val<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">boolean</span> isStart<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * Constructor of time point.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @param val     value
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @param isStart is current point representing a start of interval
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     */</span>
+</span></span><span style="display:flex;"><span>    Point<span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> val<span style="color:#f92672">,</span> <span style="color:#66d9ef">boolean</span> isStart<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">val</span> <span style="color:#f92672">=</span> val<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">isStart</span> <span style="color:#f92672">=</span> isStart<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * Override the comparator.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * If two points have different value, then compare the value.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * Otherwise, end point has higher priority.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @param p time point
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @return priority of point
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">@Override</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">compareTo</span><span style="color:#f92672">(</span>Point p<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">val</span> <span style="color:#f92672">!=</span> p<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">val</span> <span style="color:#f92672">-</span> p<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">isStart</span> <span style="color:#f92672">?</span> 1 <span style="color:#f92672">:</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div>
               
             </div>
           </div>

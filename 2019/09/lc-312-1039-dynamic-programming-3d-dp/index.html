@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.92.2 with theme Tranquilpeak 0.4.8-BETA">
+<meta name="generator" content="Hugo 0.93.1 with theme Tranquilpeak 0.4.8-BETA">
 <meta name="author" content="Notebook">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -279,100 +279,100 @@ Explanation: nums = [3,1,5,8] --&gt; [3,5,8] --&gt;   [3,8]   --&gt;  [8]  --&gt
 <p>Divide and conquer, or dynamic programming.</p>
 <h3 id="divide-and-conquer">Divide And Conquer</h3>
 <p>Divide and conquer with memoization. The sub problem is to select the current balloon as the last one to shoot. In this way, recursively find its left and right max coins.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Divide and conquer with memoization.
-</span><span style="color:#75715e"> * The sub problem is to select the current balloon as the last one to shoot.
-</span><span style="color:#75715e"> * In this way, recursively find its left and right max coins.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param nums input int array
-</span><span style="color:#75715e"> * @return max score
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">maxCoins</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> nums<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">==</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">return</span> nums<span style="color:#f92672">[</span>0<span style="color:#f92672">];</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> coins <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">+</span> 2<span style="color:#f92672">];</span>
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
-        coins<span style="color:#f92672">[</span>i <span style="color:#f92672">+</span> 1<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> nums<span style="color:#f92672">[</span>i<span style="color:#f92672">];</span>
-    <span style="color:#f92672">}</span>
-    coins<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> coins<span style="color:#f92672">[</span>coins<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span>
-
-    <span style="color:#66d9ef">return</span> findMax<span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>coins<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">][</span>coins<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">],</span> coins<span style="color:#f92672">,</span> 0<span style="color:#f92672">,</span> coins<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">);</span>
-<span style="color:#f92672">}</span>
-
-<span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Divide and conquer with memoization.
-</span><span style="color:#75715e"> * Recursively, find the max coins in left part and in right part, with current balloon scores.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param mem   memorization array
-</span><span style="color:#75715e"> * @param coins given coin array
-</span><span style="color:#75715e"> * @param left  left bound
-</span><span style="color:#75715e"> * @param right right bound
-</span><span style="color:#75715e"> * @return max coins from left to right
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">findMax</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[][]</span> mem<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> coins<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> left<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> right<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>left <span style="color:#f92672">+</span> 1 <span style="color:#f92672">==</span> right<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">return</span> 0<span style="color:#f92672">;</span>       <span style="color:#75715e">// out of boundary
-</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>mem<span style="color:#f92672">[</span>left<span style="color:#f92672">][</span>right<span style="color:#f92672">]</span> <span style="color:#f92672">&gt;</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">return</span> mem<span style="color:#f92672">[</span>left<span style="color:#f92672">][</span>right<span style="color:#f92672">];</span>        <span style="color:#75715e">// return current max (memorization)
-</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
-    <span style="color:#66d9ef">int</span> maxCoins <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
-
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> left <span style="color:#f92672">+</span> 1<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> right<span style="color:#f92672">;</span> <span style="color:#f92672">++</span>i<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        maxCoins <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>coins<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">*</span> coins<span style="color:#f92672">[</span>left<span style="color:#f92672">]</span> <span style="color:#f92672">*</span> coins<span style="color:#f92672">[</span>right<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> findMax<span style="color:#f92672">(</span>mem<span style="color:#f92672">,</span> coins<span style="color:#f92672">,</span> left<span style="color:#f92672">,</span> i<span style="color:#f92672">)</span> <span style="color:#f92672">+</span> findMax<span style="color:#f92672">(</span>mem<span style="color:#f92672">,</span> coins<span style="color:#f92672">,</span> i<span style="color:#f92672">,</span> right<span style="color:#f92672">),</span> maxCoins<span style="color:#f92672">);</span>
-    <span style="color:#f92672">}</span>
-    mem<span style="color:#f92672">[</span>left<span style="color:#f92672">][</span>right<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> maxCoins<span style="color:#f92672">;</span>
-
-    <span style="color:#66d9ef">return</span> maxCoins<span style="color:#f92672">;</span>
-<span style="color:#f92672">}</span>
-</code></pre></div><h3 id="dynamic-programming">Dynamic Programming</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Divide and conquer with memoization.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * The sub problem is to select the current balloon as the last one to shoot.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * In this way, recursively find its left and right max coins.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param nums input int array
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return max score
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">maxCoins</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> nums<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">==</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> nums<span style="color:#f92672">[</span>0<span style="color:#f92672">];</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> coins <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">+</span> 2<span style="color:#f92672">];</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        coins<span style="color:#f92672">[</span>i <span style="color:#f92672">+</span> 1<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> nums<span style="color:#f92672">[</span>i<span style="color:#f92672">];</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    coins<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> coins<span style="color:#f92672">[</span>coins<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> findMax<span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>coins<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">][</span>coins<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">],</span> coins<span style="color:#f92672">,</span> 0<span style="color:#f92672">,</span> coins<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Divide and conquer with memoization.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Recursively, find the max coins in left part and in right part, with current balloon scores.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param mem   memorization array
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param coins given coin array
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param left  left bound
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param right right bound
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return max coins from left to right
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">findMax</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[][]</span> mem<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> coins<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> left<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> right<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>left <span style="color:#f92672">+</span> 1 <span style="color:#f92672">==</span> right<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> 0<span style="color:#f92672">;</span>       <span style="color:#75715e">// out of boundary
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>mem<span style="color:#f92672">[</span>left<span style="color:#f92672">][</span>right<span style="color:#f92672">]</span> <span style="color:#f92672">&gt;</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> mem<span style="color:#f92672">[</span>left<span style="color:#f92672">][</span>right<span style="color:#f92672">];</span>        <span style="color:#75715e">// return current max (memorization)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> maxCoins <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> left <span style="color:#f92672">+</span> 1<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> right<span style="color:#f92672">;</span> <span style="color:#f92672">++</span>i<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        maxCoins <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>coins<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">*</span> coins<span style="color:#f92672">[</span>left<span style="color:#f92672">]</span> <span style="color:#f92672">*</span> coins<span style="color:#f92672">[</span>right<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> findMax<span style="color:#f92672">(</span>mem<span style="color:#f92672">,</span> coins<span style="color:#f92672">,</span> left<span style="color:#f92672">,</span> i<span style="color:#f92672">)</span> <span style="color:#f92672">+</span> findMax<span style="color:#f92672">(</span>mem<span style="color:#f92672">,</span> coins<span style="color:#f92672">,</span> i<span style="color:#f92672">,</span> right<span style="color:#f92672">),</span> maxCoins<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    mem<span style="color:#f92672">[</span>left<span style="color:#f92672">][</span>right<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> maxCoins<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> maxCoins<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><h3 id="dynamic-programming">Dynamic Programming</h3>
 <p>Dynamic programming solution.</p>
 <p>State transition:</p>
 <ul>
 <li><code>dp[i][j]</code>: max coins can be obtained from <code>i</code> to <code>j</code>.</li>
 <li><code>dp[i][j] = max(dp[i][j], dp[i][k - 1] + dp[k + 1][j] + nums[i] * nums[j] * nums[j])</code>, where <code>i &lt;= k &lt;= j</code>.</li>
 </ul>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Dynamic programming solution.
-</span><span style="color:#75715e"> * dp[i][j]: max coins can be obtained from i to j.
-</span><span style="color:#75715e"> * dp[i][j] = max(dp[i][j], dp[i][k - 1] + dp[k + 1][j] + nums[i] * nums[j] * nums[j]), where i &lt;= k &lt;= j.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param nums given array
-</span><span style="color:#75715e"> * @return max score
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">dp</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> nums<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">return</span> 0<span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">int</span> n <span style="color:#f92672">=</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">int</span><span style="color:#f92672">[][]</span> dp <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>n<span style="color:#f92672">][</span>n<span style="color:#f92672">];</span>
-
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> len <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> len <span style="color:#f92672">&lt;=</span> n<span style="color:#f92672">;</span> len<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">+</span> len <span style="color:#f92672">&lt;=</span> n<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> i <span style="color:#f92672">+</span> len <span style="color:#f92672">-</span> 1<span style="color:#f92672">;</span>
-
-            <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> k <span style="color:#f92672">=</span> i<span style="color:#f92672">;</span> k <span style="color:#f92672">&lt;=</span> j<span style="color:#f92672">;</span> k<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
-
-                <span style="color:#75715e">/*
-</span><span style="color:#75715e">                 * If current element is the first or last element in array, the value that out of array count as 1.
-</span><span style="color:#75715e">                 * But this 1 will not be added into max score. */</span>
-                <span style="color:#66d9ef">int</span> coins <span style="color:#f92672">=</span> nums<span style="color:#f92672">[</span>k<span style="color:#f92672">]</span> <span style="color:#f92672">*</span> <span style="color:#f92672">((</span>i <span style="color:#f92672">&gt;</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">?</span> nums<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span> <span style="color:#f92672">:</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">*</span> <span style="color:#f92672">((</span>j <span style="color:#f92672">&lt;</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">?</span> nums<span style="color:#f92672">[</span>j <span style="color:#f92672">+</span> 1<span style="color:#f92672">]</span> <span style="color:#f92672">:</span> 1<span style="color:#f92672">);</span>
-                coins <span style="color:#f92672">+=</span> <span style="color:#f92672">(</span>k <span style="color:#f92672">&gt;</span> i<span style="color:#f92672">)</span> <span style="color:#f92672">?</span> dp<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>k <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span> <span style="color:#f92672">:</span> 0<span style="color:#f92672">;</span>
-                coins <span style="color:#f92672">+=</span> <span style="color:#f92672">(</span>k <span style="color:#f92672">&lt;</span> j<span style="color:#f92672">)</span> <span style="color:#f92672">?</span> dp<span style="color:#f92672">[</span>k <span style="color:#f92672">+</span> 1<span style="color:#f92672">][</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">:</span> 0<span style="color:#f92672">;</span>
-                dp<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>dp<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>j<span style="color:#f92672">],</span> coins<span style="color:#f92672">);</span>
-            <span style="color:#f92672">}</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">return</span> dp<span style="color:#f92672">[</span>0<span style="color:#f92672">][</span>n <span style="color:#f92672">-</span> 1<span style="color:#f92672">];</span>
-<span style="color:#f92672">}</span>
-</code></pre></div><h1 id="1039-minimum-score-triangulation-of-polygon">1039. Minimum Score Triangulation of Polygon</h1>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Dynamic programming solution.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * dp[i][j]: max coins can be obtained from i to j.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * dp[i][j] = max(dp[i][j], dp[i][k - 1] + dp[k + 1][j] + nums[i] * nums[j] * nums[j]), where i &lt;= k &lt;= j.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param nums given array
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return max score
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">dp</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> nums<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> 0<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> n <span style="color:#f92672">=</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span><span style="color:#f92672">[][]</span> dp <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>n<span style="color:#f92672">][</span>n<span style="color:#f92672">];</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> len <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> len <span style="color:#f92672">&lt;=</span> n<span style="color:#f92672">;</span> len<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">+</span> len <span style="color:#f92672">&lt;=</span> n<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> i <span style="color:#f92672">+</span> len <span style="color:#f92672">-</span> 1<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> k <span style="color:#f92672">=</span> i<span style="color:#f92672">;</span> k <span style="color:#f92672">&lt;=</span> j<span style="color:#f92672">;</span> k<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                <span style="color:#75715e">/*
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">                 * If current element is the first or last element in array, the value that out of array count as 1.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">                 * But this 1 will not be added into max score. */</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">int</span> coins <span style="color:#f92672">=</span> nums<span style="color:#f92672">[</span>k<span style="color:#f92672">]</span> <span style="color:#f92672">*</span> <span style="color:#f92672">((</span>i <span style="color:#f92672">&gt;</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">?</span> nums<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span> <span style="color:#f92672">:</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">*</span> <span style="color:#f92672">((</span>j <span style="color:#f92672">&lt;</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">?</span> nums<span style="color:#f92672">[</span>j <span style="color:#f92672">+</span> 1<span style="color:#f92672">]</span> <span style="color:#f92672">:</span> 1<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>                coins <span style="color:#f92672">+=</span> <span style="color:#f92672">(</span>k <span style="color:#f92672">&gt;</span> i<span style="color:#f92672">)</span> <span style="color:#f92672">?</span> dp<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>k <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span> <span style="color:#f92672">:</span> 0<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>                coins <span style="color:#f92672">+=</span> <span style="color:#f92672">(</span>k <span style="color:#f92672">&lt;</span> j<span style="color:#f92672">)</span> <span style="color:#f92672">?</span> dp<span style="color:#f92672">[</span>k <span style="color:#f92672">+</span> 1<span style="color:#f92672">][</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">:</span> 0<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>                dp<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>dp<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>j<span style="color:#f92672">],</span> coins<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> dp<span style="color:#f92672">[</span>0<span style="color:#f92672">][</span>n <span style="color:#f92672">-</span> 1<span style="color:#f92672">];</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><h1 id="1039-minimum-score-triangulation-of-polygon">1039. Minimum Score Triangulation of Polygon</h1>
 <p>Link: <a href="https://leetcode.com/problems/minimum-score-triangulation-of-polygon/">Minimum Score Triangulation of Polygon</a></p>
 <h2 id="problem-description-1">Problem Description</h2>
 <p>Given <code>N</code>, consider a convex <code>N</code>-sided polygon with vertices labelled <code>A[0], A[i], ..., A[N-1]</code> in clockwise order.</p>
@@ -398,39 +398,39 @@ Explanation: The minimum score triangulation has score 1*1*3 + 1*1*4 + 1*1*5 + 1
 </ol>
 <h2 id="method--code-1">Method &amp; Code</h2>
 <p>Bottom-up dynamic programming.</p>
-<p>Divide polygon into triangles can be regarded as calculate sum of vertices' product. The recursive problem can be converted into, find a point that make score from <code>A[i]</code> to <code>A[j]</code> minimum. And then for the selected point k from previous problem, find a point that make score from <code>A[i]</code> to <code>A[k]</code>, <code>A[k]</code> to <code>A[j]</code> minimum.</p>
+<p>Divide polygon into triangles can be regarded as calculate sum of vertices&rsquo; product. The recursive problem can be converted into, find a point that make score from <code>A[i]</code> to <code>A[j]</code> minimum. And then for the selected point k from previous problem, find a point that make score from <code>A[i]</code> to <code>A[k]</code>, <code>A[k]</code> to <code>A[j]</code> minimum.</p>
 <p>Bottom-up state transition:</p>
 <p><code>dp[i][j]</code>: the minimum score to triangulate from <code>A[i]</code> to <code>A[j]</code>.</p>
 <p><code>dp[i][j] = min(dp[i][k] + dp[k][j] + A[i] * A[j] * A[k])</code>, where <code>i &lt; k &lt; j</code>, and <code>2 &lt; i + j &lt; A.length</code>.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Bottom-up dynamic programming.
-</span><span style="color:#75715e"> * Divide polygon into triangles can be regarded as calculate sum of vertices&#39; product.
-</span><span style="color:#75715e"> * The recursive problem can be converted into, find a point that make score from A[i] to A[j] minimum.
-</span><span style="color:#75715e"> * And then for the selected point k from previous problem, find a point that make score from A[i] to A[k] minimum.
-</span><span style="color:#75715e"> * Bottom-up state transition:
-</span><span style="color:#75715e"> * dp[i][j]: the minimum score to triangulate from A[i] to A[j].
-</span><span style="color:#75715e"> * dp[i][j] = min(dp[i][k] + dp[k][j] + A[i] * A[j] * A[k]), where i &lt; k &lt; j, and 2 &lt; i + j &lt; A.length.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param A given array
-</span><span style="color:#75715e"> * @return smallest possible total score that you can achieve with some triangulation of the polygon
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">minScoreTriangulation</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> A<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-    <span style="color:#66d9ef">int</span> n <span style="color:#f92672">=</span> A<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">int</span><span style="color:#f92672">[][]</span> dp <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>n<span style="color:#f92672">][</span>n<span style="color:#f92672">];</span>
-
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> length <span style="color:#f92672">=</span> 2<span style="color:#f92672">;</span> length <span style="color:#f92672">&lt;</span> n<span style="color:#f92672">;</span> length<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>      <span style="color:#75715e">// length at least should be 2
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">+</span> length <span style="color:#f92672">&lt;</span> n<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> i <span style="color:#f92672">+</span> length<span style="color:#f92672">;</span>
-            dp<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> Integer<span style="color:#f92672">.</span><span style="color:#a6e22e">MAX_VALUE</span><span style="color:#f92672">;</span>
-            <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> k <span style="color:#f92672">=</span> i <span style="color:#f92672">+</span> 1<span style="color:#f92672">;</span> k <span style="color:#f92672">&lt;</span> j<span style="color:#f92672">;</span> k<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
-                dp<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">min</span><span style="color:#f92672">(</span>dp<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>j<span style="color:#f92672">],</span> dp<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>k<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> dp<span style="color:#f92672">[</span>k<span style="color:#f92672">][</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> A<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">*</span> A<span style="color:#f92672">[</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">*</span> A<span style="color:#f92672">[</span>k<span style="color:#f92672">]);</span>
-            <span style="color:#f92672">}</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">return</span> dp<span style="color:#f92672">[</span>0<span style="color:#f92672">][</span>n <span style="color:#f92672">-</span> 1<span style="color:#f92672">];</span>
-<span style="color:#f92672">}</span>
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Bottom-up dynamic programming.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Divide polygon into triangles can be regarded as calculate sum of vertices&#39; product.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * The recursive problem can be converted into, find a point that make score from A[i] to A[j] minimum.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * And then for the selected point k from previous problem, find a point that make score from A[i] to A[k] minimum.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Bottom-up state transition:
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * dp[i][j]: the minimum score to triangulate from A[i] to A[j].
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * dp[i][j] = min(dp[i][k] + dp[k][j] + A[i] * A[j] * A[k]), where i &lt; k &lt; j, and 2 &lt; i + j &lt; A.length.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param A given array
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return smallest possible total score that you can achieve with some triangulation of the polygon
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">minScoreTriangulation</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> A<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> n <span style="color:#f92672">=</span> A<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span><span style="color:#f92672">[][]</span> dp <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>n<span style="color:#f92672">][</span>n<span style="color:#f92672">];</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> length <span style="color:#f92672">=</span> 2<span style="color:#f92672">;</span> length <span style="color:#f92672">&lt;</span> n<span style="color:#f92672">;</span> length<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>      <span style="color:#75715e">// length at least should be 2
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">+</span> length <span style="color:#f92672">&lt;</span> n<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> i <span style="color:#f92672">+</span> length<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>            dp<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> Integer<span style="color:#f92672">.</span><span style="color:#a6e22e">MAX_VALUE</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> k <span style="color:#f92672">=</span> i <span style="color:#f92672">+</span> 1<span style="color:#f92672">;</span> k <span style="color:#f92672">&lt;</span> j<span style="color:#f92672">;</span> k<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                dp<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">min</span><span style="color:#f92672">(</span>dp<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>j<span style="color:#f92672">],</span> dp<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>k<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> dp<span style="color:#f92672">[</span>k<span style="color:#f92672">][</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> A<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">*</span> A<span style="color:#f92672">[</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">*</span> A<span style="color:#f92672">[</span>k<span style="color:#f92672">]);</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> dp<span style="color:#f92672">[</span>0<span style="color:#f92672">][</span>n <span style="color:#f92672">-</span> 1<span style="color:#f92672">];</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div>
               
             </div>
           </div>

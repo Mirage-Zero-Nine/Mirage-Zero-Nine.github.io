@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.92.2 with theme Tranquilpeak 0.4.8-BETA">
+<meta name="generator" content="Hugo 0.93.1 with theme Tranquilpeak 0.4.8-BETA">
 <meta name="author" content="Notebook">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -287,39 +287,39 @@ Explanation: Since your initial capital is 0, you can only start the project ind
 </ol>
 <h2 id="method--code">Method &amp; Code</h2>
 <p>Greedy solution with two heaps. Each time, find a project with max profit within current capital capability.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Greedy solution with two heaps.
-</span><span style="color:#75715e"> * Each time, find a project with max profit within current capital capability.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param k       at most k operations
-</span><span style="color:#75715e"> * @param W       initially capital
-</span><span style="color:#75715e"> * @param Profits list of profits that each project will bring
-</span><span style="color:#75715e"> * @param Capital list of capital that each project will take
-</span><span style="color:#75715e"> * @return final maximized capital
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">findMaximizedCapital</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> k<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> W<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> Profits<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> Capital<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-    Queue<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]&gt;</span> minCapital <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> PriorityQueue<span style="color:#f92672">&lt;&gt;(</span>Comparator<span style="color:#f92672">.</span><span style="color:#a6e22e">comparingInt</span><span style="color:#f92672">(</span>a <span style="color:#f92672">-&gt;</span> a<span style="color:#f92672">[</span>0<span style="color:#f92672">]));</span>
-    Queue<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]&gt;</span> maxProfit <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> PriorityQueue<span style="color:#f92672">&lt;&gt;((</span>a<span style="color:#f92672">,</span> b<span style="color:#f92672">)</span> <span style="color:#f92672">-&gt;</span> <span style="color:#f92672">(</span>b<span style="color:#f92672">[</span>1<span style="color:#f92672">]</span> <span style="color:#f92672">-</span> a<span style="color:#f92672">[</span>1<span style="color:#f92672">]));</span>
-
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> Profits<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
-        minCapital<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]{</span>Capital<span style="color:#f92672">[</span>i<span style="color:#f92672">],</span> Profits<span style="color:#f92672">[</span>i<span style="color:#f92672">]});</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> k<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">while</span> <span style="color:#f92672">(!</span>minCapital<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">()</span> <span style="color:#f92672">&amp;&amp;</span> minCapital<span style="color:#f92672">.</span><span style="color:#a6e22e">peek</span><span style="color:#f92672">()[</span>0<span style="color:#f92672">]</span> <span style="color:#f92672">&lt;=</span> W<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>      <span style="color:#75715e">// find all projects within current capability
-</span><span style="color:#75715e"></span>            maxProfit<span style="color:#f92672">.</span><span style="color:#a6e22e">offer</span><span style="color:#f92672">(</span>minCapital<span style="color:#f92672">.</span><span style="color:#a6e22e">poll</span><span style="color:#f92672">());</span>
-        <span style="color:#f92672">}</span>
-
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>maxProfit<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>     <span style="color:#75715e">// if no project under this condition
-</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">break</span><span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span>
-
-        W <span style="color:#f92672">+=</span> maxProfit<span style="color:#f92672">.</span><span style="color:#a6e22e">poll</span><span style="color:#f92672">()[</span>1<span style="color:#f92672">];</span>      <span style="color:#75715e">// find a project with max profit
-</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">return</span> W<span style="color:#f92672">;</span>
-<span style="color:#f92672">}</span>
-</code></pre></div><h1 id="630-course-schedule-iii">630. Course Schedule III</h1>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Greedy solution with two heaps.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Each time, find a project with max profit within current capital capability.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param k       at most k operations
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param W       initially capital
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param Profits list of profits that each project will bring
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param Capital list of capital that each project will take
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return final maximized capital
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">findMaximizedCapital</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> k<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> W<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> Profits<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> Capital<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    Queue<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]&gt;</span> minCapital <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> PriorityQueue<span style="color:#f92672">&lt;&gt;(</span>Comparator<span style="color:#f92672">.</span><span style="color:#a6e22e">comparingInt</span><span style="color:#f92672">(</span>a <span style="color:#f92672">-&gt;</span> a<span style="color:#f92672">[</span>0<span style="color:#f92672">]));</span>
+</span></span><span style="display:flex;"><span>    Queue<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]&gt;</span> maxProfit <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> PriorityQueue<span style="color:#f92672">&lt;&gt;((</span>a<span style="color:#f92672">,</span> b<span style="color:#f92672">)</span> <span style="color:#f92672">-&gt;</span> <span style="color:#f92672">(</span>b<span style="color:#f92672">[</span>1<span style="color:#f92672">]</span> <span style="color:#f92672">-</span> a<span style="color:#f92672">[</span>1<span style="color:#f92672">]));</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> Profits<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        minCapital<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]{</span>Capital<span style="color:#f92672">[</span>i<span style="color:#f92672">],</span> Profits<span style="color:#f92672">[</span>i<span style="color:#f92672">]});</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> k<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">while</span> <span style="color:#f92672">(!</span>minCapital<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">()</span> <span style="color:#f92672">&amp;&amp;</span> minCapital<span style="color:#f92672">.</span><span style="color:#a6e22e">peek</span><span style="color:#f92672">()[</span>0<span style="color:#f92672">]</span> <span style="color:#f92672">&lt;=</span> W<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>      <span style="color:#75715e">// find all projects within current capability
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            maxProfit<span style="color:#f92672">.</span><span style="color:#a6e22e">offer</span><span style="color:#f92672">(</span>minCapital<span style="color:#f92672">.</span><span style="color:#a6e22e">poll</span><span style="color:#f92672">());</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>maxProfit<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>     <span style="color:#75715e">// if no project under this condition
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#66d9ef">break</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        W <span style="color:#f92672">+=</span> maxProfit<span style="color:#f92672">.</span><span style="color:#a6e22e">poll</span><span style="color:#f92672">()[</span>1<span style="color:#f92672">];</span>      <span style="color:#75715e">// find a project with max profit
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> W<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><h1 id="630-course-schedule-iii">630. Course Schedule III</h1>
 <p>Link: <a href="https://leetcode.com/problems/course-schedule-iii/">Course Schedule III</a></p>
 <h2 id="problem-description-1">Problem Description</h2>
 <p>There are <code>n</code> different online courses numbered from <code>1</code> to <code>n</code>. Each course has some duration(course length) <code>t</code> and closed on <code>dth</code> day. A course should be taken <strong>continuously</strong> for <code>t</code> days and must be finished before or on the <code>dth</code> day. You will start at the <code>1st</code> day.</p>
@@ -328,7 +328,7 @@ Explanation: Since your initial capital is 0, you can only start the project ind
 <pre tabindex="0"><code>Input: [[100, 200], [200, 1300], [1000, 1250], [2000, 3200]]
 Output: 3
 Explanation: 
-There're totally 4 courses, but you can take 3 courses at most:
+There&#39;re totally 4 courses, but you can take 3 courses at most:
 First, take the 1st course, it costs 100 days so you will finish it on the 100th day, and ready to take the next course on the 101st day.
 Second, take the 3rd course, it costs 1000 days so you will finish it on the 1100th day, and ready to take the next course on the 1101st day. 
 Third, take the 2nd course, it costs 200 days so you will finish it on the 1300th day. 
@@ -342,35 +342,35 @@ The 4th course cannot be taken now, since you will finish it on the 3300th day, 
 <p>Sort the array by duration first. Then keep a max heap to store the duration.</p>
 <p>Keep an integer to count the total days taken and traverse the sorted array. Add course&rsquo;s end to the max heap. If day count is later than current course end date, poll out the top of heap and subtract this course&rsquo;s time. This means this course should not be taken.</p>
 <p>Finally, return the size of heap. The heap contains all courses can be taken.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Sort the array by duration first. Then keep a max heap to store the duration.
-</span><span style="color:#75715e"> * Keep an integer to count the total days taken and traverse the sorted array. Add course&#39;s end to the max heap.
-</span><span style="color:#75715e"> * If day count is later than current course end date, poll out the top of heap and subtract this course&#39;s time.
-</span><span style="color:#75715e"> * This means this course should not be taken.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param courses given array that contains duration and close day
-</span><span style="color:#75715e"> * @return the maximal number of courses that can be taken
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">scheduleCourse</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[][]</span> courses<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-    Arrays<span style="color:#f92672">.</span><span style="color:#a6e22e">sort</span><span style="color:#f92672">(</span>courses<span style="color:#f92672">,</span> Comparator<span style="color:#f92672">.</span><span style="color:#a6e22e">comparingInt</span><span style="color:#f92672">(</span>a <span style="color:#f92672">-&gt;</span> a<span style="color:#f92672">[</span>1<span style="color:#f92672">]));</span>       <span style="color:#75715e">// sort array by duration
-</span><span style="color:#75715e"></span>
-    PriorityQueue<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> pq <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> PriorityQueue<span style="color:#f92672">&lt;&gt;((</span>a<span style="color:#f92672">,</span> b<span style="color:#f92672">)</span> <span style="color:#f92672">-&gt;</span> b <span style="color:#f92672">-</span> a<span style="color:#f92672">);</span>        <span style="color:#75715e">// sort by taken time
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> time <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> c <span style="color:#f92672">:</span> courses<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        time <span style="color:#f92672">+=</span> c<span style="color:#f92672">[</span>0<span style="color:#f92672">];</span>
-        pq<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>c<span style="color:#f92672">[</span>0<span style="color:#f92672">]);</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>time <span style="color:#f92672">&gt;</span> c<span style="color:#f92672">[</span>1<span style="color:#f92672">])</span> <span style="color:#f92672">{</span>      <span style="color:#75715e">// if current course is not reachable
-</span><span style="color:#75715e"></span>            time <span style="color:#f92672">-=</span> pq<span style="color:#f92672">.</span><span style="color:#a6e22e">poll</span><span style="color:#f92672">();</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">return</span> pq<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">();</span>
-<span style="color:#f92672">}</span>
-</code></pre></div><h1 id="1383-maximum-performance-of-a-team">1383. Maximum Performance of a Team</h1>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Sort the array by duration first. Then keep a max heap to store the duration.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Keep an integer to count the total days taken and traverse the sorted array. Add course&#39;s end to the max heap.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * If day count is later than current course end date, poll out the top of heap and subtract this course&#39;s time.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * This means this course should not be taken.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param courses given array that contains duration and close day
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return the maximal number of courses that can be taken
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">scheduleCourse</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[][]</span> courses<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    Arrays<span style="color:#f92672">.</span><span style="color:#a6e22e">sort</span><span style="color:#f92672">(</span>courses<span style="color:#f92672">,</span> Comparator<span style="color:#f92672">.</span><span style="color:#a6e22e">comparingInt</span><span style="color:#f92672">(</span>a <span style="color:#f92672">-&gt;</span> a<span style="color:#f92672">[</span>1<span style="color:#f92672">]));</span>       <span style="color:#75715e">// sort array by duration
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>    PriorityQueue<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> pq <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> PriorityQueue<span style="color:#f92672">&lt;&gt;((</span>a<span style="color:#f92672">,</span> b<span style="color:#f92672">)</span> <span style="color:#f92672">-&gt;</span> b <span style="color:#f92672">-</span> a<span style="color:#f92672">);</span>        <span style="color:#75715e">// sort by taken time
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> time <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> c <span style="color:#f92672">:</span> courses<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        time <span style="color:#f92672">+=</span> c<span style="color:#f92672">[</span>0<span style="color:#f92672">];</span>
+</span></span><span style="display:flex;"><span>        pq<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>c<span style="color:#f92672">[</span>0<span style="color:#f92672">]);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>time <span style="color:#f92672">&gt;</span> c<span style="color:#f92672">[</span>1<span style="color:#f92672">])</span> <span style="color:#f92672">{</span>      <span style="color:#75715e">// if current course is not reachable
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            time <span style="color:#f92672">-=</span> pq<span style="color:#f92672">.</span><span style="color:#a6e22e">poll</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> pq<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><h1 id="1383-maximum-performance-of-a-team">1383. Maximum Performance of a Team</h1>
 <p>Link: <a href="https://leetcode.com/problems/maximum-performance-of-a-team/">Maximum Performance of a Team</a></p>
 <h2 id="problem-description-2">Problem Description</h2>
 <p>There are <code>n</code> engineers numbered from 1 to <code>n</code> and two arrays: <code>speed</code> and <code>efficiency</code>, where <code>speed[i]</code> and <code>efficiency[i]</code> represent the speed and efficiency for the i-th engineer respectively. <em>Return the maximum <strong>performance</strong> of a team composed of at most <code>k</code> engineers, since the answer can be a huge number, return this modulo 10^9 + 7.</em></p>
-<p>The <strong>performance</strong> of a team is the sum of their engineers' speeds multiplied by the minimum efficiency among their engineers.</p>
+<p>The <strong>performance</strong> of a team is the sum of their engineers&rsquo; speeds multiplied by the minimum efficiency among their engineers.</p>
 <p><strong>Example 1:</strong></p>
 <pre tabindex="0"><code>Input: n = 6, speed = [2,10,3,1,5,8], efficiency = [5,4,3,9,7,2], k = 2
 Output: 60
@@ -387,43 +387,43 @@ Output: 72
 </code></pre><h2 id="method--code-2">Method &amp; Code</h2>
 <p>Greedy.</p>
 <p>Sort the engineers by largest efficiency first. Then use a priority queue with size k to find k engineers with top speed by traversing the sorted array. When adding engineers to heap, since array is sorted by efficiency, the min efficiency is the current engineer. Each time, compare current speed sum in heap and multiply to current min efficiency, find max from them.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Greedy.
-</span><span style="color:#75715e"> * Sort the engineers by largest efficiency first.
-</span><span style="color:#75715e"> * Then use a priority queue with size k to find k engineers with top speed by traversing the sorted array.
-</span><span style="color:#75715e"> * When adding engineers to heap, since array is sorted by efficiency, the min efficiency is the current engineer.
-</span><span style="color:#75715e"> * Each time, compare current speed sum in heap and multiply to current min efficiency, find max from them.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param n          n engineers
-</span><span style="color:#75715e"> * @param speed      speed of each engineer
-</span><span style="color:#75715e"> * @param efficiency efficiency of each engineer
-</span><span style="color:#75715e"> * @param k          at most k engineer can select
-</span><span style="color:#75715e"> * @return maximum performance of a team composed of at most k engineers
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">maxPerformance</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> n<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> speed<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> efficiency<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> k<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-    <span style="color:#66d9ef">int</span><span style="color:#f92672">[][]</span> pair <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>n<span style="color:#f92672">][</span>2<span style="color:#f92672">];</span>
-
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> n<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
-        pair<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]{</span>speed<span style="color:#f92672">[</span>i<span style="color:#f92672">],</span> efficiency<span style="color:#f92672">[</span>i<span style="color:#f92672">]};</span>
-    <span style="color:#f92672">}</span>
-
-    Arrays<span style="color:#f92672">.</span><span style="color:#a6e22e">sort</span><span style="color:#f92672">(</span>pair<span style="color:#f92672">,</span> <span style="color:#f92672">(</span>a<span style="color:#f92672">,</span> b<span style="color:#f92672">)</span> <span style="color:#f92672">-&gt;</span> b<span style="color:#f92672">[</span>1<span style="color:#f92672">]</span> <span style="color:#f92672">-</span> a<span style="color:#f92672">[</span>1<span style="color:#f92672">]);</span>               <span style="color:#75715e">// sorted by efficiency
-</span><span style="color:#75715e"></span>
-    PriorityQueue<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> pq <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> PriorityQueue<span style="color:#f92672">&lt;&gt;(</span>k<span style="color:#f92672">);</span>     <span style="color:#75715e">// min heap to compare speed
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">long</span> totalSpeed <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> out <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
-
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> p <span style="color:#f92672">:</span> pair<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        pq<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>p<span style="color:#f92672">[</span>0<span style="color:#f92672">]);</span>
-        totalSpeed <span style="color:#f92672">+=</span> p<span style="color:#f92672">[</span>0<span style="color:#f92672">];</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>pq<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">()</span> <span style="color:#f92672">&gt;</span> k<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            totalSpeed <span style="color:#f92672">-=</span> pq<span style="color:#f92672">.</span><span style="color:#a6e22e">poll</span><span style="color:#f92672">();</span>
-        <span style="color:#f92672">}</span>
-        out <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>out<span style="color:#f92672">,</span> totalSpeed <span style="color:#f92672">*</span> p<span style="color:#f92672">[</span>1<span style="color:#f92672">]);</span>     <span style="color:#75715e">// compare current total speed and efficiency, find max
-</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">return</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">)</span> <span style="color:#f92672">(</span>out <span style="color:#f92672">%</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">long</span><span style="color:#f92672">)</span> <span style="color:#f92672">(</span>1e9 <span style="color:#f92672">+</span> 7<span style="color:#f92672">));</span>
-<span style="color:#f92672">}</span>
-</code></pre></div><h1 id="1962-remove-stones-to-minimize-the-total">1962. Remove Stones to Minimize the Total</h1>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Greedy.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Sort the engineers by largest efficiency first.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Then use a priority queue with size k to find k engineers with top speed by traversing the sorted array.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * When adding engineers to heap, since array is sorted by efficiency, the min efficiency is the current engineer.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Each time, compare current speed sum in heap and multiply to current min efficiency, find max from them.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param n          n engineers
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param speed      speed of each engineer
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param efficiency efficiency of each engineer
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param k          at most k engineer can select
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return maximum performance of a team composed of at most k engineers
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">maxPerformance</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> n<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> speed<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> efficiency<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> k<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span><span style="color:#f92672">[][]</span> pair <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>n<span style="color:#f92672">][</span>2<span style="color:#f92672">];</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> n<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        pair<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]{</span>speed<span style="color:#f92672">[</span>i<span style="color:#f92672">],</span> efficiency<span style="color:#f92672">[</span>i<span style="color:#f92672">]};</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    Arrays<span style="color:#f92672">.</span><span style="color:#a6e22e">sort</span><span style="color:#f92672">(</span>pair<span style="color:#f92672">,</span> <span style="color:#f92672">(</span>a<span style="color:#f92672">,</span> b<span style="color:#f92672">)</span> <span style="color:#f92672">-&gt;</span> b<span style="color:#f92672">[</span>1<span style="color:#f92672">]</span> <span style="color:#f92672">-</span> a<span style="color:#f92672">[</span>1<span style="color:#f92672">]);</span>               <span style="color:#75715e">// sorted by efficiency
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>    PriorityQueue<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> pq <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> PriorityQueue<span style="color:#f92672">&lt;&gt;(</span>k<span style="color:#f92672">);</span>     <span style="color:#75715e">// min heap to compare speed
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">long</span> totalSpeed <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> out <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> p <span style="color:#f92672">:</span> pair<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        pq<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>p<span style="color:#f92672">[</span>0<span style="color:#f92672">]);</span>
+</span></span><span style="display:flex;"><span>        totalSpeed <span style="color:#f92672">+=</span> p<span style="color:#f92672">[</span>0<span style="color:#f92672">];</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>pq<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">()</span> <span style="color:#f92672">&gt;</span> k<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            totalSpeed <span style="color:#f92672">-=</span> pq<span style="color:#f92672">.</span><span style="color:#a6e22e">poll</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        out <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>out<span style="color:#f92672">,</span> totalSpeed <span style="color:#f92672">*</span> p<span style="color:#f92672">[</span>1<span style="color:#f92672">]);</span>     <span style="color:#75715e">// compare current total speed and efficiency, find max
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">)</span> <span style="color:#f92672">(</span>out <span style="color:#f92672">%</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">long</span><span style="color:#f92672">)</span> <span style="color:#f92672">(</span>1e9 <span style="color:#f92672">+</span> 7<span style="color:#f92672">));</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><h1 id="1962-remove-stones-to-minimize-the-total">1962. Remove Stones to Minimize the Total</h1>
 <p>Link: <a href="https://leetcode.com/problems/remove-stones-to-minimize-the-total/">Remove Stones to Minimize the Total</a></p>
 <h2 id="problem-description-3">Problem Description</h2>
 <p>You are given a <strong>0-indexed</strong> integer array <code>piles</code>, where <code>piles[i]</code> represents the number of stones in the <code>ith</code> pile, and an integer <code>k</code>. You should apply the following operation <strong>exactly</strong> <code>k</code> times:</p>
@@ -457,32 +457,32 @@ The total number of stones in [2,3,3,4] is 12.
 <h2 id="method--code-3">Method &amp; Code</h2>
 <p>Use a max heap to store all elements from given array. Also calculate the total sum of the array. Each time, poll out top of the heap and push back to the heap with the remaining value. Meanwhile, subtract half of the heap top from array sum.</p>
 <p>Repeat until k operations completed.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Use a max heap to store all elements from given array. Also calculate the total sum of the array.
-</span><span style="color:#75715e"> * Each time, poll out top of the heap and push back to the heap with the remaining value.
-</span><span style="color:#75715e"> * Meanwhile, subtract half of the heap top from array sum.
-</span><span style="color:#75715e"> * Repeat until k operations completed.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param piles given array
-</span><span style="color:#75715e"> * @param k     k times of operation
-</span><span style="color:#75715e"> * @return the minimum possible total number of stones remaining after applying the k operations
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">minStoneSum</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> piles<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> k<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-    PriorityQueue<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> pq <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> PriorityQueue<span style="color:#f92672">&lt;&gt;((</span>a<span style="color:#f92672">,</span> b<span style="color:#f92672">)</span> <span style="color:#f92672">-&gt;</span> b <span style="color:#f92672">-</span> a<span style="color:#f92672">);</span>
-    <span style="color:#66d9ef">int</span> total <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> piles<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
-        total <span style="color:#f92672">+=</span> piles<span style="color:#f92672">[</span>i<span style="color:#f92672">];</span>
-        pq<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>piles<span style="color:#f92672">[</span>i<span style="color:#f92672">]);</span>
-    <span style="color:#f92672">}</span>
-    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(!</span>pq<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">()</span> <span style="color:#f92672">&amp;&amp;</span> k<span style="color:#f92672">--</span> <span style="color:#f92672">&gt;</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">int</span> current <span style="color:#f92672">=</span> pq<span style="color:#f92672">.</span><span style="color:#a6e22e">poll</span><span style="color:#f92672">();</span>
-        total <span style="color:#f92672">-=</span> current <span style="color:#f92672">/</span> 2<span style="color:#f92672">;</span>
-        pq<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>current <span style="color:#f92672">-</span> current <span style="color:#f92672">/</span> 2<span style="color:#f92672">);</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">return</span> total<span style="color:#f92672">;</span>
-<span style="color:#f92672">}</span>
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Use a max heap to store all elements from given array. Also calculate the total sum of the array.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Each time, poll out top of the heap and push back to the heap with the remaining value.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Meanwhile, subtract half of the heap top from array sum.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Repeat until k operations completed.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param piles given array
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param k     k times of operation
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return the minimum possible total number of stones remaining after applying the k operations
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">minStoneSum</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> piles<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> k<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    PriorityQueue<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> pq <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> PriorityQueue<span style="color:#f92672">&lt;&gt;((</span>a<span style="color:#f92672">,</span> b<span style="color:#f92672">)</span> <span style="color:#f92672">-&gt;</span> b <span style="color:#f92672">-</span> a<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> total <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> piles<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        total <span style="color:#f92672">+=</span> piles<span style="color:#f92672">[</span>i<span style="color:#f92672">];</span>
+</span></span><span style="display:flex;"><span>        pq<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>piles<span style="color:#f92672">[</span>i<span style="color:#f92672">]);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(!</span>pq<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">()</span> <span style="color:#f92672">&amp;&amp;</span> k<span style="color:#f92672">--</span> <span style="color:#f92672">&gt;</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> current <span style="color:#f92672">=</span> pq<span style="color:#f92672">.</span><span style="color:#a6e22e">poll</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>        total <span style="color:#f92672">-=</span> current <span style="color:#f92672">/</span> 2<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        pq<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>current <span style="color:#f92672">-</span> current <span style="color:#f92672">/</span> 2<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> total<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div>
               
             </div>
           </div>

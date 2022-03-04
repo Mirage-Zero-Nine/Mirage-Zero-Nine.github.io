@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.92.2 with theme Tranquilpeak 0.4.8-BETA">
+<meta name="generator" content="Hugo 0.93.1 with theme Tranquilpeak 0.4.8-BETA">
 <meta name="author" content="Notebook">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -265,21 +265,21 @@
 <p>Given the input <code>text</code> string to the HTML parser, you have to implement the entity parser.</p>
 <p>Return <em>the text</em> after replacing the entities by the special characters.</p>
 <p><strong>Example 1:</strong></p>
-<pre tabindex="0"><code>Input: text = &quot;&amp;amp; is an HTML entity but &amp;ambassador; is not.&quot;
-Output: &quot;&amp; is an HTML entity but &amp;ambassador; is not.&quot;
+<pre tabindex="0"><code>Input: text = &#34;&amp;amp; is an HTML entity but &amp;ambassador; is not.&#34;
+Output: &#34;&amp; is an HTML entity but &amp;ambassador; is not.&#34;
 Explanation: The parser will replace the &amp;amp; entity by &amp;
 </code></pre><p><strong>Example 2:</strong></p>
-<pre tabindex="0"><code>Input: text = &quot;and I quote: &amp;quot;...&amp;quot;&quot;
-Output: &quot;and I quote: \&quot;...\&quot;&quot;
+<pre tabindex="0"><code>Input: text = &#34;and I quote: &amp;quot;...&amp;quot;&#34;
+Output: &#34;and I quote: \&#34;...\&#34;&#34;
 </code></pre><p><strong>Example 3:</strong></p>
-<pre tabindex="0"><code>Input: text = &quot;Stay home! Practice on Leetcode :)&quot;
-Output: &quot;Stay home! Practice on Leetcode :)&quot;
+<pre tabindex="0"><code>Input: text = &#34;Stay home! Practice on Leetcode :)&#34;
+Output: &#34;Stay home! Practice on Leetcode :)&#34;
 </code></pre><p><strong>Example 4:</strong></p>
-<pre tabindex="0"><code>Input: text = &quot;x &amp;gt; y &amp;amp;&amp;amp; x &amp;lt; y is always false&quot;
-Output: &quot;x &gt; y &amp;&amp; x &lt; y is always false&quot;
+<pre tabindex="0"><code>Input: text = &#34;x &amp;gt; y &amp;amp;&amp;amp; x &amp;lt; y is always false&#34;
+Output: &#34;x &gt; y &amp;&amp; x &lt; y is always false&#34;
 </code></pre><p><strong>Example 5:</strong></p>
-<pre tabindex="0"><code>Input: text = &quot;leetcode.com&amp;frasl;problemset&amp;frasl;all&quot;
-Output: &quot;leetcode.com/problemset/all&quot;
+<pre tabindex="0"><code>Input: text = &#34;leetcode.com&amp;frasl;problemset&amp;frasl;all&#34;
+Output: &#34;leetcode.com/problemset/all&#34;
 </code></pre><p><strong>Constraints:</strong></p>
 <ul>
 <li><code>1 &lt;= text.length &lt;= 10^5</code></li>
@@ -288,56 +288,56 @@ Output: &quot;leetcode.com/problemset/all&quot;
 <h2 id="method--code">Method &amp; Code</h2>
 <p>Two pointers with two stacks. In this case, use StringBuilder instead of stack for convenience.</p>
 <p>One StringBuilder keeps the output of parsed string, the other one keeps the temporary string when meets <code>&amp;</code>. When meets <code>&amp;</code>, append all the chars after <code>&amp;</code> into a StringBuilder until reaches the end of string or <code>;</code>. Then check if the content exists in the map, which keeps the mapping between special chars and entities.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Two pointers with two stacks. In this case, use StringBuilder instead of stack for convenience.
-</span><span style="color:#75715e"> * One StringBuilder keeps the output of parsed string, the other one keeps the temporary string when meets &#39;&amp;&#39;.
-</span><span style="color:#75715e"> * When meets &#39;&amp;&#39;, append all the chars after &#39;&amp;&#39; into a StringBuilder until reaches the end of string or &#39;;&#39;.
-</span><span style="color:#75715e"> * Then check if the content exists in the map, which keeps the mapping between special chars and entities.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param text given text body
-</span><span style="color:#75715e"> * @return parsed string
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">public</span> String <span style="color:#a6e22e">entityParser</span><span style="color:#f92672">(</span>String text<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-
-    <span style="color:#75715e">/* Corner case */</span>
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>text <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">||</span> text<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">()</span> <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;&#34;</span><span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-
-    HashMap<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">,</span> String<span style="color:#f92672">&gt;</span> m <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashMap<span style="color:#f92672">&lt;&gt;();</span>
-    m<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;&amp;quot;&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;\&#34;&#34;</span><span style="color:#f92672">);</span>
-    m<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;&amp;apos;&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;&#39;&#34;</span><span style="color:#f92672">);</span>
-    m<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;&amp;amp;&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;&amp;&#34;</span><span style="color:#f92672">);</span>
-    m<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;&amp;gt;&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;&gt;&#34;</span><span style="color:#f92672">);</span>
-    m<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;&amp;lt;&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;&lt;&#34;</span><span style="color:#f92672">);</span>
-    m<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;&amp;frasl;&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;/&#34;</span><span style="color:#f92672">);</span>
-
-    StringBuilder sb <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> StringBuilder<span style="color:#f92672">();</span>         <span style="color:#75715e">// final output
-</span><span style="color:#75715e"></span>    StringBuilder parse <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> StringBuilder<span style="color:#f92672">();</span>      <span style="color:#75715e">// temporary string when meets &#39;&amp;&#39;
-</span><span style="color:#75715e"></span>
-    <span style="color:#66d9ef">int</span> index <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
-
-    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>index <span style="color:#f92672">&lt;</span> text<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>text<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>index<span style="color:#f92672">)</span> <span style="color:#f92672">!=</span> <span style="color:#e6db74">&#39;&amp;&#39;</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            sb<span style="color:#f92672">.</span><span style="color:#a6e22e">append</span><span style="color:#f92672">(</span>text<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>index<span style="color:#f92672">++));</span>
-        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>index <span style="color:#f92672">&lt;</span> text<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">()</span> <span style="color:#f92672">&amp;&amp;</span> text<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>index<span style="color:#f92672">)</span> <span style="color:#f92672">!=</span> <span style="color:#e6db74">&#39;;&#39;</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                parse<span style="color:#f92672">.</span><span style="color:#a6e22e">append</span><span style="color:#f92672">(</span>text<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>index<span style="color:#f92672">++));</span>
-            <span style="color:#f92672">}</span>
-            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>index <span style="color:#f92672">&lt;</span> text<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
-                parse<span style="color:#f92672">.</span><span style="color:#a6e22e">append</span><span style="color:#f92672">(</span>text<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>index<span style="color:#f92672">++));</span>     <span style="color:#75715e">// append &#39;;&#39; if there is space
-</span><span style="color:#75715e"></span>            <span style="color:#f92672">}</span>
-
-            String tmp <span style="color:#f92672">=</span> parse<span style="color:#f92672">.</span><span style="color:#a6e22e">toString</span><span style="color:#f92672">();</span>
-
-            sb<span style="color:#f92672">.</span><span style="color:#a6e22e">append</span><span style="color:#f92672">(</span>m<span style="color:#f92672">.</span><span style="color:#a6e22e">getOrDefault</span><span style="color:#f92672">(</span>tmp<span style="color:#f92672">,</span> tmp<span style="color:#f92672">));</span>
-            parse <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> StringBuilder<span style="color:#f92672">();</span>        <span style="color:#75715e">// empty the StringBuilder for next round
-</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">return</span> sb<span style="color:#f92672">.</span><span style="color:#a6e22e">toString</span><span style="color:#f92672">();</span>
-<span style="color:#f92672">}</span>
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Two pointers with two stacks. In this case, use StringBuilder instead of stack for convenience.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * One StringBuilder keeps the output of parsed string, the other one keeps the temporary string when meets &#39;&amp;&#39;.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * When meets &#39;&amp;&#39;, append all the chars after &#39;&amp;&#39; into a StringBuilder until reaches the end of string or &#39;;&#39;.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Then check if the content exists in the map, which keeps the mapping between special chars and entities.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param text given text body
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return parsed string
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> String <span style="color:#a6e22e">entityParser</span><span style="color:#f92672">(</span>String text<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/* Corner case */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>text <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">||</span> text<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">()</span> <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;&#34;</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    HashMap<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">,</span> String<span style="color:#f92672">&gt;</span> m <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashMap<span style="color:#f92672">&lt;&gt;();</span>
+</span></span><span style="display:flex;"><span>    m<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;&amp;quot;&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;\&#34;&#34;</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>    m<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;&amp;apos;&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;&#39;&#34;</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>    m<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;&amp;amp;&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;&amp;&#34;</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>    m<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;&amp;gt;&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;&gt;&#34;</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>    m<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;&amp;lt;&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;&lt;&#34;</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>    m<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;&amp;frasl;&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;/&#34;</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    StringBuilder sb <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> StringBuilder<span style="color:#f92672">();</span>         <span style="color:#75715e">// final output
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    StringBuilder parse <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> StringBuilder<span style="color:#f92672">();</span>      <span style="color:#75715e">// temporary string when meets &#39;&amp;&#39;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> index <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>index <span style="color:#f92672">&lt;</span> text<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>text<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>index<span style="color:#f92672">)</span> <span style="color:#f92672">!=</span> <span style="color:#e6db74">&#39;&amp;&#39;</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            sb<span style="color:#f92672">.</span><span style="color:#a6e22e">append</span><span style="color:#f92672">(</span>text<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>index<span style="color:#f92672">++));</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>index <span style="color:#f92672">&lt;</span> text<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">()</span> <span style="color:#f92672">&amp;&amp;</span> text<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>index<span style="color:#f92672">)</span> <span style="color:#f92672">!=</span> <span style="color:#e6db74">&#39;;&#39;</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                parse<span style="color:#f92672">.</span><span style="color:#a6e22e">append</span><span style="color:#f92672">(</span>text<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>index<span style="color:#f92672">++));</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>index <span style="color:#f92672">&lt;</span> text<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                parse<span style="color:#f92672">.</span><span style="color:#a6e22e">append</span><span style="color:#f92672">(</span>text<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>index<span style="color:#f92672">++));</span>     <span style="color:#75715e">// append &#39;;&#39; if there is space
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            String tmp <span style="color:#f92672">=</span> parse<span style="color:#f92672">.</span><span style="color:#a6e22e">toString</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            sb<span style="color:#f92672">.</span><span style="color:#a6e22e">append</span><span style="color:#f92672">(</span>m<span style="color:#f92672">.</span><span style="color:#a6e22e">getOrDefault</span><span style="color:#f92672">(</span>tmp<span style="color:#f92672">,</span> tmp<span style="color:#f92672">));</span>
+</span></span><span style="display:flex;"><span>            parse <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> StringBuilder<span style="color:#f92672">();</span>        <span style="color:#75715e">// empty the StringBuilder for next round
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> sb<span style="color:#f92672">.</span><span style="color:#a6e22e">toString</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div>
               
             </div>
           </div>

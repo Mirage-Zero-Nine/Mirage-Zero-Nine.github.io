@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.92.2 with theme Tranquilpeak 0.4.8-BETA">
+<meta name="generator" content="Hugo 0.93.1 with theme Tranquilpeak 0.4.8-BETA">
 <meta name="author" content="Notebook">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -276,83 +276,83 @@ Explanation: [[3,1]] is also accepted.
 <p>Critical edges are the edges not on cycle (connections between cycle). Use a global timestamp to record the reach order of nodes on graph via DFS. And return the min timestamp that can be reached by one-time DFS traversal.</p>
 <p>If node is on cycle, the min timestamp it can get is the first reached node on cycle. Otherwise, the min timestamp is the node&rsquo;s initially timestamp itself.</p>
 <p>Therefore, if <code>minTimestamp &gt;= timestamp[current]</code>, then edge (previous - current) is a critical edge.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> time <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span>       <span style="color:#75715e">// global time
-</span><span style="color:#75715e"></span>
-<span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Tarjan algorithm, use timestamp that records the order of vertices visited to find all cycles on graph.
-</span><span style="color:#75715e"> * Critical edges are the edges not on cycle (connections between cycle).
-</span><span style="color:#75715e"> * Use a global timestamp to record the reach order of nodes on graph via DFS.
-</span><span style="color:#75715e"> * And return the min timestamp that can be reached by one-time DFS traversal.
-</span><span style="color:#75715e"> * If node is on cycle, the min timestamp it can get is the first reached node on cycle.
-</span><span style="color:#75715e"> * Otherwise, the min timestamp is the node&#39;s initially timestamp itself.
-</span><span style="color:#75715e"> * Therefore, if minTimestamp &gt;= timestamp[current], then edge (previous - current) is a critical edge.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param n           # of vertices
-</span><span style="color:#75715e"> * @param connections given list contains connections between nodes in graph
-</span><span style="color:#75715e"> * @return all critical connections in the network in any order
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">public</span> List<span style="color:#f92672">&lt;</span>List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;&gt;</span> <span style="color:#a6e22e">criticalConnections</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> n<span style="color:#f92672">,</span> List<span style="color:#f92672">&lt;</span>List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;&gt;</span> connections<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-    List<span style="color:#f92672">&lt;</span>List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;&gt;</span> graph <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;&gt;();</span>
-
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> n<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
-        graph<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;&gt;());</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> c <span style="color:#f92672">:</span> connections<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>       <span style="color:#75715e">// build graph
-</span><span style="color:#75715e"></span>        graph<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>c<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>0<span style="color:#f92672">)).</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>c<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>1<span style="color:#f92672">));</span>
-        graph<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>c<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>1<span style="color:#f92672">)).</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>c<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>0<span style="color:#f92672">));</span>
-    <span style="color:#f92672">}</span>
-
-    List<span style="color:#f92672">&lt;</span>List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;&gt;</span> out <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">&lt;&gt;();</span>
-
-    <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> timestamp <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>n<span style="color:#f92672">];</span>
-
-    dfs<span style="color:#f92672">(</span>out<span style="color:#f92672">,</span> graph<span style="color:#f92672">,</span> 0<span style="color:#f92672">,</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">,</span> timestamp<span style="color:#f92672">);</span>
-
-    <span style="color:#66d9ef">return</span> out<span style="color:#f92672">;</span>
-<span style="color:#f92672">}</span>
-
-<span style="color:#75715e">/**
-</span><span style="color:#75715e"> * DFS search, if current node is reached before, directly return the timestamp on this node.
-</span><span style="color:#75715e"> * In this case, there is a cycle in graph.
-</span><span style="color:#75715e"> * Otherwise, return the min time stamp that can be reached.
-</span><span style="color:#75715e"> * It will either be the first reached node in cycle, or the current node timestamp itself when there is no cycle.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param out       output list
-</span><span style="color:#75715e"> * @param graph     graph edges
-</span><span style="color:#75715e"> * @param current   current node id
-</span><span style="color:#75715e"> * @param previous  previous node id
-</span><span style="color:#75715e"> * @param timestamp previous timestamp
-</span><span style="color:#75715e"> * @return min timestamp can be reached if on a cycle
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">dfs</span><span style="color:#f92672">(</span>List<span style="color:#f92672">&lt;</span>List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;&gt;</span> out<span style="color:#f92672">,</span> List<span style="color:#f92672">&lt;</span>List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;&gt;</span> graph<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> current<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> previous<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> timestamp<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>timestamp<span style="color:#f92672">[</span>current<span style="color:#f92672">]</span> <span style="color:#f92672">&gt;</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>       <span style="color:#75715e">// avoid add extra edges into output result
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">return</span> timestamp<span style="color:#f92672">[</span>current<span style="color:#f92672">];</span>
-    <span style="color:#f92672">}</span>
-
-    timestamp<span style="color:#f92672">[</span>current<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> time<span style="color:#f92672">++;</span>        <span style="color:#75715e">// set current node timestamp
-</span><span style="color:#75715e"></span>
-    <span style="color:#66d9ef">int</span> minTimestamp <span style="color:#f92672">=</span> time<span style="color:#f92672">;</span>            <span style="color:#75715e">// the min timestamp current node is original timestamp
-</span><span style="color:#75715e"></span>
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> next <span style="color:#f92672">:</span> graph<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>current<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>next <span style="color:#f92672">!=</span> previous<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">int</span> neighborTimestamp <span style="color:#f92672">=</span> dfs<span style="color:#f92672">(</span>out<span style="color:#f92672">,</span> graph<span style="color:#f92672">,</span> next<span style="color:#f92672">,</span> current<span style="color:#f92672">,</span> timestamp<span style="color:#f92672">);</span>      <span style="color:#75715e">// obtain min timestamp
-</span><span style="color:#75715e"></span>            minTimestamp <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">min</span><span style="color:#f92672">(</span>minTimestamp<span style="color:#f92672">,</span> neighborTimestamp<span style="color:#f92672">);</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#75715e">/*
-</span><span style="color:#75715e">     * Condition of critical edge:
-</span><span style="color:#75715e">     * If current node min timestamp is larger than current node time stamp, then previous node is not on cycle.
-</span><span style="color:#75715e">     * Therefore, this edge (previous - current) is a critical edge. */</span>
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>minTimestamp <span style="color:#f92672">&gt;=</span> timestamp<span style="color:#f92672">[</span>current<span style="color:#f92672">]</span> <span style="color:#f92672">&amp;&amp;</span> previous <span style="color:#f92672">&gt;=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        out<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>Arrays<span style="color:#f92672">.</span><span style="color:#a6e22e">asList</span><span style="color:#f92672">(</span>previous<span style="color:#f92672">,</span> current<span style="color:#f92672">));</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">return</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">min</span><span style="color:#f92672">(</span>timestamp<span style="color:#f92672">[</span>current<span style="color:#f92672">],</span> minTimestamp<span style="color:#f92672">);</span>      <span style="color:#75715e">// if there is a cycle, update return timestamp
-</span><span style="color:#75715e"></span><span style="color:#f92672">}</span>
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> time <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span>       <span style="color:#75715e">// global time
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Tarjan algorithm, use timestamp that records the order of vertices visited to find all cycles on graph.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Critical edges are the edges not on cycle (connections between cycle).
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Use a global timestamp to record the reach order of nodes on graph via DFS.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * And return the min timestamp that can be reached by one-time DFS traversal.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * If node is on cycle, the min timestamp it can get is the first reached node on cycle.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Otherwise, the min timestamp is the node&#39;s initially timestamp itself.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Therefore, if minTimestamp &gt;= timestamp[current], then edge (previous - current) is a critical edge.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param n           # of vertices
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param connections given list contains connections between nodes in graph
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return all critical connections in the network in any order
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> List<span style="color:#f92672">&lt;</span>List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;&gt;</span> <span style="color:#a6e22e">criticalConnections</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> n<span style="color:#f92672">,</span> List<span style="color:#f92672">&lt;</span>List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;&gt;</span> connections<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    List<span style="color:#f92672">&lt;</span>List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;&gt;</span> graph <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;&gt;();</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> n<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        graph<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;&gt;());</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> c <span style="color:#f92672">:</span> connections<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>       <span style="color:#75715e">// build graph
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        graph<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>c<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>0<span style="color:#f92672">)).</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>c<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>1<span style="color:#f92672">));</span>
+</span></span><span style="display:flex;"><span>        graph<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>c<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>1<span style="color:#f92672">)).</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>c<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>0<span style="color:#f92672">));</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    List<span style="color:#f92672">&lt;</span>List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;&gt;</span> out <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">&lt;&gt;();</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> timestamp <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>n<span style="color:#f92672">];</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    dfs<span style="color:#f92672">(</span>out<span style="color:#f92672">,</span> graph<span style="color:#f92672">,</span> 0<span style="color:#f92672">,</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">,</span> timestamp<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> out<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * DFS search, if current node is reached before, directly return the timestamp on this node.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * In this case, there is a cycle in graph.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Otherwise, return the min time stamp that can be reached.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * It will either be the first reached node in cycle, or the current node timestamp itself when there is no cycle.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param out       output list
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param graph     graph edges
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param current   current node id
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param previous  previous node id
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param timestamp previous timestamp
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return min timestamp can be reached if on a cycle
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">dfs</span><span style="color:#f92672">(</span>List<span style="color:#f92672">&lt;</span>List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;&gt;</span> out<span style="color:#f92672">,</span> List<span style="color:#f92672">&lt;</span>List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;&gt;</span> graph<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> current<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> previous<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> timestamp<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>timestamp<span style="color:#f92672">[</span>current<span style="color:#f92672">]</span> <span style="color:#f92672">&gt;</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>       <span style="color:#75715e">// avoid add extra edges into output result
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">return</span> timestamp<span style="color:#f92672">[</span>current<span style="color:#f92672">];</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    timestamp<span style="color:#f92672">[</span>current<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> time<span style="color:#f92672">++;</span>        <span style="color:#75715e">// set current node timestamp
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> minTimestamp <span style="color:#f92672">=</span> time<span style="color:#f92672">;</span>            <span style="color:#75715e">// the min timestamp current node is original timestamp
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> next <span style="color:#f92672">:</span> graph<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>current<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>next <span style="color:#f92672">!=</span> previous<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">int</span> neighborTimestamp <span style="color:#f92672">=</span> dfs<span style="color:#f92672">(</span>out<span style="color:#f92672">,</span> graph<span style="color:#f92672">,</span> next<span style="color:#f92672">,</span> current<span style="color:#f92672">,</span> timestamp<span style="color:#f92672">);</span>      <span style="color:#75715e">// obtain min timestamp
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            minTimestamp <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">min</span><span style="color:#f92672">(</span>minTimestamp<span style="color:#f92672">,</span> neighborTimestamp<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/*
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * Condition of critical edge:
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * If current node min timestamp is larger than current node time stamp, then previous node is not on cycle.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * Therefore, this edge (previous - current) is a critical edge. */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>minTimestamp <span style="color:#f92672">&gt;=</span> timestamp<span style="color:#f92672">[</span>current<span style="color:#f92672">]</span> <span style="color:#f92672">&amp;&amp;</span> previous <span style="color:#f92672">&gt;=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        out<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>Arrays<span style="color:#f92672">.</span><span style="color:#a6e22e">asList</span><span style="color:#f92672">(</span>previous<span style="color:#f92672">,</span> current<span style="color:#f92672">));</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">min</span><span style="color:#f92672">(</span>timestamp<span style="color:#f92672">[</span>current<span style="color:#f92672">],</span> minTimestamp<span style="color:#f92672">);</span>      <span style="color:#75715e">// if there is a cycle, update return timestamp
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#f92672">}</span>
+</span></span></code></pre></div>
               
             </div>
           </div>

@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.92.2 with theme Tranquilpeak 0.4.8-BETA">
+<meta name="generator" content="Hugo 0.93.1 with theme Tranquilpeak 0.4.8-BETA">
 <meta name="author" content="Notebook">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -286,37 +286,37 @@ Output: true
 </ul>
 <p>If the remainder is not 0, then it requires a complement to make the pair divisible, it should be <code>remainder + complement == k</code>. Therefore, calculate the complement of element based on the remainder and then check if complement exist in map. Put remainder into hash map if the complement is not found.</p>
 <p>Finally, check the totally found pair equals <code>n / 2</code> (half of array length).</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Each element divided by k will have two results: remainder is 0 or not 0.
-</span><span style="color:#75715e"> * Hence, keep a hash map. The key of hash map is the remainder of n % k, where n is the current element in array.
-</span><span style="color:#75715e"> * The value of hash map is the frequency of current remainder.
-</span><span style="color:#75715e"> * If the remainder is not 0, the it requires a complement to make the pair divisible. remainder + complement == k.
-</span><span style="color:#75715e"> * Therefore, calculate the complement of element based on remainder and then check if complement exist in map.
-</span><span style="color:#75715e"> * Put remainder into hash map if the complement is not found.
-</span><span style="color:#75715e"> * Finally, check the totally found pair equals n / 2 (half of array length).
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param arr given array
-</span><span style="color:#75715e"> * @param k   divisible by k
-</span><span style="color:#75715e"> * @return true if divide the array into exactly n / 2 pairs such that the sum of each pair is divisible by k
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">canArrange</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> arr<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> k<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-    HashMap<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">,</span> Integer<span style="color:#f92672">&gt;</span> m <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashMap<span style="color:#f92672">&lt;&gt;();</span>
-    <span style="color:#66d9ef">int</span> count <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> n <span style="color:#f92672">:</span> arr<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">int</span> remainder <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>n <span style="color:#f92672">%</span> k <span style="color:#f92672">+</span> k<span style="color:#f92672">)</span> <span style="color:#f92672">%</span> k<span style="color:#f92672">;</span>            <span style="color:#75715e">// n could be negative, hence add k to keep remainder positive
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">int</span> complement <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>k <span style="color:#f92672">-</span> remainder<span style="color:#f92672">)</span> <span style="color:#f92672">%</span> k<span style="color:#f92672">;</span>       <span style="color:#75715e">// complement could be k itself, which should be converted to 0
-</span><span style="color:#75715e"></span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>m<span style="color:#f92672">.</span><span style="color:#a6e22e">containsKey</span><span style="color:#f92672">(</span>complement<span style="color:#f92672">)</span> <span style="color:#f92672">&amp;&amp;</span> m<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>complement<span style="color:#f92672">)</span> <span style="color:#f92672">&gt;</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            count<span style="color:#f92672">++;</span>
-            m<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>complement<span style="color:#f92672">,</span> m<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>complement<span style="color:#f92672">)</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">);</span>
-        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
-            m<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>remainder<span style="color:#f92672">,</span> m<span style="color:#f92672">.</span><span style="color:#a6e22e">getOrDefault</span><span style="color:#f92672">(</span>remainder<span style="color:#f92672">,</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">+</span> 1<span style="color:#f92672">);</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">return</span> count <span style="color:#f92672">==</span> arr<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">/</span> 2<span style="color:#f92672">;</span>
-<span style="color:#f92672">}</span>
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Each element divided by k will have two results: remainder is 0 or not 0.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Hence, keep a hash map. The key of hash map is the remainder of n % k, where n is the current element in array.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * The value of hash map is the frequency of current remainder.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * If the remainder is not 0, the it requires a complement to make the pair divisible. remainder + complement == k.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Therefore, calculate the complement of element based on remainder and then check if complement exist in map.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Put remainder into hash map if the complement is not found.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Finally, check the totally found pair equals n / 2 (half of array length).
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param arr given array
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param k   divisible by k
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return true if divide the array into exactly n / 2 pairs such that the sum of each pair is divisible by k
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">canArrange</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> arr<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> k<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    HashMap<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">,</span> Integer<span style="color:#f92672">&gt;</span> m <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashMap<span style="color:#f92672">&lt;&gt;();</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> count <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> n <span style="color:#f92672">:</span> arr<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> remainder <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>n <span style="color:#f92672">%</span> k <span style="color:#f92672">+</span> k<span style="color:#f92672">)</span> <span style="color:#f92672">%</span> k<span style="color:#f92672">;</span>            <span style="color:#75715e">// n could be negative, hence add k to keep remainder positive
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">int</span> complement <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>k <span style="color:#f92672">-</span> remainder<span style="color:#f92672">)</span> <span style="color:#f92672">%</span> k<span style="color:#f92672">;</span>       <span style="color:#75715e">// complement could be k itself, which should be converted to 0
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>m<span style="color:#f92672">.</span><span style="color:#a6e22e">containsKey</span><span style="color:#f92672">(</span>complement<span style="color:#f92672">)</span> <span style="color:#f92672">&amp;&amp;</span> m<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>complement<span style="color:#f92672">)</span> <span style="color:#f92672">&gt;</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            count<span style="color:#f92672">++;</span>
+</span></span><span style="display:flex;"><span>            m<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>complement<span style="color:#f92672">,</span> m<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>complement<span style="color:#f92672">)</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            m<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>remainder<span style="color:#f92672">,</span> m<span style="color:#f92672">.</span><span style="color:#a6e22e">getOrDefault</span><span style="color:#f92672">(</span>remainder<span style="color:#f92672">,</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">+</span> 1<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> count <span style="color:#f92672">==</span> arr<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">/</span> 2<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div>
               
             </div>
           </div>

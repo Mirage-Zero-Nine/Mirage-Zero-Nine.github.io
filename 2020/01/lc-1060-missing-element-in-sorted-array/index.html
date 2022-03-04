@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.92.2 with theme Tranquilpeak 0.4.8-BETA">
+<meta name="generator" content="Hugo 0.93.1 with theme Tranquilpeak 0.4.8-BETA">
 <meta name="author" content="Notebook">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -279,43 +279,43 @@ The missing numbers are [3,5,6,7,...], hence the third missing number is 6.
 <p>Finally, find the <code>num[i]</code> that is next to kth missing #. Return kth smallest <code>nums[idx - 1] + k - missing(idx - 1)</code>.</p>
 <p>Time complexity : if the missing element is larger than the last element of the array. otherwise, since it&rsquo;s not more than one pass along the array.</p>
 <p>Space complexity : since it&rsquo;s a constant space solution.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Binary search.
-</span><span style="color:#75715e"> * To find the kth missing element is actually to find the ith element in array that kth is in nums[i, i+1].
-</span><span style="color:#75715e"> * Use binary search to narrow the range of array.
-</span><span style="color:#75715e"> * If left part of sub array has more than k missing #, narrow search range to left part.
-</span><span style="color:#75715e"> * If left part has k&#39; missing # and k&#39; &lt;= k, turn to search right part and reduce k to k - k&#39;.
-</span><span style="color:#75715e"> * Finally, find the num[i] that is next to kth missing #.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param nums given array
-</span><span style="color:#75715e"> * @param k    kth missing #
-</span><span style="color:#75715e"> * @return K-th missing number starting from the leftmost number of the array
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">missingElement</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> nums<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> k<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-    <span style="color:#66d9ef">int</span> n <span style="color:#f92672">=</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">int</span> totalMissingInArray <span style="color:#f92672">=</span> nums<span style="color:#f92672">[</span>n<span style="color:#f92672">]</span> <span style="color:#f92672">-</span> nums<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> 1 <span style="color:#f92672">-</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span>
-
-    <span style="color:#75715e">/* Corner case */</span>
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>totalMissingInArray <span style="color:#f92672">&lt;</span> k<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>      <span style="color:#75715e">// if missing # is less than k, then first missing # is out of array
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">return</span> nums<span style="color:#f92672">[</span>n<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> k <span style="color:#f92672">-</span> totalMissingInArray<span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">int</span> left <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> right <span style="color:#f92672">=</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">;</span>
-
-    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>left <span style="color:#f92672">&lt;</span> right <span style="color:#f92672">-</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>      <span style="color:#75715e">// mid exists in at least 3 elements
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">int</span> mid <span style="color:#f92672">=</span> left <span style="color:#f92672">+</span> <span style="color:#f92672">(</span>right <span style="color:#f92672">-</span> left<span style="color:#f92672">)</span> <span style="color:#f92672">/</span> 2<span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">int</span> missingInRange <span style="color:#f92672">=</span> nums<span style="color:#f92672">[</span>mid<span style="color:#f92672">]</span> <span style="color:#f92672">-</span> nums<span style="color:#f92672">[</span>left<span style="color:#f92672">]</span> <span style="color:#f92672">-</span> <span style="color:#f92672">(</span>mid <span style="color:#f92672">-</span> left<span style="color:#f92672">);</span>     <span style="color:#75715e">// count missing # under current subarray
-</span><span style="color:#75715e"></span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>missingInRange <span style="color:#f92672">&gt;=</span> k<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>      <span style="color:#75715e">// narrow search range if current subarray has at least k missing #
-</span><span style="color:#75715e"></span>            right <span style="color:#f92672">=</span> mid<span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
-            left <span style="color:#f92672">=</span> mid<span style="color:#f92672">;</span>
-            k <span style="color:#f92672">-=</span> missingInRange<span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">return</span> nums<span style="color:#f92672">[</span>left<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> k<span style="color:#f92672">;</span>      <span style="color:#75715e">// if gap is large between final elements
-</span></code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Binary search.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * To find the kth missing element is actually to find the ith element in array that kth is in nums[i, i+1].
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Use binary search to narrow the range of array.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * If left part of sub array has more than k missing #, narrow search range to left part.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * If left part has k&#39; missing # and k&#39; &lt;= k, turn to search right part and reduce k to k - k&#39;.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Finally, find the num[i] that is next to kth missing #.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param nums given array
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param k    kth missing #
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return K-th missing number starting from the leftmost number of the array
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">missingElement</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> nums<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> k<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> n <span style="color:#f92672">=</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> totalMissingInArray <span style="color:#f92672">=</span> nums<span style="color:#f92672">[</span>n<span style="color:#f92672">]</span> <span style="color:#f92672">-</span> nums<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> 1 <span style="color:#f92672">-</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/* Corner case */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>totalMissingInArray <span style="color:#f92672">&lt;</span> k<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>      <span style="color:#75715e">// if missing # is less than k, then first missing # is out of array
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">return</span> nums<span style="color:#f92672">[</span>n<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> k <span style="color:#f92672">-</span> totalMissingInArray<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> left <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> right <span style="color:#f92672">=</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>left <span style="color:#f92672">&lt;</span> right <span style="color:#f92672">-</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>      <span style="color:#75715e">// mid exists in at least 3 elements
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">int</span> mid <span style="color:#f92672">=</span> left <span style="color:#f92672">+</span> <span style="color:#f92672">(</span>right <span style="color:#f92672">-</span> left<span style="color:#f92672">)</span> <span style="color:#f92672">/</span> 2<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> missingInRange <span style="color:#f92672">=</span> nums<span style="color:#f92672">[</span>mid<span style="color:#f92672">]</span> <span style="color:#f92672">-</span> nums<span style="color:#f92672">[</span>left<span style="color:#f92672">]</span> <span style="color:#f92672">-</span> <span style="color:#f92672">(</span>mid <span style="color:#f92672">-</span> left<span style="color:#f92672">);</span>     <span style="color:#75715e">// count missing # under current subarray
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>missingInRange <span style="color:#f92672">&gt;=</span> k<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>      <span style="color:#75715e">// narrow search range if current subarray has at least k missing #
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            right <span style="color:#f92672">=</span> mid<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            left <span style="color:#f92672">=</span> mid<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>            k <span style="color:#f92672">-=</span> missingInRange<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> nums<span style="color:#f92672">[</span>left<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> k<span style="color:#f92672">;</span>      <span style="color:#75715e">// if gap is large between final elements
+</span></span></span></code></pre></div>
               
             </div>
           </div>

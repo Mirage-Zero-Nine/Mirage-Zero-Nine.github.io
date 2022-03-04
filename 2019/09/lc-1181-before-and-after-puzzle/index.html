@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.92.2 with theme Tranquilpeak 0.4.8-BETA">
+<meta name="generator" content="Hugo 0.93.1 with theme Tranquilpeak 0.4.8-BETA">
 <meta name="author" content="Notebook">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -244,26 +244,26 @@
 <p>Return the Before and After puzzles that can be formed by every two phrases <code>phrases[i]</code> and <code>phrases[j]</code> where <code>i != j</code>. Note that the order of matching two phrases matters, we want to consider both orders.</p>
 <p>You should return a list of <strong>distinct</strong> strings <strong>sorted lexicographically</strong>.</p>
 <p><strong>Example 1:</strong></p>
-<pre tabindex="0"><code>Input: phrases = [&quot;writing code&quot;,&quot;code rocks&quot;]
-Output: [&quot;writing code rocks&quot;]
+<pre tabindex="0"><code>Input: phrases = [&#34;writing code&#34;,&#34;code rocks&#34;]
+Output: [&#34;writing code rocks&#34;]
 </code></pre><p><strong>Example 2:</strong></p>
-<pre tabindex="0"><code>Input: phrases = [&quot;mission statement&quot;,
-                  &quot;a quick bite to eat&quot;,
-                  &quot;a chip off the old block&quot;,
-                  &quot;chocolate bar&quot;,
-                  &quot;mission impossible&quot;,
-                  &quot;a man on a mission&quot;,
-                  &quot;block party&quot;,
-                  &quot;eat my words&quot;,
-                  &quot;bar of soap&quot;]
-Output: [&quot;a chip off the old block party&quot;,
-         &quot;a man on a mission impossible&quot;,
-         &quot;a man on a mission statement&quot;,
-         &quot;a quick bite to eat my words&quot;,
-         &quot;chocolate bar of soap&quot;]
+<pre tabindex="0"><code>Input: phrases = [&#34;mission statement&#34;,
+                  &#34;a quick bite to eat&#34;,
+                  &#34;a chip off the old block&#34;,
+                  &#34;chocolate bar&#34;,
+                  &#34;mission impossible&#34;,
+                  &#34;a man on a mission&#34;,
+                  &#34;block party&#34;,
+                  &#34;eat my words&#34;,
+                  &#34;bar of soap&#34;]
+Output: [&#34;a chip off the old block party&#34;,
+         &#34;a man on a mission impossible&#34;,
+         &#34;a man on a mission statement&#34;,
+         &#34;a quick bite to eat my words&#34;,
+         &#34;chocolate bar of soap&#34;]
 </code></pre><p><strong>Example 3:</strong></p>
-<pre tabindex="0"><code>Input: phrases = [&quot;a&quot;,&quot;b&quot;,&quot;a&quot;]
-Output: [&quot;a&quot;]
+<pre tabindex="0"><code>Input: phrases = [&#34;a&#34;,&#34;b&#34;,&#34;a&#34;]
+Output: [&#34;a&#34;]
 </code></pre><p><strong>Constraints:</strong></p>
 <ul>
 <li><code>1 &lt;= phrases.length &lt;= 100</code></li>
@@ -273,38 +273,38 @@ Output: [&quot;a&quot;]
 <p>Use 2 HashMap&rsquo;s to store first and last words as keys respectively, and the corresponding phrases as the values.</p>
 <p>Use the 3rd HashMap to check if there are duplicate phrases - a sole one can NOT create a puzzle.</p>
 <p>Use a TreeSet to guarantee distinct and ascending result.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Use 2 HashMap&#39;s to store first and last words as keys respectively, and the corresponding phrases as the values.
-</span><span style="color:#75715e"> * Use the 3rd HashMap to check if there are duplicate phrases - a sole one can NOT create a puzzle.
-</span><span style="color:#75715e"> * Use a TreeSet to guarantee distinct and ascending result.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param phrases given phrases
-</span><span style="color:#75715e"> * @return a list of distinct strings sorted lexicographically
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">public</span> List<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">beforeAndAfterPuzzles</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[]</span> phrases<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-    Map<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">,</span> Set<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;&gt;</span> head <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashMap<span style="color:#f92672">&lt;&gt;(),</span> tail <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashMap<span style="color:#f92672">&lt;&gt;();</span>
-    Map<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">,</span> Integer<span style="color:#f92672">&gt;</span> count <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashMap<span style="color:#f92672">&lt;&gt;();</span>
-
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>String p <span style="color:#f92672">:</span> phrases<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        String<span style="color:#f92672">[]</span> w <span style="color:#f92672">=</span> p<span style="color:#f92672">.</span><span style="color:#a6e22e">split</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34; &#34;</span><span style="color:#f92672">);</span>
-        head<span style="color:#f92672">.</span><span style="color:#a6e22e">computeIfAbsent</span><span style="color:#f92672">(</span>w<span style="color:#f92672">[</span>0<span style="color:#f92672">],</span> s <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">new</span> HashSet<span style="color:#f92672">&lt;&gt;()).</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>p<span style="color:#f92672">);</span>
-        tail<span style="color:#f92672">.</span><span style="color:#a6e22e">computeIfAbsent</span><span style="color:#f92672">(</span>w<span style="color:#f92672">[</span>w<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">],</span> s <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">new</span> HashSet<span style="color:#f92672">&lt;&gt;()).</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>p<span style="color:#f92672">);</span>
-        count<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>p<span style="color:#f92672">,</span> 1 <span style="color:#f92672">+</span> count<span style="color:#f92672">.</span><span style="color:#a6e22e">getOrDefault</span><span style="color:#f92672">(</span>p<span style="color:#f92672">,</span> 0<span style="color:#f92672">));</span>
-    <span style="color:#f92672">}</span>
-
-    TreeSet<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> ans <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> TreeSet<span style="color:#f92672">&lt;&gt;();</span>
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>String end <span style="color:#f92672">:</span> tail<span style="color:#f92672">.</span><span style="color:#a6e22e">keySet</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>String p <span style="color:#f92672">:</span> head<span style="color:#f92672">.</span><span style="color:#a6e22e">getOrDefault</span><span style="color:#f92672">(</span>end<span style="color:#f92672">,</span> Collections<span style="color:#f92672">.</span><span style="color:#a6e22e">emptySet</span><span style="color:#f92672">()))</span> <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>String t <span style="color:#f92672">:</span> tail<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>end<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
-                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>t<span style="color:#f92672">.</span><span style="color:#a6e22e">equals</span><span style="color:#f92672">(</span>p<span style="color:#f92672">)</span> <span style="color:#f92672">||</span> count<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>p<span style="color:#f92672">)</span> <span style="color:#f92672">&gt;</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                    ans<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>t <span style="color:#f92672">+</span> p<span style="color:#f92672">.</span><span style="color:#a6e22e">substring</span><span style="color:#f92672">(</span>end<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">()));</span>
-                <span style="color:#f92672">}</span>
-            <span style="color:#f92672">}</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;&gt;(</span>ans<span style="color:#f92672">);</span>
-<span style="color:#f92672">}</span>
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Use 2 HashMap&#39;s to store first and last words as keys respectively, and the corresponding phrases as the values.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Use the 3rd HashMap to check if there are duplicate phrases - a sole one can NOT create a puzzle.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Use a TreeSet to guarantee distinct and ascending result.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param phrases given phrases
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return a list of distinct strings sorted lexicographically
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> List<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">beforeAndAfterPuzzles</span><span style="color:#f92672">(</span>String<span style="color:#f92672">[]</span> phrases<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    Map<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">,</span> Set<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;&gt;</span> head <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashMap<span style="color:#f92672">&lt;&gt;(),</span> tail <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashMap<span style="color:#f92672">&lt;&gt;();</span>
+</span></span><span style="display:flex;"><span>    Map<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">,</span> Integer<span style="color:#f92672">&gt;</span> count <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> HashMap<span style="color:#f92672">&lt;&gt;();</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>String p <span style="color:#f92672">:</span> phrases<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        String<span style="color:#f92672">[]</span> w <span style="color:#f92672">=</span> p<span style="color:#f92672">.</span><span style="color:#a6e22e">split</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34; &#34;</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        head<span style="color:#f92672">.</span><span style="color:#a6e22e">computeIfAbsent</span><span style="color:#f92672">(</span>w<span style="color:#f92672">[</span>0<span style="color:#f92672">],</span> s <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">new</span> HashSet<span style="color:#f92672">&lt;&gt;()).</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>p<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        tail<span style="color:#f92672">.</span><span style="color:#a6e22e">computeIfAbsent</span><span style="color:#f92672">(</span>w<span style="color:#f92672">[</span>w<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">],</span> s <span style="color:#f92672">-&gt;</span> <span style="color:#66d9ef">new</span> HashSet<span style="color:#f92672">&lt;&gt;()).</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>p<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        count<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>p<span style="color:#f92672">,</span> 1 <span style="color:#f92672">+</span> count<span style="color:#f92672">.</span><span style="color:#a6e22e">getOrDefault</span><span style="color:#f92672">(</span>p<span style="color:#f92672">,</span> 0<span style="color:#f92672">));</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    TreeSet<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> ans <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> TreeSet<span style="color:#f92672">&lt;&gt;();</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>String end <span style="color:#f92672">:</span> tail<span style="color:#f92672">.</span><span style="color:#a6e22e">keySet</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>String p <span style="color:#f92672">:</span> head<span style="color:#f92672">.</span><span style="color:#a6e22e">getOrDefault</span><span style="color:#f92672">(</span>end<span style="color:#f92672">,</span> Collections<span style="color:#f92672">.</span><span style="color:#a6e22e">emptySet</span><span style="color:#f92672">()))</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>String t <span style="color:#f92672">:</span> tail<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>end<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>t<span style="color:#f92672">.</span><span style="color:#a6e22e">equals</span><span style="color:#f92672">(</span>p<span style="color:#f92672">)</span> <span style="color:#f92672">||</span> count<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>p<span style="color:#f92672">)</span> <span style="color:#f92672">&gt;</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                    ans<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>t <span style="color:#f92672">+</span> p<span style="color:#f92672">.</span><span style="color:#a6e22e">substring</span><span style="color:#f92672">(</span>end<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">()));</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;&gt;(</span>ans<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div>
               
             </div>
           </div>

@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.92.2 with theme Tranquilpeak 0.4.8-BETA">
+<meta name="generator" content="Hugo 0.93.1 with theme Tranquilpeak 0.4.8-BETA">
 <meta name="author" content="Notebook">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -253,83 +253,83 @@
 <p>The order of output does not matter.</p>
 <p><strong>Example 1:</strong></p>
 <pre tabindex="0"><code>Input:
-s: &quot;cbaebabacd&quot; p: &quot;abc&quot;
+s: &#34;cbaebabacd&#34; p: &#34;abc&#34;
 
 Output:
 [0, 6]
 
 Explanation:
-The substring with start index = 0 is &quot;cba&quot;, which is an anagram of &quot;abc&quot;.
-The substring with start index = 6 is &quot;bac&quot;, which is an anagram of &quot;abc&quot;.
+The substring with start index = 0 is &#34;cba&#34;, which is an anagram of &#34;abc&#34;.
+The substring with start index = 6 is &#34;bac&#34;, which is an anagram of &#34;abc&#34;.
 </code></pre><p><strong>Example 2:</strong></p>
 <pre tabindex="0"><code>Input:
-s: &quot;abab&quot; p: &quot;ab&quot;
+s: &#34;abab&#34; p: &#34;ab&#34;
 
 Output:
 [0, 1, 2]
 
 Explanation:
-The substring with start index = 0 is &quot;ab&quot;, which is an anagram of &quot;ab&quot;.
-The substring with start index = 1 is &quot;ba&quot;, which is an anagram of &quot;ab&quot;.
-The substring with start index = 2 is &quot;ab&quot;, which is an anagram of &quot;ab&quot;.
+The substring with start index = 0 is &#34;ab&#34;, which is an anagram of &#34;ab&#34;.
+The substring with start index = 1 is &#34;ba&#34;, which is an anagram of &#34;ab&#34;.
+The substring with start index = 2 is &#34;ab&#34;, which is an anagram of &#34;ab&#34;.
 </code></pre><h2 id="method--code">Method &amp; Code</h2>
 <p>Sliding window. The window size is fixed, which is the length of pattern.</p>
 <p>Each time, move right pointer first. If the new included char is in pattern, one char is found. If all chars in pattern are found, one anagram is found and the start index can be added.</p>
 <p>Then move the left pointer if window size is equal to pattern length. If left point previously points at one char in pattern, one more char required to be found in later string.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Sliding window.
-</span><span style="color:#75715e"> * The window size is fixed, which is the length of pattern.
-</span><span style="color:#75715e"> * Each time, move right pointer first. If the new included char is in pattern, one char is found.
-</span><span style="color:#75715e"> * If all chars in pattern are found, one anagram is found and the start index can be added.
-</span><span style="color:#75715e"> * Then move the left pointer if window size is equal to pattern length.
-</span><span style="color:#75715e"> * If left point previously points at one char in pattern, one more char required to be found in later string.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param s given string
-</span><span style="color:#75715e"> * @param p given pattern
-</span><span style="color:#75715e"> * @return all the start indices of p&#39;s anagrams in s
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">public</span> List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">findAnagrams</span><span style="color:#f92672">(</span>String s<span style="color:#f92672">,</span> String p<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-
-    List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> out <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;&gt;();</span>
-
-    <span style="color:#75715e">/* Corner case */</span>
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>s <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">||</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">()</span> <span style="color:#f92672">==</span> 0 <span style="color:#f92672">||</span> p <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">||</span> p<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">()</span> <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">return</span> out<span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> hash <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>26<span style="color:#f92672">];</span>
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">char</span> c <span style="color:#f92672">:</span> p<span style="color:#f92672">.</span><span style="color:#a6e22e">toCharArray</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
-        hash<span style="color:#f92672">[</span>c <span style="color:#f92672">-</span> <span style="color:#e6db74">&#39;a&#39;</span><span style="color:#f92672">]++;</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">int</span> left <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> count <span style="color:#f92672">=</span> p<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(),</span> n <span style="color:#f92672">=</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">();</span>
-
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> n<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
-
-        <span style="color:#66d9ef">int</span> leftIndex <span style="color:#f92672">=</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>left<span style="color:#f92672">)</span> <span style="color:#f92672">-</span> <span style="color:#e6db74">&#39;a&#39;</span><span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">int</span> rightIndex <span style="color:#f92672">=</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span> <span style="color:#f92672">-</span> <span style="color:#e6db74">&#39;a&#39;</span><span style="color:#f92672">;</span>
-
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>hash<span style="color:#f92672">[</span>rightIndex<span style="color:#f92672">]</span> <span style="color:#f92672">&gt;=</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>        <span style="color:#75715e">// if include a new char in pattern
-</span><span style="color:#75715e"></span>            count<span style="color:#f92672">--;</span>        <span style="color:#75715e">// find a new char in pattern
-</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
-        hash<span style="color:#f92672">[</span>rightIndex<span style="color:#f92672">]--;</span>
-
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>count <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>       <span style="color:#75715e">// one anagram is found
-</span><span style="color:#75715e"></span>            out<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>left<span style="color:#f92672">);</span>
-        <span style="color:#f92672">}</span>
-
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">-</span> left <span style="color:#f92672">+</span> 1 <span style="color:#f92672">==</span> p<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>       <span style="color:#75715e">// resize window
-</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>hash<span style="color:#f92672">[</span>leftIndex<span style="color:#f92672">]</span> <span style="color:#f92672">&gt;=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>     <span style="color:#75715e">// if found a char in pattern
-</span><span style="color:#75715e"></span>                count<span style="color:#f92672">++;</span>        <span style="color:#75715e">// one more char requires to be found
-</span><span style="color:#75715e"></span>            <span style="color:#f92672">}</span>
-            hash<span style="color:#f92672">[</span>leftIndex<span style="color:#f92672">]++;</span>
-            left<span style="color:#f92672">++;</span>     <span style="color:#75715e">// resize window
-</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">return</span> out<span style="color:#f92672">;</span>
-<span style="color:#f92672">}</span>
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Sliding window.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * The window size is fixed, which is the length of pattern.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Each time, move right pointer first. If the new included char is in pattern, one char is found.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * If all chars in pattern are found, one anagram is found and the start index can be added.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Then move the left pointer if window size is equal to pattern length.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * If left point previously points at one char in pattern, one more char required to be found in later string.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param s given string
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param p given pattern
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return all the start indices of p&#39;s anagrams in s
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">findAnagrams</span><span style="color:#f92672">(</span>String s<span style="color:#f92672">,</span> String p<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> out <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;&gt;();</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/* Corner case */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>s <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">||</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">()</span> <span style="color:#f92672">==</span> 0 <span style="color:#f92672">||</span> p <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">||</span> p<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">()</span> <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> out<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> hash <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>26<span style="color:#f92672">];</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">char</span> c <span style="color:#f92672">:</span> p<span style="color:#f92672">.</span><span style="color:#a6e22e">toCharArray</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        hash<span style="color:#f92672">[</span>c <span style="color:#f92672">-</span> <span style="color:#e6db74">&#39;a&#39;</span><span style="color:#f92672">]++;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> left <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> count <span style="color:#f92672">=</span> p<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">(),</span> n <span style="color:#f92672">=</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> n<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> leftIndex <span style="color:#f92672">=</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>left<span style="color:#f92672">)</span> <span style="color:#f92672">-</span> <span style="color:#e6db74">&#39;a&#39;</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> rightIndex <span style="color:#f92672">=</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span> <span style="color:#f92672">-</span> <span style="color:#e6db74">&#39;a&#39;</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>hash<span style="color:#f92672">[</span>rightIndex<span style="color:#f92672">]</span> <span style="color:#f92672">&gt;=</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>        <span style="color:#75715e">// if include a new char in pattern
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            count<span style="color:#f92672">--;</span>        <span style="color:#75715e">// find a new char in pattern
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        hash<span style="color:#f92672">[</span>rightIndex<span style="color:#f92672">]--;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>count <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>       <span style="color:#75715e">// one anagram is found
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            out<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>left<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">-</span> left <span style="color:#f92672">+</span> 1 <span style="color:#f92672">==</span> p<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>       <span style="color:#75715e">// resize window
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>hash<span style="color:#f92672">[</span>leftIndex<span style="color:#f92672">]</span> <span style="color:#f92672">&gt;=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>     <span style="color:#75715e">// if found a char in pattern
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                count<span style="color:#f92672">++;</span>        <span style="color:#75715e">// one more char requires to be found
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>            hash<span style="color:#f92672">[</span>leftIndex<span style="color:#f92672">]++;</span>
+</span></span><span style="display:flex;"><span>            left<span style="color:#f92672">++;</span>     <span style="color:#75715e">// resize window
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> out<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div>
               
             </div>
           </div>

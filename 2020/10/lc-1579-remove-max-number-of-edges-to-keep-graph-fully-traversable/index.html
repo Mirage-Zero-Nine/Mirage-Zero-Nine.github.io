@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.92.2 with theme Tranquilpeak 0.4.8-BETA">
+<meta name="generator" content="Hugo 0.93.1 with theme Tranquilpeak 0.4.8-BETA">
 <meta name="author" content="Notebook">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -274,7 +274,7 @@ Explanation: Notice that removing any edge will not make the graph fully travers
 <p><strong><img src="../../../img/ex3.png" alt="img"></strong></p>
 <pre tabindex="0"><code>Input: n = 4, edges = [[3,2,3],[1,1,2],[2,3,4]]
 Output: -1
-Explanation: In the current graph, Alice cannot reach node 4 from the other nodes. Likewise, Bob cannot reach 1. Therefore it's impossible to make the graph fully traversable.
+Explanation: In the current graph, Alice cannot reach node 4 from the other nodes. Likewise, Bob cannot reach 1. Therefore it&#39;s impossible to make the graph fully traversable.
 </code></pre><p><strong>Constraints:</strong></p>
 <ul>
 <li><code>1 &lt;= n &lt;= 10^5</code></li>
@@ -289,96 +289,96 @@ Explanation: In the current graph, Alice cannot reach node 4 from the other node
 <p>Type 3 can be both accessed by A and B, hence, union the nodes that can be connected by type 3 first. If there are two nodes have same root when union, there is a non-critical edge.</p>
 <p>The number of non-critical edges are the max number of edges can be removed. Then union all type 1 and 2 edges, keep counting the the non-critical edges. Also, counting the critical edges when doing the union for type 1 and type 2.</p>
 <p>If the number type 1 or type 2 critical edge are not equal to <code>n - 1</code>, then there are nodes not connected.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Union find. When union two nodes and they have same root, then there is a non-critical edge connects two nodes.
-</span><span style="color:#75715e"> * Type 3 can be both accessed by A and B, hence, union the nodes that can be connected by type 3 first.
-</span><span style="color:#75715e"> * If there are two nodes have same root when union, there is a non-critical edge.
-</span><span style="color:#75715e"> * The number of non-critical edges are the max number of edges can be removed.
-</span><span style="color:#75715e"> * Then union all type 1 and 2 edges, keep counting the the non-critical edges.
-</span><span style="color:#75715e"> * Also, counting the critical edges when doing the union for type 1 and type 2.
-</span><span style="color:#75715e"> * If the number type 1 or type 2 critical edge are not equal to n - 1, then there are nodes not connected.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param n     number of nodes in graph
-</span><span style="color:#75715e"> * @param edges given edges with type and connection
-</span><span style="color:#75715e"> * @return maximum number of edges can be removed and still keep graph being fully traversable
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">maxNumEdgesToRemove</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> n<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[][]</span> edges<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-    <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> parent <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>n <span style="color:#f92672">+</span> 1<span style="color:#f92672">];</span>
-    <span style="color:#66d9ef">int</span> count1 <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> count2 <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> out <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;=</span> n<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
-        parent<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> i<span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> e <span style="color:#f92672">:</span> edges<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>e<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span> <span style="color:#f92672">==</span> 3<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>union<span style="color:#f92672">(</span>e<span style="color:#f92672">[</span>1<span style="color:#f92672">],</span> e<span style="color:#f92672">[</span>2<span style="color:#f92672">],</span> parent<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
-                count1<span style="color:#f92672">++;</span>
-                count2<span style="color:#f92672">++;</span>
-            <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
-                out<span style="color:#f92672">++;</span>
-            <span style="color:#f92672">}</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-    <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> parent1 <span style="color:#f92672">=</span> parent<span style="color:#f92672">.</span><span style="color:#a6e22e">clone</span><span style="color:#f92672">();</span>
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> e <span style="color:#f92672">:</span> edges<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>e<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span> <span style="color:#f92672">==</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>union<span style="color:#f92672">(</span>e<span style="color:#f92672">[</span>1<span style="color:#f92672">],</span> e<span style="color:#f92672">[</span>2<span style="color:#f92672">],</span> parent<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
-                count1<span style="color:#f92672">++;</span>
-            <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
-                out<span style="color:#f92672">++;</span>
-            <span style="color:#f92672">}</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-    parent <span style="color:#f92672">=</span> parent1<span style="color:#f92672">;</span>       <span style="color:#75715e">// exclude type 1 edge, since it can not be accessed by B
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> e <span style="color:#f92672">:</span> edges<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>e<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span> <span style="color:#f92672">==</span> 2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>union<span style="color:#f92672">(</span>e<span style="color:#f92672">[</span>1<span style="color:#f92672">],</span> e<span style="color:#f92672">[</span>2<span style="color:#f92672">],</span> parent<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
-                count2<span style="color:#f92672">++;</span>
-            <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
-                out<span style="color:#f92672">++;</span>
-            <span style="color:#f92672">}</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">return</span> <span style="color:#f92672">(</span>count1 <span style="color:#f92672">==</span> count2 <span style="color:#f92672">&amp;&amp;</span> count2 <span style="color:#f92672">==</span> <span style="color:#f92672">(</span>n <span style="color:#f92672">-</span> 1<span style="color:#f92672">))</span> <span style="color:#f92672">?</span> out <span style="color:#f92672">:</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">;</span>
-<span style="color:#f92672">}</span>
-
-<span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Union method.
-</span><span style="color:#75715e"> * It returns whether there exists non-critical edge between two nodes.
-</span><span style="color:#75715e"> * If two nodes have same root, then there is a non-critical edge between them.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param x      first node
-</span><span style="color:#75715e"> * @param y      second node
-</span><span style="color:#75715e"> * @param parent int array stores each node&#39;s parent
-</span><span style="color:#75715e"> * @return if there exists non-critical edge between two nodes
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">union</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> x<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> y<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> parent<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-    <span style="color:#66d9ef">int</span> root1 <span style="color:#f92672">=</span> find<span style="color:#f92672">(</span>x<span style="color:#f92672">,</span> parent<span style="color:#f92672">);</span>
-    <span style="color:#66d9ef">int</span> root2 <span style="color:#f92672">=</span> find<span style="color:#f92672">(</span>y<span style="color:#f92672">,</span> parent<span style="color:#f92672">);</span>
-
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>root1 <span style="color:#f92672">==</span> root2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>       <span style="color:#75715e">// there are redundant edge can be removed
-</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
-
-    parent<span style="color:#f92672">[</span>root1<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> root2<span style="color:#f92672">;</span>
-
-    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>        <span style="color:#75715e">// no redundant edge
-</span><span style="color:#75715e"></span><span style="color:#f92672">}</span>
-
-
-<span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Find the root of current node.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param node   given node
-</span><span style="color:#75715e"> * @param parent each node&#39;s parent
-</span><span style="color:#75715e"> * @return root of current node
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">find</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> node<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> parent<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-    parent<span style="color:#f92672">[</span>node<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> node <span style="color:#f92672">==</span> parent<span style="color:#f92672">[</span>node<span style="color:#f92672">]</span> <span style="color:#f92672">?</span> node <span style="color:#f92672">:</span> find<span style="color:#f92672">(</span>parent<span style="color:#f92672">[</span>node<span style="color:#f92672">],</span> parent<span style="color:#f92672">);</span>
-    <span style="color:#66d9ef">return</span> parent<span style="color:#f92672">[</span>node<span style="color:#f92672">];</span>
-<span style="color:#f92672">}</span>
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Union find. When union two nodes and they have same root, then there is a non-critical edge connects two nodes.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Type 3 can be both accessed by A and B, hence, union the nodes that can be connected by type 3 first.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * If there are two nodes have same root when union, there is a non-critical edge.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * The number of non-critical edges are the max number of edges can be removed.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Then union all type 1 and 2 edges, keep counting the the non-critical edges.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Also, counting the critical edges when doing the union for type 1 and type 2.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * If the number type 1 or type 2 critical edge are not equal to n - 1, then there are nodes not connected.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param n     number of nodes in graph
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param edges given edges with type and connection
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return maximum number of edges can be removed and still keep graph being fully traversable
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">maxNumEdgesToRemove</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> n<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[][]</span> edges<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> parent <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>n <span style="color:#f92672">+</span> 1<span style="color:#f92672">];</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> count1 <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> count2 <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> out <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;=</span> n<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        parent<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> i<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> e <span style="color:#f92672">:</span> edges<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>e<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span> <span style="color:#f92672">==</span> 3<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>union<span style="color:#f92672">(</span>e<span style="color:#f92672">[</span>1<span style="color:#f92672">],</span> e<span style="color:#f92672">[</span>2<span style="color:#f92672">],</span> parent<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                count1<span style="color:#f92672">++;</span>
+</span></span><span style="display:flex;"><span>                count2<span style="color:#f92672">++;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                out<span style="color:#f92672">++;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> parent1 <span style="color:#f92672">=</span> parent<span style="color:#f92672">.</span><span style="color:#a6e22e">clone</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> e <span style="color:#f92672">:</span> edges<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>e<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span> <span style="color:#f92672">==</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>union<span style="color:#f92672">(</span>e<span style="color:#f92672">[</span>1<span style="color:#f92672">],</span> e<span style="color:#f92672">[</span>2<span style="color:#f92672">],</span> parent<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                count1<span style="color:#f92672">++;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                out<span style="color:#f92672">++;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    parent <span style="color:#f92672">=</span> parent1<span style="color:#f92672">;</span>       <span style="color:#75715e">// exclude type 1 edge, since it can not be accessed by B
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> e <span style="color:#f92672">:</span> edges<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>e<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span> <span style="color:#f92672">==</span> 2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>union<span style="color:#f92672">(</span>e<span style="color:#f92672">[</span>1<span style="color:#f92672">],</span> e<span style="color:#f92672">[</span>2<span style="color:#f92672">],</span> parent<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                count2<span style="color:#f92672">++;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                out<span style="color:#f92672">++;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#f92672">(</span>count1 <span style="color:#f92672">==</span> count2 <span style="color:#f92672">&amp;&amp;</span> count2 <span style="color:#f92672">==</span> <span style="color:#f92672">(</span>n <span style="color:#f92672">-</span> 1<span style="color:#f92672">))</span> <span style="color:#f92672">?</span> out <span style="color:#f92672">:</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Union method.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * It returns whether there exists non-critical edge between two nodes.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * If two nodes have same root, then there is a non-critical edge between them.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param x      first node
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param y      second node
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param parent int array stores each node&#39;s parent
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return if there exists non-critical edge between two nodes
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">union</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> x<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> y<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> parent<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> root1 <span style="color:#f92672">=</span> find<span style="color:#f92672">(</span>x<span style="color:#f92672">,</span> parent<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> root2 <span style="color:#f92672">=</span> find<span style="color:#f92672">(</span>y<span style="color:#f92672">,</span> parent<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>root1 <span style="color:#f92672">==</span> root2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>       <span style="color:#75715e">// there are redundant edge can be removed
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    parent<span style="color:#f92672">[</span>root1<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> root2<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>        <span style="color:#75715e">// no redundant edge
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Find the root of current node.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param node   given node
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param parent each node&#39;s parent
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return root of current node
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">find</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> node<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> parent<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    parent<span style="color:#f92672">[</span>node<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> node <span style="color:#f92672">==</span> parent<span style="color:#f92672">[</span>node<span style="color:#f92672">]</span> <span style="color:#f92672">?</span> node <span style="color:#f92672">:</span> find<span style="color:#f92672">(</span>parent<span style="color:#f92672">[</span>node<span style="color:#f92672">],</span> parent<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> parent<span style="color:#f92672">[</span>node<span style="color:#f92672">];</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div>
               
             </div>
           </div>

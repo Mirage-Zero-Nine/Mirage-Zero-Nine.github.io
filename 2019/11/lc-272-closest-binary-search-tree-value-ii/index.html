@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.92.2 with theme Tranquilpeak 0.4.8-BETA">
+<meta name="generator" content="Hugo 0.93.1 with theme Tranquilpeak 0.4.8-BETA">
 <meta name="author" content="Notebook">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -269,76 +269,76 @@ Output: [4,3]
 <h2 id="method--code">Method &amp; Code</h2>
 <p>Naive solution. Traverse the tree with inorder traverse. Use two stacks to store all values less than target and all values larger than target.</p>
 <p>After the inorder traverse is completed, check the top of two stacks and find the closer one. Pop that element out, continue until k closest elements.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Naive solution. Traverse the tree with inorder traverse.
-</span><span style="color:#75715e"> * Use two stacks to store all values less than target and all values larger than target.
-</span><span style="color:#75715e"> * After the inorder traverse is completed, check the top of two stacks and find the closer one.
-</span><span style="color:#75715e"> * Pop that element out, continue until k closest elements.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param root   root node
-</span><span style="color:#75715e"> * @param target target value
-</span><span style="color:#75715e"> * @param k      find k closest numbers
-</span><span style="color:#75715e"> * @return k values in the BST that are closest to the target
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">public</span> List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">closestKValues</span><span style="color:#f92672">(</span>TreeNode root<span style="color:#f92672">,</span> <span style="color:#66d9ef">double</span> target<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> k<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-    List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> out <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">&lt;&gt;();</span>
-
-    <span style="color:#75715e">/* Corner case */</span>
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>root <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">return</span> out<span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-
-    Stack<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> left <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Stack<span style="color:#f92672">&lt;&gt;();</span>
-    Stack<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> right <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Stack<span style="color:#f92672">&lt;&gt;();</span>
-
-    inorder<span style="color:#f92672">(</span>root<span style="color:#f92672">,</span> left<span style="color:#f92672">,</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">,</span> target<span style="color:#f92672">);</span>      <span style="color:#75715e">// find all elements smaller than target, top of stack is the largest
-</span><span style="color:#75715e"></span>    inorder<span style="color:#f92672">(</span>root<span style="color:#f92672">,</span> right<span style="color:#f92672">,</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">,</span> target<span style="color:#f92672">);</span>    <span style="color:#75715e">// find all elements larger than target, top of stack is the smallest
-</span><span style="color:#75715e"></span>
-    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>k<span style="color:#f92672">--</span> <span style="color:#f92672">&gt;</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">int</span> tmp<span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>left<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
-            tmp <span style="color:#f92672">=</span> right<span style="color:#f92672">.</span><span style="color:#a6e22e">pop</span><span style="color:#f92672">();</span>
-        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>right<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
-            tmp <span style="color:#f92672">=</span> left<span style="color:#f92672">.</span><span style="color:#a6e22e">pop</span><span style="color:#f92672">();</span>
-        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>        <span style="color:#75715e">// find closet one from stacks
-</span><span style="color:#75715e"></span>            tmp <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>Math<span style="color:#f92672">.</span><span style="color:#a6e22e">abs</span><span style="color:#f92672">(</span>left<span style="color:#f92672">.</span><span style="color:#a6e22e">peek</span><span style="color:#f92672">()</span> <span style="color:#f92672">-</span> target<span style="color:#f92672">)</span> <span style="color:#f92672">&gt;</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">abs</span><span style="color:#f92672">(</span>right<span style="color:#f92672">.</span><span style="color:#a6e22e">peek</span><span style="color:#f92672">()</span> <span style="color:#f92672">-</span> target<span style="color:#f92672">))</span> <span style="color:#f92672">?</span> right<span style="color:#f92672">.</span><span style="color:#a6e22e">pop</span><span style="color:#f92672">()</span> <span style="color:#f92672">:</span> left<span style="color:#f92672">.</span><span style="color:#a6e22e">pop</span><span style="color:#f92672">();</span>
-        <span style="color:#f92672">}</span>
-        out<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>tmp<span style="color:#f92672">);</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">return</span> out<span style="color:#f92672">;</span>
-<span style="color:#f92672">}</span>
-
-<span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Store all elements that are smaller/larger than target into stack.
-</span><span style="color:#75715e"> * The normal order of inorder traverse is left -&gt; root -&gt; right, which will be used in right subtree.
-</span><span style="color:#75715e"> * The left subtree will use the reverse order of inorder traverse (right -&gt; root -&gt; left).
-</span><span style="color:#75715e"> * In the recursion, it is required to assure the top of stack is the floor/ceiling element of target.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param r       root node
-</span><span style="color:#75715e"> * @param s       stack stores value of nodes
-</span><span style="color:#75715e"> * @param reverse true if traverse in reverse order of inorder traversal (right -&gt; root -&gt; left)
-</span><span style="color:#75715e"> * @param target  target value
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">inorder</span><span style="color:#f92672">(</span>TreeNode r<span style="color:#f92672">,</span> Stack<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> s<span style="color:#f92672">,</span> <span style="color:#66d9ef">boolean</span> reverse<span style="color:#f92672">,</span> <span style="color:#66d9ef">double</span> target<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-
-    <span style="color:#75715e">/* Corner case */</span>
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>r <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-
-    TreeNode next <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>reverse<span style="color:#f92672">)</span> <span style="color:#f92672">?</span> r<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span> <span style="color:#f92672">:</span> r<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">;</span>
-    inorder<span style="color:#f92672">(</span>next<span style="color:#f92672">,</span> s<span style="color:#f92672">,</span> reverse<span style="color:#f92672">,</span> target<span style="color:#f92672">);</span>
-
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">((</span>reverse <span style="color:#f92672">&amp;&amp;</span> target <span style="color:#f92672">&gt;</span> r<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span><span style="color:#f92672">)</span> <span style="color:#f92672">||</span> <span style="color:#f92672">(!</span>reverse <span style="color:#f92672">&amp;&amp;</span> target <span style="color:#f92672">&lt;=</span> r<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span><span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>     <span style="color:#75715e">// if traverse to nodes larger/smaller than target, break recursion
-</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
-
-    s<span style="color:#f92672">.</span><span style="color:#a6e22e">push</span><span style="color:#f92672">(</span>r<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span><span style="color:#f92672">);</span>
-    next <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>reverse<span style="color:#f92672">)</span> <span style="color:#f92672">?</span> r<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span> <span style="color:#f92672">:</span> r<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span><span style="color:#f92672">;</span>
-    inorder<span style="color:#f92672">(</span>next<span style="color:#f92672">,</span> s<span style="color:#f92672">,</span> reverse<span style="color:#f92672">,</span> target<span style="color:#f92672">);</span>
-<span style="color:#f92672">}</span>
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Naive solution. Traverse the tree with inorder traverse.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Use two stacks to store all values less than target and all values larger than target.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * After the inorder traverse is completed, check the top of two stacks and find the closer one.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Pop that element out, continue until k closest elements.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param root   root node
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param target target value
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param k      find k closest numbers
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return k values in the BST that are closest to the target
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">closestKValues</span><span style="color:#f92672">(</span>TreeNode root<span style="color:#f92672">,</span> <span style="color:#66d9ef">double</span> target<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> k<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    List<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> out <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">&lt;&gt;();</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/* Corner case */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>root <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> out<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    Stack<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> left <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Stack<span style="color:#f92672">&lt;&gt;();</span>
+</span></span><span style="display:flex;"><span>    Stack<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> right <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Stack<span style="color:#f92672">&lt;&gt;();</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    inorder<span style="color:#f92672">(</span>root<span style="color:#f92672">,</span> left<span style="color:#f92672">,</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">,</span> target<span style="color:#f92672">);</span>      <span style="color:#75715e">// find all elements smaller than target, top of stack is the largest
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    inorder<span style="color:#f92672">(</span>root<span style="color:#f92672">,</span> right<span style="color:#f92672">,</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">,</span> target<span style="color:#f92672">);</span>    <span style="color:#75715e">// find all elements larger than target, top of stack is the smallest
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>k<span style="color:#f92672">--</span> <span style="color:#f92672">&gt;</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> tmp<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>left<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            tmp <span style="color:#f92672">=</span> right<span style="color:#f92672">.</span><span style="color:#a6e22e">pop</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>right<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            tmp <span style="color:#f92672">=</span> left<span style="color:#f92672">.</span><span style="color:#a6e22e">pop</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>        <span style="color:#75715e">// find closet one from stacks
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            tmp <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>Math<span style="color:#f92672">.</span><span style="color:#a6e22e">abs</span><span style="color:#f92672">(</span>left<span style="color:#f92672">.</span><span style="color:#a6e22e">peek</span><span style="color:#f92672">()</span> <span style="color:#f92672">-</span> target<span style="color:#f92672">)</span> <span style="color:#f92672">&gt;</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">abs</span><span style="color:#f92672">(</span>right<span style="color:#f92672">.</span><span style="color:#a6e22e">peek</span><span style="color:#f92672">()</span> <span style="color:#f92672">-</span> target<span style="color:#f92672">))</span> <span style="color:#f92672">?</span> right<span style="color:#f92672">.</span><span style="color:#a6e22e">pop</span><span style="color:#f92672">()</span> <span style="color:#f92672">:</span> left<span style="color:#f92672">.</span><span style="color:#a6e22e">pop</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        out<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>tmp<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> out<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Store all elements that are smaller/larger than target into stack.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * The normal order of inorder traverse is left -&gt; root -&gt; right, which will be used in right subtree.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * The left subtree will use the reverse order of inorder traverse (right -&gt; root -&gt; left).
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * In the recursion, it is required to assure the top of stack is the floor/ceiling element of target.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param r       root node
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param s       stack stores value of nodes
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param reverse true if traverse in reverse order of inorder traversal (right -&gt; root -&gt; left)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param target  target value
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">inorder</span><span style="color:#f92672">(</span>TreeNode r<span style="color:#f92672">,</span> Stack<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> s<span style="color:#f92672">,</span> <span style="color:#66d9ef">boolean</span> reverse<span style="color:#f92672">,</span> <span style="color:#66d9ef">double</span> target<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/* Corner case */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>r <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    TreeNode next <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>reverse<span style="color:#f92672">)</span> <span style="color:#f92672">?</span> r<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span> <span style="color:#f92672">:</span> r<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    inorder<span style="color:#f92672">(</span>next<span style="color:#f92672">,</span> s<span style="color:#f92672">,</span> reverse<span style="color:#f92672">,</span> target<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">((</span>reverse <span style="color:#f92672">&amp;&amp;</span> target <span style="color:#f92672">&gt;</span> r<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span><span style="color:#f92672">)</span> <span style="color:#f92672">||</span> <span style="color:#f92672">(!</span>reverse <span style="color:#f92672">&amp;&amp;</span> target <span style="color:#f92672">&lt;=</span> r<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span><span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>     <span style="color:#75715e">// if traverse to nodes larger/smaller than target, break recursion
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    s<span style="color:#f92672">.</span><span style="color:#a6e22e">push</span><span style="color:#f92672">(</span>r<span style="color:#f92672">.</span><span style="color:#a6e22e">val</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>    next <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>reverse<span style="color:#f92672">)</span> <span style="color:#f92672">?</span> r<span style="color:#f92672">.</span><span style="color:#a6e22e">left</span> <span style="color:#f92672">:</span> r<span style="color:#f92672">.</span><span style="color:#a6e22e">right</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    inorder<span style="color:#f92672">(</span>next<span style="color:#f92672">,</span> s<span style="color:#f92672">,</span> reverse<span style="color:#f92672">,</span> target<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div>
               
             </div>
           </div>

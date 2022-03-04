@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.92.2 with theme Tranquilpeak 0.4.8-BETA">
+<meta name="generator" content="Hugo 0.93.1 with theme Tranquilpeak 0.4.8-BETA">
 <meta name="author" content="Notebook">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -237,7 +237,7 @@
 <p>Link: <a href="https://leetcode.com/problems/the-maze-iii/">The Maze III</a></p>
 <h2 id="problem-description">Problem Description</h2>
 <p>There is a <strong>ball</strong> in a maze with empty spaces and walls. The ball can go through empty spaces by rolling <strong>up</strong> (u), <strong>down</strong> (d), <strong>left</strong> (l) or <strong>right</strong> (r), but it won&rsquo;t stop rolling until hitting a wall. When the ball stops, it could choose the next direction. There is also a <strong>hole</strong> in this maze. The ball will drop into the hole if it rolls on to the hole.</p>
-<p>Given the <strong>ball position</strong>, the <strong>hole position</strong> and the <strong>maze</strong>, find out how the ball could drop into the hole by moving the <strong>shortest distance</strong>. The distance is defined by the number of <strong>empty spaces</strong>traveled by the ball from the start position (excluded) to the hole (included). Output the moving <strong>directions</strong> by using &lsquo;u&rsquo;, &rsquo;d', &lsquo;l&rsquo; and &lsquo;r&rsquo;. Since there could be several different shortest ways, you should output the <strong>lexicographically smallest</strong> way. If the ball cannot reach the hole, output &ldquo;impossible&rdquo;.</p>
+<p>Given the <strong>ball position</strong>, the <strong>hole position</strong> and the <strong>maze</strong>, find out how the ball could drop into the hole by moving the <strong>shortest distance</strong>. The distance is defined by the number of <strong>empty spaces</strong>traveled by the ball from the start position (excluded) to the hole (included). Output the moving <strong>directions</strong> by using &lsquo;u&rsquo;, &rsquo;d&rsquo;, &rsquo;l&rsquo; and &lsquo;r&rsquo;. Since there could be several different shortest ways, you should output the <strong>lexicographically smallest</strong> way. If the ball cannot reach the hole, output &ldquo;impossible&rdquo;.</p>
 <p>The maze is represented by a binary 2D array. 1 means the wall and 0 means the empty space. You may assume that the borders of the maze are all walls. The ball and the hole coordinates are represented by row and column indexes.</p>
 <p><strong>Example 1:</strong></p>
 <pre tabindex="0"><code>Input 1: a maze represented by a 2D array
@@ -251,12 +251,12 @@
 Input 2: ball coordinate (rowBall, colBall) = (4, 3)
 Input 3: hole coordinate (rowHole, colHole) = (0, 1)
 
-Output: &quot;lul&quot;
+Output: &#34;lul&#34;
 
 Explanation: There are two shortest ways for the ball to drop into the hole.
-The first way is left -&gt; up -&gt; left, represented by &quot;lul&quot;.
-The second way is up -&gt; left, represented by 'ul'.
-Both ways have shortest distance 6, but the first way is lexicographically smaller because 'l' &lt; 'u'. So the output is &quot;lul&quot;.
+The first way is left -&gt; up -&gt; left, represented by &#34;lul&#34;.
+The second way is up -&gt; left, represented by &#39;ul&#39;.
+Both ways have shortest distance 6, but the first way is lexicographically smaller because &#39;l&#39; &lt; &#39;u&#39;. So the output is &#34;lul&#34;.
 </code></pre><p><strong>Example 2:</strong></p>
 <pre tabindex="0"><code>Input 1: a maze represented by a 2D array
 
@@ -269,7 +269,7 @@ Both ways have shortest distance 6, but the first way is lexicographically small
 Input 2: ball coordinate (rowBall, colBall) = (4, 3)
 Input 3: hole coordinate (rowHole, colHole) = (3, 0)
 
-Output: &quot;impossible&quot;
+Output: &#34;impossible&#34;
 
 Explanation: The ball cannot reach the hole.
 </code></pre><p><strong>Note:</strong></p>
@@ -282,108 +282,108 @@ Explanation: The ball cannot reach the hole.
 <h2 id="method--code">Method &amp; Code</h2>
 <p>Backtracking with pruning. During the process of DFS, if current path is longer than shortest path, the end current searching.</p>
 <p>Use a <code>Point</code> structure to store the path and its corresponding length.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Backtracking with pruning.
-</span><span style="color:#75715e"> * During the process of DFS, if current path is longer than shortest path, the end current searching.
-</span><span style="color:#75715e"> * Use a Point structure to store the path and its corresponding length.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param maze given maze
-</span><span style="color:#75715e"> * @param ball given start position
-</span><span style="color:#75715e"> * @param hole given end position
-</span><span style="color:#75715e"> * @return how the ball could drop into the hole by moving the shortest distance, or &#34;impossible&#34; if no path
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">public</span> String <span style="color:#a6e22e">findShortestWay</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[][]</span> maze<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> ball<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> hole<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-    <span style="color:#66d9ef">int</span> m <span style="color:#f92672">=</span> maze<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">,</span> n <span style="color:#f92672">=</span> maze<span style="color:#f92672">[</span>0<span style="color:#f92672">].</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span>
-    Point<span style="color:#f92672">[][]</span> points <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Point<span style="color:#f92672">[</span>m<span style="color:#f92672">][</span>n<span style="color:#f92672">];</span>
-
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> m <span style="color:#f92672">*</span> n<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
-        points<span style="color:#f92672">[</span>i <span style="color:#f92672">/</span> n<span style="color:#f92672">][</span>i <span style="color:#f92672">%</span> n<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Point<span style="color:#f92672">(</span>i <span style="color:#f92672">/</span> n<span style="color:#f92672">,</span> i <span style="color:#f92672">%</span> n<span style="color:#f92672">);</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">int</span><span style="color:#f92672">[][]</span> directions <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[][]{{-</span>1<span style="color:#f92672">,</span> 0<span style="color:#f92672">},</span> <span style="color:#f92672">{</span>0<span style="color:#f92672">,</span> 1<span style="color:#f92672">},</span> <span style="color:#f92672">{</span>1<span style="color:#f92672">,</span> 0<span style="color:#f92672">},</span> <span style="color:#f92672">{</span>0<span style="color:#f92672">,</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">}};</span>
-    String<span style="color:#f92672">[]</span> move <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> String<span style="color:#f92672">[]{</span><span style="color:#e6db74">&#34;u&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;r&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;d&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;l&#34;</span><span style="color:#f92672">};</span>
-    PriorityQueue<span style="color:#f92672">&lt;</span>Point<span style="color:#f92672">&gt;</span> list <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> PriorityQueue<span style="color:#f92672">&lt;&gt;();</span>
-
-    list<span style="color:#f92672">.</span><span style="color:#a6e22e">offer</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> Point<span style="color:#f92672">(</span>ball<span style="color:#f92672">[</span>0<span style="color:#f92672">],</span> ball<span style="color:#f92672">[</span>1<span style="color:#f92672">],</span> 0<span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;&#34;</span><span style="color:#f92672">));</span>
-    list<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> Point<span style="color:#f92672">(</span>ball<span style="color:#f92672">[</span>0<span style="color:#f92672">],</span> ball<span style="color:#f92672">[</span>1<span style="color:#f92672">],</span> 0<span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;&#34;</span><span style="color:#f92672">));</span>
-
-    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(!</span>list<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
-        Point p <span style="color:#f92672">=</span> list<span style="color:#f92672">.</span><span style="color:#a6e22e">poll</span><span style="color:#f92672">();</span>
-
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>points<span style="color:#f92672">[</span>p<span style="color:#f92672">.</span><span style="color:#a6e22e">x</span><span style="color:#f92672">][</span>p<span style="color:#f92672">.</span><span style="color:#a6e22e">y</span><span style="color:#f92672">].</span><span style="color:#a6e22e">compareTo</span><span style="color:#f92672">(</span>p<span style="color:#f92672">)</span> <span style="color:#f92672">&lt;=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>       <span style="color:#75715e">// pruning
-</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">continue</span><span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span>
-        points<span style="color:#f92672">[</span>p<span style="color:#f92672">.</span><span style="color:#a6e22e">x</span><span style="color:#f92672">][</span>p<span style="color:#f92672">.</span><span style="color:#a6e22e">y</span><span style="color:#f92672">]</span> <span style="color:#f92672">=</span> p<span style="color:#f92672">;</span>
-
-        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> 4<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">int</span> xx <span style="color:#f92672">=</span> p<span style="color:#f92672">.</span><span style="color:#a6e22e">x</span><span style="color:#f92672">,</span> yy <span style="color:#f92672">=</span> p<span style="color:#f92672">.</span><span style="color:#a6e22e">y</span><span style="color:#f92672">,</span> l <span style="color:#f92672">=</span> p<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span>
-
-            <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>xx <span style="color:#f92672">&gt;=</span> 0 <span style="color:#f92672">&amp;&amp;</span> xx <span style="color:#f92672">&lt;</span> m <span style="color:#f92672">&amp;&amp;</span> yy <span style="color:#f92672">&gt;=</span> 0 <span style="color:#f92672">&amp;&amp;</span> yy <span style="color:#f92672">&lt;</span> n <span style="color:#f92672">&amp;&amp;</span> maze<span style="color:#f92672">[</span>xx<span style="color:#f92672">][</span>yy<span style="color:#f92672">]</span> <span style="color:#f92672">==</span> 0 <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">(</span>xx <span style="color:#f92672">!=</span> hole<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span> <span style="color:#f92672">||</span> yy <span style="color:#f92672">!=</span> hole<span style="color:#f92672">[</span>1<span style="color:#f92672">]))</span> <span style="color:#f92672">{</span>
-                xx <span style="color:#f92672">+=</span> directions<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>0<span style="color:#f92672">];</span>
-                yy <span style="color:#f92672">+=</span> directions<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>1<span style="color:#f92672">];</span>
-                l<span style="color:#f92672">++;</span>
-            <span style="color:#f92672">}</span>
-
-            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>xx <span style="color:#f92672">!=</span> hole<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span> <span style="color:#f92672">||</span> yy <span style="color:#f92672">!=</span> hole<span style="color:#f92672">[</span>1<span style="color:#f92672">])</span> <span style="color:#f92672">{</span>       <span style="color:#75715e">// check the hole
-</span><span style="color:#75715e"></span>                xx <span style="color:#f92672">-=</span> directions<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>0<span style="color:#f92672">];</span>
-                yy <span style="color:#f92672">-=</span> directions<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>1<span style="color:#f92672">];</span>
-                l<span style="color:#f92672">--;</span>
-            <span style="color:#f92672">}</span>
-            list<span style="color:#f92672">.</span><span style="color:#a6e22e">offer</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> Point<span style="color:#f92672">(</span>xx<span style="color:#f92672">,</span> yy<span style="color:#f92672">,</span> l<span style="color:#f92672">,</span> p<span style="color:#f92672">.</span><span style="color:#a6e22e">path</span> <span style="color:#f92672">+</span> move<span style="color:#f92672">[</span>i<span style="color:#f92672">]));</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">return</span> <span style="color:#f92672">(</span>points<span style="color:#f92672">[</span>hole<span style="color:#f92672">[</span>0<span style="color:#f92672">]][</span>hole<span style="color:#f92672">[</span>1<span style="color:#f92672">]].</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">==</span> Integer<span style="color:#f92672">.</span><span style="color:#a6e22e">MAX_VALUE</span><span style="color:#f92672">)</span> <span style="color:#f92672">?</span> <span style="color:#e6db74">&#34;impossible&#34;</span> <span style="color:#f92672">:</span> points<span style="color:#f92672">[</span>hole<span style="color:#f92672">[</span>0<span style="color:#f92672">]][</span>hole<span style="color:#f92672">[</span>1<span style="color:#f92672">]].</span><span style="color:#a6e22e">path</span><span style="color:#f92672">;</span>
-<span style="color:#f92672">}</span>
-
-<span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Save cell coord and the distance from start point.
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">static</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Point</span> <span style="color:#66d9ef">implements</span> Comparable<span style="color:#f92672">&lt;</span>Point<span style="color:#f92672">&gt;</span> <span style="color:#f92672">{</span>
-    <span style="color:#66d9ef">int</span> x<span style="color:#f92672">,</span> y<span style="color:#f92672">,</span> length<span style="color:#f92672">;</span>
-    String path<span style="color:#f92672">;</span>
-
-    <span style="color:#75715e">/**
-</span><span style="color:#75715e">     * Constructor of point class by cell coord.
-</span><span style="color:#75715e">     *
-</span><span style="color:#75715e">     * @param x x coord
-</span><span style="color:#75715e">     * @param y y coord
-</span><span style="color:#75715e">     */</span>
-    Point<span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> x<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> y<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">x</span> <span style="color:#f92672">=</span> x<span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">y</span> <span style="color:#f92672">=</span> y<span style="color:#f92672">;</span>
-        length <span style="color:#f92672">=</span> Integer<span style="color:#f92672">.</span><span style="color:#a6e22e">MAX_VALUE</span><span style="color:#f92672">;</span>
-        path <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;&#34;</span><span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#75715e">/**
-</span><span style="color:#75715e">     * Constructor of point class by cell coord and path from start to current cell.
-</span><span style="color:#75715e">     *
-</span><span style="color:#75715e">     * @param x      x coord
-</span><span style="color:#75715e">     * @param y      y coord
-</span><span style="color:#75715e">     * @param length length of path
-</span><span style="color:#75715e">     * @param s      path itself
-</span><span style="color:#75715e">     */</span>
-    Point<span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> x<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> y<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> length<span style="color:#f92672">,</span> String s<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">x</span> <span style="color:#f92672">=</span> x<span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">y</span> <span style="color:#f92672">=</span> y<span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">=</span> length<span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">path</span> <span style="color:#f92672">=</span> s<span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#75715e">/**
-</span><span style="color:#75715e">     * Compare priority of two points.
-</span><span style="color:#75715e">     * Smaller path has higher priority.
-</span><span style="color:#75715e">     * If path length is same, return the one with higher alphabet order (a to z).
-</span><span style="color:#75715e">     *
-</span><span style="color:#75715e">     * @param p given point
-</span><span style="color:#75715e">     * @return point with higher priority
-</span><span style="color:#75715e">     */</span>
-    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">compareTo</span><span style="color:#f92672">(</span>Point p<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">return</span> length <span style="color:#f92672">==</span> p<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">?</span> path<span style="color:#f92672">.</span><span style="color:#a6e22e">compareTo</span><span style="color:#f92672">(</span>p<span style="color:#f92672">.</span><span style="color:#a6e22e">path</span><span style="color:#f92672">)</span> <span style="color:#f92672">:</span> length <span style="color:#f92672">-</span> p<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-<span style="color:#f92672">}</span>
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Backtracking with pruning.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * During the process of DFS, if current path is longer than shortest path, the end current searching.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Use a Point structure to store the path and its corresponding length.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param maze given maze
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param ball given start position
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param hole given end position
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return how the ball could drop into the hole by moving the shortest distance, or &#34;impossible&#34; if no path
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> String <span style="color:#a6e22e">findShortestWay</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[][]</span> maze<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> ball<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> hole<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> m <span style="color:#f92672">=</span> maze<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">,</span> n <span style="color:#f92672">=</span> maze<span style="color:#f92672">[</span>0<span style="color:#f92672">].</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    Point<span style="color:#f92672">[][]</span> points <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Point<span style="color:#f92672">[</span>m<span style="color:#f92672">][</span>n<span style="color:#f92672">];</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> m <span style="color:#f92672">*</span> n<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        points<span style="color:#f92672">[</span>i <span style="color:#f92672">/</span> n<span style="color:#f92672">][</span>i <span style="color:#f92672">%</span> n<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Point<span style="color:#f92672">(</span>i <span style="color:#f92672">/</span> n<span style="color:#f92672">,</span> i <span style="color:#f92672">%</span> n<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span><span style="color:#f92672">[][]</span> directions <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[][]{{-</span>1<span style="color:#f92672">,</span> 0<span style="color:#f92672">},</span> <span style="color:#f92672">{</span>0<span style="color:#f92672">,</span> 1<span style="color:#f92672">},</span> <span style="color:#f92672">{</span>1<span style="color:#f92672">,</span> 0<span style="color:#f92672">},</span> <span style="color:#f92672">{</span>0<span style="color:#f92672">,</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">}};</span>
+</span></span><span style="display:flex;"><span>    String<span style="color:#f92672">[]</span> move <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> String<span style="color:#f92672">[]{</span><span style="color:#e6db74">&#34;u&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;r&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;d&#34;</span><span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;l&#34;</span><span style="color:#f92672">};</span>
+</span></span><span style="display:flex;"><span>    PriorityQueue<span style="color:#f92672">&lt;</span>Point<span style="color:#f92672">&gt;</span> list <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> PriorityQueue<span style="color:#f92672">&lt;&gt;();</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    list<span style="color:#f92672">.</span><span style="color:#a6e22e">offer</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> Point<span style="color:#f92672">(</span>ball<span style="color:#f92672">[</span>0<span style="color:#f92672">],</span> ball<span style="color:#f92672">[</span>1<span style="color:#f92672">],</span> 0<span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;&#34;</span><span style="color:#f92672">));</span>
+</span></span><span style="display:flex;"><span>    list<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> Point<span style="color:#f92672">(</span>ball<span style="color:#f92672">[</span>0<span style="color:#f92672">],</span> ball<span style="color:#f92672">[</span>1<span style="color:#f92672">],</span> 0<span style="color:#f92672">,</span> <span style="color:#e6db74">&#34;&#34;</span><span style="color:#f92672">));</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(!</span>list<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        Point p <span style="color:#f92672">=</span> list<span style="color:#f92672">.</span><span style="color:#a6e22e">poll</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>points<span style="color:#f92672">[</span>p<span style="color:#f92672">.</span><span style="color:#a6e22e">x</span><span style="color:#f92672">][</span>p<span style="color:#f92672">.</span><span style="color:#a6e22e">y</span><span style="color:#f92672">].</span><span style="color:#a6e22e">compareTo</span><span style="color:#f92672">(</span>p<span style="color:#f92672">)</span> <span style="color:#f92672">&lt;=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>       <span style="color:#75715e">// pruning
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#66d9ef">continue</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        points<span style="color:#f92672">[</span>p<span style="color:#f92672">.</span><span style="color:#a6e22e">x</span><span style="color:#f92672">][</span>p<span style="color:#f92672">.</span><span style="color:#a6e22e">y</span><span style="color:#f92672">]</span> <span style="color:#f92672">=</span> p<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> 4<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">int</span> xx <span style="color:#f92672">=</span> p<span style="color:#f92672">.</span><span style="color:#a6e22e">x</span><span style="color:#f92672">,</span> yy <span style="color:#f92672">=</span> p<span style="color:#f92672">.</span><span style="color:#a6e22e">y</span><span style="color:#f92672">,</span> l <span style="color:#f92672">=</span> p<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>xx <span style="color:#f92672">&gt;=</span> 0 <span style="color:#f92672">&amp;&amp;</span> xx <span style="color:#f92672">&lt;</span> m <span style="color:#f92672">&amp;&amp;</span> yy <span style="color:#f92672">&gt;=</span> 0 <span style="color:#f92672">&amp;&amp;</span> yy <span style="color:#f92672">&lt;</span> n <span style="color:#f92672">&amp;&amp;</span> maze<span style="color:#f92672">[</span>xx<span style="color:#f92672">][</span>yy<span style="color:#f92672">]</span> <span style="color:#f92672">==</span> 0 <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">(</span>xx <span style="color:#f92672">!=</span> hole<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span> <span style="color:#f92672">||</span> yy <span style="color:#f92672">!=</span> hole<span style="color:#f92672">[</span>1<span style="color:#f92672">]))</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                xx <span style="color:#f92672">+=</span> directions<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>0<span style="color:#f92672">];</span>
+</span></span><span style="display:flex;"><span>                yy <span style="color:#f92672">+=</span> directions<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>1<span style="color:#f92672">];</span>
+</span></span><span style="display:flex;"><span>                l<span style="color:#f92672">++;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>xx <span style="color:#f92672">!=</span> hole<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span> <span style="color:#f92672">||</span> yy <span style="color:#f92672">!=</span> hole<span style="color:#f92672">[</span>1<span style="color:#f92672">])</span> <span style="color:#f92672">{</span>       <span style="color:#75715e">// check the hole
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                xx <span style="color:#f92672">-=</span> directions<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>0<span style="color:#f92672">];</span>
+</span></span><span style="display:flex;"><span>                yy <span style="color:#f92672">-=</span> directions<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>1<span style="color:#f92672">];</span>
+</span></span><span style="display:flex;"><span>                l<span style="color:#f92672">--;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>            list<span style="color:#f92672">.</span><span style="color:#a6e22e">offer</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> Point<span style="color:#f92672">(</span>xx<span style="color:#f92672">,</span> yy<span style="color:#f92672">,</span> l<span style="color:#f92672">,</span> p<span style="color:#f92672">.</span><span style="color:#a6e22e">path</span> <span style="color:#f92672">+</span> move<span style="color:#f92672">[</span>i<span style="color:#f92672">]));</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#f92672">(</span>points<span style="color:#f92672">[</span>hole<span style="color:#f92672">[</span>0<span style="color:#f92672">]][</span>hole<span style="color:#f92672">[</span>1<span style="color:#f92672">]].</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">==</span> Integer<span style="color:#f92672">.</span><span style="color:#a6e22e">MAX_VALUE</span><span style="color:#f92672">)</span> <span style="color:#f92672">?</span> <span style="color:#e6db74">&#34;impossible&#34;</span> <span style="color:#f92672">:</span> points<span style="color:#f92672">[</span>hole<span style="color:#f92672">[</span>0<span style="color:#f92672">]][</span>hole<span style="color:#f92672">[</span>1<span style="color:#f92672">]].</span><span style="color:#a6e22e">path</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Save cell coord and the distance from start point.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">static</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">Point</span> <span style="color:#66d9ef">implements</span> Comparable<span style="color:#f92672">&lt;</span>Point<span style="color:#f92672">&gt;</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> x<span style="color:#f92672">,</span> y<span style="color:#f92672">,</span> length<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    String path<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * Constructor of point class by cell coord.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @param x x coord
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @param y y coord
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     */</span>
+</span></span><span style="display:flex;"><span>    Point<span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> x<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> y<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">x</span> <span style="color:#f92672">=</span> x<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">y</span> <span style="color:#f92672">=</span> y<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        length <span style="color:#f92672">=</span> Integer<span style="color:#f92672">.</span><span style="color:#a6e22e">MAX_VALUE</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        path <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;&#34;</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * Constructor of point class by cell coord and path from start to current cell.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @param x      x coord
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @param y      y coord
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @param length length of path
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @param s      path itself
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     */</span>
+</span></span><span style="display:flex;"><span>    Point<span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> x<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> y<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> length<span style="color:#f92672">,</span> String s<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">x</span> <span style="color:#f92672">=</span> x<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">y</span> <span style="color:#f92672">=</span> y<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">=</span> length<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">this</span><span style="color:#f92672">.</span><span style="color:#a6e22e">path</span> <span style="color:#f92672">=</span> s<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * Compare priority of two points.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * Smaller path has higher priority.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * If path length is same, return the one with higher alphabet order (a to z).
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @param p given point
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @return point with higher priority
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">compareTo</span><span style="color:#f92672">(</span>Point p<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> length <span style="color:#f92672">==</span> p<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">?</span> path<span style="color:#f92672">.</span><span style="color:#a6e22e">compareTo</span><span style="color:#f92672">(</span>p<span style="color:#f92672">.</span><span style="color:#a6e22e">path</span><span style="color:#f92672">)</span> <span style="color:#f92672">:</span> length <span style="color:#f92672">-</span> p<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div>
               
             </div>
           </div>

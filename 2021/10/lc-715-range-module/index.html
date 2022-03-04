@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.92.2 with theme Tranquilpeak 0.4.8-BETA">
+<meta name="generator" content="Hugo 0.93.1 with theme Tranquilpeak 0.4.8-BETA">
 <meta name="author" content="Notebook">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -259,7 +259,7 @@
 </ul>
 <p><strong>Example 1:</strong></p>
 <pre tabindex="0"><code>Input
-[&quot;RangeModule&quot;, &quot;addRange&quot;, &quot;removeRange&quot;, &quot;queryRange&quot;, &quot;queryRange&quot;, &quot;queryRange&quot;]
+[&#34;RangeModule&#34;, &#34;addRange&#34;, &#34;removeRange&#34;, &#34;queryRange&#34;, &#34;queryRange&#34;, &#34;queryRange&#34;]
 [[], [10, 20], [14, 16], [10, 14], [13, 15], [16, 17]]
 Output
 [null, null, null, true, false, true]
@@ -283,92 +283,92 @@ rangeModule.queryRange(16, 17); // return True, (The number 16 in [16, 17) is st
 <li>When query specific range, check if there is a range in map.</li>
 <li>When remove an interval, find if there is a range in map that will be removed partly. Add the remaining part to the map first, then remove the interval.</li>
 </ul>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">RangeModule</span> <span style="color:#f92672">{</span>
-    TreeMap<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">,</span> Integer<span style="color:#f92672">&gt;</span> map<span style="color:#f92672">;</span>
-
-    <span style="color:#75715e">/**
-</span><span style="color:#75715e">     * Use a tree map to store the interval. The start of interval is the key and the value is the end of this interval.
-</span><span style="color:#75715e">     * When adding new interval, floor the interval between start and end. Merge if there is an overlap.
-</span><span style="color:#75715e">     * Clear any fully overlapped interval to avoid duplication in map.
-</span><span style="color:#75715e">     * When query specific range, check if there is a range in map.
-</span><span style="color:#75715e">     * When remove an interval, find if there is a range in map that will be removed partly.
-</span><span style="color:#75715e">     * Add the remaining part to the map first, then remove the interval.
-</span><span style="color:#75715e">     */</span>
-    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">RangeModule</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
-        map <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> TreeMap<span style="color:#f92672">&lt;&gt;();</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#75715e">/**
-</span><span style="color:#75715e">     * Add a new interval to the map.
-</span><span style="color:#75715e">     * Floor the left and right in map to see if there is an existing interval that has an overlap.
-</span><span style="color:#75715e">     * If there is an overlap, merge them. Then put the new interval to the map.
-</span><span style="color:#75715e">     * After add the interval to the map, remove any fully overlapped interval in the map.
-</span><span style="color:#75715e">     *
-</span><span style="color:#75715e">     * @param left  start of the interval
-</span><span style="color:#75715e">     * @param right end of the interval, not included
-</span><span style="color:#75715e">     */</span>
-    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">addRange</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> left<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> right<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-
-        <span style="color:#75715e">/* Corner case */</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>right <span style="color:#f92672">&lt;</span> left<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span>
-
-        Integer startInterval <span style="color:#f92672">=</span> map<span style="color:#f92672">.</span><span style="color:#a6e22e">floorKey</span><span style="color:#f92672">(</span>left<span style="color:#f92672">),</span> endInterval <span style="color:#f92672">=</span> map<span style="color:#f92672">.</span><span style="color:#a6e22e">floorKey</span><span style="color:#f92672">(</span>right<span style="color:#f92672">);</span>
-
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>startInterval <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;&amp;</span> map<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>startInterval<span style="color:#f92672">)</span> <span style="color:#f92672">&gt;=</span> left<span style="color:#f92672">)</span> <span style="color:#f92672">{</span> <span style="color:#75715e">// left included in existing interval
-</span><span style="color:#75715e"></span>            left <span style="color:#f92672">=</span> startInterval<span style="color:#f92672">;</span> <span style="color:#75715e">// merge interval if there is an overlap
-</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>endInterval <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;&amp;</span> map<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>endInterval<span style="color:#f92672">)</span> <span style="color:#f92672">&gt;</span> right<span style="color:#f92672">)</span> <span style="color:#f92672">{</span> <span style="color:#75715e">// right is larger than existing interval
-</span><span style="color:#75715e"></span>            right <span style="color:#f92672">=</span> map<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>endInterval<span style="color:#f92672">);</span>
-        <span style="color:#f92672">}</span>
-
-        map<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>left<span style="color:#f92672">,</span> right<span style="color:#f92672">);</span>
-        map<span style="color:#f92672">.</span><span style="color:#a6e22e">subMap</span><span style="color:#f92672">(</span>left<span style="color:#f92672">,</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">,</span> right<span style="color:#f92672">,</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">).</span><span style="color:#a6e22e">clear</span><span style="color:#f92672">();</span> <span style="color:#75715e">// remove all the intermediate intervals
-</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
-
-    <span style="color:#75715e">/**
-</span><span style="color:#75715e">     * Check if a specific interval exists in the map.
-</span><span style="color:#75715e">     *
-</span><span style="color:#75715e">     * @param left  start of the query range
-</span><span style="color:#75715e">     * @param right end of the query range
-</span><span style="color:#75715e">     * @return return true if every number in the interval [left, right) is currently being tracked, and false otherwise
-</span><span style="color:#75715e">     */</span>
-    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">queryRange</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> left<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> right<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        Integer start <span style="color:#f92672">=</span> map<span style="color:#f92672">.</span><span style="color:#a6e22e">floorKey</span><span style="color:#f92672">(</span>left<span style="color:#f92672">);</span>
-
-        <span style="color:#66d9ef">return</span> start <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;&amp;</span> map<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>start<span style="color:#f92672">)</span> <span style="color:#f92672">&gt;=</span> right<span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#75715e">/**
-</span><span style="color:#75715e">     * Remove a specific range from the map.
-</span><span style="color:#75715e">     * Similar to the adding operation.
-</span><span style="color:#75715e">     * The difference is that there may be an interval in the map that will only be partly removed.
-</span><span style="color:#75715e">     * Hence, add the remaining part to the map first, then remove the requested interval.
-</span><span style="color:#75715e">     *
-</span><span style="color:#75715e">     * @param left  start of the query range
-</span><span style="color:#75715e">     * @param right end of the query range
-</span><span style="color:#75715e">     */</span>
-    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">removeRange</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> left<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> right<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-
-        <span style="color:#75715e">/* Corner case */</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>right <span style="color:#f92672">&lt;</span> left<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span>
-
-        Integer start <span style="color:#f92672">=</span> map<span style="color:#f92672">.</span><span style="color:#a6e22e">floorKey</span><span style="color:#f92672">(</span>left<span style="color:#f92672">),</span> end <span style="color:#f92672">=</span> map<span style="color:#f92672">.</span><span style="color:#a6e22e">floorKey</span><span style="color:#f92672">(</span>right<span style="color:#f92672">);</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>end <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;&amp;</span> map<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>end<span style="color:#f92672">)</span> <span style="color:#f92672">&gt;</span> right<span style="color:#f92672">)</span> <span style="color:#f92672">{</span> <span style="color:#75715e">// end should be first, since end is not included to be removed
-</span><span style="color:#75715e"></span>            map<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>right<span style="color:#f92672">,</span> map<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>end<span style="color:#f92672">));</span>
-        <span style="color:#f92672">}</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>start <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;&amp;</span> map<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>start<span style="color:#f92672">)</span> <span style="color:#f92672">&gt;</span> left<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            map<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>start<span style="color:#f92672">,</span> left<span style="color:#f92672">);</span>
-        <span style="color:#f92672">}</span>
-
-        <span style="color:#75715e">// remove all the intermediate intervals within range
-</span><span style="color:#75715e"></span>        map<span style="color:#f92672">.</span><span style="color:#a6e22e">subMap</span><span style="color:#f92672">(</span>left<span style="color:#f92672">,</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">,</span> right<span style="color:#f92672">,</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">).</span><span style="color:#a6e22e">clear</span><span style="color:#f92672">();</span>
-    <span style="color:#f92672">}</span>
-<span style="color:#f92672">}</span>
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">RangeModule</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    TreeMap<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">,</span> Integer<span style="color:#f92672">&gt;</span> map<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * Use a tree map to store the interval. The start of interval is the key and the value is the end of this interval.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * When adding new interval, floor the interval between start and end. Merge if there is an overlap.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * Clear any fully overlapped interval to avoid duplication in map.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * When query specific range, check if there is a range in map.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * When remove an interval, find if there is a range in map that will be removed partly.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * Add the remaining part to the map first, then remove the interval.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#a6e22e">RangeModule</span><span style="color:#f92672">()</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        map <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> TreeMap<span style="color:#f92672">&lt;&gt;();</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * Add a new interval to the map.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * Floor the left and right in map to see if there is an existing interval that has an overlap.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * If there is an overlap, merge them. Then put the new interval to the map.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * After add the interval to the map, remove any fully overlapped interval in the map.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @param left  start of the interval
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @param right end of the interval, not included
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">addRange</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> left<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> right<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">/* Corner case */</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>right <span style="color:#f92672">&lt;</span> left<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        Integer startInterval <span style="color:#f92672">=</span> map<span style="color:#f92672">.</span><span style="color:#a6e22e">floorKey</span><span style="color:#f92672">(</span>left<span style="color:#f92672">),</span> endInterval <span style="color:#f92672">=</span> map<span style="color:#f92672">.</span><span style="color:#a6e22e">floorKey</span><span style="color:#f92672">(</span>right<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>startInterval <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;&amp;</span> map<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>startInterval<span style="color:#f92672">)</span> <span style="color:#f92672">&gt;=</span> left<span style="color:#f92672">)</span> <span style="color:#f92672">{</span> <span style="color:#75715e">// left included in existing interval
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            left <span style="color:#f92672">=</span> startInterval<span style="color:#f92672">;</span> <span style="color:#75715e">// merge interval if there is an overlap
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>endInterval <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;&amp;</span> map<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>endInterval<span style="color:#f92672">)</span> <span style="color:#f92672">&gt;</span> right<span style="color:#f92672">)</span> <span style="color:#f92672">{</span> <span style="color:#75715e">// right is larger than existing interval
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            right <span style="color:#f92672">=</span> map<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>endInterval<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        map<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>left<span style="color:#f92672">,</span> right<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        map<span style="color:#f92672">.</span><span style="color:#a6e22e">subMap</span><span style="color:#f92672">(</span>left<span style="color:#f92672">,</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">,</span> right<span style="color:#f92672">,</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">).</span><span style="color:#a6e22e">clear</span><span style="color:#f92672">();</span> <span style="color:#75715e">// remove all the intermediate intervals
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * Check if a specific interval exists in the map.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @param left  start of the query range
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @param right end of the query range
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @return return true if every number in the interval [left, right) is currently being tracked, and false otherwise
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">queryRange</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> left<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> right<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        Integer start <span style="color:#f92672">=</span> map<span style="color:#f92672">.</span><span style="color:#a6e22e">floorKey</span><span style="color:#f92672">(</span>left<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> start <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;&amp;</span> map<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>start<span style="color:#f92672">)</span> <span style="color:#f92672">&gt;=</span> right<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * Remove a specific range from the map.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * Similar to the adding operation.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * The difference is that there may be an interval in the map that will only be partly removed.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * Hence, add the remaining part to the map first, then remove the requested interval.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @param left  start of the query range
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * @param right end of the query range
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">public</span> <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">removeRange</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> left<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> right<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">/* Corner case */</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>right <span style="color:#f92672">&lt;</span> left<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        Integer start <span style="color:#f92672">=</span> map<span style="color:#f92672">.</span><span style="color:#a6e22e">floorKey</span><span style="color:#f92672">(</span>left<span style="color:#f92672">),</span> end <span style="color:#f92672">=</span> map<span style="color:#f92672">.</span><span style="color:#a6e22e">floorKey</span><span style="color:#f92672">(</span>right<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>end <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;&amp;</span> map<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>end<span style="color:#f92672">)</span> <span style="color:#f92672">&gt;</span> right<span style="color:#f92672">)</span> <span style="color:#f92672">{</span> <span style="color:#75715e">// end should be first, since end is not included to be removed
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            map<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>right<span style="color:#f92672">,</span> map<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>end<span style="color:#f92672">));</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>start <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">&amp;&amp;</span> map<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>start<span style="color:#f92672">)</span> <span style="color:#f92672">&gt;</span> left<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            map<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>start<span style="color:#f92672">,</span> left<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">// remove all the intermediate intervals within range
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        map<span style="color:#f92672">.</span><span style="color:#a6e22e">subMap</span><span style="color:#f92672">(</span>left<span style="color:#f92672">,</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">,</span> right<span style="color:#f92672">,</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">).</span><span style="color:#a6e22e">clear</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div>
               
             </div>
           </div>

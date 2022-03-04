@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.92.2 with theme Tranquilpeak 0.4.8-BETA">
+<meta name="generator" content="Hugo 0.93.1 with theme Tranquilpeak 0.4.8-BETA">
 <meta name="author" content="Notebook">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -280,50 +280,50 @@ cost = [3,4,3]
 Output: -1
 
 Explanation:
-You can't start at station 0 or 1, as there is not enough gas to travel to the next station.
-Let's start at station 2 and fill up with 4 unit of gas. Your tank = 0 + 4 = 4
+You can&#39;t start at station 0 or 1, as there is not enough gas to travel to the next station.
+Let&#39;s start at station 2 and fill up with 4 unit of gas. Your tank = 0 + 4 = 4
 Travel to station 0. Your tank = 4 - 3 + 2 = 3
 Travel to station 1. Your tank = 3 - 3 + 3 = 3
 You cannot travel back to station 2, as it requires 4 unit of gas but you only have 3.
-Therefore, you can't travel around the circuit once no matter where you start.
+Therefore, you can&#39;t travel around the circuit once no matter where you start.
 </code></pre><h2 id="method--code">Method &amp; Code</h2>
 <p>If total gas can cover all cost of gas, then there will be an available start location.</p>
 <p>Assume the start position is 0, traverse the array and calculate the cost in each station. If the sum of gas can not cover the cost from previous station to current station, set the start location to the next location. Meanwhile, add the cost from start location to current location (which should be a negative number, meaning the needed gas from the last station to current station).</p>
 <p>i.e.: assume start position is <code>i</code>, the absolute value of <code>sum(0, i)</code> (negative, means not sufficient) should be smaller than <code>sum(i, n)</code>, where <code>n</code> is the length of array, and sum means the sum of <code>gas[i] - cost[i]</code> (cost of moving from one gas station to the next one).</p>
 <p>Finally, if total gas can not cover total cost, then return -1. Otherwise, return start location.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
-</span><span style="color:#75715e"> * If total gas can cover all cost of gas, then there will be an available start location.
-</span><span style="color:#75715e"> * Assume the start position is 0, then calculate the cost in each station.
-</span><span style="color:#75715e"> * If it can not cover the cost from previous station to current station, then set the start location to the next.
-</span><span style="color:#75715e"> * Meanwhile, add the cost from start location to current location. This will be checked after traverse complete.
-</span><span style="color:#75715e"> * If the remaining gas can cover the cost, the remaining gas should be more than the need before start location.
-</span><span style="color:#75715e"> * Finally, if total gas can not cover total cost, then return -1. Otherwise, return start location.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param gas  amount of gas
-</span><span style="color:#75715e"> * @param cost cost of gas
-</span><span style="color:#75715e"> * @return starting station&#39;s index if it can travel around the circuit once in the clockwise direction
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">canCompleteCircuit</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> gas<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> cost<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-
-    <span style="color:#75715e">/* Corner case */</span>
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>gas <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">||</span> cost <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">||</span> gas<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">==</span> 0 <span style="color:#f92672">||</span> cost<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">int</span> n <span style="color:#f92672">=</span> gas<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">,</span> totalCost <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> currentCost <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> start <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> n<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
-        currentCost <span style="color:#f92672">+=</span> gas<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">-</span> cost<span style="color:#f92672">[</span>i<span style="color:#f92672">];</span> <span style="color:#75715e">// cost from previous station to current station
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>currentCost <span style="color:#f92672">&lt;</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span> <span style="color:#75715e">// if this station is not reachable, set start location to next position
-</span><span style="color:#75715e"></span>            totalCost <span style="color:#f92672">+=</span> currentCost<span style="color:#f92672">;</span> <span style="color:#75715e">// add cost from start to this position
-</span><span style="color:#75715e"></span>            currentCost <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
-            start <span style="color:#f92672">=</span> i <span style="color:#f92672">+</span> 1<span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-
-    totalCost <span style="color:#f92672">+=</span> currentCost<span style="color:#f92672">;</span> <span style="color:#75715e">// check if current gas in tank could cover previous cost
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">return</span> totalCost <span style="color:#f92672">&gt;=</span> 0 <span style="color:#f92672">?</span> start <span style="color:#f92672">:</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">;</span>
-<span style="color:#f92672">}</span>
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * If total gas can cover all cost of gas, then there will be an available start location.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Assume the start position is 0, then calculate the cost in each station.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * If it can not cover the cost from previous station to current station, then set the start location to the next.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Meanwhile, add the cost from start location to current location. This will be checked after traverse complete.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * If the remaining gas can cover the cost, the remaining gas should be more than the need before start location.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Finally, if total gas can not cover total cost, then return -1. Otherwise, return start location.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param gas  amount of gas
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param cost cost of gas
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return starting station&#39;s index if it can travel around the circuit once in the clockwise direction
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">canCompleteCircuit</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> gas<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> cost<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/* Corner case */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>gas <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">||</span> cost <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">||</span> gas<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">==</span> 0 <span style="color:#f92672">||</span> cost<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> n <span style="color:#f92672">=</span> gas<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">,</span> totalCost <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> currentCost <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> start <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> n<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        currentCost <span style="color:#f92672">+=</span> gas<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">-</span> cost<span style="color:#f92672">[</span>i<span style="color:#f92672">];</span> <span style="color:#75715e">// cost from previous station to current station
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>currentCost <span style="color:#f92672">&lt;</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span> <span style="color:#75715e">// if this station is not reachable, set start location to next position
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            totalCost <span style="color:#f92672">+=</span> currentCost<span style="color:#f92672">;</span> <span style="color:#75715e">// add cost from start to this position
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            currentCost <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>            start <span style="color:#f92672">=</span> i <span style="color:#f92672">+</span> 1<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    totalCost <span style="color:#f92672">+=</span> currentCost<span style="color:#f92672">;</span> <span style="color:#75715e">// check if current gas in tank could cover previous cost
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">return</span> totalCost <span style="color:#f92672">&gt;=</span> 0 <span style="color:#f92672">?</span> start <span style="color:#f92672">:</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div>
               
             </div>
           </div>

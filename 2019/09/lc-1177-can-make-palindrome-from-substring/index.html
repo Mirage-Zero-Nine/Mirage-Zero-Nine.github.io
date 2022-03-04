@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.92.2 with theme Tranquilpeak 0.4.8-BETA">
+<meta name="generator" content="Hugo 0.93.1 with theme Tranquilpeak 0.4.8-BETA">
 <meta name="author" content="Notebook">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -254,14 +254,14 @@
 <p>Return an array <code>answer[]</code>, where <code>answer[i]</code> is the result of the <code>i</code>-th query <code>queries[i]</code>.</p>
 <p>Note that: Each letter is counted <strong>individually</strong> for replacement so if for example <code>s[left..right] = &quot;aaa&quot;</code>, and <code>k = 2</code>, we can only replace two of the letters.  (Also, note that the initial string <code>s</code> is never modified by any query.)</p>
 <p><strong>Example :</strong></p>
-<pre tabindex="0"><code>Input: s = &quot;abcda&quot;, queries = [[3,3,0],[1,2,0],[0,3,1],[0,3,2],[0,4,1]]
+<pre tabindex="0"><code>Input: s = &#34;abcda&#34;, queries = [[3,3,0],[1,2,0],[0,3,1],[0,3,2],[0,4,1]]
 Output: [true,false,false,true,true]
 Explanation:
-queries[0] : substring = &quot;d&quot;, is palidrome.
-queries[1] : substring = &quot;bc&quot;, is not palidrome.
-queries[2] : substring = &quot;abcd&quot;, is not palidrome after replacing only 1 character.
-queries[3] : substring = &quot;abcd&quot;, could be changed to &quot;abba&quot; which is palidrome. Also this can be changed to &quot;baab&quot; first rearrange it &quot;bacd&quot; then replace &quot;cd&quot; with &quot;ab&quot;.
-queries[4] : substring = &quot;abcda&quot;, could be changed to &quot;abcba&quot; which is palidrome.
+queries[0] : substring = &#34;d&#34;, is palidrome.
+queries[1] : substring = &#34;bc&#34;, is not palidrome.
+queries[2] : substring = &#34;abcd&#34;, is not palidrome after replacing only 1 character.
+queries[3] : substring = &#34;abcd&#34;, could be changed to &#34;abba&#34; which is palidrome. Also this can be changed to &#34;baab&#34; first rearrange it &#34;bacd&#34; then replace &#34;cd&#34; with &#34;ab&#34;.
+queries[4] : substring = &#34;abcda&#34;, could be changed to &#34;abcba&#34; which is palidrome.
 </code></pre><p><strong>Constraints:</strong></p>
 <ul>
 <li><code>1 &lt;= s.length, queries.length &lt;= 10^5</code></li>
@@ -273,98 +273,98 @@ queries[4] : substring = &quot;abcda&quot;, could be changed to &quot;abcba&quot
 <p>Prefix sum.</p>
 <p>Traverse <code>s</code>, find all char appearance from 0 to i. Then based on given range, count the char frequency.</p>
 <p>Find all odd chars and see if they are more than replacement limit.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Prefix sum.
-</span><span style="color:#75715e"> * Traverse s, find all char appearance from 0 to i.
-</span><span style="color:#75715e"> * Then based on given range, count the char frequency.
-</span><span style="color:#75715e"> * Find all odd chars and see if they are more than replacement limit.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param s       given string
-</span><span style="color:#75715e"> * @param queries given queries
-</span><span style="color:#75715e"> * @return array answer[], answer[i] is the result of the i-th query queries[i]
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">public</span> List<span style="color:#f92672">&lt;</span>Boolean<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">canMakePaliQueries</span><span style="color:#f92672">(</span>String s<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[][]</span> queries<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-
-    List<span style="color:#f92672">&lt;</span>Boolean<span style="color:#f92672">&gt;</span> out <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;&gt;();</span>
-    <span style="color:#66d9ef">int</span><span style="color:#f92672">[][]</span> prefixSum <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">()</span> <span style="color:#f92672">+</span> 1<span style="color:#f92672">][</span>26<span style="color:#f92672">];</span>
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;=</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">();</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
-        prefixSum<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> prefixSum<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">].</span><span style="color:#a6e22e">clone</span><span style="color:#f92672">();</span>
-        prefixSum<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">-</span> <span style="color:#e6db74">&#39;a&#39;</span><span style="color:#f92672">]++;</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> query <span style="color:#f92672">:</span> queries<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>query<span style="color:#f92672">[</span>2<span style="color:#f92672">]</span> <span style="color:#f92672">&gt;</span> 13<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            out<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
-        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">int</span> count <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
-            <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> 26<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
-                count <span style="color:#f92672">+=</span> <span style="color:#f92672">(</span>prefixSum<span style="color:#f92672">[</span>query<span style="color:#f92672">[</span>1<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> 1<span style="color:#f92672">][</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">-</span> prefixSum<span style="color:#f92672">[</span>query<span style="color:#f92672">[</span>0<span style="color:#f92672">]][</span>i<span style="color:#f92672">])</span> <span style="color:#f92672">%</span> 2<span style="color:#f92672">;</span>
-            <span style="color:#f92672">}</span>
-
-            out<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>count <span style="color:#f92672">/</span> 2 <span style="color:#f92672">&lt;=</span> query<span style="color:#f92672">[</span>2<span style="color:#f92672">]);</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">return</span> out<span style="color:#f92672">;</span>
-<span style="color:#f92672">}</span>
-
-<span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Count char each time directly.
-</span><span style="color:#75715e"> * If replacement can be taken for more than 13 times, then it will always be palindrome.
-</span><span style="color:#75715e"> * Otherwise, count the char that appears odd times. These char may requires replacement.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param s       given string
-</span><span style="color:#75715e"> * @param queries given queries
-</span><span style="color:#75715e"> * @return array answer[], answer[i] is the result of the i-th query queries[i]
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">public</span> List<span style="color:#f92672">&lt;</span>Boolean<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">countChar</span><span style="color:#f92672">(</span>String s<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[][]</span> queries<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-
-    List<span style="color:#f92672">&lt;</span>Boolean<span style="color:#f92672">&gt;</span> out <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;&gt;();</span>
-
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> cur <span style="color:#f92672">:</span> queries<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-
-        <span style="color:#75715e">/*
-</span><span style="color:#75715e">         * If can replace more than 13 times, then all chars can be replaced.
-</span><span style="color:#75715e">         * Otherwise, count the total number of odd chars, which requires replacement. */</span>
-        out<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">((</span>cur<span style="color:#f92672">[</span>2<span style="color:#f92672">]</span> <span style="color:#f92672">&gt;</span> 13<span style="color:#f92672">)</span> <span style="color:#f92672">||</span> Helper<span style="color:#f92672">(</span>s<span style="color:#f92672">,</span> cur<span style="color:#f92672">[</span>0<span style="color:#f92672">],</span> cur<span style="color:#f92672">[</span>1<span style="color:#f92672">],</span> cur<span style="color:#f92672">[</span>2<span style="color:#f92672">]));</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">return</span> out<span style="color:#f92672">;</span>
-<span style="color:#f92672">}</span>
-
-<span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Count char appearance.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param s       given string
-</span><span style="color:#75715e"> * @param start   start position
-</span><span style="color:#75715e"> * @param end     end position
-</span><span style="color:#75715e"> * @param replace replace time
-</span><span style="color:#75715e"> * @return if current range can be palindrome after replace and rearrange
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">Helper</span><span style="color:#f92672">(</span>String s<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> start<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> end<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> replace<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>start <span style="color:#f92672">==</span> end<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> index <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>26<span style="color:#f92672">];</span>
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> start<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;=</span> end<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
-        index<span style="color:#f92672">[</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span> <span style="color:#f92672">-</span> <span style="color:#e6db74">&#39;a&#39;</span><span style="color:#f92672">]++;</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">int</span> check <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> 26<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>index<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">%</span> 2 <span style="color:#f92672">!=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            check<span style="color:#f92672">++;</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">((</span>end <span style="color:#f92672">-</span> start <span style="color:#f92672">+</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">%</span> 2 <span style="color:#f92672">==</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>       <span style="color:#75715e">// if range is odd, then one odd char can be at center
-</span><span style="color:#75715e"></span>        check <span style="color:#f92672">=</span> check <span style="color:#f92672">-</span> 1<span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">return</span> check <span style="color:#f92672">&lt;=</span> replace <span style="color:#f92672">*</span> 2<span style="color:#f92672">;</span>
-<span style="color:#f92672">}</span>
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Prefix sum.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Traverse s, find all char appearance from 0 to i.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Then based on given range, count the char frequency.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Find all odd chars and see if they are more than replacement limit.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param s       given string
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param queries given queries
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return array answer[], answer[i] is the result of the i-th query queries[i]
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> List<span style="color:#f92672">&lt;</span>Boolean<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">canMakePaliQueries</span><span style="color:#f92672">(</span>String s<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[][]</span> queries<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    List<span style="color:#f92672">&lt;</span>Boolean<span style="color:#f92672">&gt;</span> out <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;&gt;();</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span><span style="color:#f92672">[][]</span> prefixSum <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">()</span> <span style="color:#f92672">+</span> 1<span style="color:#f92672">][</span>26<span style="color:#f92672">];</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;=</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">();</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        prefixSum<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> prefixSum<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">].</span><span style="color:#a6e22e">clone</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>        prefixSum<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">-</span> <span style="color:#e6db74">&#39;a&#39;</span><span style="color:#f92672">]++;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> query <span style="color:#f92672">:</span> queries<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>query<span style="color:#f92672">[</span>2<span style="color:#f92672">]</span> <span style="color:#f92672">&gt;</span> 13<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            out<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">true</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">int</span> count <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> 26<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                count <span style="color:#f92672">+=</span> <span style="color:#f92672">(</span>prefixSum<span style="color:#f92672">[</span>query<span style="color:#f92672">[</span>1<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> 1<span style="color:#f92672">][</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">-</span> prefixSum<span style="color:#f92672">[</span>query<span style="color:#f92672">[</span>0<span style="color:#f92672">]][</span>i<span style="color:#f92672">])</span> <span style="color:#f92672">%</span> 2<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            out<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>count <span style="color:#f92672">/</span> 2 <span style="color:#f92672">&lt;=</span> query<span style="color:#f92672">[</span>2<span style="color:#f92672">]);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> out<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Count char each time directly.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * If replacement can be taken for more than 13 times, then it will always be palindrome.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Otherwise, count the char that appears odd times. These char may requires replacement.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param s       given string
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param queries given queries
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return array answer[], answer[i] is the result of the i-th query queries[i]
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> List<span style="color:#f92672">&lt;</span>Boolean<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">countChar</span><span style="color:#f92672">(</span>String s<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[][]</span> queries<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    List<span style="color:#f92672">&lt;</span>Boolean<span style="color:#f92672">&gt;</span> out <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;&gt;();</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> cur <span style="color:#f92672">:</span> queries<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">/*
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">         * If can replace more than 13 times, then all chars can be replaced.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">         * Otherwise, count the total number of odd chars, which requires replacement. */</span>
+</span></span><span style="display:flex;"><span>        out<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">((</span>cur<span style="color:#f92672">[</span>2<span style="color:#f92672">]</span> <span style="color:#f92672">&gt;</span> 13<span style="color:#f92672">)</span> <span style="color:#f92672">||</span> Helper<span style="color:#f92672">(</span>s<span style="color:#f92672">,</span> cur<span style="color:#f92672">[</span>0<span style="color:#f92672">],</span> cur<span style="color:#f92672">[</span>1<span style="color:#f92672">],</span> cur<span style="color:#f92672">[</span>2<span style="color:#f92672">]));</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> out<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Count char appearance.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param s       given string
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param start   start position
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param end     end position
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param replace replace time
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return if current range can be palindrome after replace and rearrange
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">Helper</span><span style="color:#f92672">(</span>String s<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> start<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> end<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> replace<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>start <span style="color:#f92672">==</span> end<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> index <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>26<span style="color:#f92672">];</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> start<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;=</span> end<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        index<span style="color:#f92672">[</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span> <span style="color:#f92672">-</span> <span style="color:#e6db74">&#39;a&#39;</span><span style="color:#f92672">]++;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> check <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> 26<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>index<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">%</span> 2 <span style="color:#f92672">!=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            check<span style="color:#f92672">++;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">((</span>end <span style="color:#f92672">-</span> start <span style="color:#f92672">+</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">%</span> 2 <span style="color:#f92672">==</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>       <span style="color:#75715e">// if range is odd, then one odd char can be at center
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        check <span style="color:#f92672">=</span> check <span style="color:#f92672">-</span> 1<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> check <span style="color:#f92672">&lt;=</span> replace <span style="color:#f92672">*</span> 2<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div>
               
             </div>
           </div>

@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.92.2 with theme Tranquilpeak 0.4.8-BETA">
+<meta name="generator" content="Hugo 0.93.1 with theme Tranquilpeak 0.4.8-BETA">
 <meta name="author" content="Notebook">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -261,37 +261,37 @@ Notice that book number 2 does not have to be on the first shelf.
 <li>Place current book into a new shelf level: <code>dp[i] = dp[i - 1] + books[i][1]</code>.</li>
 <li>Place book with previous books to previous level, or a new level: <code>dp[i] = Math.min(dp[i], dp[j - 1] + height)</code>, where <code>height</code> is the book height from <code>(i - 1)th</code> book to the book that can not be fitted into same level. In other words, <code>sum(book[j][0], book[j + 1][0], ..., book[1][0]) &lt;= shelf_width</code>.</li>
 </ol>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Dynamic programming.
-</span><span style="color:#75715e"> * There are two possible conditions of placing books:
-</span><span style="color:#75715e"> * 1. Place current book into a new shelf level: dp[i] = dp[i - 1] + books[i][1]
-</span><span style="color:#75715e"> * 2. Place book with previous books to previous level, or a new level: dp[i] = Math.min(dp[i], dp[j - 1] + height)
-</span><span style="color:#75715e"> * height is the book height from (i - 1)th book to the book that can not be fitted into same level.
-</span><span style="color:#75715e"> * sum(book[j][0], book[j + 1][0], ..., book[1][0]) &lt;= shelf_width.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param books       given books list
-</span><span style="color:#75715e"> * @param shelf_width limit of level of each shelf
-</span><span style="color:#75715e"> * @return minimum possible height that the total bookshelf can be after placing shelves
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">minHeightShelves</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[][]</span> books<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> shelf_width<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-    <span style="color:#66d9ef">int</span> n <span style="color:#f92672">=</span> books<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> dp <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>n <span style="color:#f92672">+</span> 1<span style="color:#f92672">];</span>
-
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;=</span> n<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">int</span> width <span style="color:#f92672">=</span> books<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">][</span>0<span style="color:#f92672">];</span>
-        <span style="color:#66d9ef">int</span> height <span style="color:#f92672">=</span> books<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">][</span>1<span style="color:#f92672">];</span>
-        dp<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> dp<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> height<span style="color:#f92672">;</span>
-
-        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> i <span style="color:#f92672">-</span> 1<span style="color:#f92672">;</span> j <span style="color:#f92672">&gt;</span> 0 <span style="color:#f92672">&amp;&amp;</span> width <span style="color:#f92672">+</span> books<span style="color:#f92672">[</span>j <span style="color:#f92672">-</span> 1<span style="color:#f92672">][</span>0<span style="color:#f92672">]</span> <span style="color:#f92672">&lt;=</span> shelf_width<span style="color:#f92672">;</span> <span style="color:#f92672">--</span>j<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            height <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>height<span style="color:#f92672">,</span> books<span style="color:#f92672">[</span>j <span style="color:#f92672">-</span> 1<span style="color:#f92672">][</span>1<span style="color:#f92672">]);</span>
-            dp<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">min</span><span style="color:#f92672">(</span>dp<span style="color:#f92672">[</span>i<span style="color:#f92672">],</span> dp<span style="color:#f92672">[</span>j <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> height<span style="color:#f92672">);</span>
-            width <span style="color:#f92672">+=</span> books<span style="color:#f92672">[</span>j <span style="color:#f92672">-</span> 1<span style="color:#f92672">][</span>0<span style="color:#f92672">];</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">return</span> dp<span style="color:#f92672">[</span>n<span style="color:#f92672">];</span>
-<span style="color:#f92672">}</span>
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Dynamic programming.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * There are two possible conditions of placing books:
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * 1. Place current book into a new shelf level: dp[i] = dp[i - 1] + books[i][1]
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * 2. Place book with previous books to previous level, or a new level: dp[i] = Math.min(dp[i], dp[j - 1] + height)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * height is the book height from (i - 1)th book to the book that can not be fitted into same level.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * sum(book[j][0], book[j + 1][0], ..., book[1][0]) &lt;= shelf_width.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param books       given books list
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param shelf_width limit of level of each shelf
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return minimum possible height that the total bookshelf can be after placing shelves
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">minHeightShelves</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[][]</span> books<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> shelf_width<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> n <span style="color:#f92672">=</span> books<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> dp <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>n <span style="color:#f92672">+</span> 1<span style="color:#f92672">];</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;=</span> n<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> width <span style="color:#f92672">=</span> books<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">][</span>0<span style="color:#f92672">];</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> height <span style="color:#f92672">=</span> books<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">][</span>1<span style="color:#f92672">];</span>
+</span></span><span style="display:flex;"><span>        dp<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> dp<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> height<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> i <span style="color:#f92672">-</span> 1<span style="color:#f92672">;</span> j <span style="color:#f92672">&gt;</span> 0 <span style="color:#f92672">&amp;&amp;</span> width <span style="color:#f92672">+</span> books<span style="color:#f92672">[</span>j <span style="color:#f92672">-</span> 1<span style="color:#f92672">][</span>0<span style="color:#f92672">]</span> <span style="color:#f92672">&lt;=</span> shelf_width<span style="color:#f92672">;</span> <span style="color:#f92672">--</span>j<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            height <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>height<span style="color:#f92672">,</span> books<span style="color:#f92672">[</span>j <span style="color:#f92672">-</span> 1<span style="color:#f92672">][</span>1<span style="color:#f92672">]);</span>
+</span></span><span style="display:flex;"><span>            dp<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">min</span><span style="color:#f92672">(</span>dp<span style="color:#f92672">[</span>i<span style="color:#f92672">],</span> dp<span style="color:#f92672">[</span>j <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> height<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>            width <span style="color:#f92672">+=</span> books<span style="color:#f92672">[</span>j <span style="color:#f92672">-</span> 1<span style="color:#f92672">][</span>0<span style="color:#f92672">];</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> dp<span style="color:#f92672">[</span>n<span style="color:#f92672">];</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div>
               
             </div>
           </div>

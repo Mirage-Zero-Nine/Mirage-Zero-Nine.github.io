@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.92.2 with theme Tranquilpeak 0.4.8-BETA">
+<meta name="generator" content="Hugo 0.93.1 with theme Tranquilpeak 0.4.8-BETA">
 <meta name="author" content="Notebook">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -302,133 +302,133 @@ Explanation: The array cannot be partitioned into equal sum subsets.
 <li><code>dp[i - 1][j - nums[i - 1]]</code>: choose <code>nums[i]</code>, and if <code>j - nums[i]</code> can make up sum, <code>dp[i][j]</code> can.</li>
 <li><code>dp[i - 1][j]</code>: leave <code>nums[i]</code> and if from <code>nums[0]</code> to <code>nums[i-1]</code> can make up, then <code>dp[i][j]</code> can.</li>
 </ul>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
-</span><span style="color:#75715e"> * 0/1 Knapsack problem.
-</span><span style="color:#75715e"> * State transition:
-</span><span style="color:#75715e"> * dp[i][j] = dp[i - 1][j - nums[i - 1]] || dp[i - 1][j]
-</span><span style="color:#75715e"> * dp[i - 1][j - nums[i - 1]]: choose nums[i], and if j - nums[i] can make up sum, dp[i][j] can.
-</span><span style="color:#75715e"> * dp[i - 1][j]: leave nums[i] and if from nums[0] to nums[i-1] can make up, then dp[i][j] can.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param nums given array
-</span><span style="color:#75715e"> * @return if the array can be partitioned into two subsets such that the sum of elements in both subsets is equal
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">canPartition</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> nums<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-
-    <span style="color:#75715e">/* Corner case */</span>
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">&lt;</span> 2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">int</span> sum <span style="color:#f92672">=</span> Arrays<span style="color:#f92672">.</span><span style="color:#a6e22e">stream</span><span style="color:#f92672">(</span>nums<span style="color:#f92672">).</span><span style="color:#a6e22e">sum</span><span style="color:#f92672">();</span>
-
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>sum <span style="color:#f92672">%</span> 2 <span style="color:#f92672">==</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>       <span style="color:#75715e">// odd number can not be spilt to equal parts
-</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
-
-    sum <span style="color:#f92672">/=</span> 2<span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">boolean</span><span style="color:#f92672">[][]</span> dp <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">boolean</span><span style="color:#f92672">[</span>nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">+</span> 1<span style="color:#f92672">][</span>sum <span style="color:#f92672">+</span> 1<span style="color:#f92672">];</span>     <span style="color:#75715e">// dp[i][j]: if 0 to i in nums can reach sum of j
-</span><span style="color:#75715e"></span>
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> dp<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
-        dp<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>0<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> dp<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> j <span style="color:#f92672">&lt;</span> dp<span style="color:#f92672">[</span>0<span style="color:#f92672">].</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> j<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
-
-            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>j <span style="color:#f92672">-</span> nums<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span> <span style="color:#f92672">&gt;=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>     <span style="color:#75715e">// choose current nums[i]
-</span><span style="color:#75715e"></span>                dp<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> dp<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">][</span>j <span style="color:#f92672">-</span> nums<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">]]</span> <span style="color:#f92672">||</span> dp<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">][</span>j<span style="color:#f92672">];</span>
-            <span style="color:#f92672">}</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">return</span> dp<span style="color:#f92672">[</span>nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">][</span>sum<span style="color:#f92672">];</span>
-<span style="color:#f92672">}</span>
-</code></pre></div><h3 id="dfs">DFS</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * 0/1 Knapsack problem.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * State transition:
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * dp[i][j] = dp[i - 1][j - nums[i - 1]] || dp[i - 1][j]
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * dp[i - 1][j - nums[i - 1]]: choose nums[i], and if j - nums[i] can make up sum, dp[i][j] can.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * dp[i - 1][j]: leave nums[i] and if from nums[0] to nums[i-1] can make up, then dp[i][j] can.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param nums given array
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return if the array can be partitioned into two subsets such that the sum of elements in both subsets is equal
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">canPartition</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> nums<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/* Corner case */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">&lt;</span> 2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> sum <span style="color:#f92672">=</span> Arrays<span style="color:#f92672">.</span><span style="color:#a6e22e">stream</span><span style="color:#f92672">(</span>nums<span style="color:#f92672">).</span><span style="color:#a6e22e">sum</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>sum <span style="color:#f92672">%</span> 2 <span style="color:#f92672">==</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>       <span style="color:#75715e">// odd number can not be spilt to equal parts
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    sum <span style="color:#f92672">/=</span> 2<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">boolean</span><span style="color:#f92672">[][]</span> dp <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">boolean</span><span style="color:#f92672">[</span>nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">+</span> 1<span style="color:#f92672">][</span>sum <span style="color:#f92672">+</span> 1<span style="color:#f92672">];</span>     <span style="color:#75715e">// dp[i][j]: if 0 to i in nums can reach sum of j
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> dp<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        dp<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>0<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> dp<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> j <span style="color:#f92672">&lt;</span> dp<span style="color:#f92672">[</span>0<span style="color:#f92672">].</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> j<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>j <span style="color:#f92672">-</span> nums<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span> <span style="color:#f92672">&gt;=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>     <span style="color:#75715e">// choose current nums[i]
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                dp<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> dp<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">][</span>j <span style="color:#f92672">-</span> nums<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">]]</span> <span style="color:#f92672">||</span> dp<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">][</span>j<span style="color:#f92672">];</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> dp<span style="color:#f92672">[</span>nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">][</span>sum<span style="color:#f92672">];</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><h3 id="dfs">DFS</h3>
 <p>DFS with pruning, idea is same as the DP solution, select or not select. Keep a boolean array, or a hash map to prune.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
-</span><span style="color:#75715e"> * DFS with pruning, idea is same as the DP solution, select or not select.
-</span><span style="color:#75715e"> * Keep a boolean array or a hash map to prune.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param nums given array
-</span><span style="color:#75715e"> * @return if the array can be partitioned into two subsets such that the sum of elements in both subsets is equal
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">canPartitionDFS</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> nums<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-
-    <span style="color:#75715e">/* Corner case */</span>
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">&lt;</span> 2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">int</span> sum <span style="color:#f92672">=</span> Arrays<span style="color:#f92672">.</span><span style="color:#a6e22e">stream</span><span style="color:#f92672">(</span>nums<span style="color:#f92672">).</span><span style="color:#a6e22e">sum</span><span style="color:#f92672">();</span>
-
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>sum <span style="color:#f92672">%</span> 2 <span style="color:#f92672">==</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>       <span style="color:#75715e">// odd number can not be spilt to equal parts
-</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
-    Arrays<span style="color:#f92672">.</span><span style="color:#a6e22e">sort</span><span style="color:#f92672">(</span>nums<span style="color:#f92672">);</span>
-    Boolean<span style="color:#f92672">[]</span> visited <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Boolean<span style="color:#f92672">[</span>sum <span style="color:#f92672">/</span> 2 <span style="color:#f92672">+</span> 1<span style="color:#f92672">];</span>
-    visited<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
-
-    <span style="color:#66d9ef">return</span> dfs<span style="color:#f92672">(</span>nums<span style="color:#f92672">,</span> 0<span style="color:#f92672">,</span> sum <span style="color:#f92672">/</span> 2<span style="color:#f92672">,</span> visited<span style="color:#f92672">);</span>
-<span style="color:#f92672">}</span>
-
-<span style="color:#75715e">/**
-</span><span style="color:#75715e"> * DFS to check if array can be divided into 2 subsets.
-</span><span style="color:#75715e"> * Idea is same to dynamic programming solution, select current element or not select.
-</span><span style="color:#75715e"> * Keep a hash map as pruning.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param nums  given array
-</span><span style="color:#75715e"> * @param index current index
-</span><span style="color:#75715e"> * @param sum   current remaining sum
-</span><span style="color:#75715e"> * @param m     hash map
-</span><span style="color:#75715e"> * @return if the array can be divided into two parts
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">dfs</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> nums<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> index<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> sum<span style="color:#f92672">,</span> HashMap<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">,</span> Boolean<span style="color:#f92672">&gt;</span> m<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>m<span style="color:#f92672">.</span><span style="color:#a6e22e">containsKey</span><span style="color:#f92672">(</span>sum<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">return</span> m<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>sum<span style="color:#f92672">);</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>index <span style="color:#f92672">==</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">||</span> sum <span style="color:#f92672">&lt;</span> nums<span style="color:#f92672">[</span>index<span style="color:#f92672">])</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>sum <span style="color:#f92672">==</span> nums<span style="color:#f92672">[</span>index<span style="color:#f92672">])</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-
-    m<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>sum<span style="color:#f92672">,</span> dfs<span style="color:#f92672">(</span>nums<span style="color:#f92672">,</span> index <span style="color:#f92672">+</span> 1<span style="color:#f92672">,</span> sum <span style="color:#f92672">-</span> nums<span style="color:#f92672">[</span>index<span style="color:#f92672">],</span> m<span style="color:#f92672">)</span> <span style="color:#f92672">||</span> dfs<span style="color:#f92672">(</span>nums<span style="color:#f92672">,</span> index <span style="color:#f92672">+</span> 1<span style="color:#f92672">,</span> sum<span style="color:#f92672">,</span> m<span style="color:#f92672">));</span>
-
-    <span style="color:#66d9ef">return</span> m<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>sum<span style="color:#f92672">);</span>
-<span style="color:#f92672">}</span>
-
-<span style="color:#75715e">/**
-</span><span style="color:#75715e"> * DFS to check if array can be divided into 2 subsets.
-</span><span style="color:#75715e"> * Idea is same to dynamic programming solution, select current element or not select.
-</span><span style="color:#75715e"> * Keep a Boolean array as pruning.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param nums    given array
-</span><span style="color:#75715e"> * @param index   current index
-</span><span style="color:#75715e"> * @param sum     current remaining sum
-</span><span style="color:#75715e"> * @param visited pruning
-</span><span style="color:#75715e"> * @return if the array can be divided into two parts
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">dfs</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> nums<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> index<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> sum<span style="color:#f92672">,</span> Boolean<span style="color:#f92672">[]</span> visited<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>visited<span style="color:#f92672">[</span>sum<span style="color:#f92672">]</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">return</span> visited<span style="color:#f92672">[</span>sum<span style="color:#f92672">];</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>index <span style="color:#f92672">==</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">||</span> sum <span style="color:#f92672">&lt;</span> nums<span style="color:#f92672">[</span>index<span style="color:#f92672">])</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>sum <span style="color:#f92672">==</span> nums<span style="color:#f92672">[</span>index<span style="color:#f92672">])</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-    visited<span style="color:#f92672">[</span>sum<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> dfs<span style="color:#f92672">(</span>nums<span style="color:#f92672">,</span> index <span style="color:#f92672">+</span> 1<span style="color:#f92672">,</span> sum <span style="color:#f92672">-</span> nums<span style="color:#f92672">[</span>index<span style="color:#f92672">],</span> visited<span style="color:#f92672">)</span> <span style="color:#f92672">||</span> dfs<span style="color:#f92672">(</span>nums<span style="color:#f92672">,</span> index <span style="color:#f92672">+</span> 1<span style="color:#f92672">,</span> sum<span style="color:#f92672">,</span> visited<span style="color:#f92672">);</span>
-
-    <span style="color:#66d9ef">return</span> visited<span style="color:#f92672">[</span>sum<span style="color:#f92672">];</span>
-<span style="color:#f92672">}</span>
-</code></pre></div><h1 id="518-coin-change-2">518. Coin Change 2</h1>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * DFS with pruning, idea is same as the DP solution, select or not select.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Keep a boolean array or a hash map to prune.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param nums given array
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return if the array can be partitioned into two subsets such that the sum of elements in both subsets is equal
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">canPartitionDFS</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> nums<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/* Corner case */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">&lt;</span> 2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> sum <span style="color:#f92672">=</span> Arrays<span style="color:#f92672">.</span><span style="color:#a6e22e">stream</span><span style="color:#f92672">(</span>nums<span style="color:#f92672">).</span><span style="color:#a6e22e">sum</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>sum <span style="color:#f92672">%</span> 2 <span style="color:#f92672">==</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>       <span style="color:#75715e">// odd number can not be spilt to equal parts
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    Arrays<span style="color:#f92672">.</span><span style="color:#a6e22e">sort</span><span style="color:#f92672">(</span>nums<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>    Boolean<span style="color:#f92672">[]</span> visited <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Boolean<span style="color:#f92672">[</span>sum <span style="color:#f92672">/</span> 2 <span style="color:#f92672">+</span> 1<span style="color:#f92672">];</span>
+</span></span><span style="display:flex;"><span>    visited<span style="color:#f92672">[</span>0<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> dfs<span style="color:#f92672">(</span>nums<span style="color:#f92672">,</span> 0<span style="color:#f92672">,</span> sum <span style="color:#f92672">/</span> 2<span style="color:#f92672">,</span> visited<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * DFS to check if array can be divided into 2 subsets.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Idea is same to dynamic programming solution, select current element or not select.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Keep a hash map as pruning.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param nums  given array
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param index current index
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param sum   current remaining sum
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param m     hash map
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return if the array can be divided into two parts
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">dfs</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> nums<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> index<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> sum<span style="color:#f92672">,</span> HashMap<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">,</span> Boolean<span style="color:#f92672">&gt;</span> m<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>m<span style="color:#f92672">.</span><span style="color:#a6e22e">containsKey</span><span style="color:#f92672">(</span>sum<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> m<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>sum<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>index <span style="color:#f92672">==</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">||</span> sum <span style="color:#f92672">&lt;</span> nums<span style="color:#f92672">[</span>index<span style="color:#f92672">])</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>sum <span style="color:#f92672">==</span> nums<span style="color:#f92672">[</span>index<span style="color:#f92672">])</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    m<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>sum<span style="color:#f92672">,</span> dfs<span style="color:#f92672">(</span>nums<span style="color:#f92672">,</span> index <span style="color:#f92672">+</span> 1<span style="color:#f92672">,</span> sum <span style="color:#f92672">-</span> nums<span style="color:#f92672">[</span>index<span style="color:#f92672">],</span> m<span style="color:#f92672">)</span> <span style="color:#f92672">||</span> dfs<span style="color:#f92672">(</span>nums<span style="color:#f92672">,</span> index <span style="color:#f92672">+</span> 1<span style="color:#f92672">,</span> sum<span style="color:#f92672">,</span> m<span style="color:#f92672">));</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> m<span style="color:#f92672">.</span><span style="color:#a6e22e">get</span><span style="color:#f92672">(</span>sum<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * DFS to check if array can be divided into 2 subsets.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Idea is same to dynamic programming solution, select current element or not select.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Keep a Boolean array as pruning.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param nums    given array
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param index   current index
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param sum     current remaining sum
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param visited pruning
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return if the array can be divided into two parts
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">dfs</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> nums<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> index<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> sum<span style="color:#f92672">,</span> Boolean<span style="color:#f92672">[]</span> visited<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>visited<span style="color:#f92672">[</span>sum<span style="color:#f92672">]</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">null</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> visited<span style="color:#f92672">[</span>sum<span style="color:#f92672">];</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>index <span style="color:#f92672">==</span> nums<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">||</span> sum <span style="color:#f92672">&lt;</span> nums<span style="color:#f92672">[</span>index<span style="color:#f92672">])</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>sum <span style="color:#f92672">==</span> nums<span style="color:#f92672">[</span>index<span style="color:#f92672">])</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    visited<span style="color:#f92672">[</span>sum<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> dfs<span style="color:#f92672">(</span>nums<span style="color:#f92672">,</span> index <span style="color:#f92672">+</span> 1<span style="color:#f92672">,</span> sum <span style="color:#f92672">-</span> nums<span style="color:#f92672">[</span>index<span style="color:#f92672">],</span> visited<span style="color:#f92672">)</span> <span style="color:#f92672">||</span> dfs<span style="color:#f92672">(</span>nums<span style="color:#f92672">,</span> index <span style="color:#f92672">+</span> 1<span style="color:#f92672">,</span> sum<span style="color:#f92672">,</span> visited<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> visited<span style="color:#f92672">[</span>sum<span style="color:#f92672">];</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><h1 id="518-coin-change-2">518. Coin Change 2</h1>
 <p>Link: <a href="https://leetcode.com/problems/coin-change-2/">Coin Change 2</a></p>
 <h2 id="problem-description-1">Problem Description</h2>
 <p>You are given coins of different denominations and a total amount of money. Write a function to compute the number of combinations that make up that amount. You may assume that you have infinite number of each kind of coin.</p>
@@ -462,41 +462,41 @@ Output: 1
 <li><code>dp[i][j - coins[i - 1]]</code>: choose ith coin reaches amount reduce <code>ith</code> coin.</li>
 </ul>
 <p>If <code>j - coins[i - 1] &lt; 0</code>, then <code>dp[i][j - coins[i - 1]] = 0</code>.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Knapsack problem.
-</span><span style="color:#75715e"> * dp[i][j] = dp[i - 1][j] + dp[i][j - coins[i - 1]], if j - coins[i - 1] &gt;= 0.
-</span><span style="color:#75715e"> * dp[i - 1][j]: do not choose ith coin
-</span><span style="color:#75715e"> * dp[i][j - coins[i - 1]]: choose ith coin reaches amount reduce ith coin
-</span><span style="color:#75715e"> * if j - coins[i - 1]&lt;0, dp[i][j - coins[i - 1]] = 0.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param amount make up amount
-</span><span style="color:#75715e"> * @param coins  total coins
-</span><span style="color:#75715e"> * @return number of combinations that make up that amount
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">change</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> amount<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> coins<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-
-    <span style="color:#75715e">/*
-</span><span style="color:#75715e">     * i -&gt; from 0 to ith coins
-</span><span style="color:#75715e">     * j -&gt; from 0 to j amount to be made up */</span>
-    <span style="color:#66d9ef">int</span><span style="color:#f92672">[][]</span> dp <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>coins<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">+</span> 1<span style="color:#f92672">][</span>amount <span style="color:#f92672">+</span> 1<span style="color:#f92672">];</span>
-
-    dp<span style="color:#f92672">[</span>0<span style="color:#f92672">][</span>0<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span>
-
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> dp<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
-        dp<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>0<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span>
-        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> j <span style="color:#f92672">&lt;</span> dp<span style="color:#f92672">[</span>0<span style="color:#f92672">].</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> j<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
-            <span style="color:#75715e">/*
-</span><span style="color:#75715e">             * dp[i][j] = dp[i-1][j] + dp[i][j-coins[i-1]], if j-coins[i-1] &gt;= 0.
-</span><span style="color:#75715e">             * dp[i-1][j]: do not choose ith coin
-</span><span style="color:#75715e">             * dp[i][j-coins[i-1]]: choose ith coin reaches amount reduce ith coin
-</span><span style="color:#75715e">             * if j-coins[i-1]&lt;0, dp[i][j-coins[i-1]]=0 */</span>
-            dp<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> dp<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">][</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> <span style="color:#f92672">((</span>j <span style="color:#f92672">-</span> coins<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span> <span style="color:#f92672">&gt;=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">?</span> dp<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>j <span style="color:#f92672">-</span> coins<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">]]</span> <span style="color:#f92672">:</span> 0<span style="color:#f92672">);</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">return</span> dp<span style="color:#f92672">[</span>coins<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">][</span>amount<span style="color:#f92672">];</span>
-<span style="color:#f92672">}</span>
-</code></pre></div><h1 id="1049-last-stone-weight-ii">1049. Last Stone Weight II</h1>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Knapsack problem.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * dp[i][j] = dp[i - 1][j] + dp[i][j - coins[i - 1]], if j - coins[i - 1] &gt;= 0.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * dp[i - 1][j]: do not choose ith coin
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * dp[i][j - coins[i - 1]]: choose ith coin reaches amount reduce ith coin
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * if j - coins[i - 1]&lt;0, dp[i][j - coins[i - 1]] = 0.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param amount make up amount
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param coins  total coins
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return number of combinations that make up that amount
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">change</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> amount<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> coins<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/*
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * i -&gt; from 0 to ith coins
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * j -&gt; from 0 to j amount to be made up */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span><span style="color:#f92672">[][]</span> dp <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>coins<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">+</span> 1<span style="color:#f92672">][</span>amount <span style="color:#f92672">+</span> 1<span style="color:#f92672">];</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    dp<span style="color:#f92672">[</span>0<span style="color:#f92672">][</span>0<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> dp<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        dp<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>0<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> j <span style="color:#f92672">&lt;</span> dp<span style="color:#f92672">[</span>0<span style="color:#f92672">].</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> j<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#75715e">/*
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">             * dp[i][j] = dp[i-1][j] + dp[i][j-coins[i-1]], if j-coins[i-1] &gt;= 0.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">             * dp[i-1][j]: do not choose ith coin
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">             * dp[i][j-coins[i-1]]: choose ith coin reaches amount reduce ith coin
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">             * if j-coins[i-1]&lt;0, dp[i][j-coins[i-1]]=0 */</span>
+</span></span><span style="display:flex;"><span>            dp<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> dp<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">][</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> <span style="color:#f92672">((</span>j <span style="color:#f92672">-</span> coins<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span> <span style="color:#f92672">&gt;=</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">?</span> dp<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>j <span style="color:#f92672">-</span> coins<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">]]</span> <span style="color:#f92672">:</span> 0<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> dp<span style="color:#f92672">[</span>coins<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">][</span>amount<span style="color:#f92672">];</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><h1 id="1049-last-stone-weight-ii">1049. Last Stone Weight II</h1>
 <p>Link: <a href="https://leetcode.com/problems/last-stone-weight-ii">Last Stone Weight II</a></p>
 <h2 id="problem-description-2">Problem Description</h2>
 <p>We have a collection of rocks, each rock has a positive integer weight.</p>
@@ -513,7 +513,7 @@ Explanation:
 We can combine 2 and 4 to get 2 so the array converts to [2,7,1,8,1] then,
 we can combine 7 and 8 to get 1 so the array converts to [2,1,1,1] then,
 we can combine 2 and 1 to get 1 so the array converts to [1,1,1] then,
-we can combine 1 and 1 to get 0 so the array converts to [1] then that's the optimal value. 
+we can combine 1 and 1 to get 0 so the array converts to [1] then that&#39;s the optimal value. 
 </code></pre><p><strong>Note:</strong></p>
 <ol>
 <li><code>1 &lt;= stones.length &lt;= 30</code></li>
@@ -521,41 +521,41 @@ we can combine 1 and 1 to get 0 so the array converts to [1] then that's the opt
 </ol>
 <h2 id="method--code-2">Method &amp; Code</h2>
 <p>Knapsack problem. State transition is same as previous problem.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Knapsack problem.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param stones given int array
-</span><span style="color:#75715e"> * @return min sum difference of two sub array
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">lastStoneWeightII</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> stones<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-
-    <span style="color:#75715e">/* Corner case */</span>
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>stones<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">==</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">return</span> stones<span style="color:#f92672">[</span>0<span style="color:#f92672">];</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">int</span> sum <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> s1 <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> s <span style="color:#f92672">:</span> stones<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        sum <span style="color:#f92672">+=</span> s<span style="color:#f92672">;</span>       <span style="color:#75715e">// find total sum of array
-</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">boolean</span><span style="color:#f92672">[][]</span> dp <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">boolean</span><span style="color:#f92672">[</span>sum <span style="color:#f92672">/</span> 2 <span style="color:#f92672">+</span> 1<span style="color:#f92672">][</span>stones<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">+</span> 1<span style="color:#f92672">];</span>
-
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;=</span> stones<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
-        dp<span style="color:#f92672">[</span>0<span style="color:#f92672">][</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;=</span> sum <span style="color:#f92672">/</span> 2<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> j <span style="color:#f92672">&lt;=</span> stones<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> j<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>dp<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>j <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span> <span style="color:#f92672">||</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">&gt;=</span> stones<span style="color:#f92672">[</span>j <span style="color:#f92672">-</span> 1<span style="color:#f92672">])</span> <span style="color:#f92672">&amp;&amp;</span> dp<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> stones<span style="color:#f92672">[</span>j <span style="color:#f92672">-</span> 1<span style="color:#f92672">]][</span>j <span style="color:#f92672">-</span> 1<span style="color:#f92672">])</span> <span style="color:#f92672">{</span>
-                dp<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
-                s1 <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>s1<span style="color:#f92672">,</span> i<span style="color:#f92672">);</span>
-            <span style="color:#f92672">}</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-    <span style="color:#66d9ef">return</span> sum <span style="color:#f92672">-</span> s1 <span style="color:#f92672">*</span> 2<span style="color:#f92672">;</span>
-<span style="color:#f92672">}</span>
-</code></pre></div><h1 id="1155-number-of-dice-rolls-with-target-sum">1155. Number of Dice Rolls With Target Sum</h1>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Knapsack problem.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param stones given int array
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return min sum difference of two sub array
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">lastStoneWeightII</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> stones<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/* Corner case */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>stones<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">==</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> stones<span style="color:#f92672">[</span>0<span style="color:#f92672">];</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> sum <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> s1 <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> s <span style="color:#f92672">:</span> stones<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        sum <span style="color:#f92672">+=</span> s<span style="color:#f92672">;</span>       <span style="color:#75715e">// find total sum of array
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">boolean</span><span style="color:#f92672">[][]</span> dp <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">boolean</span><span style="color:#f92672">[</span>sum <span style="color:#f92672">/</span> 2 <span style="color:#f92672">+</span> 1<span style="color:#f92672">][</span>stones<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">+</span> 1<span style="color:#f92672">];</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;=</span> stones<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        dp<span style="color:#f92672">[</span>0<span style="color:#f92672">][</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;=</span> sum <span style="color:#f92672">/</span> 2<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> j <span style="color:#f92672">&lt;=</span> stones<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> j<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>dp<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>j <span style="color:#f92672">-</span> 1<span style="color:#f92672">]</span> <span style="color:#f92672">||</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">&gt;=</span> stones<span style="color:#f92672">[</span>j <span style="color:#f92672">-</span> 1<span style="color:#f92672">])</span> <span style="color:#f92672">&amp;&amp;</span> dp<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> stones<span style="color:#f92672">[</span>j <span style="color:#f92672">-</span> 1<span style="color:#f92672">]][</span>j <span style="color:#f92672">-</span> 1<span style="color:#f92672">])</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                dp<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>                s1 <span style="color:#f92672">=</span> Math<span style="color:#f92672">.</span><span style="color:#a6e22e">max</span><span style="color:#f92672">(</span>s1<span style="color:#f92672">,</span> i<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> sum <span style="color:#f92672">-</span> s1 <span style="color:#f92672">*</span> 2<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><h1 id="1155-number-of-dice-rolls-with-target-sum">1155. Number of Dice Rolls With Target Sum</h1>
 <p>Link: <a href="https://leetcode.com/problems/number-of-dice-rolls-with-target-sum/">Number of Dice Rolls With Target Sum</a></p>
 <h2 id="problem-description-3">Problem Description</h2>
 <p>You have <code>d</code> dice, and each die has <code>f</code> faces numbered <code>1, 2, ..., f</code>.</p>
@@ -597,41 +597,41 @@ The answer must be returned modulo 10^9 + 7.
 <ul>
 <li><code>dp[i][j] = dp[i][j] + dp[i - 1][j - k]</code>, where <code>k</code> from <code>[1, f]</code>, <code>j - k &gt;= 0</code> and <code>j &lt;= i * f</code> (target # should at least be # of dices)</li>
 </ul>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Dynamic programming.
-</span><span style="color:#75715e"> * State transition:
-</span><span style="color:#75715e"> * If j &lt;= i * f (target # should at least be # of dices)
-</span><span style="color:#75715e"> * dp[i][j] = dp[i][j] + dp[i - 1][j - k], where k from [1, f] and j - k &gt;= 0.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param d      # of dices
-</span><span style="color:#75715e"> * @param f      # of faces
-</span><span style="color:#75715e"> * @param target target #
-</span><span style="color:#75715e"> * @return # of possible ways (modulo 10^9 + 7) to roll the dice so the sum of the face up numbers equals target
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">numRollsToTarget</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> d<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> f<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> target<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-
-    <span style="color:#75715e">/* Corner case */</span>
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>d <span style="color:#f92672">*</span> f <span style="color:#f92672">&lt;</span> target <span style="color:#f92672">||</span> target <span style="color:#f92672">&lt;</span> d<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">return</span> 0<span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">int</span> MOD <span style="color:#f92672">=</span> 1000000007<span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">int</span><span style="color:#f92672">[][]</span> dp <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>d <span style="color:#f92672">+</span> 1<span style="color:#f92672">][</span>target <span style="color:#f92672">+</span> 1<span style="color:#f92672">];</span>
-    dp<span style="color:#f92672">[</span>0<span style="color:#f92672">][</span>0<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span>       <span style="color:#75715e">// 0 dice sums 0
-</span><span style="color:#75715e"></span>
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;=</span> d<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>      <span style="color:#75715e">// how many possibility can i dices sum up to j;
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> j <span style="color:#f92672">&lt;=</span> target<span style="color:#f92672">;</span> j<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>j <span style="color:#f92672">&lt;=</span> i <span style="color:#f92672">*</span> f<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> k <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> k <span style="color:#f92672">&lt;=</span> f <span style="color:#f92672">&amp;&amp;</span> k <span style="color:#f92672">&lt;=</span> j<span style="color:#f92672">;</span> k<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
-                    dp<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>dp<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> dp<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">][</span>j <span style="color:#f92672">-</span> k<span style="color:#f92672">])</span> <span style="color:#f92672">%</span> MOD<span style="color:#f92672">;</span>
-                <span style="color:#f92672">}</span>
-            <span style="color:#f92672">}</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">return</span> dp<span style="color:#f92672">[</span>d<span style="color:#f92672">][</span>target<span style="color:#f92672">];</span>
-<span style="color:#f92672">}</span>
-</code></pre></div><h1 id="1235-maximum-profit-in-job-scheduling">1235. Maximum Profit in Job Scheduling</h1>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Dynamic programming.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * State transition:
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * If j &lt;= i * f (target # should at least be # of dices)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * dp[i][j] = dp[i][j] + dp[i - 1][j - k], where k from [1, f] and j - k &gt;= 0.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param d      # of dices
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param f      # of faces
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param target target #
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return # of possible ways (modulo 10^9 + 7) to roll the dice so the sum of the face up numbers equals target
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">numRollsToTarget</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> d<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> f<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> target<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/* Corner case */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>d <span style="color:#f92672">*</span> f <span style="color:#f92672">&lt;</span> target <span style="color:#f92672">||</span> target <span style="color:#f92672">&lt;</span> d<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> 0<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> MOD <span style="color:#f92672">=</span> 1000000007<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span><span style="color:#f92672">[][]</span> dp <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>d <span style="color:#f92672">+</span> 1<span style="color:#f92672">][</span>target <span style="color:#f92672">+</span> 1<span style="color:#f92672">];</span>
+</span></span><span style="display:flex;"><span>    dp<span style="color:#f92672">[</span>0<span style="color:#f92672">][</span>0<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span>       <span style="color:#75715e">// 0 dice sums 0
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;=</span> d<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>      <span style="color:#75715e">// how many possibility can i dices sum up to j;
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> j <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> j <span style="color:#f92672">&lt;=</span> target<span style="color:#f92672">;</span> j<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>j <span style="color:#f92672">&lt;=</span> i <span style="color:#f92672">*</span> f<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> k <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> k <span style="color:#f92672">&lt;=</span> f <span style="color:#f92672">&amp;&amp;</span> k <span style="color:#f92672">&lt;=</span> j<span style="color:#f92672">;</span> k<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                    dp<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>dp<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>j<span style="color:#f92672">]</span> <span style="color:#f92672">+</span> dp<span style="color:#f92672">[</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">][</span>j <span style="color:#f92672">-</span> k<span style="color:#f92672">])</span> <span style="color:#f92672">%</span> MOD<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> dp<span style="color:#f92672">[</span>d<span style="color:#f92672">][</span>target<span style="color:#f92672">];</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><h1 id="1235-maximum-profit-in-job-scheduling">1235. Maximum Profit in Job Scheduling</h1>
 <p>Link: <a href="https://leetcode.com/problems/maximum-profit-in-job-scheduling/">Maximum Profit in Job Scheduling</a></p>
 <h2 id="problem-description-4">Problem Description</h2>
 <p>We have <code>n</code> jobs, where every job is scheduled to be done from <code>startTime[i]</code> to <code>endTime[i]</code>, obtaining a profit of <code>profit[i]</code>.</p>
@@ -667,43 +667,43 @@ Output: 6
 <li>Don&rsquo;t do current job.</li>
 </ol>
 <p>If finish current job could make more profit compare to current max profit in map, add it to the map.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Similar to knapsack problems. Dynamic programming with TreeMap.
-</span><span style="color:#75715e"> * There are 2 cases:
-</span><span style="color:#75715e"> * 1. If current job is done: find the latest ending job, add profit to it.
-</span><span style="color:#75715e"> * 2. Don&#39;t do current job.
-</span><span style="color:#75715e"> * If finish current job could make more profit compare to current max profit in map, add it to the map.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param startTime start time array
-</span><span style="color:#75715e"> * @param endTime   end time array
-</span><span style="color:#75715e"> * @param profit    profit of each job
-</span><span style="color:#75715e"> * @return the maximum profit that there are no two jobs with overlapping time range
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">jobScheduling</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> startTime<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> endTime<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> profit<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-    <span style="color:#66d9ef">int</span> n <span style="color:#f92672">=</span> startTime<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">int</span><span style="color:#f92672">[][]</span> jobs <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>n<span style="color:#f92672">][</span>3<span style="color:#f92672">];</span>
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> n<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
-        jobs<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]{</span>startTime<span style="color:#f92672">[</span>i<span style="color:#f92672">],</span> endTime<span style="color:#f92672">[</span>i<span style="color:#f92672">],</span> profit<span style="color:#f92672">[</span>i<span style="color:#f92672">]};</span>
-    <span style="color:#f92672">}</span>
-
-    Arrays<span style="color:#f92672">.</span><span style="color:#a6e22e">sort</span><span style="color:#f92672">(</span>jobs<span style="color:#f92672">,</span> Comparator<span style="color:#f92672">.</span><span style="color:#a6e22e">comparingInt</span><span style="color:#f92672">(</span>a <span style="color:#f92672">-&gt;</span> a<span style="color:#f92672">[</span>1<span style="color:#f92672">]));</span> <span style="color:#75715e">// sort by end time
-</span><span style="color:#75715e"></span>    TreeMap<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">,</span> Integer<span style="color:#f92672">&gt;</span> dp <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> TreeMap<span style="color:#f92672">&lt;&gt;();</span> <span style="color:#75715e">// end time -&gt; profit
-</span><span style="color:#75715e"></span>    dp<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>0<span style="color:#f92672">,</span> 0<span style="color:#f92672">);</span>
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> job <span style="color:#f92672">:</span> jobs<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#75715e">/*
-</span><span style="color:#75715e">         * Two cases, similar to knapsack problem:
-</span><span style="color:#75715e">         * 1. If current job is done: find the latest ending job, add profit to it.
-</span><span style="color:#75715e">         * 2. Don&#39;t do current job.
-</span><span style="color:#75715e">         * If finish current job could make more profit compare to current max profit in map, add it to the map. */</span>
-        <span style="color:#66d9ef">int</span> current <span style="color:#f92672">=</span> dp<span style="color:#f92672">.</span><span style="color:#a6e22e">floorEntry</span><span style="color:#f92672">(</span>job<span style="color:#f92672">[</span>0<span style="color:#f92672">]).</span><span style="color:#a6e22e">getValue</span><span style="color:#f92672">()</span> <span style="color:#f92672">+</span> job<span style="color:#f92672">[</span>2<span style="color:#f92672">];</span> <span style="color:#75715e">// get the profit if current job is done
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>current <span style="color:#f92672">&gt;</span> dp<span style="color:#f92672">.</span><span style="color:#a6e22e">lastEntry</span><span style="color:#f92672">().</span><span style="color:#a6e22e">getValue</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
-            dp<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>job<span style="color:#f92672">[</span>1<span style="color:#f92672">],</span> current<span style="color:#f92672">);</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">return</span> dp<span style="color:#f92672">.</span><span style="color:#a6e22e">lastEntry</span><span style="color:#f92672">().</span><span style="color:#a6e22e">getValue</span><span style="color:#f92672">();</span>
-<span style="color:#f92672">}</span>
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Similar to knapsack problems. Dynamic programming with TreeMap.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * There are 2 cases:
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * 1. If current job is done: find the latest ending job, add profit to it.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * 2. Don&#39;t do current job.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * If finish current job could make more profit compare to current max profit in map, add it to the map.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param startTime start time array
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param endTime   end time array
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param profit    profit of each job
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return the maximum profit that there are no two jobs with overlapping time range
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">jobScheduling</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> startTime<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> endTime<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> profit<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> n <span style="color:#f92672">=</span> startTime<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span><span style="color:#f92672">[][]</span> jobs <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>n<span style="color:#f92672">][</span>3<span style="color:#f92672">];</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> n<span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        jobs<span style="color:#f92672">[</span>i<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]{</span>startTime<span style="color:#f92672">[</span>i<span style="color:#f92672">],</span> endTime<span style="color:#f92672">[</span>i<span style="color:#f92672">],</span> profit<span style="color:#f92672">[</span>i<span style="color:#f92672">]};</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    Arrays<span style="color:#f92672">.</span><span style="color:#a6e22e">sort</span><span style="color:#f92672">(</span>jobs<span style="color:#f92672">,</span> Comparator<span style="color:#f92672">.</span><span style="color:#a6e22e">comparingInt</span><span style="color:#f92672">(</span>a <span style="color:#f92672">-&gt;</span> a<span style="color:#f92672">[</span>1<span style="color:#f92672">]));</span> <span style="color:#75715e">// sort by end time
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    TreeMap<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">,</span> Integer<span style="color:#f92672">&gt;</span> dp <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> TreeMap<span style="color:#f92672">&lt;&gt;();</span> <span style="color:#75715e">// end time -&gt; profit
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    dp<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>0<span style="color:#f92672">,</span> 0<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> job <span style="color:#f92672">:</span> jobs<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">/*
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">         * Two cases, similar to knapsack problem:
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">         * 1. If current job is done: find the latest ending job, add profit to it.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">         * 2. Don&#39;t do current job.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">         * If finish current job could make more profit compare to current max profit in map, add it to the map. */</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> current <span style="color:#f92672">=</span> dp<span style="color:#f92672">.</span><span style="color:#a6e22e">floorEntry</span><span style="color:#f92672">(</span>job<span style="color:#f92672">[</span>0<span style="color:#f92672">]).</span><span style="color:#a6e22e">getValue</span><span style="color:#f92672">()</span> <span style="color:#f92672">+</span> job<span style="color:#f92672">[</span>2<span style="color:#f92672">];</span> <span style="color:#75715e">// get the profit if current job is done
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>current <span style="color:#f92672">&gt;</span> dp<span style="color:#f92672">.</span><span style="color:#a6e22e">lastEntry</span><span style="color:#f92672">().</span><span style="color:#a6e22e">getValue</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            dp<span style="color:#f92672">.</span><span style="color:#a6e22e">put</span><span style="color:#f92672">(</span>job<span style="color:#f92672">[</span>1<span style="color:#f92672">],</span> current<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> dp<span style="color:#f92672">.</span><span style="color:#a6e22e">lastEntry</span><span style="color:#f92672">().</span><span style="color:#a6e22e">getValue</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div>
               
             </div>
           </div>

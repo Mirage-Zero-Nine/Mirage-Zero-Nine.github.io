@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.92.2 with theme Tranquilpeak 0.4.8-BETA">
+<meta name="generator" content="Hugo 0.93.1 with theme Tranquilpeak 0.4.8-BETA">
 <meta name="author" content="Notebook">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -258,7 +258,7 @@
 <p><strong><img src="../../../img/diag1b.png" alt="img"></strong></p>
 <pre tabindex="0"><code>Input:
 n = 2
-logs = [&quot;0:start:0&quot;,&quot;1:start:2&quot;,&quot;1:end:5&quot;,&quot;0:end:6&quot;]
+logs = [&#34;0:start:0&#34;,&#34;1:start:2&#34;,&#34;1:end:5&#34;,&#34;0:end:6&#34;]
 Output: [3, 4]
 Explanation:
 Function 0 starts at the beginning of time 0, then it executes 2 units of time and reaches the end of time 1.
@@ -278,42 +278,42 @@ So function 0 spends 2 + 1 = 3 units of total time executing, and function 1 spe
 <li>If current log is the end of function, pop out index of current function and add time to the output array.</li>
 </ul>
 <p>Each time, save the end time of current function for next round calculation.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Use a stack to temporary stores # of interrupted function.
-</span><span style="color:#75715e"> * If current log is a start command of function, then previous function has ended.
-</span><span style="color:#75715e"> * Calculate time of previous function and save the index to the stack for later execution.
-</span><span style="color:#75715e"> * If current log is the end of function, pop out index of current function and add time to the output array.
-</span><span style="color:#75715e"> * Each time, save the end time of current function for next round calculation.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param n    n functions
-</span><span style="color:#75715e"> * @param logs logs with functions
-</span><span style="color:#75715e"> * @return the exclusive time of each function, sorted by their function id
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> <span style="color:#a6e22e">exclusiveTime</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> n<span style="color:#f92672">,</span> List<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> logs<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-    <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> out <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>n<span style="color:#f92672">];</span>
-    Stack<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> s <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Stack<span style="color:#f92672">&lt;&gt;();</span>
-    <span style="color:#66d9ef">int</span> startTime <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>       <span style="color:#75715e">// start time is always 0
-</span><span style="color:#75715e"></span>
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>String log <span style="color:#f92672">:</span> logs<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        String<span style="color:#f92672">[]</span> arr <span style="color:#f92672">=</span> log<span style="color:#f92672">.</span><span style="color:#a6e22e">split</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;:&#34;</span><span style="color:#f92672">);</span>
-        <span style="color:#66d9ef">int</span> functionIndex <span style="color:#f92672">=</span> Integer<span style="color:#f92672">.</span><span style="color:#a6e22e">parseInt</span><span style="color:#f92672">(</span>arr<span style="color:#f92672">[</span>0<span style="color:#f92672">]);</span>
-        <span style="color:#66d9ef">int</span> currentTime <span style="color:#f92672">=</span> Integer<span style="color:#f92672">.</span><span style="color:#a6e22e">parseInt</span><span style="color:#f92672">(</span>arr<span style="color:#f92672">[</span>2<span style="color:#f92672">]);</span>
-
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>arr<span style="color:#f92672">[</span>1<span style="color:#f92672">].</span><span style="color:#a6e22e">equals</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;start&#34;</span><span style="color:#f92672">))</span> <span style="color:#f92672">{</span>       <span style="color:#75715e">// a new interruption
-</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>             <span style="color:#75715e">// if there is a job in process
-</span><span style="color:#75715e"></span>                out<span style="color:#f92672">[</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">peek</span><span style="color:#f92672">()]</span> <span style="color:#f92672">+=</span> currentTime <span style="color:#f92672">-</span> startTime<span style="color:#f92672">;</span>        <span style="color:#75715e">// previous function has been interrupted
-</span><span style="color:#75715e"></span>            <span style="color:#f92672">}</span>
-            s<span style="color:#f92672">.</span><span style="color:#a6e22e">push</span><span style="color:#f92672">(</span>functionIndex<span style="color:#f92672">);</span>          <span style="color:#75715e">// add current function #
-</span><span style="color:#75715e"></span>            startTime <span style="color:#f92672">=</span> currentTime<span style="color:#f92672">;</span>        <span style="color:#75715e">// set start time of current function
-</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>        <span style="color:#75715e">// end of current function
-</span><span style="color:#75715e"></span>            out<span style="color:#f92672">[</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">pop</span><span style="color:#f92672">()]</span> <span style="color:#f92672">+=</span> currentTime <span style="color:#f92672">-</span> startTime <span style="color:#f92672">+</span> 1<span style="color:#f92672">;</span>        <span style="color:#75715e">// calculate time of finished function
-</span><span style="color:#75715e"></span>            startTime <span style="color:#f92672">=</span> currentTime <span style="color:#f92672">+</span> 1<span style="color:#f92672">;</span>                        <span style="color:#75715e">// the start time of next function should add 1
-</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">return</span> out<span style="color:#f92672">;</span>
-<span style="color:#f92672">}</span>
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Use a stack to temporary stores # of interrupted function.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * If current log is a start command of function, then previous function has ended.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Calculate time of previous function and save the index to the stack for later execution.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * If current log is the end of function, pop out index of current function and add time to the output array.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Each time, save the end time of current function for next round calculation.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param n    n functions
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param logs logs with functions
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return the exclusive time of each function, sorted by their function id
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> <span style="color:#a6e22e">exclusiveTime</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> n<span style="color:#f92672">,</span> List<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> logs<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> out <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>n<span style="color:#f92672">];</span>
+</span></span><span style="display:flex;"><span>    Stack<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> s <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Stack<span style="color:#f92672">&lt;&gt;();</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> startTime <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>       <span style="color:#75715e">// start time is always 0
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>String log <span style="color:#f92672">:</span> logs<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        String<span style="color:#f92672">[]</span> arr <span style="color:#f92672">=</span> log<span style="color:#f92672">.</span><span style="color:#a6e22e">split</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;:&#34;</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> functionIndex <span style="color:#f92672">=</span> Integer<span style="color:#f92672">.</span><span style="color:#a6e22e">parseInt</span><span style="color:#f92672">(</span>arr<span style="color:#f92672">[</span>0<span style="color:#f92672">]);</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> currentTime <span style="color:#f92672">=</span> Integer<span style="color:#f92672">.</span><span style="color:#a6e22e">parseInt</span><span style="color:#f92672">(</span>arr<span style="color:#f92672">[</span>2<span style="color:#f92672">]);</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>arr<span style="color:#f92672">[</span>1<span style="color:#f92672">].</span><span style="color:#a6e22e">equals</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;start&#34;</span><span style="color:#f92672">))</span> <span style="color:#f92672">{</span>       <span style="color:#75715e">// a new interruption
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>             <span style="color:#75715e">// if there is a job in process
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                out<span style="color:#f92672">[</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">peek</span><span style="color:#f92672">()]</span> <span style="color:#f92672">+=</span> currentTime <span style="color:#f92672">-</span> startTime<span style="color:#f92672">;</span>        <span style="color:#75715e">// previous function has been interrupted
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>            s<span style="color:#f92672">.</span><span style="color:#a6e22e">push</span><span style="color:#f92672">(</span>functionIndex<span style="color:#f92672">);</span>          <span style="color:#75715e">// add current function #
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            startTime <span style="color:#f92672">=</span> currentTime<span style="color:#f92672">;</span>        <span style="color:#75715e">// set start time of current function
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>        <span style="color:#75715e">// end of current function
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            out<span style="color:#f92672">[</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">pop</span><span style="color:#f92672">()]</span> <span style="color:#f92672">+=</span> currentTime <span style="color:#f92672">-</span> startTime <span style="color:#f92672">+</span> 1<span style="color:#f92672">;</span>        <span style="color:#75715e">// calculate time of finished function
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            startTime <span style="color:#f92672">=</span> currentTime <span style="color:#f92672">+</span> 1<span style="color:#f92672">;</span>                        <span style="color:#75715e">// the start time of next function should add 1
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> out<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div>
               
             </div>
           </div>

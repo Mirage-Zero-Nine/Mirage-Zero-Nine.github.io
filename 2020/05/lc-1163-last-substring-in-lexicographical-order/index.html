@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.92.2 with theme Tranquilpeak 0.4.8-BETA">
+<meta name="generator" content="Hugo 0.93.1 with theme Tranquilpeak 0.4.8-BETA">
 <meta name="author" content="Notebook">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -250,12 +250,12 @@
 <h2 id="problem-description">Problem Description</h2>
 <p>Given a string <code>s</code>, return the last substring of <code>s</code> in lexicographical order.</p>
 <p><strong>Example 1:</strong></p>
-<pre tabindex="0"><code>Input: &quot;abab&quot;
-Output: &quot;bab&quot;
-Explanation: The substrings are [&quot;a&quot;, &quot;ab&quot;, &quot;aba&quot;, &quot;abab&quot;, &quot;b&quot;, &quot;ba&quot;, &quot;bab&quot;]. The lexicographically maximum substring is &quot;bab&quot;.
+<pre tabindex="0"><code>Input: &#34;abab&#34;
+Output: &#34;bab&#34;
+Explanation: The substrings are [&#34;a&#34;, &#34;ab&#34;, &#34;aba&#34;, &#34;abab&#34;, &#34;b&#34;, &#34;ba&#34;, &#34;bab&#34;]. The lexicographically maximum substring is &#34;bab&#34;.
 </code></pre><p><strong>Example 2:</strong></p>
-<pre tabindex="0"><code>Input: &quot;leetcode&quot;
-Output: &quot;tcode&quot;
+<pre tabindex="0"><code>Input: &#34;leetcode&#34;
+Output: &#34;tcode&#34;
 </code></pre><p><strong>Note:</strong></p>
 <ol>
 <li><code>1 &lt;= s.length &lt;= 4 * 10^5</code></li>
@@ -270,48 +270,48 @@ Output: &quot;tcode&quot;
 <li>Encode the suffix by current char&rsquo;s index in sorted distinct char.</li>
 </ol>
 <p>The key of encoding is to normalize the encoded value. For example, string <code>abc</code>&rsquo;s result should be <code>c</code>. If not normalized, then the output will be <code>abc</code>.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Find the largest suffix of given string in lexicographical order.
-</span><span style="color:#75715e"> * Encoding suffix:
-</span><span style="color:#75715e"> * 1. Find the number of distinct chars.
-</span><span style="color:#75715e"> * 2. Sort the distinct chars.
-</span><span style="color:#75715e"> * 3. Encode the suffix by current char&#39;s index in sorted distinct char.
-</span><span style="color:#75715e"> * The key of encoding is to normalize the encode value.
-</span><span style="color:#75715e"> * For example, string &#34;abc&#34;&#39;s result should be &#34;c&#34;. If not normalized then the output will be &#34;abc&#34;.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param s given string
-</span><span style="color:#75715e"> * @return last substring of s in lexicographical order
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">public</span> String <span style="color:#a6e22e">lastSubstring</span><span style="color:#f92672">(</span>String s<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-
-    <span style="color:#75715e">/* Corner case */</span>
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>s <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">||</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">()</span> <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;&#34;</span><span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-
-    TreeSet<span style="color:#f92672">&lt;</span>Character<span style="color:#f92672">&gt;</span> ts <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> TreeSet<span style="color:#f92672">&lt;&gt;();</span>
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">();</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
-        ts<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">));</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">int</span> base <span style="color:#f92672">=</span> ts<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">();</span>       <span style="color:#75715e">// total number of distinct char
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> start <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>              <span style="color:#75715e">// start of largest suffix
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">double</span> max <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> current <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
-
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">()</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">;</span> i <span style="color:#f92672">&gt;=</span> 0<span style="color:#f92672">;</span> i<span style="color:#f92672">--)</span> <span style="color:#f92672">{</span>     <span style="color:#75715e">// get suffices of string
-</span><span style="color:#75715e"></span>        current <span style="color:#f92672">+=</span> ts<span style="color:#f92672">.</span><span style="color:#a6e22e">headSet</span><span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)).</span><span style="color:#a6e22e">size</span><span style="color:#f92672">();</span>      <span style="color:#75715e">// encode current suffix
-</span><span style="color:#75715e"></span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>current <span style="color:#f92672">&gt;=</span> max<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>       <span style="color:#75715e">// new larger suffix is found
-</span><span style="color:#75715e"></span>            max <span style="color:#f92672">=</span> current<span style="color:#f92672">;</span>
-            start <span style="color:#f92672">=</span> i<span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span>
-
-        current <span style="color:#f92672">/=</span> base<span style="color:#f92672">;</span>        <span style="color:#75715e">// normalize the encode value to avoid longer substring has larger encode value
-</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">return</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">substring</span><span style="color:#f92672">(</span>start<span style="color:#f92672">);</span>
-<span style="color:#f92672">}</span>
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Find the largest suffix of given string in lexicographical order.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Encoding suffix:
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * 1. Find the number of distinct chars.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * 2. Sort the distinct chars.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * 3. Encode the suffix by current char&#39;s index in sorted distinct char.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * The key of encoding is to normalize the encode value.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * For example, string &#34;abc&#34;&#39;s result should be &#34;c&#34;. If not normalized then the output will be &#34;abc&#34;.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param s given string
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return last substring of s in lexicographical order
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> String <span style="color:#a6e22e">lastSubstring</span><span style="color:#f92672">(</span>String s<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/* Corner case */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>s <span style="color:#f92672">==</span> <span style="color:#66d9ef">null</span> <span style="color:#f92672">||</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">()</span> <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#e6db74">&#34;&#34;</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    TreeSet<span style="color:#f92672">&lt;</span>Character<span style="color:#f92672">&gt;</span> ts <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> TreeSet<span style="color:#f92672">&lt;&gt;();</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">();</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        ts<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">));</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> base <span style="color:#f92672">=</span> ts<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">();</span>       <span style="color:#75715e">// total number of distinct char
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">int</span> start <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>              <span style="color:#75715e">// start of largest suffix
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">double</span> max <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> current <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">()</span> <span style="color:#f92672">-</span> 1<span style="color:#f92672">;</span> i <span style="color:#f92672">&gt;=</span> 0<span style="color:#f92672">;</span> i<span style="color:#f92672">--)</span> <span style="color:#f92672">{</span>     <span style="color:#75715e">// get suffices of string
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        current <span style="color:#f92672">+=</span> ts<span style="color:#f92672">.</span><span style="color:#a6e22e">headSet</span><span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)).</span><span style="color:#a6e22e">size</span><span style="color:#f92672">();</span>      <span style="color:#75715e">// encode current suffix
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>current <span style="color:#f92672">&gt;=</span> max<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>       <span style="color:#75715e">// new larger suffix is found
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            max <span style="color:#f92672">=</span> current<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>            start <span style="color:#f92672">=</span> i<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        current <span style="color:#f92672">/=</span> base<span style="color:#f92672">;</span>        <span style="color:#75715e">// normalize the encode value to avoid longer substring has larger encode value
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">substring</span><span style="color:#f92672">(</span>start<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div>
               
             </div>
           </div>

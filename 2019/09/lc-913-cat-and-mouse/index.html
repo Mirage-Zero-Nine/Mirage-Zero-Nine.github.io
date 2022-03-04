@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.92.2 with theme Tranquilpeak 0.4.8-BETA">
+<meta name="generator" content="Hugo 0.93.1 with theme Tranquilpeak 0.4.8-BETA">
 <meta name="author" content="Notebook">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -289,135 +289,135 @@ Explanation:
 <p>After the array is constructed, use a &ldquo;reversed BFS&rdquo; to color all nodes. The queue used in this “reversed BFS” records all nodes that the winner of current node with mouse, cat&rsquo;s position and turn is fixed.</p>
 <p>Each time, poll out the node at the head of queue, color children based on children&rsquo;s remaining connected nodes. If child&rsquo;s winner is fixed, add this child node to queue.</p>
 <p>Finally, after all colorable nodes are colored, check the start position to find winner.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> DRAW <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> MOUSE_WIN <span style="color:#f92672">=</span> 1<span style="color:#f92672">,</span> CAT_WIN <span style="color:#f92672">=</span> 2<span style="color:#f92672">,</span> MOUSE_TURN <span style="color:#f92672">=</span> 1<span style="color:#f92672">,</span> CAT_TURN <span style="color:#f92672">=</span> 2<span style="color:#f92672">;</span>
-
-<span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Minimax problem.
-</span><span style="color:#75715e"> * Use two 3D arrays as map, stores the status and child number based on each node and turn.
-</span><span style="color:#75715e"> * After the array is constructed, use a &#34;reversed BFS&#34; to color all nodes.
-</span><span style="color:#75715e"> * The queue records all nodes that the winner of current node with mouse, cat&#39;s position and turn is fixed.
-</span><span style="color:#75715e"> * Each time, poll out the node at the head of queue, color children based on children&#39;s remaining connected nodes.
-</span><span style="color:#75715e"> * If child&#39;s winner is fixed, add this child node to queue.
-</span><span style="color:#75715e"> * Finally, after all colorable nodes are colored, check the start position to find winner.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param graph given graph edges
-</span><span style="color:#75715e"> * @return 1 if Mouse win, 2 if Cat win, and 0 if is a draw
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">catMouseGame</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[][]</span> graph<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-    <span style="color:#66d9ef">int</span> N <span style="color:#f92672">=</span> graph<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span>
-
-    <span style="color:#75715e">/*
-</span><span style="color:#75715e">     * status[node] : who wins in the end if start from this node
-</span><span style="color:#75715e">     * status[mouse_location][cat_location][turn] */</span>
-    <span style="color:#66d9ef">int</span><span style="color:#f92672">[][][]</span> statusArr <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>50<span style="color:#f92672">][</span>50<span style="color:#f92672">][</span>3<span style="color:#f92672">];</span> <span style="color:#75715e">//
-</span><span style="color:#75715e"></span>
-    <span style="color:#75715e">/*
-</span><span style="color:#75715e">     * childNum[node]: the number of neutral children of this node
-</span><span style="color:#75715e">     * childNum[mouse_location][cat_location][turn] */</span>
-    <span style="color:#66d9ef">int</span><span style="color:#f92672">[][][]</span> childNum <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>50<span style="color:#f92672">][</span>50<span style="color:#f92672">][</span>3<span style="color:#f92672">];</span>
-
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> m <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> m <span style="color:#f92672">&lt;</span> N<span style="color:#f92672">;</span> <span style="color:#f92672">++</span>m<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>           <span style="color:#75715e">// mouse location
-</span><span style="color:#75715e"></span>        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> c <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> c <span style="color:#f92672">&lt;</span> N<span style="color:#f92672">;</span> <span style="color:#f92672">++</span>c<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>       <span style="color:#75715e">// cat location
-</span><span style="color:#75715e"></span>            childNum<span style="color:#f92672">[</span>m<span style="color:#f92672">][</span>c<span style="color:#f92672">][</span>MOUSE_TURN<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> graph<span style="color:#f92672">[</span>m<span style="color:#f92672">].</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span>
-            childNum<span style="color:#f92672">[</span>m<span style="color:#f92672">][</span>c<span style="color:#f92672">][</span>CAT_TURN<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> graph<span style="color:#f92672">[</span>c<span style="color:#f92672">].</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span>
-            <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> x <span style="color:#f92672">:</span> graph<span style="color:#f92672">[</span>c<span style="color:#f92672">])</span> <span style="color:#f92672">{</span>
-                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>x <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>       <span style="color:#75715e">// cat can not stay at the hole (position 0).
-</span><span style="color:#75715e"></span>                    childNum<span style="color:#f92672">[</span>m<span style="color:#f92672">][</span>c<span style="color:#f92672">][</span>CAT_TURN<span style="color:#f92672">]--;</span>
-                    <span style="color:#66d9ef">break</span><span style="color:#f92672">;</span>
-                <span style="color:#f92672">}</span>
-            <span style="color:#f92672">}</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#75715e">/*
-</span><span style="color:#75715e">     * enqueued : all nodes are known who wins in the end.
-</span><span style="color:#75715e">     * Nodes with DRAW status are not in this queue. */</span>
-    Queue<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]&gt;</span> q <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">&lt;&gt;();</span>
-
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> N<span style="color:#f92672">;</span> <span style="color:#f92672">++</span>i<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> t <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> t <span style="color:#f92672">&lt;=</span> 2<span style="color:#f92672">;</span> <span style="color:#f92672">++</span>t<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>      <span style="color:#75715e">// turn
-</span><span style="color:#75715e"></span>            statusArr<span style="color:#f92672">[</span>0<span style="color:#f92672">][</span>i<span style="color:#f92672">][</span>t<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> MOUSE_WIN<span style="color:#f92672">;</span>        <span style="color:#75715e">// mouse wins if it is at the hole (position 0).
-</span><span style="color:#75715e"></span>            q<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]{</span>0<span style="color:#f92672">,</span> i<span style="color:#f92672">,</span> t<span style="color:#f92672">,</span> MOUSE_WIN<span style="color:#f92672">});</span>
-            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">&gt;</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                statusArr<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>i<span style="color:#f92672">][</span>t<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> CAT_WIN<span style="color:#f92672">;</span>      <span style="color:#75715e">// cat wins if mouse and cat are at the same location.
-</span><span style="color:#75715e"></span>                q<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]{</span>i<span style="color:#f92672">,</span> i<span style="color:#f92672">,</span> t<span style="color:#f92672">,</span> CAT_WIN<span style="color:#f92672">});</span>
-            <span style="color:#f92672">}</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#75715e">/*
-</span><span style="color:#75715e">     * The previous queue has already record nodes with their status.
-</span><span style="color:#75715e">     * Next step is to finish the coloring, percolate nodes that already known the winner. */</span>
-    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(!</span>q<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> node <span style="color:#f92672">=</span> q<span style="color:#f92672">.</span><span style="color:#a6e22e">remove</span><span style="color:#f92672">();</span>
-
-        <span style="color:#66d9ef">int</span> mouseLoc <span style="color:#f92672">=</span> node<span style="color:#f92672">[</span>0<span style="color:#f92672">],</span> catLoc <span style="color:#f92672">=</span> node<span style="color:#f92672">[</span>1<span style="color:#f92672">],</span> turn <span style="color:#f92672">=</span> node<span style="color:#f92672">[</span>2<span style="color:#f92672">],</span> status <span style="color:#f92672">=</span> node<span style="color:#f92672">[</span>3<span style="color:#f92672">];</span>
-
-        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> parent <span style="color:#f92672">:</span> parents<span style="color:#f92672">(</span>graph<span style="color:#f92672">,</span> mouseLoc<span style="color:#f92672">,</span> catLoc<span style="color:#f92672">,</span> turn<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>       <span style="color:#75715e">// for every parent of this node (m, c, t)
-</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">int</span> mouseLoc2 <span style="color:#f92672">=</span> parent<span style="color:#f92672">[</span>0<span style="color:#f92672">],</span> catLoc2 <span style="color:#f92672">=</span> parent<span style="color:#f92672">[</span>1<span style="color:#f92672">],</span> turn2 <span style="color:#f92672">=</span> parent<span style="color:#f92672">[</span>2<span style="color:#f92672">];</span>
-
-            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>statusArr<span style="color:#f92672">[</span>mouseLoc2<span style="color:#f92672">][</span>catLoc2<span style="color:#f92672">][</span>turn2<span style="color:#f92672">]</span> <span style="color:#f92672">==</span> DRAW<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>     <span style="color:#75715e">// if parent node is a draw
-</span><span style="color:#75715e"></span>
-                <span style="color:#75715e">/*
-</span><span style="color:#75715e">                 * Find if the parent node can make a winning move (mouse to MOUSE_WIN, or cat to CAT_WIN).
-</span><span style="color:#75715e">                 * If so, then child node status is fixed. */</span>
-                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>turn2 <span style="color:#f92672">==</span> MOUSE_TURN <span style="color:#f92672">&amp;&amp;</span> status <span style="color:#f92672">==</span> MOUSE_WIN <span style="color:#f92672">||</span> turn2 <span style="color:#f92672">==</span> CAT_TURN <span style="color:#f92672">&amp;&amp;</span> status <span style="color:#f92672">==</span> CAT_WIN<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-                    statusArr<span style="color:#f92672">[</span>mouseLoc2<span style="color:#f92672">][</span>catLoc2<span style="color:#f92672">][</span>turn2<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> status<span style="color:#f92672">;</span>
-                    q<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]{</span>mouseLoc2<span style="color:#f92672">,</span> catLoc2<span style="color:#f92672">,</span> turn2<span style="color:#f92672">,</span> status<span style="color:#f92672">});</span>
-                <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
-
-                    <span style="color:#75715e">/*
-</span><span style="color:#75715e">                     * Otherwise, this parent has neutral children_num[parent]--.
-</span><span style="color:#75715e">                     * Enqueue if all children of this parent are colored as losing moves. */</span>
-                    childNum<span style="color:#f92672">[</span>mouseLoc2<span style="color:#f92672">][</span>catLoc2<span style="color:#f92672">][</span>turn2<span style="color:#f92672">]--;</span>
-                    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>childNum<span style="color:#f92672">[</span>mouseLoc2<span style="color:#f92672">][</span>catLoc2<span style="color:#f92672">][</span>turn2<span style="color:#f92672">]</span> <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-
-                        <span style="color:#75715e">/*
-</span><span style="color:#75715e">                         * All children of this node&#39;s winner is fixed. And the turn is previous move.
-</span><span style="color:#75715e">                         * If previous turn is mouse, then current move is cat.
-</span><span style="color:#75715e">                         * If previous turn is cat, then current move is mouse. */</span>
-                        statusArr<span style="color:#f92672">[</span>mouseLoc2<span style="color:#f92672">][</span>catLoc2<span style="color:#f92672">][</span>turn2<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>turn2 <span style="color:#f92672">==</span> MOUSE_TURN<span style="color:#f92672">)</span> <span style="color:#f92672">?</span> CAT_WIN <span style="color:#f92672">:</span> MOUSE_WIN<span style="color:#f92672">;</span>
-                        q<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]{</span>mouseLoc2<span style="color:#f92672">,</span> catLoc2<span style="color:#f92672">,</span> turn2<span style="color:#f92672">,</span> statusArr<span style="color:#f92672">[</span>mouseLoc2<span style="color:#f92672">][</span>catLoc2<span style="color:#f92672">][</span>turn2<span style="color:#f92672">]});</span>
-                    <span style="color:#f92672">}</span>
-                <span style="color:#f92672">}</span>
-            <span style="color:#f92672">}</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#75715e">/*
-</span><span style="color:#75715e">     * Mouse is at location 1, cat is at location 2.
-</span><span style="color:#75715e">     * Mouse moves first. */</span>
-    <span style="color:#66d9ef">return</span> statusArr<span style="color:#f92672">[</span>1<span style="color:#f92672">][</span>2<span style="color:#f92672">][</span>MOUSE_TURN<span style="color:#f92672">];</span>
-<span style="color:#f92672">}</span>
-
-
-<span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Find parents of current node, based on mouse and cat&#39;s position, and current turn (m, c, t).
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param graph    given graph
-</span><span style="color:#75715e"> * @param mouseLoc mouse position
-</span><span style="color:#75715e"> * @param catLoc   cat position
-</span><span style="color:#75715e"> * @param turn     MOUSE_TURN = 1, CAT_TURN = 2
-</span><span style="color:#75715e"> * @return nodes can be reached based on specific turn
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">private</span> List<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]&gt;</span> <span style="color:#a6e22e">parents</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[][]</span> graph<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> mouseLoc<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> catLoc<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> turn<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-    List<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]&gt;</span> out <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;&gt;();</span>
-
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>turn <span style="color:#f92672">==</span> CAT_TURN<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> m2 <span style="color:#f92672">:</span> graph<span style="color:#f92672">[</span>mouseLoc<span style="color:#f92672">])</span> <span style="color:#f92672">{</span>
-            out<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]{</span>m2<span style="color:#f92672">,</span> catLoc<span style="color:#f92672">,</span> MOUSE_TURN<span style="color:#f92672">});</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> c2 <span style="color:#f92672">:</span> graph<span style="color:#f92672">[</span>catLoc<span style="color:#f92672">])</span> <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>c2 <span style="color:#f92672">&gt;</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>       <span style="color:#75715e">// cat can not stay at the hole (position 0).
-</span><span style="color:#75715e"></span>                out<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]{</span>mouseLoc<span style="color:#f92672">,</span> c2<span style="color:#f92672">,</span> CAT_TURN<span style="color:#f92672">});</span>
-            <span style="color:#f92672">}</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">return</span> out<span style="color:#f92672">;</span>
-<span style="color:#f92672">}</span>
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">final</span> <span style="color:#66d9ef">int</span> DRAW <span style="color:#f92672">=</span> 0<span style="color:#f92672">,</span> MOUSE_WIN <span style="color:#f92672">=</span> 1<span style="color:#f92672">,</span> CAT_WIN <span style="color:#f92672">=</span> 2<span style="color:#f92672">,</span> MOUSE_TURN <span style="color:#f92672">=</span> 1<span style="color:#f92672">,</span> CAT_TURN <span style="color:#f92672">=</span> 2<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Minimax problem.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Use two 3D arrays as map, stores the status and child number based on each node and turn.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * After the array is constructed, use a &#34;reversed BFS&#34; to color all nodes.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * The queue records all nodes that the winner of current node with mouse, cat&#39;s position and turn is fixed.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Each time, poll out the node at the head of queue, color children based on children&#39;s remaining connected nodes.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * If child&#39;s winner is fixed, add this child node to queue.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Finally, after all colorable nodes are colored, check the start position to find winner.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param graph given graph edges
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return 1 if Mouse win, 2 if Cat win, and 0 if is a draw
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">catMouseGame</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[][]</span> graph<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> N <span style="color:#f92672">=</span> graph<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/*
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * status[node] : who wins in the end if start from this node
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * status[mouse_location][cat_location][turn] */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span><span style="color:#f92672">[][][]</span> statusArr <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>50<span style="color:#f92672">][</span>50<span style="color:#f92672">][</span>3<span style="color:#f92672">];</span> <span style="color:#75715e">//
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/*
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * childNum[node]: the number of neutral children of this node
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * childNum[mouse_location][cat_location][turn] */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span><span style="color:#f92672">[][][]</span> childNum <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[</span>50<span style="color:#f92672">][</span>50<span style="color:#f92672">][</span>3<span style="color:#f92672">];</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> m <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> m <span style="color:#f92672">&lt;</span> N<span style="color:#f92672">;</span> <span style="color:#f92672">++</span>m<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>           <span style="color:#75715e">// mouse location
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> c <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> c <span style="color:#f92672">&lt;</span> N<span style="color:#f92672">;</span> <span style="color:#f92672">++</span>c<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>       <span style="color:#75715e">// cat location
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            childNum<span style="color:#f92672">[</span>m<span style="color:#f92672">][</span>c<span style="color:#f92672">][</span>MOUSE_TURN<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> graph<span style="color:#f92672">[</span>m<span style="color:#f92672">].</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>            childNum<span style="color:#f92672">[</span>m<span style="color:#f92672">][</span>c<span style="color:#f92672">][</span>CAT_TURN<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> graph<span style="color:#f92672">[</span>c<span style="color:#f92672">].</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> x <span style="color:#f92672">:</span> graph<span style="color:#f92672">[</span>c<span style="color:#f92672">])</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>x <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>       <span style="color:#75715e">// cat can not stay at the hole (position 0).
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                    childNum<span style="color:#f92672">[</span>m<span style="color:#f92672">][</span>c<span style="color:#f92672">][</span>CAT_TURN<span style="color:#f92672">]--;</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">break</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/*
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * enqueued : all nodes are known who wins in the end.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * Nodes with DRAW status are not in this queue. */</span>
+</span></span><span style="display:flex;"><span>    Queue<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]&gt;</span> q <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> LinkedList<span style="color:#f92672">&lt;&gt;();</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> N<span style="color:#f92672">;</span> <span style="color:#f92672">++</span>i<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> t <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span> t <span style="color:#f92672">&lt;=</span> 2<span style="color:#f92672">;</span> <span style="color:#f92672">++</span>t<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>      <span style="color:#75715e">// turn
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            statusArr<span style="color:#f92672">[</span>0<span style="color:#f92672">][</span>i<span style="color:#f92672">][</span>t<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> MOUSE_WIN<span style="color:#f92672">;</span>        <span style="color:#75715e">// mouse wins if it is at the hole (position 0).
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            q<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]{</span>0<span style="color:#f92672">,</span> i<span style="color:#f92672">,</span> t<span style="color:#f92672">,</span> MOUSE_WIN<span style="color:#f92672">});</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">&gt;</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                statusArr<span style="color:#f92672">[</span>i<span style="color:#f92672">][</span>i<span style="color:#f92672">][</span>t<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> CAT_WIN<span style="color:#f92672">;</span>      <span style="color:#75715e">// cat wins if mouse and cat are at the same location.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                q<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]{</span>i<span style="color:#f92672">,</span> i<span style="color:#f92672">,</span> t<span style="color:#f92672">,</span> CAT_WIN<span style="color:#f92672">});</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/*
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * The previous queue has already record nodes with their status.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * Next step is to finish the coloring, percolate nodes that already known the winner. */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> <span style="color:#f92672">(!</span>q<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> node <span style="color:#f92672">=</span> q<span style="color:#f92672">.</span><span style="color:#a6e22e">remove</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">int</span> mouseLoc <span style="color:#f92672">=</span> node<span style="color:#f92672">[</span>0<span style="color:#f92672">],</span> catLoc <span style="color:#f92672">=</span> node<span style="color:#f92672">[</span>1<span style="color:#f92672">],</span> turn <span style="color:#f92672">=</span> node<span style="color:#f92672">[</span>2<span style="color:#f92672">],</span> status <span style="color:#f92672">=</span> node<span style="color:#f92672">[</span>3<span style="color:#f92672">];</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> parent <span style="color:#f92672">:</span> parents<span style="color:#f92672">(</span>graph<span style="color:#f92672">,</span> mouseLoc<span style="color:#f92672">,</span> catLoc<span style="color:#f92672">,</span> turn<span style="color:#f92672">))</span> <span style="color:#f92672">{</span>       <span style="color:#75715e">// for every parent of this node (m, c, t)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#66d9ef">int</span> mouseLoc2 <span style="color:#f92672">=</span> parent<span style="color:#f92672">[</span>0<span style="color:#f92672">],</span> catLoc2 <span style="color:#f92672">=</span> parent<span style="color:#f92672">[</span>1<span style="color:#f92672">],</span> turn2 <span style="color:#f92672">=</span> parent<span style="color:#f92672">[</span>2<span style="color:#f92672">];</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>statusArr<span style="color:#f92672">[</span>mouseLoc2<span style="color:#f92672">][</span>catLoc2<span style="color:#f92672">][</span>turn2<span style="color:#f92672">]</span> <span style="color:#f92672">==</span> DRAW<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>     <span style="color:#75715e">// if parent node is a draw
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span>                <span style="color:#75715e">/*
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">                 * Find if the parent node can make a winning move (mouse to MOUSE_WIN, or cat to CAT_WIN).
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">                 * If so, then child node status is fixed. */</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>turn2 <span style="color:#f92672">==</span> MOUSE_TURN <span style="color:#f92672">&amp;&amp;</span> status <span style="color:#f92672">==</span> MOUSE_WIN <span style="color:#f92672">||</span> turn2 <span style="color:#f92672">==</span> CAT_TURN <span style="color:#f92672">&amp;&amp;</span> status <span style="color:#f92672">==</span> CAT_WIN<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                    statusArr<span style="color:#f92672">[</span>mouseLoc2<span style="color:#f92672">][</span>catLoc2<span style="color:#f92672">][</span>turn2<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> status<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>                    q<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]{</span>mouseLoc2<span style="color:#f92672">,</span> catLoc2<span style="color:#f92672">,</span> turn2<span style="color:#f92672">,</span> status<span style="color:#f92672">});</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#75715e">/*
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">                     * Otherwise, this parent has neutral children_num[parent]--.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">                     * Enqueue if all children of this parent are colored as losing moves. */</span>
+</span></span><span style="display:flex;"><span>                    childNum<span style="color:#f92672">[</span>mouseLoc2<span style="color:#f92672">][</span>catLoc2<span style="color:#f92672">][</span>turn2<span style="color:#f92672">]--;</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>childNum<span style="color:#f92672">[</span>mouseLoc2<span style="color:#f92672">][</span>catLoc2<span style="color:#f92672">][</span>turn2<span style="color:#f92672">]</span> <span style="color:#f92672">==</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>                        <span style="color:#75715e">/*
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">                         * All children of this node&#39;s winner is fixed. And the turn is previous move.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">                         * If previous turn is mouse, then current move is cat.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">                         * If previous turn is cat, then current move is mouse. */</span>
+</span></span><span style="display:flex;"><span>                        statusArr<span style="color:#f92672">[</span>mouseLoc2<span style="color:#f92672">][</span>catLoc2<span style="color:#f92672">][</span>turn2<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>turn2 <span style="color:#f92672">==</span> MOUSE_TURN<span style="color:#f92672">)</span> <span style="color:#f92672">?</span> CAT_WIN <span style="color:#f92672">:</span> MOUSE_WIN<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>                        q<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]{</span>mouseLoc2<span style="color:#f92672">,</span> catLoc2<span style="color:#f92672">,</span> turn2<span style="color:#f92672">,</span> statusArr<span style="color:#f92672">[</span>mouseLoc2<span style="color:#f92672">][</span>catLoc2<span style="color:#f92672">][</span>turn2<span style="color:#f92672">]});</span>
+</span></span><span style="display:flex;"><span>                    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/*
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * Mouse is at location 1, cat is at location 2.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * Mouse moves first. */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> statusArr<span style="color:#f92672">[</span>1<span style="color:#f92672">][</span>2<span style="color:#f92672">][</span>MOUSE_TURN<span style="color:#f92672">];</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Find parents of current node, based on mouse and cat&#39;s position, and current turn (m, c, t).
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param graph    given graph
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param mouseLoc mouse position
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param catLoc   cat position
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param turn     MOUSE_TURN = 1, CAT_TURN = 2
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return nodes can be reached based on specific turn
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">private</span> List<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]&gt;</span> <span style="color:#a6e22e">parents</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[][]</span> graph<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> mouseLoc<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> catLoc<span style="color:#f92672">,</span> <span style="color:#66d9ef">int</span> turn<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    List<span style="color:#f92672">&lt;</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]&gt;</span> out <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> ArrayList<span style="color:#f92672">&lt;&gt;();</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>turn <span style="color:#f92672">==</span> CAT_TURN<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> m2 <span style="color:#f92672">:</span> graph<span style="color:#f92672">[</span>mouseLoc<span style="color:#f92672">])</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            out<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]{</span>m2<span style="color:#f92672">,</span> catLoc<span style="color:#f92672">,</span> MOUSE_TURN<span style="color:#f92672">});</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span> <span style="color:#66d9ef">else</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> c2 <span style="color:#f92672">:</span> graph<span style="color:#f92672">[</span>catLoc<span style="color:#f92672">])</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>c2 <span style="color:#f92672">&gt;</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>       <span style="color:#75715e">// cat can not stay at the hole (position 0).
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                out<span style="color:#f92672">.</span><span style="color:#a6e22e">add</span><span style="color:#f92672">(</span><span style="color:#66d9ef">new</span> <span style="color:#66d9ef">int</span><span style="color:#f92672">[]{</span>mouseLoc<span style="color:#f92672">,</span> c2<span style="color:#f92672">,</span> CAT_TURN<span style="color:#f92672">});</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> out<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div>
               
             </div>
           </div>

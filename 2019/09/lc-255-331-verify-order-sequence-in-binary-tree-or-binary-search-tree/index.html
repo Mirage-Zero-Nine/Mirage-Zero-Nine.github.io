@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="generator" content="Hugo 0.92.2 with theme Tranquilpeak 0.4.8-BETA">
+<meta name="generator" content="Hugo 0.93.1 with theme Tranquilpeak 0.4.8-BETA">
 <meta name="author" content="Notebook">
 <meta name="keywords" content="">
 <meta name="description" content="">
@@ -291,64 +291,64 @@ Output: true
 </ul>
 <p>Each time, check if current node is smaller than current tree&rsquo;s root node. Since the traversal process is to find left child in BST, if current node is smaller than root, return <code>false</code>.</p>
 <p>The space complexity can be optimized to <code>O(1)</code> by using a pointer to point at the root of current subtree, instead of using a stack.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Follow the pre-order traversal rule. In BST, left children is always smaller than root node.
-</span><span style="color:#75715e"> * If current element is smaller than top of stack, current node is still in left sub tree.
-</span><span style="color:#75715e"> * Otherwise, current node is previous node&#39;s right child.
-</span><span style="color:#75715e"> * Update min value to current subtree&#39;s root when traverse to right subtree.
-</span><span style="color:#75715e"> * Each time, check if current node is smaller than current tree&#39;s root node.
-</span><span style="color:#75715e"> * Since the traversal process is to find left child in BST, if current node is smaller than root, return false.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param preorder given array
-</span><span style="color:#75715e"> * @return whether it is the correct preorder traversal sequence of a binary search tree
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">verifyPreorder</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> preorder<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-    <span style="color:#66d9ef">int</span> min <span style="color:#f92672">=</span> Integer<span style="color:#f92672">.</span><span style="color:#a6e22e">MIN_VALUE</span><span style="color:#f92672">;</span>
-    Stack<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> s <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Stack<span style="color:#f92672">&lt;&gt;();</span>
-
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">:</span> preorder<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">&lt;</span> min<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>      <span style="color:#75715e">// if left subtree is smaller than root value, then it is invalid BST
-</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span>
-        <span style="color:#66d9ef">while</span> <span style="color:#f92672">(!</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">empty</span><span style="color:#f92672">()</span> <span style="color:#f92672">&amp;&amp;</span> i <span style="color:#f92672">&gt;</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">peek</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>        <span style="color:#75715e">// if i &gt; s.peek(), then i is in right subtree
-</span><span style="color:#75715e"></span>            min <span style="color:#f92672">=</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">pop</span><span style="color:#f92672">();</span>      <span style="color:#75715e">// update min value to current subtree&#39;s root when traverse to right subtree
-</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
-
-        s<span style="color:#f92672">.</span><span style="color:#a6e22e">push</span><span style="color:#f92672">(</span>i<span style="color:#f92672">);</span>      <span style="color:#75715e">// current root value in subtree
-</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
-    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
-<span style="color:#f92672">}</span>
-
-<span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Use array instead of stack to find root of subtree.
-</span><span style="color:#75715e"> * Use a pointer to point at current root of tree.
-</span><span style="color:#75715e"> * The predecessor in array can be used as stack to store current root.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param preorder given array
-</span><span style="color:#75715e"> * @return whether it is the correct preorder traversal sequence of a binary search tree
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">private</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">constantSpace</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> preorder<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-
-    <span style="color:#75715e">/* Corner case */</span>
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>preorder<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">&lt;</span> 2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">int</span> min <span style="color:#f92672">=</span> Integer<span style="color:#f92672">.</span><span style="color:#a6e22e">MIN_VALUE</span><span style="color:#f92672">,</span> p <span style="color:#f92672">=</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">;</span>
-
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">:</span> preorder<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">&lt;</span> min<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span>
-        <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>p <span style="color:#f92672">&gt;=</span> 0 <span style="color:#f92672">&amp;&amp;</span> i <span style="color:#f92672">&gt;</span> preorder<span style="color:#f92672">[</span>p<span style="color:#f92672">])</span> <span style="color:#f92672">{</span>
-            min <span style="color:#f92672">=</span> preorder<span style="color:#f92672">[</span>p<span style="color:#f92672">--];</span>        <span style="color:#75715e">// in-place find root node of current right subtree
-</span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
-        preorder<span style="color:#f92672">[++</span>p<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> i<span style="color:#f92672">;</span>              <span style="color:#75715e">// in-place fill new root of current tree
-</span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
-
-    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
-<span style="color:#f92672">}</span>
-</code></pre></div><h1 id="331-verify-preorder-serialization-of-a-binary-tree">331. Verify Preorder Serialization of a Binary Tree</h1>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Follow the pre-order traversal rule. In BST, left children is always smaller than root node.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * If current element is smaller than top of stack, current node is still in left sub tree.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Otherwise, current node is previous node&#39;s right child.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Update min value to current subtree&#39;s root when traverse to right subtree.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Each time, check if current node is smaller than current tree&#39;s root node.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Since the traversal process is to find left child in BST, if current node is smaller than root, return false.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param preorder given array
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return whether it is the correct preorder traversal sequence of a binary search tree
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">verifyPreorder</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> preorder<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> min <span style="color:#f92672">=</span> Integer<span style="color:#f92672">.</span><span style="color:#a6e22e">MIN_VALUE</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    Stack<span style="color:#f92672">&lt;</span>Integer<span style="color:#f92672">&gt;</span> s <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Stack<span style="color:#f92672">&lt;&gt;();</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">:</span> preorder<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">&lt;</span> min<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>      <span style="color:#75715e">// if left subtree is smaller than root value, then it is invalid BST
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">while</span> <span style="color:#f92672">(!</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">empty</span><span style="color:#f92672">()</span> <span style="color:#f92672">&amp;&amp;</span> i <span style="color:#f92672">&gt;</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">peek</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>        <span style="color:#75715e">// if i &gt; s.peek(), then i is in right subtree
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            min <span style="color:#f92672">=</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">pop</span><span style="color:#f92672">();</span>      <span style="color:#75715e">// update min value to current subtree&#39;s root when traverse to right subtree
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        s<span style="color:#f92672">.</span><span style="color:#a6e22e">push</span><span style="color:#f92672">(</span>i<span style="color:#f92672">);</span>      <span style="color:#75715e">// current root value in subtree
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Use array instead of stack to find root of subtree.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Use a pointer to point at current root of tree.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * The predecessor in array can be used as stack to store current root.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param preorder given array
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return whether it is the correct preorder traversal sequence of a binary search tree
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">private</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">constantSpace</span><span style="color:#f92672">(</span><span style="color:#66d9ef">int</span><span style="color:#f92672">[]</span> preorder<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/* Corner case */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>preorder<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span> <span style="color:#f92672">&lt;</span> 2<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> min <span style="color:#f92672">=</span> Integer<span style="color:#f92672">.</span><span style="color:#a6e22e">MIN_VALUE</span><span style="color:#f92672">,</span> p <span style="color:#f92672">=</span> <span style="color:#f92672">-</span>1<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">:</span> preorder<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>i <span style="color:#f92672">&lt;</span> min<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>p <span style="color:#f92672">&gt;=</span> 0 <span style="color:#f92672">&amp;&amp;</span> i <span style="color:#f92672">&gt;</span> preorder<span style="color:#f92672">[</span>p<span style="color:#f92672">])</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            min <span style="color:#f92672">=</span> preorder<span style="color:#f92672">[</span>p<span style="color:#f92672">--];</span>        <span style="color:#75715e">// in-place find root node of current right subtree
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        preorder<span style="color:#f92672">[++</span>p<span style="color:#f92672">]</span> <span style="color:#f92672">=</span> i<span style="color:#f92672">;</span>              <span style="color:#75715e">// in-place fill new root of current tree
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">true</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><h1 id="331-verify-preorder-serialization-of-a-binary-tree">331. Verify Preorder Serialization of a Binary Tree</h1>
 <p>Link: <a href="https://leetcode.com/problems/verify-preorder-serialization-of-a-binary-tree">Verify Preorder Serialization of a Binary Tree</a></p>
 <h2 id="problem-description-1">Problem Description</h2>
 <p>One way to serialize a binary tree is to use pre-order traversal. When we encounter a non-null node, we record the node&rsquo;s value. If it is a null node, we record using a sentinel value such as <code>#</code>.</p>
@@ -364,13 +364,13 @@ Output: true
 <p>Each comma separated value in the string must be either an integer or a character <code>'#'</code> representing <code>null</code> pointer.</p>
 <p>You may assume that the input format is always valid, for example it could never contain two consecutive commas such as <code>&quot;1,,3&quot;</code>.</p>
 <p><strong>Example 1:</strong></p>
-<pre tabindex="0"><code>Input: &quot;9,3,4,#,#,1,#,#,2,#,6,#,#&quot;
+<pre tabindex="0"><code>Input: &#34;9,3,4,#,#,1,#,#,2,#,6,#,#&#34;
 Output: true
 </code></pre><p><strong>Example 2:</strong></p>
-<pre tabindex="0"><code>Input: &quot;1,#&quot;
+<pre tabindex="0"><code>Input: &#34;1,#&#34;
 Output: false
 </code></pre><p><strong>Example 3:</strong></p>
-<pre tabindex="0"><code>Input: &quot;9,#,#,1&quot;
+<pre tabindex="0"><code>Input: &#34;9,#,#,1&#34;
 Output: false
 </code></pre><h2 id="method--code-1">Method &amp; Code</h2>
 <p>Three approaches.</p>
@@ -388,49 +388,49 @@ Output: false
 <li>If meet a &ldquo;,&rdquo;, regraded as one node is used, slot - 1.</li>
 </ul>
 <p>Finally, check if slot is exactly 0.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Follow pre order traverse rule to &#34;build&#34; the tree. 
-</span><span style="color:#75715e"> * 1. Each non-empty node creates two slots for null node (left, right child).
-</span><span style="color:#75715e"> * 2. Each non-empty node requires one slot, and null node consume one slot of node.
-</span><span style="color:#75715e"> * Therefore, use &#34;,&#34; as the mark that one slot is used.
-</span><span style="color:#75715e"> * If one non-empty node is found, slot + 2.
-</span><span style="color:#75715e"> * If one null node is found, slot remains unchanged.
-</span><span style="color:#75715e"> * If meet a &#34;,&#34;, regraded as one node is used, slot - 1.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param preorder given preorder nodes
-</span><span style="color:#75715e"> * @return whether it is a correct preorder traversal serialization of a binary tree
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">isValidSerialization</span><span style="color:#f92672">(</span>String preorder<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-    <span style="color:#66d9ef">int</span> slot <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span>
-    <span style="color:#66d9ef">int</span> n <span style="color:#f92672">=</span> preorder<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">();</span>
-
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> n<span style="color:#f92672">;</span> <span style="color:#f92672">++</span>i<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-
-        <span style="color:#75715e">/*
-</span><span style="color:#75715e">         * &#34;,&#34;: use one node
-</span><span style="color:#75715e">         * number: create two slot for nodes (null &amp; non-empty)
-</span><span style="color:#75715e">         * &#34;#&#34;: null node does not take node, combine with &#34;,&#34; to use one slot. */</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>preorder<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span> <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;,&#39;</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-
-            slot<span style="color:#f92672">--;</span>        <span style="color:#75715e">// one node takes one slot
-</span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>slot <span style="color:#f92672">&lt;</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>        <span style="color:#75715e">// no more slots available
-</span><span style="color:#75715e"></span>                <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
-            <span style="color:#f92672">}</span>
-
-            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>preorder<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">!=</span> <span style="color:#e6db74">&#39;#&#39;</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>         <span style="color:#75715e">// non-empty node creates two children slots
-</span><span style="color:#75715e"></span>                slot <span style="color:#f92672">+=</span> 2<span style="color:#f92672">;</span>
-            <span style="color:#f92672">}</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-
-    <span style="color:#75715e">/*
-</span><span style="color:#75715e">     * Check the last node.
-</span><span style="color:#75715e">     * Since last node does not have &#34;,&#34;, it requires extra check. */</span>
-    slot <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>preorder<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>n <span style="color:#f92672">-</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;#&#39;</span><span style="color:#f92672">)</span> <span style="color:#f92672">?</span> slot <span style="color:#f92672">-</span> 1 <span style="color:#f92672">:</span> slot <span style="color:#f92672">+</span> 1<span style="color:#f92672">;</span>
-
-    <span style="color:#66d9ef">return</span> slot <span style="color:#f92672">==</span> 0<span style="color:#f92672">;</span>      <span style="color:#75715e">// all slots should be used up
-</span><span style="color:#75715e"></span><span style="color:#f92672">}</span>
-</code></pre></div><h3 id="stack">Stack</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Follow pre order traverse rule to &#34;build&#34; the tree. 
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * 1. Each non-empty node creates two slots for null node (left, right child).
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * 2. Each non-empty node requires one slot, and null node consume one slot of node.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Therefore, use &#34;,&#34; as the mark that one slot is used.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * If one non-empty node is found, slot + 2.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * If one null node is found, slot remains unchanged.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * If meet a &#34;,&#34;, regraded as one node is used, slot - 1.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param preorder given preorder nodes
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return whether it is a correct preorder traversal serialization of a binary tree
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">isValidSerialization</span><span style="color:#f92672">(</span>String preorder<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> slot <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> n <span style="color:#f92672">=</span> preorder<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> n<span style="color:#f92672">;</span> <span style="color:#f92672">++</span>i<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#75715e">/*
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">         * &#34;,&#34;: use one node
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">         * number: create two slot for nodes (null &amp; non-empty)
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">         * &#34;#&#34;: null node does not take node, combine with &#34;,&#34; to use one slot. */</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>preorder<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i<span style="color:#f92672">)</span> <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;,&#39;</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            slot<span style="color:#f92672">--;</span>        <span style="color:#75715e">// one node takes one slot
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>slot <span style="color:#f92672">&lt;</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>        <span style="color:#75715e">// no more slots available
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>preorder<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>i <span style="color:#f92672">-</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">!=</span> <span style="color:#e6db74">&#39;#&#39;</span><span style="color:#f92672">)</span> <span style="color:#f92672">{</span>         <span style="color:#75715e">// non-empty node creates two children slots
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>                slot <span style="color:#f92672">+=</span> 2<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/*
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * Check the last node.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">     * Since last node does not have &#34;,&#34;, it requires extra check. */</span>
+</span></span><span style="display:flex;"><span>    slot <span style="color:#f92672">=</span> <span style="color:#f92672">(</span>preorder<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>n <span style="color:#f92672">-</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;#&#39;</span><span style="color:#f92672">)</span> <span style="color:#f92672">?</span> slot <span style="color:#f92672">-</span> 1 <span style="color:#f92672">:</span> slot <span style="color:#f92672">+</span> 1<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> slot <span style="color:#f92672">==</span> 0<span style="color:#f92672">;</span>      <span style="color:#75715e">// all slots should be used up
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><h3 id="stack">Stack</h3>
 <p>Using stack to store nodes including <code>#</code>.</p>
 <ul>
 <li>Case 1: number -&gt; push it to the stack.</li>
@@ -438,76 +438,76 @@ Output: false
 </ul>
 <p>If so, pop until top of stack is not <code>#</code>.</p>
 <p>Finally, check if stack size is 1, and stack top is #.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
-</span><span style="color:#75715e"> * Using stack to store nodes including &#34;#&#34;.
-</span><span style="color:#75715e"> * Case 1: number -&gt; push it to the stack.
-</span><span style="color:#75715e"> * Case 2: # -&gt; check if the top of stack is also #.
-</span><span style="color:#75715e"> * If so, pop until top of stack is not #.
-</span><span style="color:#75715e"> * Finally, check if stack size is 1, and stack top is #.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param preorder given preorder nodes
-</span><span style="color:#75715e"> * @return whether it is a correct preorder traversal serialization of a binary tree
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">stack</span><span style="color:#f92672">(</span>String preorder<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-
-    <span style="color:#75715e">/* Corner case */</span>
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>preorder<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>0<span style="color:#f92672">)</span> <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;#&#39;</span> <span style="color:#f92672">&amp;&amp;</span> preorder<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">()</span> <span style="color:#f92672">&gt;</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-
-    Stack<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> s <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Stack<span style="color:#f92672">&lt;&gt;();</span>
-    String<span style="color:#f92672">[]</span> arr <span style="color:#f92672">=</span> preorder<span style="color:#f92672">.</span><span style="color:#a6e22e">split</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;,&#34;</span><span style="color:#f92672">);</span>
-
-    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> arr<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
-
-        <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>arr<span style="color:#f92672">[</span>i<span style="color:#f92672">].</span><span style="color:#a6e22e">equals</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;#&#34;</span><span style="color:#f92672">)</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">!</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">()</span> <span style="color:#f92672">&amp;&amp;</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">peek</span><span style="color:#f92672">().</span><span style="color:#a6e22e">equals</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;#&#34;</span><span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
-            s<span style="color:#f92672">.</span><span style="color:#a6e22e">pop</span><span style="color:#f92672">();</span>
-            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
-                <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>       <span style="color:#75715e">// pop out root -&gt; invalid tree
-</span><span style="color:#75715e"></span>            <span style="color:#f92672">}</span>
-            s<span style="color:#f92672">.</span><span style="color:#a6e22e">pop</span><span style="color:#f92672">();</span>
-        <span style="color:#f92672">}</span>
-        s<span style="color:#f92672">.</span><span style="color:#a6e22e">push</span><span style="color:#f92672">(</span>arr<span style="color:#f92672">[</span>i<span style="color:#f92672">]);</span>
-    <span style="color:#f92672">}</span>
-    System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>s<span style="color:#f92672">);</span>
-    <span style="color:#66d9ef">return</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">()</span> <span style="color:#f92672">==</span> 1 <span style="color:#f92672">&amp;&amp;</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">peek</span><span style="color:#f92672">().</span><span style="color:#a6e22e">equals</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;#&#34;</span><span style="color:#f92672">);</span>
-<span style="color:#f92672">}</span>
-</code></pre></div><h3 id="degree">Degree</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Using stack to store nodes including &#34;#&#34;.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Case 1: number -&gt; push it to the stack.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Case 2: # -&gt; check if the top of stack is also #.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * If so, pop until top of stack is not #.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Finally, check if stack size is 1, and stack top is #.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param preorder given preorder nodes
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return whether it is a correct preorder traversal serialization of a binary tree
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">stack</span><span style="color:#f92672">(</span>String preorder<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/* Corner case */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>preorder<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>0<span style="color:#f92672">)</span> <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;#&#39;</span> <span style="color:#f92672">&amp;&amp;</span> preorder<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">()</span> <span style="color:#f92672">&gt;</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    Stack<span style="color:#f92672">&lt;</span>String<span style="color:#f92672">&gt;</span> s <span style="color:#f92672">=</span> <span style="color:#66d9ef">new</span> Stack<span style="color:#f92672">&lt;&gt;();</span>
+</span></span><span style="display:flex;"><span>    String<span style="color:#f92672">[]</span> arr <span style="color:#f92672">=</span> preorder<span style="color:#f92672">.</span><span style="color:#a6e22e">split</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;,&#34;</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span><span style="color:#66d9ef">int</span> i <span style="color:#f92672">=</span> 0<span style="color:#f92672">;</span> i <span style="color:#f92672">&lt;</span> arr<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">;</span> i<span style="color:#f92672">++)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">while</span> <span style="color:#f92672">(</span>arr<span style="color:#f92672">[</span>i<span style="color:#f92672">].</span><span style="color:#a6e22e">equals</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;#&#34;</span><span style="color:#f92672">)</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#f92672">!</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">()</span> <span style="color:#f92672">&amp;&amp;</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">peek</span><span style="color:#f92672">().</span><span style="color:#a6e22e">equals</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;#&#34;</span><span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            s<span style="color:#f92672">.</span><span style="color:#a6e22e">pop</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>s<span style="color:#f92672">.</span><span style="color:#a6e22e">isEmpty</span><span style="color:#f92672">())</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>                <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>       <span style="color:#75715e">// pop out root -&gt; invalid tree
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>            <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>            s<span style="color:#f92672">.</span><span style="color:#a6e22e">pop</span><span style="color:#f92672">();</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        s<span style="color:#f92672">.</span><span style="color:#a6e22e">push</span><span style="color:#f92672">(</span>arr<span style="color:#f92672">[</span>i<span style="color:#f92672">]);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    System<span style="color:#f92672">.</span><span style="color:#a6e22e">out</span><span style="color:#f92672">.</span><span style="color:#a6e22e">println</span><span style="color:#f92672">(</span>s<span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">size</span><span style="color:#f92672">()</span> <span style="color:#f92672">==</span> 1 <span style="color:#f92672">&amp;&amp;</span> s<span style="color:#f92672">.</span><span style="color:#a6e22e">peek</span><span style="color:#f92672">().</span><span style="color:#a6e22e">equals</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;#&#34;</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div><h3 id="degree">Degree</h3>
 <p>All non-null node provides 2 outdegree and 1 indegree (2 children and 1 parent), except root. All null node provides 0 outdegree and 1 indegree (0 child and 1 parent). Difference between out degree and in degree: <code>outdegree - indegree</code>.</p>
 <ul>
 <li>If the node is not null, increase diff by 2, because it provides two out degrees.</li>
 <li>If a serialization is correct, <code>outdegree - indegree</code> should never be negative and diff will be zero when finished.</li>
 </ul>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-java" data-lang="java"><span style="color:#75715e">/**
-</span><span style="color:#75715e"> * All non-null node provides 2 outdegree and 1 indegree (2 children and 1 parent), except root.
-</span><span style="color:#75715e"> * All null node provides 0 outdegree and 1 indegree (0 child and 1 parent).
-</span><span style="color:#75715e"> * Difference between out degree and in degree: outdegree - indegree
-</span><span style="color:#75715e"> * If the node is not null, increase diff by 2, because it provides two out degrees.
-</span><span style="color:#75715e"> * If a serialization is correct, outdegree - indegree should never be negative and diff will be zero when finished.
-</span><span style="color:#75715e"> *
-</span><span style="color:#75715e"> * @param preorder given preorder nodes
-</span><span style="color:#75715e"> * @return whether it is a correct preorder traversal serialization of a binary tree
-</span><span style="color:#75715e"> */</span>
-<span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">degree</span><span style="color:#f92672">(</span>String preorder<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-
-    <span style="color:#75715e">/* Corner case */</span>
-    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>preorder<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>0<span style="color:#f92672">)</span> <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;#&#39;</span> <span style="color:#f92672">&amp;&amp;</span> preorder<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">()</span> <span style="color:#f92672">&gt;</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
-    <span style="color:#f92672">}</span>
-
-    String<span style="color:#f92672">[]</span> nodes <span style="color:#f92672">=</span> preorder<span style="color:#f92672">.</span><span style="color:#a6e22e">split</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;,&#34;</span><span style="color:#f92672">);</span>
-    <span style="color:#66d9ef">int</span> diff <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span>       <span style="color:#75715e">// root has
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>String node <span style="color:#f92672">:</span> nodes<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(--</span>diff <span style="color:#f92672">&lt;</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
-            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span>
-        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>node<span style="color:#f92672">.</span><span style="color:#a6e22e">equals</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;#&#34;</span><span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
-            diff <span style="color:#f92672">+=</span> 2<span style="color:#f92672">;</span>
-        <span style="color:#f92672">}</span>
-    <span style="color:#f92672">}</span>
-    <span style="color:#66d9ef">return</span> diff <span style="color:#f92672">==</span> 0<span style="color:#f92672">;</span>
-<span style="color:#f92672">}</span>
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span><span style="color:#75715e">/**
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * All non-null node provides 2 outdegree and 1 indegree (2 children and 1 parent), except root.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * All null node provides 0 outdegree and 1 indegree (0 child and 1 parent).
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * Difference between out degree and in degree: outdegree - indegree
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * If the node is not null, increase diff by 2, because it provides two out degrees.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * If a serialization is correct, outdegree - indegree should never be negative and diff will be zero when finished.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> *
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @param preorder given preorder nodes
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> * @return whether it is a correct preorder traversal serialization of a binary tree
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"> */</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">public</span> <span style="color:#66d9ef">boolean</span> <span style="color:#a6e22e">degree</span><span style="color:#f92672">(</span>String preorder<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">/* Corner case */</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> <span style="color:#f92672">(</span>preorder<span style="color:#f92672">.</span><span style="color:#a6e22e">charAt</span><span style="color:#f92672">(</span>0<span style="color:#f92672">)</span> <span style="color:#f92672">==</span> <span style="color:#e6db74">&#39;#&#39;</span> <span style="color:#f92672">&amp;&amp;</span> preorder<span style="color:#f92672">.</span><span style="color:#a6e22e">length</span><span style="color:#f92672">()</span> <span style="color:#f92672">&gt;</span> 1<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    String<span style="color:#f92672">[]</span> nodes <span style="color:#f92672">=</span> preorder<span style="color:#f92672">.</span><span style="color:#a6e22e">split</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;,&#34;</span><span style="color:#f92672">);</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> diff <span style="color:#f92672">=</span> 1<span style="color:#f92672">;</span>       <span style="color:#75715e">// root has
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">for</span> <span style="color:#f92672">(</span>String node <span style="color:#f92672">:</span> nodes<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(--</span>diff <span style="color:#f92672">&lt;</span> 0<span style="color:#f92672">)</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            <span style="color:#66d9ef">return</span> <span style="color:#66d9ef">false</span><span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">if</span> <span style="color:#f92672">(!</span>node<span style="color:#f92672">.</span><span style="color:#a6e22e">equals</span><span style="color:#f92672">(</span><span style="color:#e6db74">&#34;#&#34;</span><span style="color:#f92672">))</span> <span style="color:#f92672">{</span>
+</span></span><span style="display:flex;"><span>            diff <span style="color:#f92672">+=</span> 2<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">}</span>
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> diff <span style="color:#f92672">==</span> 0<span style="color:#f92672">;</span>
+</span></span><span style="display:flex;"><span><span style="color:#f92672">}</span>
+</span></span></code></pre></div>
               
             </div>
           </div>
